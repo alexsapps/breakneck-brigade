@@ -24,10 +24,12 @@ namespace Breakneck_Brigade
 
         static void Main(string[] args)
         {
+           // LoadConfig loader = new LoadConfig("../../Config/ConfigFiles.xml");
+
             InitGLFW();
             GlfwWindowPtr mainWindow = Glfw.CreateWindow(640, 480, "Breakneck Brigade", GlfwMonitorPtr.Null, GlfwWindowPtr.Null);
             Glfw.MakeContextCurrent(mainWindow);
-               
+
             while (!Glfw.WindowShouldClose(mainWindow))
             {
                 int width, height;
@@ -46,12 +48,12 @@ namespace Breakneck_Brigade
                 GL.Rotate(Glfw.GetTime() * 50.0, 0, 0, 1.0);
 
                 GL.Begin(BeginMode.Triangles);
-                    GL.Color3(.1, 0.0, 0.0);
-                    GL.Vertex3(-.6, -.4, 0.0);
-                    GL.Color3(0.0, .1, 0.0);
-                    GL.Vertex3(.6, -.4, 0.0);
-                    GL.Color3(0.0, 0.0, .10);
-                    GL.Vertex3(0.0, .6, 0.0);
+                GL.Color3(.1, 0.0, 0.0);
+                GL.Vertex3(-.6, -.4, 0.0);
+                GL.Color3(0.0, .1, 0.0);
+                GL.Vertex3(.6, -.4, 0.0);
+                GL.Color3(0.0, 0.0, .10);
+                GL.Vertex3(0.0, .6, 0.0);
                 GL.End();
 
                 Glfw.SwapBuffers(mainWindow);
