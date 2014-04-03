@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breakneck Brigade", "Breakneck Brigade\Breakneck Brigade.csproj", "{8229E016-814D-4317-A2DC-BF2BA2C0A272}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SousChef", "SousChef\SousChef.csproj", "{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

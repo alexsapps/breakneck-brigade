@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Pencil.Gaming;
 using Pencil.Gaming.Graphics;
+using SousChef;
 
 namespace Breakneck_Brigade
 {
@@ -34,6 +35,11 @@ namespace Breakneck_Brigade
                 Glfw.GetFramebufferSize(mainWindow, out width, out height);
                 float ratio = (float)width / height;
 
+                GL.Enable(EnableCap.Lighting);
+
+                Matrix4 matrix4 = new Matrix4();
+                //GL.LoadMatrix(matrix4.m);
+             
                 GL.Viewport(0, 0, width, height);
                 GL.Clear(ClearBufferMask.ColorBufferBit);
 
