@@ -37,11 +37,11 @@
   <ItemGroup>
     <Reference Include="NVorbis, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>H:\Git Repos\cse125\Breakneck Brigade\Breakneck Brigade\lib\NVorbis.dll</HintPath>
+      <HintPath>lib\NVorbis.dll</HintPath>
     </Reference>
     <Reference Include="Pencil.Gaming.dll, Version=1.0.5054.23712, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>H:\Git Repos\cse125\Breakneck Brigade\Breakneck Brigade\lib\Pencil.Gaming.dll.dll</HintPath>
+      <HintPath>lib\Pencil.Gaming.dll.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,8 +53,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Config\LoadConfig.cs" />
+    <Compile Include="PhysObj\DynamicPhysObj.cs" />
+    <Compile Include="PhysObj\StaticPhysObj.cs" />
+    <Compile Include="Player\ExternalPlayer.cs" />
+    <Compile Include="Player\LocalPlayer.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PhysObj\PhysObj.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -71,6 +78,10 @@
       <Project>{a4f5d1bb-0cbc-4fde-8cbf-2ad542dee53b}</Project>
       <Name>SousChef</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\ConfigFiles.xml" />
+    <Content Include="Config\test.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
