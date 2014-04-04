@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NVorbis, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -52,16 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Config\LoadConfig.cs" />
-    <Compile Include="PhysObj\DynamicPhysObj.cs" />
-    <Compile Include="PhysObj\StaticPhysObj.cs" />
-    <Compile Include="Player\ExternalPlayer.cs" />
-    <Compile Include="Player\LocalPlayer.cs" />
-    <Compile Include="GameObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PhysObj\PhysObj.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -74,21 +70,22 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\ConfigFiles.xml" />
+    <Content Include="Config\test.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SousChef\SousChef.csproj">
       <Project>{a4f5d1bb-0cbc-4fde-8cbf-2ad542dee53b}</Project>
       <Name>SousChef</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Config\ConfigFiles.xml" />
-    <Content Include="Config\test.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>pushd $(ProjectDir)\$(OutDir)
-echo "Copying in native libraries for Pencil"
-xcopy ..\..\lib /s /t /e /y /l
-popd</PostBuildEvent>
+    <PostBuildEvent>echo "Copying in native libraries for Pencil"
+pushd $(ProjectDir)
+robocopy lib bin\Debug /s
+popd
+exit 0</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

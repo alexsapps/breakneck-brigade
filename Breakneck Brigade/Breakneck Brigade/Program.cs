@@ -37,7 +37,7 @@ namespace Breakneck_Brigade
                 Glfw.GetFramebufferSize(mainWindow, out width, out height);
                 float ratio = (float)width / height;
 
-                GL.Enable(EnableCap.Lighting);
+                //GL.Enable(EnableCap.Lighting);
 
                 Matrix4 matrix4 = new Matrix4();
                 //GL.LoadMatrix(matrix4.m);

@@ -11,7 +11,8 @@ namespace SousChef
          */
         public Matrix4()
         {
-            backingArray = new float[4,4];
+            backingArray    = new float[4,4];
+            glArray         = new float[16];
 	        for (int i=0; i<4; ++i)
 	        {
 		        for (int j=0; j<4; ++j)
@@ -27,6 +28,9 @@ namespace SousChef
                         float m20, float m21, float m22, float m23,
                         float m30, float m31, float m32, float m33 )
         {
+            backingArray    = new float[4, 4];
+            glArray         = new float[16];
+
             backingArray[0,0] = m00;
             backingArray[0,1] = m01;
             backingArray[0,2] = m02;
@@ -54,6 +58,8 @@ namespace SousChef
                         double m20, double m21, double m22, double m23,
                         double m30, double m31, double m32, double m33 )
         {
+            backingArray    = new float[4, 4];
+            glArray         = new float[16];
             backingArray[0,0] = (float) m00;
             backingArray[0,1] = (float) m01;
             backingArray[0,2] = (float) m02;
