@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -8,7 +8,7 @@ namespace Breakneck_Brigade
 {
     class LoadConfig
     {
-        public Hashtable configFileHash;
+        public Dictionary<string, string> configFiles;
         public LoadConfig(string configFile)
         {
             XmlDocument doc = new XmlDocument();
@@ -19,23 +19,28 @@ namespace Breakneck_Brigade
             {
                 string name = node.SelectSingleNode("filename").InnerText;
                 string id = node.SelectSingleNode("id").InnerText;
-                System.Diagnostics.Debug.Write("anme is " + name);
-                System.Diagnostics.Debug.Write("anme is " + id);
-
-                configFileHash.Add(id, name);
+                configFiles.Add(id, name);
             }
         }
 
-        public Hashtable LoadAll()
+        public Dictionary<string, string> LoadAll()
         {
-            //should call all the individual load methods, store the returns and return the hash(or map, I haven't looked into it)
-            return configFileHash;
-
+            return configFiles;
         }
 
-        public void LoadIngredients()
+        public Dictionary<string, string> LoadIngredientsFile()
         {
-            //load the ingredient xml. Use the id to find the file in the configFileHash
+            return configFiles;
+        }
+
+        public Dictionary<string, string> LoadCookerFile()
+        {
+            return configFiles;
+        }
+
+        public Dictionary<string, string> LoadRecipiesFile()
+        {
+            return configFiles;
         }
     }
 }
