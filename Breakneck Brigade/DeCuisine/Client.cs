@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SousChef;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,10 +12,30 @@ namespace DeCuisine
 {
     class Client
     {
+        public BBLock Lock = new BBLock();
+
         private TcpClient connection { get; set; }
+
+        private Thread _communicateThread;
+        public Thread CommunicateThread
+        {
+            private get { return _communicateThread; }
+            set
+            {
+                if (_communicateThread == null)
+                    _communicateThread = value;
+                else
+                    throw new Exception("thread already set.");
+            }
+        }
 
         public event EventHandler Connected;
         public event EventHandler Disconnected;
+
+        public Client()
+        {
+            
+        }
 
         public void Communicate(TcpClient c)
         {
@@ -46,10 +67,14 @@ namespace DeCuisine
             }
             catch (ThreadAbortException)
             {
-                Disconnect();
+                //disconnecting.
+                //do not call disconnect() already disconnecting.
+                return;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debugger.Break();
+                //TODO: log error message ex
                 Disconnect();
                 throw;
             }
@@ -58,8 +83,11 @@ namespace DeCuisine
 
         public void Disconnect()
         {
+            Lock.AssertHeld();
+
             try
             {
+                CommunicateThread.Abort();
                 connection.Close();
             }
             catch { }

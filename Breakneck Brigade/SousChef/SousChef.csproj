@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assert.cs" />
+    <Compile Include="BBLock.cs" />
     <Compile Include="MathConstants.cs" />
     <Compile Include="Matrix4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using SousChef;
 
 namespace DeCuisine
 {
     class Server
     {
+        public BBLock Lock = new BBLock();
+
         public bool Started { get; private set; }
 
         public IPAddress _ip;
@@ -45,9 +48,9 @@ namespace DeCuisine
     
         public Server()
         {
-
+            
         }
-        public Server(IPAddress ip, int port)
+        public Server(IPAddress ip, int port) : this()
         {
             this.IP = ip;
             this.Port = port;
@@ -57,17 +60,20 @@ namespace DeCuisine
         Thread listener_thread;
         List<Client> clients = new List<Client>();
 
-        Game game;
+        public Game Game { get; private set; }
 
         public void Start()
         {
+            Lock.AssertHeld();
+
             if (Started)
             {
                 throw new Exception("Already started.");
             }
 
-            game = new Game();
+            Game = new Game();
 
+            cancel_listen = false;
             listener = new TcpListener(IP, Port);
             listener_thread = new Thread(new ThreadStart(Listen));
             listener_thread.Start();
@@ -76,14 +82,21 @@ namespace DeCuisine
 
         public void Stop()
         {
+            Lock.AssertHeld();
+
             if (Started)
             {
+                cancel_listen = true;
+                listener.Stop(); //do this first, actually.
                 listener_thread.Abort();
-                listener.Stop();
-                listener = null;
 
-                game.Dispose();
-                game = null;
+                while(cancel_listen)
+                {
+                    Monitor.Wait(Lock, 50); //give up lock so listener can stop
+                }
+
+                //listener.Stop();
+                listener = null;
 
                 foreach (var client in clients)
                 {
@@ -91,17 +104,76 @@ namespace DeCuisine
                 }
                 clients.Clear();
 
+                lock (Game.Lock)
+                {
+                    if (Game.Mode == GameMode.Started || Game.Mode == GameMode.Paused)
+                    {
+                        Game.Stop();
+                    }
+                    Game.Dispose();
+                    Game = null;
+                }
+
                 Started = false;
             }
         }
 
+        private bool cancel_listen;
         public void Listen()
         {
-            while (true)
+            try
             {
-                TcpClient connection = listener.AcceptTcpClient();
-                Client client = new Client();
-                Thread client_thread = new Thread(() => client.Communicate(connection));
+            keepGoing:
+                listener.Stop();
+                listener.Start();
+
+                try
+                {
+                    while (true)
+                    {
+                        if (cancel_listen)
+                            return;
+
+                        TcpClient connection = listener.AcceptTcpClient();
+
+                        lock (Lock)
+                        {
+                            if (Game.Mode == GameMode.Init)  //only connect during init
+                            {
+                                Client client = new Client();
+                                clients.Add(client);
+                                Thread client_thread = new Thread(() => client.Communicate(connection));
+                                client.CommunicateThread = client_thread;
+                                client_thread.Start();
+                            }
+                            else
+                            {
+                                connection.Close();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (cancel_listen)
+                        return; //server is shutting down
+                    else
+                    {
+                        //TODO: log ex
+                        Console.WriteLine(ex.ToString());
+                        System.Diagnostics.Debugger.Break(); //TODO:  break whenever logging error
+                        goto keepGoing;
+                    }
+                }
+                finally
+                {
+                    if (listener != null)
+                        listener.Stop();
+                }
+            }
+            finally
+            {
+                cancel_listen = false; //indicate listening cancelled so stop() can become unblocked
             }
         }
     }
