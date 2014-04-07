@@ -50,6 +50,7 @@ namespace DeCuisine
                         Disconnect();
                         return;
                     }
+                    Connected(this, EventArgs.Empty);
 
                     while (true)
                     {

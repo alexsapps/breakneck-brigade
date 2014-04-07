@@ -16,6 +16,9 @@ namespace DeCuisine
 
         public bool Started { get; private set; }
 
+        public event EventHandler<ClientEventArgs> ClientEnter;
+        public event EventHandler<ClientEventArgs> ClientLeave;
+
         public IPAddress _ip;
         public IPAddress IP
         {
@@ -71,7 +74,7 @@ namespace DeCuisine
                 throw new Exception("Already started.");
             }
 
-            Game = new Game();
+            Game = new Game(this);
 
             cancel_listen = false;
             listener = new TcpListener(IP, Port);
@@ -142,6 +145,8 @@ namespace DeCuisine
                             {
                                 Client client = new Client();
                                 clients.Add(client);
+                                client.Connected += client_Connected;
+                                client.Disconnected += client_Disconnected;
                                 Thread client_thread = new Thread(() => client.Communicate(connection));
                                 client.CommunicateThread = client_thread;
                                 client_thread.Start();
@@ -175,6 +180,16 @@ namespace DeCuisine
             {
                 cancel_listen = false; //indicate listening cancelled so stop() can become unblocked
             }
+        }
+
+        void client_Connected(object sender, EventArgs e)
+        {
+            ClientEnter(this, new ClientEventArgs((Client)sender));
+        }
+
+        void client_Disconnected(object sender, EventArgs e)
+        {
+            ClientLeave(this, new ClientEventArgs((Client)sender));
         }
     }
 }

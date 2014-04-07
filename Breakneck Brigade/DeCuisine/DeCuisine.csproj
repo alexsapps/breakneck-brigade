@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="ClientEvent.cs" />
+    <Compile Include="ClientEventArgs.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="Program.cs" />
