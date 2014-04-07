@@ -32,8 +32,6 @@ namespace Breakneck_Brigade
                 return;
             }
 
-             // LoadConfig loader = new LoadConfig("../../Config/ConfigFiles.xml");
-
             InitGLFW();
             GlfwWindowPtr mainWindow = Glfw.CreateWindow(640, 480, "Breakneck Brigade", GlfwMonitorPtr.Null, GlfwWindowPtr.Null);
             Glfw.MakeContextCurrent(mainWindow);

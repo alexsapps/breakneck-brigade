@@ -73,7 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
-    <Compile Include="Config\LoadConfig.cs" />
     <Compile Include="FakeClient.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,10 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Config\ConfigFiles.xml" />
-    <Content Include="Config\test.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SousChef\SousChef.csproj">
