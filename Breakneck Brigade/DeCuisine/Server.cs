@@ -103,7 +103,10 @@ namespace DeCuisine
 
                 foreach (var client in clients)
                 {
-                    client.Disconnect(); //TODO: synchronize.  what if we are reading data from client?
+                    lock (client.Lock)
+                    {
+                        client.Disconnect(); //TODO: synchronize.  what if we are reading data from client?
+                    }
                 }
                 clients.Clear();
 
@@ -189,6 +192,7 @@ namespace DeCuisine
 
         void client_Disconnected(object sender, EventArgs e)
         {
+            clients.Remove((Client)sender);
             ClientLeave(this, new ClientEventArgs((Client)sender));
         }
     }

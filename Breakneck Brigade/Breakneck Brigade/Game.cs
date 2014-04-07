@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SousChef;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,13 @@ namespace Breakneck_Brigade
 {
     class Game
     {
-        public Dictionary<string, GameObject> gameObjects { get; private set; }
+        public BBLock Lock = new BBLock();
+
+        public Dictionary<string, string> gameObjects { get; private set; }
 
         public Game()
         {
-            gameObjects = new Dictionary<string, GameObject>();
+            gameObjects = new Dictionary<string, string>();
         }
 
     }

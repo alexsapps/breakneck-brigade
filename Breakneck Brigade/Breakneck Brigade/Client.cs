@@ -14,18 +14,28 @@ namespace Breakneck_Brigade
     class Client
     {
         public BBLock Lock = new BBLock();
-        TcpClient Connection;
-        public bool Connected { get; private set; }
+        TcpClient connection;
+        public bool IsConnected { get; private set; }
+        public Game Game { get; private set; }
+        public GameMode GameMode {get; private set; }
+        public event EventHandler Disconnected;
+
+        public Client()
+        {
+            ClientEvents = new List<ClientEvent>();
+            GameMode = GameMode.Init;
+        }
 
         public void Connect(string host, int port)
         {
             Lock.AssertHeld();
 
-            Connection = new TcpClient(host, port);
+            connection = new TcpClient();
+            connection.Connect(host, port);
             receiverThread = new Thread(() => receive());
             receiverThread.Start();
 
-            Connected = true;
+            IsConnected = true;
         }
 
         private Thread receiverThread;
@@ -33,20 +43,17 @@ namespace Breakneck_Brigade
         {
             try
             {
-                using (BinaryWriter writer = new BinaryWriter(Connection.GetStream()))
+                new BinaryWriter(connection.GetStream()).Write(BB.ClientProtocolHandshakeStr);
+                
+                using (BinaryReader reader = new BinaryReader(connection.GetStream()))
                 {
-                    writer.Write(BB.ClientProtocolHandshakeStr);
-                }
-
-                using (BinaryReader reader = new BinaryReader(Connection.GetStream()))
-                {
-                    Connection.ReceiveTimeout = 10000;
+                    connection.ReceiveTimeout = 10000;
                     if (!reader.ReadString().Equals(BB.ServerProtocolHandshakeStr))
                     {
                         Disconnect();
                         return;
                     }
-                    Connection.ReceiveTimeout = 0;
+                    connection.ReceiveTimeout = 0;
 
                     senderThread = new Thread(() => send());
                     senderThread.Start();
@@ -57,8 +64,35 @@ namespace Breakneck_Brigade
                         switch (type)
                         {
                             case ServerMessageType.GameModeUpdate:
+                                GameMode = (GameMode)reader.ReadByte();
+                                switch (GameMode)
+                                {
+                                    case GameMode.Init:
+                                        break;
+                                    case GameMode.Started:
+                                        Game = new Game();
+                                        break;
+                                    case GameMode.Stopping:
+                                        break;
+                                    default:
+                                        lock (Lock)
+                                        {
+                                            Disconnect();
+                                        }
+                                        return;
+                                }
+
                                 break;
                             case ServerMessageType.GameStateUpdate:
+                                
+                                Game.gameObjects.Clear();
+                                int len = reader.ReadInt32();
+                                for (int i = 0; i < len; i++)
+                                {
+                                    string key = reader.ReadString();
+                                    string value = reader.ReadString();
+                                    Game.gameObjects.Add(key, value);
+                                }
                                 break;
                             default:
                                 break;
@@ -66,16 +100,20 @@ namespace Breakneck_Brigade
                     }
                 }
             }
-            catch(SocketException)
+            catch(IOException)
             {
-                //disconnecting
+                //if connected, server ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
+                if (IsConnected)
+                {
+                    lock (Lock) { Disconnect(); }
+                }
                 return;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
                 //TODO: log error message ex
-                Disconnect(); //TODO: are we already disconnecting?
+                lock (Lock) { Disconnect(); }
                 throw;
             }
         }
@@ -84,11 +122,11 @@ namespace Breakneck_Brigade
         public List<ClientEvent> ClientEvents { get; private set; }
         private void send()
         {
-            using (BinaryWriter writer = new BinaryWriter(Connection.GetStream()))
+            using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
             {
                 lock (ClientEvents)
                 {
-                    while (Connected)
+                    while (IsConnected)
                     {
                         foreach(var clientEvent in ClientEvents)
                         {
@@ -113,14 +151,15 @@ namespace Breakneck_Brigade
         {
             Lock.AssertHeld();
 
-            Connected = false;
+            IsConnected = false;
 
             lock (ClientEvents)
             {
                 Monitor.PulseAll(ClientEvents); //close sender thread
             }
 
-            Connection.Close(); //close receiver thread
+            connection.Close(); //close receiver thread
+            Disconnected(this, EventArgs.Empty);
         }
 
     }

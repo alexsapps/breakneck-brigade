@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeCuisine
+namespace SousChef
 {
-    enum GameMode
+    public enum GameMode
     {
         Init, //wait for users to connect
         Started, //the game is playing

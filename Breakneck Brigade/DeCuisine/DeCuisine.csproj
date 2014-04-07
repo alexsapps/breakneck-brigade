@@ -45,7 +45,6 @@
     <Compile Include="ClientEventArgs.cs" />
     <Compile Include="DCClientEvent.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameMode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />

@@ -50,10 +50,8 @@ namespace DeCuisine
 
             try
             {
-                using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
-                {
-                    writer.Write(BB.ServerProtocolHandshakeStr);
-                }
+                new BinaryWriter(connection.GetStream()).Write(BB.ServerProtocolHandshakeStr);
+
                 using (BinaryReader reader = new BinaryReader(c.GetStream()))
                 {
                     connection.ReceiveTimeout = 10000;
@@ -98,16 +96,18 @@ namespace DeCuisine
                     }
                 }
             }
-            catch (SocketException)
+            catch (IOException)
             {
-                //disconnecting
+                //if connected, client ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
+                if (IsConnected)
+                    lock (Lock) { Disconnect(); }
                 return;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
                 //TODO: log error message ex
-                Disconnect(); //TODO: are we already disconnecting?
+                lock (Lock) { Disconnect(); }
                 throw;
             }
         }
@@ -125,6 +125,21 @@ namespace DeCuisine
                         foreach (var message in ServerMessages)
                         {
                             writer.Write((byte)message.Type);
+                            switch (message.Type)
+                            {
+                                case ServerMessageType.GameModeUpdate:
+                                    writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
+                                    break;
+                                case ServerMessageType.GameStateUpdate:
+                                    var msg = (ServerGameStateUpdateMessage)message;
+                                    writer.Write(msg.GameObjects.Count);
+                                    foreach (var obj in msg.GameObjects)
+                                    {
+                                        writer.Write(obj.Key);
+                                        writer.Write(obj.Value);
+                                    }
+                                    break;
+                            }
                         }
                         ServerMessages.Clear();
                         Monitor.Wait(ServerMessages);

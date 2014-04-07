@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.cmdConnect = new System.Windows.Forms.Button();
             this.txtMessages = new System.Windows.Forms.Label();
             this.txtIP = new System.Windows.Forms.TextBox();
             this.txtPort = new System.Windows.Forms.TextBox();
             this.cmdClientEvent = new System.Windows.Forms.Button();
+            this.tmrRender = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // cmdConnect
@@ -47,12 +49,10 @@
             // 
             // txtMessages
             // 
-            this.txtMessages.AutoSize = true;
             this.txtMessages.Location = new System.Drawing.Point(9, 115);
             this.txtMessages.Name = "txtMessages";
-            this.txtMessages.Size = new System.Drawing.Size(35, 13);
+            this.txtMessages.Size = new System.Drawing.Size(263, 123);
             this.txtMessages.TabIndex = 1;
-            this.txtMessages.Text = "label1";
             // 
             // txtIP
             // 
@@ -60,6 +60,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(107, 20);
             this.txtIP.TabIndex = 2;
+            this.txtIP.Text = "127.0.0.1";
             // 
             // txtPort
             // 
@@ -67,7 +68,7 @@
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(52, 20);
             this.txtPort.TabIndex = 3;
-            this.txtPort.Text = "2222";
+            this.txtPort.Text = "22222";
             // 
             // cmdClientEvent
             // 
@@ -78,6 +79,10 @@
             this.cmdClientEvent.Text = "spawn something";
             this.cmdClientEvent.UseVisualStyleBackColor = true;
             this.cmdClientEvent.Click += new System.EventHandler(this.cmdClientEvent_Click);
+            // 
+            // tmrRender
+            // 
+            this.tmrRender.Tick += new System.EventHandler(this.tmrRender_Tick);
             // 
             // FakeClient
             // 
@@ -91,6 +96,7 @@
             this.Controls.Add(this.cmdConnect);
             this.Name = "FakeClient";
             this.Text = "FakeClient";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FakeClient_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -103,5 +109,6 @@
         private System.Windows.Forms.TextBox txtIP;
         private System.Windows.Forms.TextBox txtPort;
         private System.Windows.Forms.Button cmdClientEvent;
+        private System.Windows.Forms.Timer tmrRender;
     }
 }

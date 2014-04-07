@@ -68,6 +68,7 @@ namespace DeCuisine
             runThread.Start();
 
             Mode = GameMode.Started;
+            SendModeChangeUpdate();
         }
 
         public void Stop()
@@ -135,19 +136,20 @@ namespace DeCuisine
                      * handle an instant in time, e.g. gravity, collisions
                      */
                     {
-
+                        
                     }
 
                     /*
                      * send updates to clients
                      */
                     {
-                        //TODO: make ThreadPool for sending messages to all clients.  jobs are sending tick-update to client.
                         foreach(Client client in clients)
                         {
                             lock (client.ServerMessages)
                             {
-                                client.ServerMessages.Add(new ServerMessage() { Type = ServerMessageType.GameStateUpdate });
+                                client.ServerMessages.Add(new ServerGameStateUpdateMessage() { 
+                                    Type = ServerMessageType.GameStateUpdate, 
+                                    GameObjects = GameObjects });
                                 Monitor.PulseAll(client.ServerMessages);
                             }
                         }
@@ -161,6 +163,23 @@ namespace DeCuisine
                 if (waitTime > 0)
                     Thread.Sleep(new TimeSpan(waitTime));
                 //TODO:  if not more than zero, log item -- rate too fast!
+            }
+        }
+
+
+        private void SendModeChangeUpdate()
+        {
+            foreach (Client client in clients)
+            {
+                lock (client.ServerMessages)
+                {
+                    client.ServerMessages.Add(new ServerGameModeUpdateMessage()
+                    {
+                        Type = ServerMessageType.GameModeUpdate,
+                        Mode = Mode
+                    });
+                    Monitor.PulseAll(client.ServerMessages);
+                }
             }
         }
 
