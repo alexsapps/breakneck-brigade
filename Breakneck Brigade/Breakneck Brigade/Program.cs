@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Pencil.Gaming;
 using Pencil.Gaming.Graphics;
 using SousChef;
+using System.IO;
 
 namespace Breakneck_Brigade
 {
@@ -25,7 +26,13 @@ namespace Breakneck_Brigade
 
         static void Main(string[] args)
         {
-           // LoadConfig loader = new LoadConfig("../../Config/ConfigFiles.xml");
+            if (network_debugging())
+            {
+                (new FakeClient()).ShowDialog();
+                return;
+            }
+
+             // LoadConfig loader = new LoadConfig("../../Config/ConfigFiles.xml");
 
             InitGLFW();
             GlfwWindowPtr mainWindow = Glfw.CreateWindow(640, 480, "Breakneck Brigade", GlfwMonitorPtr.Null, GlfwWindowPtr.Null);
@@ -69,6 +76,11 @@ namespace Breakneck_Brigade
             Glfw.DestroyWindow(mainWindow);
             Glfw.Terminate();
             Environment.Exit(0);
+        }
+
+        private static bool network_debugging()
+        {
+            return File.Exists("c:\\network_debugging.txt");
         }
     }
 }

@@ -31,7 +31,7 @@ namespace DeCuisine
         {
             lock (Lock)
             {
-                clients.Remove(e.Client);
+                clients.Add(e.Client);
 
                 lock (ClientInput)
                 {
@@ -44,7 +44,7 @@ namespace DeCuisine
         {
             lock (Lock)
             {
-                clients.Add(e.Client);
+                clients.Remove(e.Client);
 
                 lock (ClientInput)
                 {
@@ -131,6 +131,8 @@ namespace DeCuisine
                         foreach(Client client in clients)
                         {
                             
+                            client.
+
                         }
                     }
                 }

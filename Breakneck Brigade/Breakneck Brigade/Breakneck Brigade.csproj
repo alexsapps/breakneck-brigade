@@ -63,6 +63,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,6 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\LoadConfig.cs" />
+    <Compile Include="FakeClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FakeClient.Designer.cs">
+      <DependentUpon>FakeClient.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameObject.cs" />
     <Compile Include="PhysObj\DynamicPhysObj.cs" />
     <Compile Include="PhysObj\PhysObj.cs" />

@@ -79,7 +79,6 @@ namespace DeCuisine
                 Disconnect();
                 throw;
             }
-            
         }
 
         public void Disconnect()
