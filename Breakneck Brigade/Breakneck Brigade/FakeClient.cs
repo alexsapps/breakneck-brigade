@@ -36,12 +36,15 @@ namespace Breakneck_Brigade
             {
                 throw new Exception();
             }
-
-            lock (client.Lock)
+            try
             {
-                client.Connect(host, port);
+                lock (client.Lock)
+                {
+                    client.Connect(host, port);
+                }
+            }catch(Exception ex) {
+                MessageBox.Show("Error connecting. Is the server running? " + ex.Message);
             }
-
             cmdConnect.Enabled = false;
             tmrRender.Start();
         }
@@ -53,9 +56,27 @@ namespace Breakneck_Brigade
 
         private void cmdClientEvent_Click(object sender, EventArgs e)
         {
-            lock (client.ClientEvents) {
-                client.ClientEvents.Add(new ClientEvent() { Type = ClientEventType.RequestTestObject, Args = new Dictionary<string,string>() });
-                Monitor.PulseAll(client.ClientEvents);
+            if (client != null)
+            {
+                lock (client.Lock)
+                {
+                    if (client.GameMode == GameMode.Started)
+                    {
+                        lock (client.ClientEvents)
+                        {
+                            client.ClientEvents.Add(new ClientEvent() { Type = ClientEventType.RequestTestObject, Args = new Dictionary<string, string>() });
+                            Monitor.PulseAll(client.ClientEvents);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("game hasn't started yet.  first, issue 'play' command to server.");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("not connected.");
             }
             
         }
