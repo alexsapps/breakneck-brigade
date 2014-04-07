@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    public enum ClientEventType
+    public enum ServerMessageType
     {
-        Enter,
-        Leave,
-        Move,
-        RequestTestObject
+        GameModeUpdate,
+        GameStateUpdate,
 
     }
 }

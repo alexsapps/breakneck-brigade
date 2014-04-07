@@ -14,9 +14,13 @@ namespace DeCuisine
 
         public GameMode Mode { get; private set; }
 
+        private Dictionary<string, string> GameObjects = new Dictionary<string, string>(); //TODO: this should be string (id) to GameObject
+
         private Thread runThread;
 
         private Server server;
+
+        private Random random = new Random();
 
         public Game(Server server)
         {
@@ -24,7 +28,7 @@ namespace DeCuisine
             this.server = server;
             server.ClientEnter += server_ClientEnter;
             server.ClientLeave += server_ClientLeave;
-            ClientInput = new List<ClientEvent>();
+            ClientInput = new List<DCClientEvent>();
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -35,7 +39,7 @@ namespace DeCuisine
 
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new ClientEvent() { Client = e.Client, Type = ClientEventType.Enter }); //we can change this.
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Enter } }); //we can change this.
                 }
             }
         }
@@ -48,7 +52,7 @@ namespace DeCuisine
 
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new ClientEvent() { Client = e.Client, Type = ClientEventType.Leave });
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Leave } });
                 }
             }
         }
@@ -72,16 +76,21 @@ namespace DeCuisine
 
             if (Mode == GameMode.Stopping)
                 throw new Exception("already stopping.");
-            if (Mode == GameMode.Started || Mode == GameMode.Paused)
-                runThread.Abort();
-            
+
+            var prevMode = Mode;
             Mode = GameMode.Stopping;
+
+            if (prevMode == GameMode.Started || prevMode == GameMode.Paused)
+            {
+                runThread.Join();
+                runThread = null;
+            }
         }
 
         private List<Client> clients = new List<Client>();
 
         // clients Lock(ClientInput) without locking the whole server, just to specify their input
-        public List<ClientEvent> ClientInput { get; private set; }
+        public List<DCClientEvent> ClientInput { get; private set; }
 
         public void Run()
         {
@@ -91,7 +100,7 @@ namespace DeCuisine
             long rate = seconds * second;
             long next = start;
 
-            while (true)
+            while (Mode == GameMode.Started)
             {
                 next += rate;
                 lock (Lock)
@@ -101,12 +110,18 @@ namespace DeCuisine
                      */
                     lock (ClientInput)
                     {
-                        foreach (ClientEvent input in ClientInput)
+                        foreach (DCClientEvent input in ClientInput)
                         {
-                            switch (input.Type)
+                            switch (input.Event.Type)
                             {
+                                case ClientEventType.Enter:
+                                    break;
+                                case ClientEventType.Leave:
+                                    break;
                                 case ClientEventType.Move:
-                                    
+                                    break;
+                                case ClientEventType.RequestTestObject:
+                                    GameObjects.Add("obj" + random.Next(0,1000), "x: " + random.Next(0,1000) + "; y: " + random.Next(0,1000));
                                     break;
                                 default:
                                     //error
@@ -130,9 +145,11 @@ namespace DeCuisine
                         //TODO: make ThreadPool for sending messages to all clients.  jobs are sending tick-update to client.
                         foreach(Client client in clients)
                         {
-                            
-                            client.
-
+                            lock (client.ServerMessages)
+                            {
+                                client.ServerMessages.Add(new ServerMessage() { Type = ServerMessageType.GameStateUpdate });
+                                Monitor.PulseAll(client.ServerMessages);
+                            }
                         }
                     }
                 }
@@ -145,12 +162,6 @@ namespace DeCuisine
                     Thread.Sleep(new TimeSpan(waitTime));
                 //TODO:  if not more than zero, log item -- rate too fast!
             }
-        }
-
-        //ThreadPool clientUpdaterPool;
-        private void updateClient(Task clientUpdateTask)
-        {
-
         }
 
         public void Dispose()

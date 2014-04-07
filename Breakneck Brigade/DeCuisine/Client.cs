@@ -1,6 +1,7 @@
 ﻿using SousChef;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -15,15 +16,20 @@ namespace DeCuisine
         public BBLock Lock = new BBLock();
 
         private TcpClient connection { get; set; }
+        
+        public bool IsConnected { get; private set; }
 
-        private Thread _communicateThread;
-        public Thread CommunicateThread
+        public Server Server { get; set; }
+        public Game Game { get { return Server.Game; } }
+
+        private Thread _receiveThread;
+        public Thread receiveThread
         {
-            private get { return _communicateThread; }
+            private get { return _receiveThread; }
             set
             {
-                if (_communicateThread == null)
-                    _communicateThread = value;
+                if (_receiveThread == null)
+                    _receiveThread = value;
                 else
                     throw new Exception("thread already set.");
             }
@@ -32,32 +38,58 @@ namespace DeCuisine
         public event EventHandler Connected;
         public event EventHandler Disconnected;
 
-        public Client()
+        public Client(Server server)
         {
-            
+            this.Server = server;
+            ServerMessages = new List<ServerMessage>();
         }
 
-        public void Communicate(TcpClient c)
+        public void Receive(TcpClient c)
         {
             this.connection = c;
 
             try
             {
-                using (BinaryReader r = new BinaryReader(c.GetStream()))
+                using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
                 {
-                    if (!r.ReadString().Equals("Breakneck Brigade v1")) //TODO make shared, auto-incrementing version generator function in SousChef
+                    writer.Write(BB.ServerProtocolHandshakeStr);
+                }
+                using (BinaryReader reader = new BinaryReader(c.GetStream()))
+                {
+                    connection.ReceiveTimeout = 10000;
+                    if (!reader.ReadString().Equals(BB.ClientProtocolHandshakeStr))
                     {
                         Disconnect();
                         return;
                     }
+                    connection.ReceiveTimeout = 0;
+
+                    IsConnected = true;
                     Connected(this, EventArgs.Empty);
+
+                    senderThread = new Thread(() => send());
+                    senderThread.Start();
 
                     while (true)
                     {
-                        int cmd = r.ReadByte();
-                        switch (cmd)
+                        ClientMessageType type = (ClientMessageType)reader.ReadByte();
+                        switch (type)
                         {
-                            case 1: //TODO: make commands enum in SousChef
+                            case ClientMessageType.ClientEvent:
+                                ClientEventType eventType = (ClientEventType)reader.ReadByte();
+                                int length = reader.ReadByte();
+                                var args = new Dictionary<string, string>();
+                                for (int i = 0; i < length; i++)
+                                {
+                                    args.Add(reader.ReadString(), reader.ReadString());
+                                }
+                                DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = new ClientEvent() { Type = eventType, Args = args } };
+
+                                lock (Game.ClientInput)
+                                {
+                                    Game.ClientInput.Add(clientEvent);
+                                }
+
                                 break;
                             default:
                                 Disconnect();
@@ -66,18 +98,38 @@ namespace DeCuisine
                     }
                 }
             }
-            catch (ThreadAbortException)
+            catch (SocketException)
             {
-                //disconnecting.
-                //do not call disconnect() already disconnecting.
+                //disconnecting
                 return;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
                 //TODO: log error message ex
-                Disconnect();
+                Disconnect(); //TODO: are we already disconnecting?
                 throw;
+            }
+        }
+
+        private Thread senderThread;
+        public List<ServerMessage> ServerMessages { get; private set; }
+        private void send()
+        {
+            using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
+            {
+                lock (ServerMessages)
+                {
+                    while (IsConnected)
+                    {
+                        foreach (var message in ServerMessages)
+                        {
+                            writer.Write((byte)message.Type);
+                        }
+                        ServerMessages.Clear();
+                        Monitor.Wait(ServerMessages);
+                    }
+                }
             }
         }
 
@@ -85,12 +137,21 @@ namespace DeCuisine
         {
             Lock.AssertHeld();
 
+            Debug.Assert(IsConnected); //do not disconnect twice
+            IsConnected = false;
+
+            lock (ServerMessages)
+            {
+                Monitor.PulseAll(ServerMessages); //close sender thread
+            }
+
             try
             {
-                CommunicateThread.Abort();
-                connection.Close();
+                connection.Close(); //close receiver thread
             }
             catch { }
+
+            
 
             Disconnected(this, EventArgs.Empty);
         }

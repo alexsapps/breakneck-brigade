@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    public enum ClientEventType
+    public enum ClientMessageType
     {
-        Enter,
-        Leave,
-        Move,
-        RequestTestObject
+        ClientEvent
 
     }
 }

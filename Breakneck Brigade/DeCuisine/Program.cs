@@ -14,7 +14,7 @@ namespace DeCuisine
 
         static void Main(string[] args)
         {
-            int port = 0; //TODO: read port from config file
+            int port = 22222; //TODO: read port from config file
 
             server = new Server(IPAddress.Any, port);
             lock (server.Lock)

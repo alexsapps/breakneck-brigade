@@ -143,12 +143,12 @@ namespace DeCuisine
                         {
                             if (Game.Mode == GameMode.Init)  //only connect during init
                             {
-                                Client client = new Client();
+                                Client client = new Client(this);
                                 clients.Add(client);
                                 client.Connected += client_Connected;
                                 client.Disconnected += client_Disconnected;
-                                Thread client_thread = new Thread(() => client.Communicate(connection));
-                                client.CommunicateThread = client_thread;
+                                Thread client_thread = new Thread(() => client.Receive(connection));
+                                client.receiveThread = client_thread;
                                 client_thread.Start();
                             }
                             else

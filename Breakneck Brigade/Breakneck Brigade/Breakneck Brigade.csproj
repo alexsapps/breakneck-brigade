@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
     <Compile Include="Config\LoadConfig.cs" />
     <Compile Include="FakeClient.cs">
       <SubType>Form</SubType>
@@ -79,6 +80,7 @@
     <Compile Include="FakeClient.Designer.cs">
       <DependentUpon>FakeClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="PhysObj\DynamicPhysObj.cs" />
     <Compile Include="PhysObj\PhysObj.cs" />
@@ -124,6 +126,11 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FakeClient.resx">
+      <DependentUpon>FakeClient.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

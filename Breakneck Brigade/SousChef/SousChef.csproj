@@ -39,11 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BB.cs" />
     <Compile Include="BBLock.cs" />
+    <Compile Include="ClientEvent.cs" />
     <Compile Include="ClientEventType.cs" />
+    <Compile Include="ClientMessageType.cs" />
     <Compile Include="MathConstants.cs" />
     <Compile Include="Matrix4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerMessage.cs" />
+    <Compile Include="ServerMessageType.cs" />
     <Compile Include="Vector4.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
