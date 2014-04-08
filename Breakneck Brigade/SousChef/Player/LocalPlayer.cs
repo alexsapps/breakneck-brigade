@@ -3,34 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Breakneck_Brigade
+namespace SousChef
 {
-    class ExternalPlayer : GameObject
+    class LocalPlayer : GameObject
     {
-        public ExternalPlayer(int id)
+        public LocalPlayer(int id)
             : base(id)
         {
-            //this.pos = vector(0,0,0)
+            //pos = vector3(0,0,0); 
         }
 
-        public ExternalPlayer(int id, string tag) 
+        public LocalPlayer(int id, string tag)
             : base(id, tag)
         {
-            //this.pos = vector(0,0,0)
-        }   
+            //pos = vector(0,0,0);
+        }
 
-        /* public ExternalPlayer(int id, string tag, vector position)
+        /* public Player(int id, string tag, vector initPos)
+          : base(id, tag)
         {
-            //this.pos = pos
+
         } */
-        
+
         public override void Render()
         {
+            //draw at position 
             throw new NotImplementedException();
         }
 
         public override void Update()
         {
+            //recieve input and update postion and orientation
             throw new NotImplementedException();
         }
     }
