@@ -16,12 +16,8 @@ namespace SousChef
         }
         public override void Update()
         {
-            throw NotImplementedException;
+
         }
 
-        public override void Render()
-        {
-            throw NotImplementedException;
-        }
     }
 }
