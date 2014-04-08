@@ -1,0 +1,1595 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tao.Sdl.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:Tao.Sdl.SdlTest">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitSubSystemVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitSubSystemAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitSubSystemTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitSubSystemCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitSubSystemJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.InitSubSystemEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.SdlQuit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.QuitSubSystemVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.QuitSubSystemAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.QuitSubSystemTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.QuitSubSystemCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.QuitSubSystemJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.QuitSubSystemEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.WasInitEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.WasInitVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.WasInitAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.WasInitCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.WasInitJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.WasInitTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.GetAppState">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.AudioDriverName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.GetKeyName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.GetKeyNameFalse">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.OpenAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.LoadWAV">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.LoadWAV_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.Endian">
+            <summary>
+            Endian Test
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.FRAMES_TO_MSF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.MSF_TO_FRAMES">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDNumDrives">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDOpen">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDPlay">
+            <summary>
+            There is a problem with the SDL C-function. 
+            Many cds will not start with a low 'start' setting. 
+            I will only use SDL_CDPlayTracks.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDPlayTracks">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDPause">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDResume">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDStop">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CD_INDRIVE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.TrackAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDEject">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CDClose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.HasMMX">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.HasMMXExt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.Has3DNow">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.HasAltiVec">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.HasRDTSC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.HasSSE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.HasSSE2">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.SetGetError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.ClearError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.PutEnv">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.GetEnv">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.GetTicks">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.Delay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.SetTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.SetTimerCancel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.LinkedVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.CompiledVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.VersionAtLeast1210">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTest.VersionAtLeast1211">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Tao.Sdl.SdlTestGfx">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.InitSdl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.Quit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.pixelColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.pixelRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.hlineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.hlineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.vlineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.vlineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.rectangleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.rectangleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.boxColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.boxRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.lineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.lineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aalineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aalineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.CircleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.CircleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aaCircleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aaCircleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.filledCircleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.filledCircleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.EllipseColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.EllipseRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aaEllipseColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aaEllipseRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledEllipseColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledEllipseRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.PieColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.PieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledPieColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.TrigonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.TrigonPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aaTrigonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aaTrigonPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledTrigonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledTrigonPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.polygonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.polygonRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aapolygonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.aapolygonRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledPolygonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.FilledPolygonRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.bezierColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.bezierRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.charColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.charRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.stringColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.stringRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.gfxPrimitivesFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.rotozoomSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.rotozoomSurfaceSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.zoomSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.zoomSurfaceSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestGfx.ImageFilterAdd">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Tao.Sdl.SdlTestImage">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.VideoSetup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LinkedVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isBMP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isJPG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isGIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isPNG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isPNM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isPCX">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isXPM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isXCF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.isTIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadGIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadJPG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadPNG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadPCX">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadTGA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadPNM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadBMP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadXPM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadXCF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadTIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.ReadXPMFromArray">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.SetGetError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.Load_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestImage.LoadTyped_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Tao.Sdl.SdlTestMixer">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.LinkedVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.InitAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.QuitAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.OpenAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.AllocateChannels">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.QuerySpec">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.LoadWAV_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.LoadWAV">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.LoadMUSwav">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.LoadMUSmp3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.LoadMUSOGG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetGetError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.QuickLoad_WAV">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.QuickLoad_RAW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FreeChunk">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FreeMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GetMusicType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetPostMix">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.HookMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.HookMusicFinished">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GetMusicHookData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.ChannelFinished">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.RegisterEffect">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.UnregisterEffect">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.UnregisterAllEffects">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetPanning">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetDistance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetReverseStereo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.ReserveChannels">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GroupChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GroupChannels">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GroupAvailable">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GroupCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GroupOldest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GroupNewer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.PlayChannelTimed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.PlayChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.PlayMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadeInMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadeInMusicPos">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadeInChannelTimed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadeInChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.Volume">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.VolumeChunk">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.VolumeMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.HaltChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.HaltGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.HaltMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.ExpireChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadeOutChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadeOutGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadeOutMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadingMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.FadingChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.Pause">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.Resume">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.Paused">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.PauseMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.ResumeMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.RewindMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.PausedMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetMusicPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.Playing">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.PlayingMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetPlayingCMD">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GetChunk">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.SetSynchroValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.GetSynchroValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestMixer.CloseAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Tao.Sdl.SdlTestTtf">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.VideoSetup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.LinkedVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.TTF_Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.TTF_Quit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.OpenFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.OpenFontIndex">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.OpenFontRW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.OpenFontIndexRW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.CloseFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.SetGetFontStyle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontHeight">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontAscent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontDescent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontLineSkip">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontFaces">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontFaceIsFixedWidth">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontFaceFamilyName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.FontFaceStyleName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.GlyphMetrics">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.SizeText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.SizeUTF8">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.SizeUNICODE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderText_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderUTF8_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderUNICODE_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderGlyph_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderText_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderUTF8_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderUNICODE_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderGlyph_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderText_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderUTF8_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderUNICODE_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestTtf.RenderGlyph_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Tao.Sdl.SdlTestOverlay">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestOverlay.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestOverlay.VideoSetup(System.Boolean)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestOverlay.SetOverlay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestOverlay.BasicMarshal">
+            <summary>
+            Tests to see if video can support 800x600 8bit.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestOverlay.hw_overlayTrue">
+            <summary>
+            Tests to see if video can support 800x600 8bit.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestOverlay.hw_overlayFalse">
+            <summary>
+            Tests to see if video can support 800x600 8bit.
+            </summary>
+        </member>
+        <member name="T:Tao.Sdl.SdlTestVideo">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.VideoSetup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetVideoWindow">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.VideoModeOk">
+            <summary>
+            Tests to see if video can support 800x600 8bit.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.DriverName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.CreateRGBSurfaceAndFree">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.FillRectAndFlip">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.MustLock">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.GetVideoSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.GetVideoInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.UpdateRect">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.UpdateRects">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetGamma">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.WM_SetGetCaption">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.WM_IconifyWindow">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.WM_ToggleFullScreen">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.GetGammaRamp">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetGammaRamp">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetColors">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetPalette">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.ListModes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_MapRGB">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_MapRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_GetRGB">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_GetRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_GrabInput">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.CreateRGBSurfaceFrom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.LockUnlockSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.LoadBMPSaveBMPBlit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetColorKey">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetAlpha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SetClipRect">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.ConvertSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.DisplayFormat">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.DisplayFormatAlpha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_CreateLockUnlockFreeYUVOverlay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_DisplayYUVOverlay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.SDL_GL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.WM_SetIcon">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SdlTestVideo.GetWMinfo">
+            <summary>
+            Tests to ensure that WindowManager correctly returns the info struct.
+            </summary>
+        </member>
+        <member name="T:Tao.Sdl.SmpegTest">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SmpegTest.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SmpegTest.InitSdl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SmpegTest.Quit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SmpegTest.SMPEG_new">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SmpegTest.SMPEG_new_rwops">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Sdl.SmpegTest.SMPEG_play">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>
