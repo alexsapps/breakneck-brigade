@@ -74,6 +74,10 @@ namespace Breakneck_Brigade
             Glfw.glfwTerminate();
             Environment.Exit(0);
 #endif
+
+#if PROJECT_GAMECODE_TEST
+
+#endif
         }
     }
 }
