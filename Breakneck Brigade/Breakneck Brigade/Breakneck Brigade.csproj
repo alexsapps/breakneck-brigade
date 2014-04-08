@@ -40,7 +40,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -51,6 +51,16 @@
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GraphicsTest|AnyCPU' ">
+    <OutputPath>bin\GraphicsTest\</OutputPath>
+    <DefineConstants>PROJECT_GRAPHICS_MODE</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'NetworkTest|AnyCPU' ">
+    <OutputPath>bin\NetworkTest\</OutputPath>
+    <DefineConstants>PROJECT_NETWORK_MODE</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NVorbis, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
@@ -145,7 +155,7 @@
   <PropertyGroup>
     <PostBuildEvent>echo "Copying in dependancies"
 pushd $(ProjectDir)
-robocopy lib\deps bin\Debug /s
+robocopy lib\deps $(OutDir) /s
 popd
 exit 0</PostBuildEvent>
   </PropertyGroup>
