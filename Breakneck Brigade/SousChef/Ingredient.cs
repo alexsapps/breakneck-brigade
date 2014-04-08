@@ -7,13 +7,16 @@ using SousChef;
 
 namespace SousChef
 {
-    class Ingredient : GameObject
+    public class Ingredient : GameObject
     {
-        public Ingredient(int x) 
-            : base(x)
+        public string Name { get; set; }
+    
+        public Ingredient(int id, string name) 
+            : base(id)
         {
-
+            this.Name = name;
         }
+
         public override void Update()
         {
 

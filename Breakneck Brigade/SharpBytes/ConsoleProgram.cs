@@ -13,7 +13,7 @@ namespace SharpBytes
         {
             string configLocation = "../../Config/";
             LoadConfig configLoader = new LoadConfig(configLocation, "ConfigFiles.xml");
-            List<string> ingredients = configLoader.LoadIngredientsFile();
+            List<Ingredient> ingredients = configLoader.LoadIngredientsFile();
             Dictionary<string, Recipe> recipe = configLoader.LoadRecipiesFile();
             Console.Write("breakpoint"); //set break point here to stop program
         }

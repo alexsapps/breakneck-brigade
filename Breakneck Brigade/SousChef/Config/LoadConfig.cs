@@ -11,18 +11,16 @@ namespace SousChef
         public Dictionary<string, string> configFiles;
         public struct ConfigSalad
         {
-            public List<string> ingredients;
+            public List<Ingredient> ingredients;
             public Dictionary<string, Recipe> recipies;
             //public Dictionary<string, Cooker> cookers;
         }
-
 
         /*
          * Loads the configuartion file. 
          * configFolder = the config folder where the configFile and all other xml is stored
          * configFile = A xml file containging the names of the individual config files
          */
-
         public LoadConfig(string configFolder, string configFile)
         {
             XmlDocument doc = new XmlDocument();
@@ -44,9 +42,9 @@ namespace SousChef
             return salad;
         }
 
-        public List<string> LoadIngredientsFile()
+        public List<Ingredient> LoadIngredientsFile()
         {
-            List<string> ingredients = new List<string>();
+            List<Ingredient> ingredients = new List<Ingredient>();
             XmlDocument doc = new XmlDocument();
             doc.Load(configFiles["ingredients"]);
 
@@ -54,8 +52,9 @@ namespace SousChef
             foreach(XmlNode node in doc.DocumentElement.ChildNodes)
             {
                 string name = node.SelectSingleNode("name").InnerText.Trim();
+                Ingredient ingToAdd = new Ingredient(1, name);
                 string model = node.SelectSingleNode("model").InnerText.Trim();
-                ingredients.Add(name);
+                ingredients.Add(ingToAdd);
             }
             return ingredients;
         }
@@ -74,8 +73,9 @@ namespace SousChef
             //loop ovewr recipe nodes
             foreach (XmlNode node in doc.DocumentElement.ChildNodes)
             {
-                List<string> ingredients = new List<string>();
+                List<Ingredient> ingredients = new List<Ingredient>();
                 string name = node.SelectSingleNode("name").InnerText.Trim();
+                Ingredient finalProduct = new Ingredient(1, name);
                 string cooker = node.SelectSingleNode("cooker").InnerText.Trim();
 
                 //select all innner ingredient nodes
@@ -83,10 +83,11 @@ namespace SousChef
                 foreach (XmlNode ingredientNode in ingredientsNodes)
                 {
                     string ing = ingredientNode.InnerText.Trim();
-                    ingredients.Add(ingredientNode.InnerText.Trim());
+                    Ingredient ingToAdd = new Ingredient(1, ing);
+                    ingredients.Add(ingToAdd);
                 }
 
-                Recipe recipesToAdd = new Recipe(ingredients, cooker, name, "place");
+                Recipe recipesToAdd = new Recipe(ingredients, cooker, finalProduct, "place");
                 recipes.Add(name, recipesToAdd);
             }
 
