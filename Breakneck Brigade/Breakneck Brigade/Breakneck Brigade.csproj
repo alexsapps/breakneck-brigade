@@ -110,6 +110,7 @@
       <DependentUpon>FakeClient.cs</DependentUpon>
     </Compile>
     <Compile Include="Game.cs" />
+    <Compile Include="Graphics\ModelData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -117,7 +118,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Graphics\" />
     <Folder Include="lib\" />
   </ItemGroup>
   <ItemGroup>
