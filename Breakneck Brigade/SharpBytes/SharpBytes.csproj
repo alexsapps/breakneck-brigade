@@ -51,7 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\ConfigFiles.xml" />
+    <Content Include="Config\Cookers.xml" />
     <Content Include="Config\Ingredients.xml" />
+    <Content Include="Config\Recipes.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SousChef\SousChef.csproj">
