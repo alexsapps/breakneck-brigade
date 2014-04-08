@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tao.Ode.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:Tao.Ode.Matrix3Marshalling">
+             <summary>
+             This fixture tests marshalling of Tao.Ode functions using dMatrix3 as a parameter.
+             dMatrix3 does not marshall correctly itself for some reason, so until this is corrected,
+             dMatrix3 is passed to ODE as an array and overloaded functions are provided to retain
+             compatibility with the ODE API.
+            
+             Strangely enough, dMatrix3 marshalling in the reverse direction (ie. from ODE) seems to work.
+             </summary>
+        </member>
+        <member name="M:Tao.Ode.Matrix3Marshalling.dBodyGetRotationTest">
+            <summary>
+            Test to verify that dMatrix3 is correctly marshalled when *returning* data
+            from an ODE call.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,662 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tao.FtGl</name>
+    </assembly>
+    <members>
+        <member name="T:Tao.FtGl.FtGl">
+            #region Class Documentation
+            <summary>
+                FTGL bindings for .NET, implementing FTGL 2.1.3.0
+            </summary>
+            <remarks>
+            </remarks>
+            #endregion Class Documentation
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTGLBitmapFont">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTFont">
+            <summary>
+            Generic Font abstract class
+            </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.FTFont._ptr">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.FTFont._data">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.FTFont._gch">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglDestroyFont(System.IntPtr)">
+            <summary>
+            Close a font file.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Destroy">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontLineHeight(System.IntPtr)">
+            <summary>
+            Gets the line spacing for the font.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.LineHeight">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglSetFontCharMap(System.IntPtr,Tao.FreeType.FT_Encoding)">
+            <summary>
+            Set the character map for the face.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.CharMap(Tao.FreeType.FT_Encoding)">
+            <summary>
+            
+            </summary>
+            <param name="encoding"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontBBox(System.IntPtr,System.String,System.Int32,System.Single[])">
+            <summary>
+            Get the bounding box for a string.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.BBox(System.String,System.Single@,System.Single@,System.Single@,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <param name="x1"></param>
+            <param name="y1"></param>
+            <param name="z1"></param>
+            <param name="x2"></param>
+            <param name="y2"></param>
+            <param name="z2"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.BBox(System.String,System.Int32,System.Single@,System.Single@,System.Single@,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <param name="start"></param>
+            <param name="end"></param>
+            <param name="x1"></param>
+            <param name="y1"></param>
+            <param name="z1"></param>
+            <param name="x2"></param>
+            <param name="y2"></param>
+            <param name="z2"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontFaceSize(System.IntPtr)">
+            <summary>
+            Get the current face size in points.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.FaceSize">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglSetFontFaceSize(System.IntPtr,System.UInt32,System.UInt32)">
+            <summary>
+            Set the char size for the current face.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.FaceSize(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="size"></param>
+            <param name="res"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.FaceSize(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="size"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontDescender(System.IntPtr)">
+            <summary>
+            Gets the global descender height for the face.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Descender">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontAscender(System.IntPtr)">
+            <summary>
+            Get the global ascender height for the face.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Ascender">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontAdvance(System.IntPtr,System.String)">
+            <summary>
+            Get the advance width for a string.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Advance(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglSetFontDepth(System.IntPtr,System.Single)">
+            <summary>
+            Set the extrusion distance for the font. Only implemented by FTGLExtrudeFont
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Depth(System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="depth"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglSetFontOutset(System.IntPtr,System.Single,System.Single)">
+            <summary>
+            Set the outset distance for the font. Only implemented by FTGLOutlineFont,
+            FTGLPolygonFont and FTGLExtrudeFont
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Outset(System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="front"></param>
+            <param name="back"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglRenderFont(System.IntPtr,System.String)">
+            <summary>
+            Render a string of characters.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Render(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontError(System.IntPtr)">
+            <summary>
+            Queries the Font for errors.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Error">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglAttachFile(System.IntPtr,System.String)">
+            <summary>
+            Attach auxilliary file to font e.g font metrics.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Attach(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="pathFont"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglAttachData(System.IntPtr,System.String,System.Int32)">
+            <summary>
+            Attach auxilliary data to font e.g font metrics, from memory
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.Attach(System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="p"></param>
+            <param name="size"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontCharMapCount(System.IntPtr)">
+            <summary>
+            Get the number of character maps in this face.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.CharMapCount">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglGetFontCharMapList(System.IntPtr)">
+            <summary>
+            Get a list of character maps in this face.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.CharMapList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.ftglSetFontDisplayList(System.IntPtr,System.Int32)">
+            <summary>
+            Enable or disable the use of Display Lists inside FTGL.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTFont.SetDisplayList(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="use"></param>
+        </member>
+        <member name="P:Tao.FtGl.FtGl.FTFont.Pointer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLBitmapFont.ftglCreateBitmapFont(System.String)">
+            <summary>
+            Open and read a font file. Create a Bitmap font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLBitmapFont.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="namefont"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLBitmapFont.ftglCreateBitmapFontFromMem(System.IntPtr,System.Int32)">
+            <summary>
+            Open and read a font from memory. Create a Bitmap font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLBitmapFont.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTGLPixmapFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPixmapFont.ftglCreatePixmapFont(System.String)">
+            <summary>
+            Open and read a font file. Create a Pixmap font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPixmapFont.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="namefont"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPixmapFont.ftglCreatePixmapFontFromMem(System.IntPtr,System.Int32)">
+            <summary>
+            Open and read a font from memory. Create a Pixmap font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPixmapFont.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTGLOutlineFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLOutlineFont.ftglCreateOutlineFont(System.String)">
+            <summary>
+            Open and read a font file. Create a Outline font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLOutlineFont.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="namefont"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLOutlineFont.ftglCreateOutlineFontFromMem(System.IntPtr,System.Int32)">
+            <summary>
+            Open and read a font from memory. Create a Outline font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLOutlineFont.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTGLPolygonFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPolygonFont.ftglCreatePolygonFont(System.String)">
+            <summary>
+            Open and read a font file. Create a Polygon font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPolygonFont.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="namefont"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPolygonFont.ftglCreatePolygonFontFromMem(System.IntPtr,System.Int32)">
+            <summary>
+            Open and read a font from memory. Create a Polygon font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLPolygonFont.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTGLExtrudeFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLExtrudeFont.ftglCreateExtrudeFont(System.String)">
+            <summary>
+            Open and read a font file. Create a Extrud font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLExtrudeFont.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="namefont"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLExtrudeFont.ftglCreateExtrudeFontFromMem(System.IntPtr,System.Int32)">
+            <summary>
+            Open and read a font from memory. Create a Extrude font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLExtrudeFont.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTGLTextureFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLTextureFont.ftglCreateTextureFont(System.String)">
+            <summary>
+            Open and read a font file. Create a Texture font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLTextureFont.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="namefont"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLTextureFont.ftglCreateTextureFontFromMem(System.IntPtr,System.Int32)">
+            <summary>
+            Open and read a font from memory. Create a Texture font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTGLTextureFont.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.RenderMode">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.RenderMode.RENDER_FRONT">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.RenderMode.RENDER_BACK">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.RenderMode.RENDER_SIDE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.TextAlignment">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.TextAlignment.ALIGN_LEFT">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.TextAlignment.ALIGN_CENTER">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.TextAlignment.ALIGN_RIGHT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.TextAlignment.ALIGN_JUSTIFY">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTSimpleLayout">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Tao.FtGl.FtGl.FTLayout">
+            <summary>
+            Generic Layout abstract class
+            </summary>
+        </member>
+        <member name="F:Tao.FtGl.FtGl.FTLayout._ptr">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.Destroy">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.Finalize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.ftglGetLayoutBBox(System.IntPtr,System.String,System.Single[])">
+            <summary>
+            Get the bounding box for a formatted string.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.BBox(System.String,System.Single@,System.Single@,System.Single@,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <param name="x1"></param>
+            <param name="y1"></param>
+            <param name="z1"></param>
+            <param name="x2"></param>
+            <param name="y2"></param>
+            <param name="z2"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.ftglSetLayoutFont(System.IntPtr,System.IntPtr)">
+            <summary>
+            Set the font to use for rendering the text.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.SetFont(Tao.FtGl.FtGl.FTFont)">
+            <summary>
+            
+            </summary>
+            <param name="font"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.ftglGetLayoutFont(System.IntPtr)">
+            <summary>
+            Get the current font
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTLayout.GetFont">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglCreateSimpleLayout">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglRenderLayout(System.IntPtr,System.String,System.Int32)">
+            <summary>
+            Render a string of characters with a specific render mode
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.RenderMode(System.String,Tao.FtGl.FtGl.RenderMode)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <param name="mode"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglRenderLayoutSpace(System.IntPtr,System.String,System.Single)">
+            <summary>
+            Render a string of characters and distribute extra space amongst the whitespace
+            regions of the string.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.RenderSpace(System.String,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <param name="extraSpace"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglSetLayoutLineLength(System.IntPtr,System.Single)">
+            <summary>
+            The maximum line length for formatting text.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.SetLineLength(System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="length"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglGetLayoutLineLength(System.IntPtr)">
+            <summary>
+            Get the current line length.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.GetLineLength">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglSetLayoutAlignment(System.IntPtr,System.Int32)">
+            <summary>
+            The text alignment mode used to distribute space within a line or rendered text.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.SetAlignment(Tao.FtGl.FtGl.TextAlignment)">
+            <summary>
+            
+            </summary>
+            <param name="align"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglGetLayoutAlignement(System.IntPtr)">
+            <summary>
+            Get the text alignment mode.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.GetAlignment">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglSetLayoutLineSpacing(System.IntPtr,System.Single)">
+            <summary>
+            Sets the line height.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.SetLineSpacing(System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="space"></param>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.ftglGetLayoutLineSpacing(System.IntPtr)">
+            <summary>
+            Get the line spacing.
+            </summary>
+        </member>
+        <member name="M:Tao.FtGl.FtGl.FTSimpleLayout.GetLineSpacing">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

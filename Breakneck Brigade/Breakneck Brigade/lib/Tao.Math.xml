@@ -1,0 +1,420 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tao.Math</name>
+    </assembly>
+    <members>
+        <member name="T:Tao.Math.Matrix4">
+            <summary>
+            Class representing a 4x4 float matrix. This class also provides a lot of useful operations for OpenGL matrices.
+            </summary>
+            <remarks>
+            This class is an early implementation and there's a lot of potential for improvements. Techniques like Parallel.For,
+            property initializers and maybe LINQ should be considered!
+            </remarks>
+        </member>
+        <member name="F:Tao.Math.Matrix4.data">
+            <summary>
+             The matrix data
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Matrix4.#ctor">
+            <summary>
+            Default constructor, fills up the matrix with 0s
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Matrix4.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Constructor, which enables specifying the matrix elements one by one.
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Matrix4.#ctor(System.Single)">
+            <summary>
+            Constructor which fills up the matrix with a given scalar value
+            </summary>
+            <param name="value">The scalar value to fill up the matrix with</param>
+        </member>
+        <member name="M:Tao.Math.Matrix4.CreateIdentity">
+            <summary>
+            Creates and returns an identity matrix
+            </summary>
+            <returns>The new identity matrix</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.CreateTranslation(System.Single,System.Single,System.Single)">
+            <summary>
+            Creates and returns a new translation matrix
+            </summary>
+            <param name="x">The translation along the X axis</param>
+            <param name="y">The translation along the y axis</param>
+            <param name="z">The translation along the Z axis</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.CreateLookAt(Tao.Math.Vector3,Tao.Math.Vector3,Tao.Math.Vector3)">
+             <summary>
+            Builds a viewing transformation matrix.
+             </summary>
+             <param name="eye">The position of the eye point </param>
+             <param name="target">The position of the target point </param>
+             <param name="up">The direction of the up vector</param>
+             <returns></returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.CreateLookAt(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+             <summary>
+            Builds a viewing transformation matrix.
+             </summary>
+             <param name="eyex">The X position of the eye point </param>
+             <param name="eyey">The Y position of the eye point </param>
+             <param name="eyez">The Z position of the eye point </param>
+             <param name="targetx">The X position of the target point </param>
+             <param name="targety">The Y position of the target point </param>
+             <param name="targetz">The Z position of the target point </param>
+             <param name="upx">The X direction of the up vector</param>
+             <param name="upy">The Y direction of the up vector</param>
+             <param name="upz">The Z direction of the up vector</param>
+             <returns></returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.CreatePerspective(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Builds the perspective projection matrix.
+            </summary>
+            <param name="fovy">The FoV angle</param>
+            <param name="aspect">The aspect ratio</param>
+            <param name="zNear">The nearest visible distance</param>
+            <param name="zFar">The farthest visible distance</param>
+            <returns>The matrix built from the given values</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.CreateInversePerspective(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Builds the inverse perspective projection matrix.
+            </summary>
+            <param name="fovy">The FoV angle</param>
+            <param name="aspect">The aspect ratio</param>
+            <param name="zNear">The nearest visible distance</param>
+            <param name="zFar">The farthest visible distance</param>
+            <returns>The matrix built from the given values</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Identity">
+            <summary>
+            Turns the current matrix into identity matrix, thus overwriting the current values.
+            </summary>
+            <returns>An identity matrix</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Inverse">
+            <summary>
+            Calculates the inverse of the current matrix
+            </summary>
+            <returns>The inverse of the given matrix</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Adjoint">
+            <summary>
+            Calculates the adjoint of the matrix.
+            </summary>
+            <remarks>
+            <para>This is an expanded version of the Ogre adjoint() method, to give better performance in C#. Generated using a script</para>
+            </remarks>
+            <returns>The calculated value</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Translate(System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a translation matrix, thus overwriting the current values.
+            </summary>
+            <param name="x">The translation along the X axis</param>
+            <param name="y">The translation along the y axis</param>
+            <param name="z">The translation along the Z axis</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.RotateX(System.Single)">
+            <summary>
+            Rotates the current matrix along the X axis
+            </summary>
+            <param name="deg">The rotation angle in degrees</param>
+            <returns>The resulting matrix</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.RotateY(System.Single)">
+            <summary>
+            Rotates the current matrix along the Y axis
+            </summary>
+            <param name="deg">The rotation angle in degrees</param>
+            <returns>The resulting matrix</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.RotateZ(System.Single)">
+            <summary>
+            Rotates the current matrix along the Z axis
+            </summary>
+            <param name="deg">The rotation angle in degrees</param>
+            <returns>The resulting matrix</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Scale(System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a scale matrix, thus overwriting the current values.
+            </summary>
+            <param name="x">The scale value along the X axis</param>
+            <param name="y">The scale value along the Y axis</param>
+            <param name="z">The scale value along the Z axis</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Clone(Tao.Math.Matrix4)">
+            <summary>
+            Returns a copy of the current matrix
+            </summary>
+            <remarks>This may be speeded up... (Parallel.For or LINQ maybe?)</remarks>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Fill(System.Single)">
+            <summary>
+            Fills up the matrix with a give scalar
+            </summary>
+            <remarks>This may be speeded up... (Parallel.For or LINQ maybe?)</remarks>
+        </member>
+        <member name="M:Tao.Math.Matrix4.op_Addition(Tao.Math.Matrix4,Tao.Math.Matrix4)">
+            <summary>
+            Adds two matrices
+            </summary>
+            <remarks>
+            This can be speeded up by using a parameterized constructor, instead of
+            using default constructors and setting values later.
+            Also, Parallel.For or LINQ should be checked.
+            </remarks>
+        </member>
+        <member name="M:Tao.Math.Matrix4.op_Subtraction(Tao.Math.Matrix4,Tao.Math.Matrix4)">
+            <summary>
+            Subtracts two matrices
+            </summary>
+            <remarks>
+            This can be speeded up by using a parameterized constructor, instead of
+            using default constructors and setting values later.
+            Also, Parallel.For or LINQ should be checked.
+            </remarks>
+        </member>
+        <member name="M:Tao.Math.Matrix4.op_Multiply(Tao.Math.Matrix4,Tao.Math.Matrix4)">
+            <summary>
+            Multiplies two matrices
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Matrix4.op_Multiply(Tao.Math.Matrix4,System.Single)">
+            <summary>
+            Multiplies all values in a matrix with a given scalar
+            </summary>
+            <remarks>
+            This can be speeded up by using a parameterized constructor, instead of
+            using default constructors and setting values later.
+            Also, Parallel.For or LINQ should be checked.
+            </remarks>
+        </member>
+        <member name="M:Tao.Math.Matrix4.op_Equality(Tao.Math.Matrix4,Tao.Math.Matrix4)">
+            <summary>
+            Compares two matrices
+            </summary>
+            <returns>True if the matrices are the same</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.op_Inequality(Tao.Math.Matrix4,Tao.Math.Matrix4)">
+            <summary>
+            Compares two matrices
+            </summary>
+            <returns>
+            True if the matrices are not the same
+            </returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.GetHashCode">
+            <summary>
+            Overridden to get rid of the csc compiler warnings :) 
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Equals(System.Object)">
+            <summary>
+            Compares a given matrix to the current matrix instance
+            </summary>
+            <param name="obj">The object to compare to the current matrix</param>
+            <returns>True if the matrices are equal</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Data">
+             <summary>
+            Returns a float array, representing the matrix
+             </summary>
+             <returns>A float array, holding the elements of the matrix</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.DegToRad(System.Single)">
+            <summary>
+            Converts degrees to radians
+            </summary>
+            <param name="deg">The value in degrees</param>
+            <returns>The value in radians</returns>
+        </member>
+        <member name="M:Tao.Math.Matrix4.Cot(System.Single)">
+            <summary>
+            Returns the cotangent of the angle.
+            </summary>
+            <param name="angle">angle The angle in radian</param>
+            <returns>The calculated cotangent</returns>
+        </member>
+        <member name="P:Tao.Math.Matrix4.Determinant">
+            <summary>
+            Calculates the determinant of the matrix.
+            </summary>
+            <remarks>
+            <para>This is an expanded version of the Ogre adjoint() method, to give better performance in C#. Generated using a script</para>
+            </remarks>
+            <returns>The calculated value</returns>
+        </member>
+        <member name="T:Tao.Math.Vector3">
+            <summary>
+            Class representing a 3D float vector
+            </summary>
+            <remarks>
+            This class is an early implementation and there's a lot of potential for improvements. Techniques like Parallel.For,
+            property initializers and maybe LINQ should be considered!
+            </remarks>
+        </member>
+        <member name="F:Tao.Math.Vector3.x">
+            <summary>
+            The first component of the vector
+            </summary>
+        </member>
+        <member name="F:Tao.Math.Vector3.y">
+            <summary>
+            The second component of the vector
+            </summary>
+        </member>
+        <member name="F:Tao.Math.Vector3.z">
+            <summary>
+            The third component of the vector
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Vector3.#ctor">
+            <summary>
+            Default constructor. Creates a null vector.
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Vector3.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Constructor which enables specifying the vector's three components
+            </summary>
+            <param name="px">The first component of the vector</param>
+            <param name="py">The second component of the vector</param>
+            <param name="pz">The third component of the vector</param>
+        </member>
+        <member name="M:Tao.Math.Vector3.Normalize">
+            <summary>
+            Normalizes the vector and returns a copy of the result
+            </summary>
+            <returns>A copy of the normalized vector</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.Dot(Tao.Math.Vector3)">
+            <summary>
+            Calculates the dot product of two vectors
+            </summary>
+            <param name="v">The second vector component for the dot product</param>
+            <returns>The calculated value</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.Cross(Tao.Math.Vector3)">
+            <summary>
+            Calculates the cross product of two vectors
+            </summary>
+            <param name="v">The second vector component for the cross product</param>
+            <returns>The calculated value</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Addition(Tao.Math.Vector3,Tao.Math.Vector3)">
+            <summary>
+            Adds two vectors
+            </summary>
+            <param name="v1">The first vector to add</param>
+            <param name="v2">The second vector to add</param>
+            <returns>The result of the addition</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Subtraction(Tao.Math.Vector3,Tao.Math.Vector3)">
+            <summary>
+            Subtracts a vector from another
+            </summary>
+            <param name="v1">The vector to subtract from</param>
+            <param name="v2">The vector to subtract</param>
+            <returns>The resulting vector</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Multiply(Tao.Math.Vector3,Tao.Math.Matrix4)">
+            <summary>
+            Multiplies a vector by a matrix
+            </summary>
+            <param name="v">The vector to multiply</param>
+            <param name="mat">The matrix to multiply with</param>
+            <returns>The resulting vector</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Multiply(Tao.Math.Vector3,System.Single)">
+            <summary>
+            Multiplies a vector with a given scalar
+            </summary>
+            <param name="v">The vector to multiply</param>
+            <param name="value">The scalar value to multiply with</param>
+            <returns>The resulting vector</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Multiply(System.Single,Tao.Math.Vector3)">
+            <summary>
+            Multiplies a vector with a given scalar
+            </summary>
+            <param name="value">The scalar value to multiply with</param>
+            <param name="v">The vector to multiply</param>
+            <returns>The resulting vector</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Division(Tao.Math.Vector3,System.Single)">
+            <summary>
+            Divides a vector by a given scalar
+            </summary>
+            <param name="v">The vector to divide</param>
+            /// <param name="value">The scalar value to divide by</param>
+            <returns>The resulting vector</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Equality(Tao.Math.Vector3,Tao.Math.Vector3)">
+            <summary>
+            Compares two vectors
+            </summary>
+            <param name="v1">The first vector to compare</param>
+            <param name="v2">The second vector to compare</param>
+            <returns>True, if the vectors are the same</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.op_Inequality(Tao.Math.Vector3,Tao.Math.Vector3)">
+            <summary>
+            Compares two vectors
+            </summary>
+            <param name="v1">The first vector to compare</param>
+            <param name="v2">The second vector to compare</param>
+            <returns>True, if the vectors are not the same</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.Clone">
+            <summary>
+            Returns a copy of the current vector
+            </summary>
+            <returns>A new copy of the current vector</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.GetHashCode">
+            <summary>
+            Overridden to get rid of the csc compiler warnings :) 
+            </summary>
+        </member>
+        <member name="M:Tao.Math.Vector3.Equals(System.Object)">
+            <summary>
+            Compares a given vector to the current vector instance
+            </summary>
+            <param name="obj">The vector to compare to the current one</param>
+            <returns>True, if the two vectors are the same</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.Data">
+            <summary>
+            Returns a float array, representing the vector
+            </summary>
+            <returns>The float array containing the vector's components</returns>
+        </member>
+        <member name="M:Tao.Math.Vector3.Data(System.Single[])">
+            <summary>
+            Fills the given float array with the vector's components
+            </summary>
+            <param name="v">The float array to fill</param>
+        </member>
+        <member name="P:Tao.Math.Vector3.Length">
+            <summary>
+            Returns the length of the vector
+            </summary>
+        </member>
+        <member name="P:Tao.Math.Vector3.Zero">
+            <summary>
+            Returns a zero vector
+            </summary>
+        </member>
+    </members>
+</doc>
