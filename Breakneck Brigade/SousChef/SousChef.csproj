@@ -44,19 +44,25 @@
     <Compile Include="ClientEvent.cs" />
     <Compile Include="ClientEventType.cs" />
     <Compile Include="ClientMessageType.cs" />
+    <Compile Include="Config\LoadConfig.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="Ingredient.cs" />
     <Compile Include="MathConstants.cs" />
     <Compile Include="Matrix4.cs" />
-    <Compile Include="PhysObj\DynamicPhysObj.cs" />
-    <Compile Include="PhysObj\PhysObj.cs" />
-    <Compile Include="PhysObj\StaticPhysObj.cs" />
     <Compile Include="Player\ExternalPlayer.cs" />
     <Compile Include="Player\LocalPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recipe.cs" />
     <Compile Include="ServerMessage.cs" />
     <Compile Include="ServerMessageType.cs" />
     <Compile Include="Vector4.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\ConfigFiles.xml" />
+    <Content Include="Config\Cookers.xml" />
+    <Content Include="Config\Ingredients.xml" />
+    <Content Include="Config\Recipes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
