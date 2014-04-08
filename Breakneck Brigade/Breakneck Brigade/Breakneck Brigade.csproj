@@ -29,7 +29,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -40,7 +40,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -52,14 +52,20 @@
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GraphicsTest|AnyCPU' ">
+    <OutputPath>bin\GraphicsTest\</OutputPath>
+    <DefineConstants>PROJECT_GRAPHICS_MODE</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'NetworkTest|AnyCPU' ">
+    <OutputPath>bin\NetworkTest\</OutputPath>
+    <DefineConstants>PROJECT_NETWORK_MODE</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NVorbis, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\NVorbis.dll</HintPath>
-    </Reference>
-    <Reference Include="Pencil.Gaming.dll, Version=1.0.5054.23712, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Pencil.Gaming.dll.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -70,6 +76,30 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.FFmpeg">
+      <HintPath>lib\Tao.FFmpeg.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Glfw">
+      <HintPath>lib\Tao.Glfw.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Ode">
+      <HintPath>lib\Tao.Ode.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenAl">
+      <HintPath>lib\Tao.OpenAl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl">
+      <HintPath>lib\Tao.OpenGl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Platform.Windows">
+      <HintPath>lib\Tao.Platform.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>lib\Tao.Sdl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl.Tests">
+      <HintPath>lib\Tao.Sdl.Tests.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
@@ -123,9 +153,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo "Copying in native libraries for Pencil"
+    <PostBuildEvent>echo "Copying in dependancies"
 pushd $(ProjectDir)
-robocopy lib bin\Debug /s
+robocopy lib\deps $(OutDir) /s
 popd
 exit 0</PostBuildEvent>
   </PropertyGroup>

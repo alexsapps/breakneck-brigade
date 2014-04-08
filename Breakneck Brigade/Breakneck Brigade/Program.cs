@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Pencil.Gaming;
-using Pencil.Gaming.Graphics;
 using SousChef;
+using Tao.Glfw;
+using Tao.OpenGl;
 using System.IO;
 
 namespace Breakneck_Brigade
@@ -17,7 +17,7 @@ namespace Breakneck_Brigade
          */
         static void InitGLFW()
         {
-            if(!Glfw.Init())
+            if(Glfw.glfwInit() == Gl.GL_FALSE)
             {
                 Console.Error.WriteLine("ERROR: GLFW Initialization failed!");
                 Environment.Exit(1);
@@ -26,20 +26,19 @@ namespace Breakneck_Brigade
 
         static void Main(string[] args)
         {
-            if (network_debugging())
-            {
+#if PROJECT_NETWORK_MODE
                 (new FakeClient()).ShowDialog();
                 return;
-            }
+#endif
 
+#if PROJECT_GRAPHICS_MODE
             InitGLFW();
-            GlfwWindowPtr mainWindow = Glfw.CreateWindow(640, 480, "Breakneck Brigade", GlfwMonitorPtr.Null, GlfwWindowPtr.Null);
-            Glfw.MakeContextCurrent(mainWindow);
+            Glfw.glfwOpenWindow(640, 480, 0, 0, 0, 8, 32, 32, Glfw.GLFW_WINDOW);
 
-            while (!Glfw.WindowShouldClose(mainWindow))
+            while (Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) == Gl.GL_TRUE)
             {
                 int width, height;
-                Glfw.GetFramebufferSize(mainWindow, out width, out height);
+                Glfw.glfwGetWindowSize(out width, out height);
                 float ratio = (float)width / height;
 
                 //GL.Enable(EnableCap.Lighting);
@@ -47,38 +46,38 @@ namespace Breakneck_Brigade
                 Matrix4 matrix4 = new Matrix4();
                 //GL.LoadMatrix(matrix4.m);
              
-                GL.Viewport(0, 0, width, height);
-                GL.Clear(ClearBufferMask.ColorBufferBit);
+                Gl.glViewport(0, 0, width, height);
+                Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
 
-                GL.MatrixMode(MatrixMode.Projection);
-                GL.LoadIdentity();
-                GL.Ortho(-ratio, ratio, -1.0, 1.0, 1.0, -1.0);
+                Gl.glMatrixMode(Gl.GL_PROJECTION);
+                Gl.glLoadIdentity();
+                Gl.glOrtho(-ratio, ratio, -1.0, 1.0, 1.0, -1.0);
 
-                GL.MatrixMode(MatrixMode.Modelview);
-                GL.LoadIdentity();
-                GL.Rotate(Glfw.GetTime() * 50.0, 0, 0, 1.0);
+                Gl.glMatrixMode(Gl.GL_MODELVIEW);
+                Gl.glLoadIdentity();
+                Gl.glRotatef((float) (Glfw.glfwGetTime() * 50.0), 0.0f, 0.0f, 1.0f);
 
-                GL.Begin(BeginMode.Triangles);
-                GL.Color3(.1, 0.0, 0.0);
-                GL.Vertex3(-.6, -.4, 0.0);
-                GL.Color3(0.0, .1, 0.0);
-                GL.Vertex3(.6, -.4, 0.0);
-                GL.Color3(0.0, 0.0, .10);
-                GL.Vertex3(0.0, .6, 0.0);
-                GL.End();
+                Gl.glBegin(Gl.GL_TRIANGLES);
+                    Gl.glColor3f(.1f, 0.0f, 0.0f);
+                    Gl.glVertex3f(-.6f, -.4f, 0.0f);
+                    Gl.glColor3f(0.0f, .1f, 0.0f);
+                    Gl.glVertex3f(.6f, -.4f, 0.0f);
+                    Gl.glColor3f(0.0f, 0.0f, .10f);
+                    Gl.glVertex3f(0.0f, .6f, 0.0f);
+                Gl.glEnd();
 
-                Glfw.SwapBuffers(mainWindow);
-                Glfw.PollEvents();
+                Glfw.glfwSwapBuffers();
+                Glfw.glfwPollEvents();
             }
 
-            Glfw.DestroyWindow(mainWindow);
-            Glfw.Terminate();
+            Glfw.glfwCloseWindow();
+            Glfw.glfwTerminate();
             Environment.Exit(0);
-        }
+#endif
 
-        private static bool network_debugging()
-        {
-            return File.Exists("c:\\network_debugging.txt");
+#if PROJECT_GAMECODE_TEST
+
+#endif
         }
     }
 }
