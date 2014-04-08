@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Breakneck_Brigade
+namespace SousChef
 {
-    class StaticPhysObj : PhysObj
+    class DynamicPhysObj : PhysObj
     {
-        public StaticPhysObj(int id)
+        public DynamicPhysObj(int id)
             : base(id)
         {
             //pos = vector(0,0,0)
         }
 
-        public StaticPhysObj(int id, string tag)
+        public DynamicPhysObj(int id, string tag)
             : base(id, tag)
         {
-
+            //pos = vector(0,0,0)
         }
 
         /* public StaticPysObj(int id, string tag, vector position)
@@ -26,7 +26,7 @@ namespace Breakneck_Brigade
 
         public override void Update()
         {
-            //Not moving but may need to interact with still
+            //move 
             throw new NotImplementedException();
         }
     }

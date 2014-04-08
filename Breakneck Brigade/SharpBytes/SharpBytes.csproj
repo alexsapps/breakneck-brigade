@@ -53,6 +53,12 @@
     <Content Include="Config\ConfigFiles.xml" />
     <Content Include="Config\Ingredients.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SousChef\SousChef.csproj">
+      <Project>{a4f5d1bb-0cbc-4fde-8cbf-2ad542dee53b}</Project>
+      <Name>SousChef</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

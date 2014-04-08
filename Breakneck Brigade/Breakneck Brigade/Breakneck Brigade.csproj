@@ -80,12 +80,6 @@
       <DependentUpon>FakeClient.cs</DependentUpon>
     </Compile>
     <Compile Include="Game.cs" />
-    <Compile Include="GameObject.cs" />
-    <Compile Include="PhysObj\DynamicPhysObj.cs" />
-    <Compile Include="PhysObj\PhysObj.cs" />
-    <Compile Include="PhysObj\StaticPhysObj.cs" />
-    <Compile Include="Player\ExternalPlayer.cs" />
-    <Compile Include="Player\LocalPlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
