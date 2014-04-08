@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    public class Ingredient : GameObject
+    class Cooker : GameObject
     {
+
         public string Name { get; set; }
-    
-        public Ingredient(int id, string name) 
+        public List<Ingredient> Ingredients;
+        public List<Recipe> Recipes; //Not an Infiniter cooker
+
+        public Cooker(int id, string name)
             : base(id)
         {
             this.Name = name;
@@ -18,8 +21,9 @@ namespace SousChef
 
         public override void Update()
         {
-
+            throw new NotImplementedException();
         }
+
 
     }
 }
