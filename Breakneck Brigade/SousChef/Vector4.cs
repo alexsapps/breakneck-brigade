@@ -66,7 +66,7 @@ namespace SousChef
          * Constructor that initializes only x, y, and z dimensions.
          * Initializes homogenous coordinate to 1, indicating a 3D vector
          */
-        Vector4(float x, float y, float z)
+        public Vector4(float x, float y, float z)
         {
             v[0] = x;
             v[1] = y;
@@ -78,7 +78,7 @@ namespace SousChef
          * Constructor that initializes only x, y, and z dimensions.
          * Initializes homogenous coordinate to 1, indicating a 3D vector
          */
-        Vector4(double x, double y, double z)
+        public Vector4(double x, double y, double z)
         {
             v[0] = (float) x;
             v[1] = (float) y;

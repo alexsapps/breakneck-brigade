@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpBytes
+namespace SousChef
 {
-    class Recipe 
+    public class Recipe 
     {
         public List<string> ingredients;
         public string cooker; 

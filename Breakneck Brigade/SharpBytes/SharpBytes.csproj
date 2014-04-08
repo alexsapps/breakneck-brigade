@@ -44,19 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Recipe.cs" />
-    <Compile Include="Config\LoadConfig.cs" />
     <Compile Include="ConsoleProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Config\ConfigFiles.xml" />
-    <Content Include="Config\Cookers.xml" />
-    <Content Include="Config\Ingredients.xml" />
-    <Content Include="Config\Recipes.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SousChef\SousChef.csproj">

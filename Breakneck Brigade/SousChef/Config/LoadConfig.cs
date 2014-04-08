@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace SharpBytes
+namespace SousChef
 {
-    class LoadConfig
+    public class LoadConfig
     {
         public Dictionary<string, string> configFiles;
         public struct ConfigSalad
@@ -15,6 +15,7 @@ namespace SharpBytes
             public Dictionary<string, Recipe> recipies;
             //public Dictionary<string, Cooker> cookers;
         }
+
 
         /*
          * Loads the configuartion file. 
