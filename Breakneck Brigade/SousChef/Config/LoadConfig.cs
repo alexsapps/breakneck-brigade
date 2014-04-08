@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace SousChef
 {
-    class LoadConfig
+    public class LoadConfig
     {
         public Dictionary<string, string> configFiles;
         public struct ConfigSalad
@@ -15,6 +15,7 @@ namespace SousChef
             public Dictionary<string, Recipe> recipies;
             //public Dictionary<string, Cooker> cookers;
         }
+
 
         /*
          * Loads the configuartion file. 

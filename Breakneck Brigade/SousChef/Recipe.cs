@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    class Recipe 
+    public class Recipe 
     {
         public List<string> ingredients;
         public string cooker; 

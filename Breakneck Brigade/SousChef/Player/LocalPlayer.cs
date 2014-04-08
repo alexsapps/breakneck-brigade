@@ -13,12 +13,6 @@ namespace SousChef
             //pos = vector3(0,0,0); 
         }
 
-        public LocalPlayer(int id, string tag)
-            : base(id, tag)
-        {
-            //pos = vector(0,0,0);
-        }
-
         /* public Player(int id, string tag, vector initPos)
           : base(id, tag)
         {

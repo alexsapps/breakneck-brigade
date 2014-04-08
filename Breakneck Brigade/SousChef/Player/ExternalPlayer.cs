@@ -13,11 +13,6 @@ namespace SousChef
             //this.pos = vector(0,0,0)
         }
 
-        public ExternalPlayer(int id, string tag) 
-            : base(id, tag)
-        {
-            //this.pos = vector(0,0,0)
-        }   
 
         /* public ExternalPlayer(int id, string tag, vector position)
         {
