@@ -1,0 +1,31 @@
+﻿use cases:
+
+<ingredients>
+	<ingredient name="x" loc="y" texture="z" />
+	<ingredient name="x" loc="y" texture="z" />
+	<ingredient name="x" loc="y" texture="z" />
+</ingredients>
+
+<things>
+	<thing name="x" val="y" z="w">
+		<left-ingredients>
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+		</left-ingredients>
+		<right-ingredients>
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+		</right-ingredients>
+		<books>
+			<book name="k" />
+			<book name="y" />
+		</books>
+		<towels>
+			<towel>thing</towel>
+			<towel>thing</towel>
+			<towel>thing</towel>
+		</towel>
+	</thing>
+</things>
