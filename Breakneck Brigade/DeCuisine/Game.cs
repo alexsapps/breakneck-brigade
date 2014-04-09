@@ -14,7 +14,7 @@ namespace DeCuisine
 
         public GameMode Mode { get; private set; }
 
-        private Dictionary<string, string> GameObjects = new Dictionary<string, string>(); //TODO: this should be string (id) to GameObject
+        private Dictionary<string, GameObject> GameObjects = new Dictionary<string, GameObject>(); //TODO: this should be string (id) to GameObject
 
         private Thread runThread;
 
@@ -122,7 +122,8 @@ namespace DeCuisine
                                 case ClientEventType.Move:
                                     break;
                                 case ClientEventType.RequestTestObject:
-                                    GameObjects.Add("obj" + random.Next(0,1000), "x: " + random.Next(0,1000) + "; y: " + random.Next(0,1000));
+                                    int id = getId();
+                                    //GameObjects.Add(id, new Ingredient(id));
                                     break;
                                 default:
                                     //error
@@ -135,6 +136,7 @@ namespace DeCuisine
                     /*
                      * handle an instant in time, e.g. gravity, collisions
                      */
+                    foreach (var obj in GameObjects)
                     {
                         
                     }
@@ -143,7 +145,7 @@ namespace DeCuisine
                      * send updates to clients
                      */
                     {
-                        foreach(Client client in clients)
+                        foreach (Client client in clients)
                         {
                             lock (client.ServerMessages)
                             {
@@ -181,6 +183,12 @@ namespace DeCuisine
                     Monitor.PulseAll(client.ServerMessages);
                 }
             }
+        }
+
+        int _lastId;
+
+        public int getId() {
+            return _lastId++;
         }
 
         public void Dispose()
