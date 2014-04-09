@@ -8,19 +8,19 @@ namespace SousChef
 {
     public class Recipe 
     {
-        public List<string> ingredients;
-        public string cooker; 
-        public string finalProduct;
+        public List<Ingredient> Ingredients;
+        public string Cooker; 
+        public Ingredient FinalProduct;
         
-        public Recipe(List<string> ingredients, string cooker, string finalProduct, string modelLoc)
+        public Recipe(List<Ingredient> ingredients, string cooker, Ingredient finalProduct, string modelLoc)
         {
-            this.ingredients = new List<string>();
-            foreach(string ingredient in ingredients)
+            this.Ingredients = new List<Ingredient>();
+            foreach(var ingredient in ingredients)
             {
-                this.ingredients.Add(ingredient);
+                this.Ingredients.Add(ingredient);
             }
-            this.cooker = cooker;
-            this.finalProduct = finalProduct;
+            this.Cooker = cooker;
+            this.FinalProduct = finalProduct;
         }
     }
 }

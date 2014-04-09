@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Breakneck_Brigade.Graphics
 {
-    class ModelData
+    /*
+     * A container class for textures for use with OpenGL
+     * Ryan George
+     */
+    class Texture
     {
-        public string TextureFilename;
-        public string ModelFilename;
     }
 }

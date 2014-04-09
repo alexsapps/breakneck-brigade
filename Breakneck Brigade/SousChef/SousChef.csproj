@@ -48,6 +48,7 @@
     <Compile Include="ClientEventType.cs" />
     <Compile Include="ClientMessageType.cs" />
     <Compile Include="Config\LoadConfig.cs" />
+    <Compile Include="Cooker.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Ingredient.cs" />
