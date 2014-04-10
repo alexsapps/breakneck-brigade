@@ -8,3 +8,13 @@ C:\Users\cbn004\Documents\cse125.git\trunk\Breakneck Brigade\LetsCook\bin\Debug\
 C:\Users\cbn004\Documents\cse125.git\trunk\Breakneck Brigade\LetsCook\obj\Debug\LetsCook.csprojResolveAssemblyReference.cache
 C:\Users\cbn004\Documents\cse125.git\trunk\Breakneck Brigade\LetsCook\obj\Debug\LetsCook.exe
 C:\Users\cbn004\Documents\cse125.git\trunk\Breakneck Brigade\LetsCook\obj\Debug\LetsCook.pdb
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\bin\Debug\LetsCook.exe.config
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\bin\Debug\LetsCook.exe
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\bin\Debug\LetsCook.pdb
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\bin\Debug\Tao.Ode.dll
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\bin\Debug\Tao.Ode.Tests.dll
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\bin\Debug\Tao.Ode.xml
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\bin\Debug\Tao.Ode.Tests.xml
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\obj\Debug\LetsCook.csprojResolveAssemblyReference.cache
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\obj\Debug\LetsCook.exe
+C:\Users\Natalie\Documents\GitHub\cse125\Breakneck Brigade\LetsCook\obj\Debug\LetsCook.pdb
