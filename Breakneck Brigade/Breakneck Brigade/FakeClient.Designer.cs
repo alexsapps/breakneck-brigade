@@ -82,6 +82,7 @@
             // 
             // tmrRender
             // 
+            this.tmrRender.Interval = 10;
             this.tmrRender.Tick += new System.EventHandler(this.tmrRender_Tick);
             // 
             // FakeClient

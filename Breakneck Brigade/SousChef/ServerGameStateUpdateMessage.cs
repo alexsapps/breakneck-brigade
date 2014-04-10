@@ -9,6 +9,6 @@ namespace SousChef
     public class ServerGameStateUpdateMessage : ServerMessage
     {
 
-        public Dictionary<string,GameObject> GameObjects { get; set; }
+        public Dictionary<int,GameObject> GameObjects { get; set; }
     }
 }

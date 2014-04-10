@@ -14,7 +14,7 @@ namespace DeCuisine
 
         public GameMode Mode { get; private set; }
 
-        private Dictionary<string, GameObject> GameObjects = new Dictionary<string, GameObject>(); //TODO: this should be string (id) to GameObject
+        private Dictionary<int, GameObject> GameObjects = new Dictionary<int, GameObject>(); //TODO: this should be string (id) to GameObject
 
         private Thread runThread;
 
@@ -123,7 +123,7 @@ namespace DeCuisine
                                     break;
                                 case ClientEventType.RequestTestObject:
                                     int id = getId();
-                                    //GameObjects.Add(id, new Ingredient(id));
+                                    GameObjects.Add(id, new Ingredient(id, null) { pos = new Vector4(random.Next(100), random.Next(100), random.Next(100), random.Next(100)) });
                                     break;
                                 default:
                                     //error

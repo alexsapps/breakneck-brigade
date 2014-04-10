@@ -86,7 +86,7 @@ namespace Breakneck_Brigade
                     {
                         foreach (var x in client.Game.gameObjects)
                         {
-                            v.AppendLine(x.Key + " { " + x.Value + " } ");
+                            v.AppendLine(x.Key + " { " + x.Value.pos.ToString() + " } ");
                         }
                     }
                 }

@@ -13,18 +13,16 @@ namespace SousChef
     /// </author>
     public class Vector4
     {
-        float[] v;              //Backing array for the object
+        const int size = 4;
+
+        float[] v = new float[size];              //Backing array for the object
 
        /// <summary>
        /// Initializes all dimensions of the vector to 0.
        /// </summary>
         public Vector4()
         {
-            v = new float[4];
-	        for (int i=0; i<4; ++i)
-	        {
-		        v[i] = 0;
-	        }
+            
         } 
 
         /// <summary>
@@ -33,11 +31,7 @@ namespace SousChef
         /// <param name="other"></param>
         public Vector4(Vector4 other)
         {
-            v = new float[4];
-            v[0] = other[0];
-            v[1] = other[1];
-            v[2] = other[2];
-            v[3] = other[3];
+            Array.Copy(other.v, this.v, size);
         }
 
         /// <summary>
@@ -111,8 +105,8 @@ namespace SousChef
         /// <returns></returns>
         public float this[int ind]
         {
-            get {return v[ind];}
-            set {v[ind] = value;}
+            get { return v[ind]; }
+            set { v[ind] = value; }
         }
         
         /// <summary>
@@ -138,7 +132,7 @@ namespace SousChef
         /// <returns>The scaled vector</returns>
         public static Vector4 operator * (Vector4 lhs, float scalar)
         {
-            return scalar*lhs;
+            return scalar * lhs;
         }
 
         /// <summary>
@@ -294,11 +288,19 @@ namespace SousChef
         /// </summary>
         public void Print()
         {
-	        Console.Write(  "Vector4: " + "\n" + 
-                            v[0]        + "\n" +
-                            v[1]        + "\n" +
-                            v[2]        + "\n" +
-                            v[3]        + "\n" );
+	        Console.WriteLine(ToString());
+        }
+
+        /// <summary>
+        /// Get's the string representation of this Vector4
+        /// </summary>
+        public override string ToString()
+        {
+            return "Vector4: " +
+                v[0] + "," +
+                v[1] + "," +
+                v[2] + "," +
+                v[3];
         }
     }
 }
