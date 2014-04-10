@@ -26,13 +26,7 @@ namespace SousChef
         {
             backingArray    = new float[4,4];
             glArray         = new float[16];
-	        for (int i=0; i<4; ++i)
-	        {
-		        for (int j=0; j<4; ++j)
-		        {
-			        backingArray[i,j] = 0;
-		        }
-	        }
+            this.Identity();
             UpdateGLArray();
         } 
 
@@ -248,6 +242,29 @@ namespace SousChef
         }
 
         /// <summary>
+        /// Multiplies this matrix by a 4x1 vector by inverting the vector to a 1x4 vector.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>A 1x4 vector which is the result of the multiplication. </returns>
+        public Vector4 Multiply(Vector4 other)
+        {
+            Vector4 result = new Vector4();
+            for (int ii = 0; ii < 4; ii++)
+            {
+                for (int jj = 0; jj < 4; jj++)
+                {
+                    result[ii] += backingArray[jj, ii] * other[jj];
+                }
+            }
+            return result;
+        }
+
+        public static Matrix4 operator * (Matrix4 lhs, Matrix4 rhs)
+        {
+            return lhs.Multiply(rhs);
+        }
+
+        /// <summary>
         /// Makes the matrix homogenous by dividing every value by the homogenous coordinate (m[3][3])
         /// </summary>
         public void Homogenize()
@@ -259,24 +276,6 @@ namespace SousChef
 			        backingArray[ii,jj] /= backingArray[3,3];
 		        }
 	        }
-        }
-
-        /// <summary>
-        /// Multiplies this matrix by a 4x1 vector by inverting the vector to a 1x4 vector.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns>A 1x4 vector which is the result of the multiplication. </returns>
-        public Vector4 Multiply(Vector4 other)
-        {
-            Vector4 result = new Vector4();
-	        for(int ii = 0; ii < 4; ii++)
-	        {
-		        for(int jj = 0; jj < 4 ; jj++)
-		        {
-			        result[ii] += backingArray[jj,ii] * other[jj];
-		        }
-	        }
-	        return result;
         }
 
         /// <summary>
@@ -554,7 +553,7 @@ namespace SousChef
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public void TranslationMat(float x, float y, float z)
+        public Matrix4 TranslationMat(float x, float y, float z)
         {
 	        backingArray[0,0] = 1;
 	        backingArray[0,1] = 0;
@@ -572,6 +571,8 @@ namespace SousChef
 	        backingArray[3,1] = y;
 	        backingArray[3,2] = z;
 	        backingArray[3,3] = 1;
+
+            return this;
         }
 
         /// <summary>
@@ -631,7 +632,7 @@ namespace SousChef
         /// <summary>
         /// A quick matrix inversion. This will only work if the matrix is actually homogenous.
         /// </summary>
-        public void FastInvert()
+        public Matrix4 FastInvert()
         {
             backingArray[0,0] = backingArray[0,0];
 	        backingArray[0,1] = backingArray[1,0];
@@ -648,13 +649,17 @@ namespace SousChef
 	        backingArray[3,0] = -backingArray[3,0];
 	        backingArray[3,1] = -backingArray[3,1];
 	        backingArray[3,2] = -backingArray[3,2];
+
+            return this;
         }
 
-        /// <summary>
+      
+        ///<summary>
         /// Multiplies all values in the matrix by this scalar (including the homogenous coordinate)
         /// </summary>
         /// <param name="scalar"></param>
-        public void Scale(float scalar)
+        /// <returns>A reference to this Matrix4</returns>
+        public Matrix4 Scale(float scalar)
         {
 	        for(int ii = 0; ii < 4; ii++)
 	        {
@@ -663,6 +668,7 @@ namespace SousChef
 			        backingArray[ii,jj] *= scalar;
 		        }
 	        }
+            return this;
         }
         /// <summary>
         /// Prints the values in the matrix to the console.
