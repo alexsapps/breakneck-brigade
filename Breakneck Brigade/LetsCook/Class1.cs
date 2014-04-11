@@ -18,7 +18,7 @@ namespace LetsCook
         static double radius = 0.2, mass = 1.0;// radius(m)、weight(kg) 
 
         // Simulation loop
-        void simLoop(int pause)
+        static void SimLoop(int pause)
         {
             Ode.dVector3 pos; //　position 
             Ode.dMatrix3 R; // rotation matrix 　
@@ -28,6 +28,21 @@ namespace LetsCook
 
             // Ode.dsSetColor(1.0,0.0,0.0);  // Set color  (red, green, blue) value is from 0 to 1.0
             // Ode.dsDrawSphere(pos,R,radius);　　// Draw a sphere
+            int width, height;
+            Glfw.glfwGetWindowSize(out width, out height);
+            float ratio = (float)width / height;
+
+            Gl.glViewport(0, 0, width, height);
+            //Always clear both color and depth
+            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+
+            TestRenderer.mainCamera.Update();
+            TestRenderer.mainCamera.Render();
+
+            TestRenderer.DrawSphere((float)pos.X, (float)pos.Y, (float)pos.Z, (float)radius);
+
+            Glfw.glfwSwapBuffers();
+            Glfw.glfwPollEvents();
         }
 
 
@@ -71,53 +86,20 @@ namespace LetsCook
             // fn.stop 　　 = NULL;　　　　     // no stop function
             // fn.path_to_textures = "../../drawstuff/textures";　//　path to the texture
             // dsSimulationLoop (argc,argv,352,288,&fn);
-            
-            /* Init GLFW */
-            Glfw.glfwInit();
+            TestRenderer.InitGLFW();
+            TestRenderer.InitGL();
 
-            Glfw.glfwOpenWindowHint(Glfw.GLFW_DEPTH_BITS, 16);
-
-            int window = Glfw.glfwOpenWindow(400, 400, 0, 0, 0 ,0, 0, 0, Glfw.GLFW_WINDOW_NO_RESIZE);
-            if (window != 0)
+            while (Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) == Gl.GL_TRUE)
             {
-                Glfw.glfwTerminate();
-                return;
+                SimLoop(0);
             }
 
-            // Glfw.glfwSetFramebufferSizeCallback(window, reshape);
-            // Glfw.glfwSetKeyCallback(window, key_callback);
-            // Glfw.glfwMakeContextCurrent(window);
-            Glfw.glfwSwapInterval(1);
-
-            // Glfw.glfwGetFramebufferSize(window, &width, &height);
-            // reshape(window, width, height);
-
-            Glfw.glfwSetTime(0.0);
-            Gl.glClearColor(0.55f, 0.55f, 0.55f, 0.0f);
-            Gl.glShadeModel(Gl.GL_FLAT);
-
-            /* Main loop */
-            for (; ; )
-            {
-                /* Timing */
-                t = Glfw.glfwGetTime();
-                dt = t - t_old;
-                t_old = t;
-
-                /* Draw one frame */
-
-                /* Swap buffers */
-                // Glfw.glfwSwapBuffers(window);
-                // Glfw.glfwPollEvents();
-
-                /* Check if we are still running */
-                //if (Glfw.glfwWindowShouldClose(window))
-                //    break;
-            }
-
-            Glfw.glfwTerminate();
+            TestRenderer.DestroyGLFW();
             Ode.dWorldDestroy(world);// Destroy the world 　
             Ode.dCloseODE();           // Close ODE
+
+            Environment.Exit(0);
+
         }
     }
 }

@@ -36,15 +36,39 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Cooker.cs" />
+    <Compile Include="GameRoom.cs" />
+    <Compile Include="Ingredient.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="TestRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Tao.FreeGlut">
+      <HintPath>H:\Visual Studio 2013\Projects\trunk\Breakneck Brigade\Breakneck Brigade\lib\Tao.FreeGlut.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Glfw">
+      <HintPath>H:\Visual Studio 2013\Projects\trunk\Breakneck Brigade\Breakneck Brigade\lib\Tao.Glfw.dll</HintPath>
+    </Reference>
     <Reference Include="Tao.Ode">
       <HintPath>..\Breakneck Brigade\lib\Tao.Ode.dll</HintPath>
     </Reference>
     <Reference Include="Tao.Ode.Tests">
       <HintPath>..\Breakneck Brigade\lib\Tao.Ode.Tests.dll</HintPath>
     </Reference>
+    <Reference Include="Tao.OpenGl">
+      <HintPath>H:\Visual Studio 2013\Projects\trunk\Breakneck Brigade\Breakneck Brigade\lib\Tao.OpenGl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Breakneck Brigade\Breakneck Brigade.csproj">
+      <Project>{8229e016-814d-4317-a2dc-bf2ba2c0a272}</Project>
+      <Name>Breakneck Brigade</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SousChef\SousChef.csproj">
+      <Project>{a4f5d1bb-0cbc-4fde-8cbf-2ad542dee53b}</Project>
+      <Name>SousChef</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
