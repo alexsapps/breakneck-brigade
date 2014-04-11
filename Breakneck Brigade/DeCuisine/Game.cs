@@ -22,13 +22,32 @@ namespace DeCuisine
 
         private Random random = new Random();
 
+        int frameRate;
+
         public Game(Server server)
         {
             Mode = GameMode.Init; //start in init mode
             this.server = server;
             server.ClientEnter += server_ClientEnter;
             server.ClientLeave += server_ClientLeave;
-            ClientInput = new List<DCClientEvent>();
+            lock (Lock)
+            {
+                ClientInput = new List<DCClientEvent>();
+                loadConfig();
+            }
+        }
+
+        public void ReloadConfig()
+        {
+            loadConfig();
+        }
+
+        void loadConfig()
+        {
+            Lock.AssertHeld();
+            var configFolder = new GlobalsConfigFolder();
+            var config = configFolder.Open("settings.xml");
+            frameRate = int.Parse(config.GetSetting("frame-rate", 1000));
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -96,9 +115,9 @@ namespace DeCuisine
         public void Run()
         {
             long start = DateTime.UtcNow.Ticks;
-            long second = (new TimeSpan(0, 0, 0, 1)).Ticks;
-            int seconds = 1; //TODO: read from config
-            long rate = seconds * second;
+            long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
+            int milliseconds = frameRate;
+            long rate = milliseconds * millisecond_ticks; //rate to wait in ticks
             long next = start;
 
             while (Mode == GameMode.Started)
@@ -138,7 +157,7 @@ namespace DeCuisine
                      */
                     foreach (var obj in GameObjects)
                     {
-                        
+                        obj.Value.Update();
                     }
 
                     /*

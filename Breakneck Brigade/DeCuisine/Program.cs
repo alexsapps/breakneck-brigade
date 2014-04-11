@@ -83,6 +83,13 @@ namespace DeCuisine
                                 Console.WriteLine("Server not started.");
                         }
                         break;
+                    case "reconfig":
+                    case "reload":
+                        lock (server.Lock)
+                        {
+                            server.ReloadConfig();
+                        }
+                        break;
                     case "exit":
                         lock (server.Lock)
                         {

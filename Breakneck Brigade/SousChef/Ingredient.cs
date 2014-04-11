@@ -18,8 +18,7 @@ namespace SousChef
 
         public override void Update()
         {
-
+            this.pos[1]--;
         }
-
     }
 }

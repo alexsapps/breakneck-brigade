@@ -192,8 +192,6 @@ namespace DeCuisine
             }
             catch { }
 
-            
-
             Disconnected(this, EventArgs.Empty);
         }
     }
