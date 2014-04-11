@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Tao.Ode;
+using Tao.FreeGlut;
+using Tao.OpenGl;
+using Tao.Glfw;
 
 namespace LetsCook
 {
@@ -20,9 +23,10 @@ namespace LetsCook
             Ode.dVector3 pos; //　position 
             Ode.dMatrix3 R; // rotation matrix 　
             Ode.dWorldStep(world, 0.05);// Step a simulation world, time step is 0.05 [s]
-            // Ode.dsSetColor(1.0,0.0,0.0);  // Set color  (red, green, blue) value is from 0 to 1.0
             pos = Ode.dBodyGetPosition(ball);// Get a position
             R = Ode.dBodyGetRotation(ball);// Get a rotation
+
+            // Ode.dsSetColor(1.0,0.0,0.0);  // Set color  (red, green, blue) value is from 0 to 1.0
             // Ode.dsDrawSphere(pos,R,radius);　　// Draw a sphere
         }
 
@@ -36,21 +40,12 @@ namespace LetsCook
             // dsSetViewpoint (xyz,hpr);　　// Set a view point
         }
 
+        static double t = 0, dt = 0, t_old = 0;
+
         static void Main(string[] args)
         {
             double x0 = 0.0, y0 = 0.0, z0 = 1.0; // initial position of an ball[m]
             Ode.dMass m1 = new Ode.dMass(); // mass parameter
-
-            // for drawstuff
-            // dsFunctions fn;　//　drawstuff structure
-            // fn.version = DS_VERSION;　  // the version of the drawstuff
-            // fn.start = &start;　　　　　      　// start function
-            // fn.step = &simLoop;　　        // step function
-            // fn.command = NULL;　　　　   // no command function for keyboard
-            // fn.stop 　　 = NULL;　　　　     // no stop function
-            // fn.path_to_textures = "../../drawstuff/textures";　//　path to the texture
-
-
 
             Ode.dInitODE();      // Initialize ODE
             world = Ode.dWorldCreate();  // Create a dynamic world
@@ -67,7 +62,60 @@ namespace LetsCook
             // Simulation loop
             // argc, argv are argument of main function. Window size is  352 x 288 [pixel]
             // fn is a structure of drawstuff
+            // for drawstuff
+            // dsFunctions fn;　//　drawstuff structure
+            // fn.version = DS_VERSION;　  // the version of the drawstuff
+            // fn.start = &start;　　　　　      　// start function
+            // fn.step = &simLoop;　　        // step function
+            // fn.command = NULL;　　　　   // no command function for keyboard
+            // fn.stop 　　 = NULL;　　　　     // no stop function
+            // fn.path_to_textures = "../../drawstuff/textures";　//　path to the texture
             // dsSimulationLoop (argc,argv,352,288,&fn);
+            
+            /* Init GLFW */
+            Glfw.glfwInit();
+
+            Glfw.glfwOpenWindowHint(Glfw.GLFW_DEPTH_BITS, 16);
+
+            int window = Glfw.glfwOpenWindow(400, 400, 0, 0, 0 ,0, 0, 0, Glfw.GLFW_WINDOW_NO_RESIZE);
+            if (window != 0)
+            {
+                Glfw.glfwTerminate();
+                return;
+            }
+
+            // Glfw.glfwSetFramebufferSizeCallback(window, reshape);
+            // Glfw.glfwSetKeyCallback(window, key_callback);
+            // Glfw.glfwMakeContextCurrent(window);
+            Glfw.glfwSwapInterval(1);
+
+            // Glfw.glfwGetFramebufferSize(window, &width, &height);
+            // reshape(window, width, height);
+
+            Glfw.glfwSetTime(0.0);
+            Gl.glClearColor(0.55f, 0.55f, 0.55f, 0.0f);
+            Gl.glShadeModel(Gl.GL_FLAT);
+
+            /* Main loop */
+            for (; ; )
+            {
+                /* Timing */
+                t = Glfw.glfwGetTime();
+                dt = t - t_old;
+                t_old = t;
+
+                /* Draw one frame */
+
+                /* Swap buffers */
+                // Glfw.glfwSwapBuffers(window);
+                // Glfw.glfwPollEvents();
+
+                /* Check if we are still running */
+                //if (Glfw.glfwWindowShouldClose(window))
+                //    break;
+            }
+
+            Glfw.glfwTerminate();
             Ode.dWorldDestroy(world);// Destroy the world 　
             Ode.dCloseODE();           // Close ODE
         }
