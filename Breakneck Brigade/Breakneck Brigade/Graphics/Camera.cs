@@ -11,7 +11,7 @@ namespace Breakneck_Brigade.Graphics
 	/// <summary>
 	/// Simple camera class with support for basic camera controls.
 	/// </summary>
-    class Camera
+    public class Camera
     {
         // Perspective controls
         /// <summary>
