@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    class Cooker : GameObject
+    public class Cooker : GameObject
     {
 
         public string Name { get; set; }

@@ -68,7 +68,6 @@
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(52, 20);
             this.txtPort.TabIndex = 3;
-            this.txtPort.Text = "22222";
             // 
             // cmdClientEvent
             // 
@@ -98,6 +97,7 @@
             this.Name = "FakeClient";
             this.Text = "FakeClient";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FakeClient_FormClosing);
+            this.Load += new System.EventHandler(this.FakeClient_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

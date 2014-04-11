@@ -12,10 +12,13 @@ namespace DeCuisine
     class Program
     {
         static Server server;
+        static GlobalsConfigFolder config = new GlobalsConfigFolder();
+        static GlobalsConfigFile globalConfig;
 
         static void Main(string[] args)
         {
-            int port = 22222; //TODO: read port from config file
+            globalConfig = config.Open("global-config.xml");
+            int port = int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
             server = new Server(IPAddress.Any, port);
             lock (server.Lock)
