@@ -1,0 +1,32 @@
+﻿use cases:
+
+/* get list */
+<ingredients>
+	<ingredient name="x" loc="y" texture="z" />
+	<ingredient name="x" loc="y" texture="z" />
+	<ingredient name="x" loc="y" texture="z" />
+</ingredients>
+
+<things>
+	<thing name="x" val="y" z="w"> /* attributes handler */
+		<left-ingredients> /* subtree handler -> get list */
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+		</left-ingredients>
+		<right-ingredients>
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+			<ingredient name="x" loc="y" texture="z" />
+		</right-ingredients>
+		<books> /* get list (book handler) */
+			<book name="k" />
+			<book name="y" />
+		</books>
+		<towels> /* get string list */
+			<towel>thing</towel>
+			<towel>thing</towel>
+			<towel>thing</towel>
+		</towel>
+	</thing>
+</things>

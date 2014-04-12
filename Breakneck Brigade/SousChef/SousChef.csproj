@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GameTest|AnyCPU'">
+    <OutputPath>bin\GameTest\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -39,20 +42,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\BBXFileParser.cs" />
+    <Compile Include="Config\BBXml.cs" />
+    <Compile Include="Config\ConfigSalad.cs" />
+    <Compile Include="Config\GlobalsConfigFile.cs" />
+    <Compile Include="Config\GlobalsConfigFolder.cs" />
+    <Compile Include="Config\Ingredients.cs" />
+    <Compile Include="Config\BBXItemParser.cs" />
     <Compile Include="BB.cs" />
     <Compile Include="BBLock.cs" />
     <Compile Include="ClientEvent.cs" />
     <Compile Include="ClientEventType.cs" />
     <Compile Include="ClientMessageType.cs" />
+    <Compile Include="Cooker.cs" />
     <Compile Include="GameMode.cs" />
+    <Compile Include="GameObject.cs" />
+    <Compile Include="Ingredient.cs" />
     <Compile Include="MathConstants.cs" />
     <Compile Include="Matrix4.cs" />
+    <Compile Include="Config\GameObjectConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recipe.cs" />
     <Compile Include="ServerGameModeUpdateMessage.cs" />
     <Compile Include="ServerGameStateUpdateMessage.cs" />
     <Compile Include="ServerMessage.cs" />
     <Compile Include="ServerMessageType.cs" />
     <Compile Include="Vector4.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\use cases.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

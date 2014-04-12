@@ -20,6 +20,13 @@ namespace Breakneck_Brigade
         }
 
         Client client;
+        GlobalsConfigFolder config = new GlobalsConfigFolder();
+        GlobalsConfigFile globalConfig;
+        private void FakeClient_Load(object sender, EventArgs e)
+        {
+            globalConfig = config.Open(BB.GlobalConfigFilename);
+            txtPort.Text = globalConfig.GetSetting("server-port", BB.DefaultServerPort);
+        }
 
         private void cmdConnect_Click(object sender, EventArgs e)
         {
@@ -107,7 +114,7 @@ namespace Breakneck_Brigade
                     {
                         foreach (var x in client.Game.gameObjects)
                         {
-                            v.AppendLine(x.Key + " { " + x.Value + " } ");
+                            v.AppendLine(x.Key + " { " + x.Value.pos.ToString() + " } ");
                         }
                     }
                 }
@@ -119,5 +126,6 @@ namespace Breakneck_Brigade
             
             txtMessages.Text = v.ToString();
         }
+
     }
 }

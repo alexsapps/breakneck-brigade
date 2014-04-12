@@ -14,7 +14,7 @@ namespace DeCuisine
 
         public GameMode Mode { get; private set; }
 
-        private Dictionary<string, string> GameObjects = new Dictionary<string, string>(); //TODO: this should be string (id) to GameObject
+        private Dictionary<int, GameObject> GameObjects = new Dictionary<int, GameObject>(); //TODO: this should be string (id) to GameObject
 
         private Thread runThread;
 
@@ -22,13 +22,32 @@ namespace DeCuisine
 
         private Random random = new Random();
 
+        int frameRate;
+
         public Game(Server server)
         {
             Mode = GameMode.Init; //start in init mode
             this.server = server;
             server.ClientEnter += server_ClientEnter;
             server.ClientLeave += server_ClientLeave;
-            ClientInput = new List<DCClientEvent>();
+            lock (Lock)
+            {
+                ClientInput = new List<DCClientEvent>();
+                loadConfig();
+            }
+        }
+
+        public void ReloadConfig()
+        {
+            loadConfig();
+        }
+
+        void loadConfig()
+        {
+            Lock.AssertHeld();
+            var configFolder = new GlobalsConfigFolder();
+            var config = configFolder.Open("settings.xml");
+            frameRate = int.Parse(config.GetSetting("frame-rate", 1000));
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -96,9 +115,9 @@ namespace DeCuisine
         public void Run()
         {
             long start = DateTime.UtcNow.Ticks;
-            long second = (new TimeSpan(0, 0, 0, 1)).Ticks;
-            int seconds = 1; //TODO: read from config
-            long rate = seconds * second;
+            long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
+            int milliseconds = frameRate;
+            long rate = milliseconds * millisecond_ticks; //rate to wait in ticks
             long next = start;
 
             while (Mode == GameMode.Started)
@@ -122,7 +141,8 @@ namespace DeCuisine
                                 case ClientEventType.Move:
                                     break;
                                 case ClientEventType.RequestTestObject:
-                                    GameObjects.Add("obj" + random.Next(0,1000), "x: " + random.Next(0,1000) + "; y: " + random.Next(0,1000));
+                                    int id = getId();
+                                    GameObjects.Add(id, new Ingredient(id, null) { pos = new Vector4(random.Next(100), random.Next(100), random.Next(100), random.Next(100)) });
                                     break;
                                 default:
                                     //error
@@ -135,15 +155,16 @@ namespace DeCuisine
                     /*
                      * handle an instant in time, e.g. gravity, collisions
                      */
+                    foreach (var obj in GameObjects)
                     {
-                        
+                        obj.Value.Update();
                     }
 
                     /*
                      * send updates to clients
                      */
                     {
-                        foreach(Client client in clients)
+                        foreach (Client client in clients)
                         {
                             lock (client.ServerMessages)
                             {
@@ -181,6 +202,12 @@ namespace DeCuisine
                     Monitor.PulseAll(client.ServerMessages);
                 }
             }
+        }
+
+        int _lastId;
+
+        public int getId() {
+            return _lastId++;
         }
 
         public void Dispose()

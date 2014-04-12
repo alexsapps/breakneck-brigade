@@ -2,27 +2,58 @@ using System;
 
 namespace SousChef
 {
+    /// <summary>
+    /// A 4x4 homogenous matrix for storing 3D transformations.
+    /// </summary>
+    /// <author>
+    /// Ryan George
+    /// </author>
     public class Matrix4
     {
-        public float[,] backingArray    { get; private set; } //Backing data structure for the matrix
-        public float[]  glArray         { get; private set; } //Generated array for use in OpenGL. Updated on backing array mutation
-        /*
-         * Initializes to identity matrix
-         */
+        /// <summary>
+        /// Backing data structure for the matrix
+        /// </summary>
+        public float[,] backingArray    { get; private set; }
+        /// <summary>
+        /// Generated array for use in OpenGL. Updated on backing array mutation
+        /// </summary>
+        public float[]  glArray         { get; private set; }
+        
+        /// <summary>
+        /// Initializes matrix to identity matrix.
+        /// </summary>
         public Matrix4()
         {
             backingArray    = new float[4,4];
             glArray         = new float[16];
-	        for (int i=0; i<4; ++i)
-	        {
-		        for (int j=0; j<4; ++j)
-		        {
-			        backingArray[i,j] = 0;
-		        }
-	        }
+            this.Identity();
             UpdateGLArray();
         } 
 
+        /// <summary>
+        /// Initializes the matrix to the specified matrix with row-major parameter order.
+        /// That is, the matrix will have the values:
+        /// m00, m01, m02, m03
+        /// m10, m11, m12, m13
+        /// m20, m21, m22, m23
+        /// m30, m31, m32, m33
+        /// </summary>
+        /// <param name="m00"></param>
+        /// <param name="m01"></param>
+        /// <param name="m02"></param>
+        /// <param name="m03"></param>
+        /// <param name="m10"></param>
+        /// <param name="m11"></param>
+        /// <param name="m12"></param>
+        /// <param name="m13"></param>
+        /// <param name="m20"></param>
+        /// <param name="m21"></param>
+        /// <param name="m22"></param>
+        /// <param name="m23"></param>
+        /// <param name="m30"></param>
+        /// <param name="m31"></param>
+        /// <param name="m32"></param>
+        /// <param name="m33"></param>
         public Matrix4( float m00, float m01, float m02, float m03,
                         float m10, float m11, float m12, float m13,
                         float m20, float m21, float m22, float m23,
@@ -50,9 +81,30 @@ namespace SousChef
             UpdateGLArray();
         }
 
-        /*
-         * 
-         */
+        /// <summary>
+        /// Initializes the matrix to the specified matrix with row-major parameter order.
+        /// That is, the matrix will have the values:
+        /// m00, m01, m02, m03
+        /// m10, m11, m12, m13
+        /// m20, m21, m22, m23
+        /// m30, m31, m32, m33
+        /// </summary>
+        /// <param name="m00"></param>
+        /// <param name="m01"></param>
+        /// <param name="m02"></param>
+        /// <param name="m03"></param>
+        /// <param name="m10"></param>
+        /// <param name="m11"></param>
+        /// <param name="m12"></param>
+        /// <param name="m13"></param>
+        /// <param name="m20"></param>
+        /// <param name="m21"></param>
+        /// <param name="m22"></param>
+        /// <param name="m23"></param>
+        /// <param name="m30"></param>
+        /// <param name="m31"></param>
+        /// <param name="m32"></param>
+        /// <param name="m33"></param>
         public Matrix4( double m00, double m01, double m02, double m03,
                         double m10, double m11, double m12, double m13,
                         double m20, double m21, double m22, double m23,
@@ -79,9 +131,12 @@ namespace SousChef
             UpdateGLArray();
         }
 
-        /*
-         * 
-         */
+        /// <summary>
+        /// Quick method to set a value in the matrix.
+        /// </summary>
+        /// <param name="x">Column</param>
+        /// <param name="y">Row</param>
+        /// <returns></returns>
         public float this[int x, int y]
         {
             get { return backingArray[x, y];                    }
@@ -111,7 +166,34 @@ namespace SousChef
             backingArray[3,3] = m33;
             UpdateGLArray();
         }
-        public void SetAll( double m00, double m10, double m20, double m30,
+
+        /// <summary>
+        /// Sets all values in the matrix in row-major parameter order.
+        /// 
+        /// That is, the matrix will have the values:
+        /// m00, m01, m02, m03
+        /// m10, m11, m12, m13
+        /// m20, m21, m22, m23
+        /// m30, m31, m32, m33 
+        /// </summary>
+        /// <param name="m00"></param>
+        /// <param name="m10"></param>
+        /// <param name="m20"></param>
+        /// <param name="m30"></param>
+        /// <param name="m01"></param>
+        /// <param name="m11"></param>
+        /// <param name="m21"></param>
+        /// <param name="m31"></param>
+        /// <param name="m02"></param>
+        /// <param name="m12"></param>
+        /// <param name="m22"></param>
+        /// <param name="m32"></param>
+        /// <param name="m03"></param>
+        /// <param name="m13"></param>
+        /// <param name="m23"></param>
+        /// <param name="m33"></param>
+        /// <returns>A reference to the matrix SetAll was called on</returns>
+        public Matrix4 SetAll( double m00, double m10, double m20, double m30,
                             double m01, double m11, double m21, double m31,
                             double m02, double m12, double m22, double m32,
                             double m03, double m13, double m23, double m33 )
@@ -132,18 +214,14 @@ namespace SousChef
             backingArray[3,1] = (float) m31; 
             backingArray[3,2] = (float) m32; 
             backingArray[3,3] = (float) m33;
-            UpdateGLArray();
+            return this;
         }
 
-        public void Identity()
-        {
-            SetAll(1, 0, 0, 0,
-                   0, 1, 0, 0,
-                   0, 0, 1, 0,
-                   0, 0, 0, 1);
-
-        }
-
+        /// <summary>
+        /// Multiplies this matrix by another matrix.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>The result of the matrix multiplication</returns>
         public Matrix4 Multiply(Matrix4 other)
         {
 	        Matrix4 result = new Matrix4(   0, 0, 0, 0,
@@ -164,7 +242,40 @@ namespace SousChef
             return result;
         }
 
-        public void Homogenize()
+        /// <summary>
+        /// Multiplies this matrix by a 4x1 vector by inverting the vector to a 1x4 vector.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>A 1x4 vector which is the result of the multiplication. </returns>
+        public Vector4 Multiply(Vector4 other)
+        {
+            Vector4 result = new Vector4();
+            for (int ii = 0; ii < 4; ii++)
+            {
+                for (int jj = 0; jj < 4; jj++)
+                {
+                    result[ii] += backingArray[jj, ii] * other[jj];
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Matrix4 * Matrix4 operator override
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns>A reference to this matrix</returns>
+        public static Matrix4 operator * (Matrix4 lhs, Matrix4 rhs)
+        {
+            return lhs.Multiply(rhs);
+        }
+
+        /// <summary>
+        /// Makes the matrix homogenous by dividing every value by the homogenous coordinate (m[3][3])
+        /// </summary>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 Homogenize()
         {
 	        for(int ii = 0; ii < 4; ii++)
 	        {
@@ -173,22 +284,28 @@ namespace SousChef
 			        backingArray[ii,jj] /= backingArray[3,3];
 		        }
 	        }
+            return this;
         }
 
-        public Vector4 Multiply(Vector4 other)
+        /// <summary>
+        /// Sets the instance of this matrix to have the values of the identity matrix.
+        /// </summary>
+        /// <return>A reference to this matrix</return>
+        public Matrix4 Identity()
         {
-            Vector4 result = new Vector4();
-	        for(int ii = 0; ii < 4; ii++)
-	        {
-		        for(int jj = 0; jj < 4 ; jj++)
-		        {
-			        result[ii] += backingArray[jj,ii] * other[jj];
-		        }
-	        }
-	        return result;
+            SetAll(1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1);
+            return this;
         }
 
-        public void RotateX(float angle)
+        /// <summary>
+        /// Creates a rotation around the world X axis
+        /// </summary>
+        /// <param name="angle">The angle to rotate around in radians</param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 RotateX(float angle)
         {
 	        backingArray[0,0] = 1;
 	        backingArray[0,1] = 0;
@@ -206,9 +323,15 @@ namespace SousChef
 	        backingArray[3,1] = 0;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 1;
+            return this;
         }
 
-        public void RotateY(float angle)
+        /// <summary>
+        /// Creates a rotation around the world Y axis
+        /// </summary>
+        /// <param name="angle">The angle to rotate around in radians</param>
+        /// <returns>A reference to this Matrix</returns>
+        public Matrix4 RotateY(float angle)
         {
 	        backingArray[0,0] = (float) Math.Cos(angle);
 	        backingArray[0,1] = 0;
@@ -226,9 +349,15 @@ namespace SousChef
 	        backingArray[3,1] = 0;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 1;
+            return this;
         }
 
-        public void RotateZ(float angle)
+        /// <summary>
+        /// Creates a rotation around the world Z axis
+        /// </summary>
+        /// <param name="angle">The angle to rotate around in radians</param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 RotateZ(float angle)
         {
 	        backingArray[0,0] = (float) Math.Cos(angle);
 	        backingArray[0,1] = (float) Math.Sin(angle);
@@ -246,9 +375,15 @@ namespace SousChef
 	        backingArray[3,1] = 0;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 1;
+            return this;
         }
 
-        public void RotateXDeg(float angle)
+        /// <summary>
+        /// Creates a rotation around the world X axis
+        /// </summary>
+        /// <param name="angle">The angle to rotate around in degrees</param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 RotateXDeg(float angle)
         {
 	        angle = (angle/180.0f) * MathConstants.INVERSE_PI;
 
@@ -268,9 +403,16 @@ namespace SousChef
 	        backingArray[3,1] = 0;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 1;
+
+            return this;
         }
 
-        public void RotateYDeg(float angle)
+        /// <summary>
+        /// Creates a rotation around the world Y axis
+        /// </summary>
+        /// <param name="angle">The angle to rotate around in degrees</param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 RotateYDeg(float angle)
         {
             angle = (angle/180.0f) * MathConstants.INVERSE_PI;
 
@@ -290,9 +432,16 @@ namespace SousChef
 	        backingArray[3,1] = 0;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 1;
+
+            return this;
         }
 
-        public void RotateZDeg(float angle)
+        /// <summary>
+        /// Creates a rotation around the world Z axis
+        /// </summary>
+        /// <param name="angle">The angle to rotate around in degrees</param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 RotateZDeg(float angle)
         {
             angle = (float) (angle/180.0) * MathConstants.INVERSE_PI;
 
@@ -312,9 +461,52 @@ namespace SousChef
 	        backingArray[3,1] = 0;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 1;
+
+            return this;
         }
 
+
+        /// <summary>
+        /// Creates a rotation around an arbitrary axis
+        /// </summary>
+        /// <param name="axis">The axis to rate around as a normalized vector</param>
+        /// <param name="angle">The angle to rotate around this axis in radians</param>
+        /// <returns>A reference to this matrix</returns>
         public Matrix4 Rotate(Vector4 axis, float angle)
+        {
+            float cTheta = (float)Math.Cos(angle);
+            float sTheta = (float)Math.Sin(angle);
+            float ax = axis[0];
+            float ay = axis[1];
+            float az = axis[2];
+
+            backingArray[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
+            backingArray[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
+            backingArray[0, 2] = ax*az*(1-cTheta) - ay*sTheta;
+            backingArray[0, 3] = 0;
+            backingArray[1, 0] = ax*ay*(1-cTheta) - az * sTheta;
+            backingArray[1, 1] = (float)(Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
+            backingArray[1, 2] = ay*az*(1-cTheta) + ax*sTheta;
+            backingArray[1, 3] = 0;
+            backingArray[2, 0] = ax*az*(1-cTheta) + ay*sTheta;
+            backingArray[2, 1] = ay*az*(1-cTheta)-ax*sTheta;
+            backingArray[2, 2] = (float)(Math.Pow(az, 2) + cTheta*(1-Math.Pow(az, 2)));
+            backingArray[2, 3] = 0;
+            backingArray[3, 0] = 0;
+            backingArray[3, 1] = 0;
+            backingArray[3, 2] = 0;
+            backingArray[3, 3] = 1;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Creates a rotation around an arbitrary axis
+        /// </summary>
+        /// <param name="axis">The axis to rate around as a normalized vector</param>
+        /// <param name="angle">The angle to rotate around this axis in degrees</param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 RotateDeg(Vector4 axis, float angle)
         {
 	        angle = (float) (angle/180.0) * MathConstants.INVERSE_PI;
 	        float cTheta = (float) Math.Cos(angle);
@@ -325,30 +517,35 @@ namespace SousChef
 
             float[,] t = new float[4,4];
 
-	        t[0,0] = (float) (Math.Pow(ax,2) + cTheta*(1-Math.Pow(ax,2)));
-	        t[0,1] = ax*ay*(1-cTheta) + az*sTheta;
-	        t[0,2] = ax*az*(1-cTheta) - ay*sTheta;
-	        t[0,3] = 0;
-	        t[1,0] = ax*ay*(1-cTheta) - az * sTheta;
-            t[1,1] = (float) (Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
-	        t[1,2] = ay*az*(1-cTheta) + ax*sTheta;
-	        t[1,3] = 0;
-	        t[2,0] = ax*az*(1-cTheta) + ay*sTheta;
-	        t[2,1] = ay*az*(1-cTheta)-ax*sTheta;
-	        t[2,2] = (float) (Math.Pow(az,2) + cTheta*(1-Math.Pow(az,2)));
-	        t[2,3] = 0;
-	        t[3,0] = 0;
-	        t[3,1] = 0;
-            t[3,2] = 0;
-	        t[3,3] = 1;
+            backingArray[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
+            backingArray[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
+            backingArray[0, 2] = ax*az*(1-cTheta) - ay*sTheta;
+            backingArray[0, 3] = 0;
+            backingArray[1, 0] = ax*ay*(1-cTheta) - az * sTheta;
+            backingArray[1, 1] = (float)(Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
+            backingArray[1, 2] = ay*az*(1-cTheta) + ax*sTheta;
+            backingArray[1, 3] = 0;
+            backingArray[2, 0] = ax*az*(1-cTheta) + ay*sTheta;
+            backingArray[2, 1] = ay*az*(1-cTheta)-ax*sTheta;
+            backingArray[2, 2] = (float)(Math.Pow(az, 2) + cTheta*(1-Math.Pow(az, 2)));
+            backingArray[2, 3] = 0;
+            backingArray[3, 0] = 0;
+            backingArray[3, 1] = 0;
+            backingArray[3, 2] = 0;
+            backingArray[3, 3] = 1;
     
-            return new Matrix4( t[0,0], t[0,1], t[0,2], t[0,3],
-                                t[1,0], t[1,1], t[1,2], t[1,3],
-                                t[2,0], t[2,1], t[2,2], t[2,3],
-                                t[3,0], t[3,1], t[3,2], t[3,3]);
+            return this;
         }
 
-        public void ScalingMat(float x, float y, float z)
+        /// <summary>
+        /// Turns this matrix into a scaling matrix, scaling each dimension by
+        /// the corresponding paremeter.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 ScalingMat(float x, float y, float z)
         {
 	        backingArray[0,0] = x;
 	        backingArray[0,1] = 0;
@@ -366,9 +563,18 @@ namespace SousChef
 	        backingArray[3,1] = 0;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 1;
-        }
+            
+            return this;
 
-        public void TranslationMat(float x, float y, float z)
+        }
+        /// <summary>
+        /// Turns this matrix into a translation matrix, translating the
+        /// model by the arguments in each specified dimension.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public Matrix4 TranslationMat(float x, float y, float z)
         {
 	        backingArray[0,0] = 1;
 	        backingArray[0,1] = 0;
@@ -386,9 +592,15 @@ namespace SousChef
 	        backingArray[3,1] = y;
 	        backingArray[3,2] = z;
 	        backingArray[3,3] = 1;
+
+            return this;
         }
 
-        public void Transpose()
+        /// <summary>
+        /// Transposes the matrix (that is, reflects across the down-right diagonal)
+        /// </summary>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 Transpose()
         {
 	        float temp;
 	        for(int ii = 3; ii >= 0; ii--)
@@ -400,12 +612,15 @@ namespace SousChef
 			        backingArray[jj,ii] = temp;
 		        }
 	        }
+            return this;
         }
 
-        /*
-         * Full matrix invert for a 4x4 matrix
-         */
-        public void Invert()
+        /// <summary>
+        /// A fully calculated matrix inverse. Substantially more expensive than the FastInverse. Should
+        /// only be used when FastInverse fails to invert the matrix.
+        /// </summary>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 Invert()
         {
             float det = backingArray[0,0]*backingArray[1,1]*backingArray[2,2]*backingArray[3,3]+backingArray[0,0]*backingArray[1,2]*backingArray[2,3]*backingArray[3,1]+backingArray[0,0]*backingArray[1,3]*backingArray[2,1]*backingArray[3,2]
             +backingArray[0,1]*backingArray[1,0]*backingArray[2,3]*backingArray[3,2]+backingArray[0,1]*backingArray[1,2]*backingArray[2,0]*backingArray[3,3]+backingArray[0,1]*backingArray[1,3]*backingArray[2,2]*backingArray[3,0]
@@ -435,16 +650,15 @@ namespace SousChef
             for(int i=0;i<4;i++)
                 for(int j=0;j<4;j++)
                     backingArray[i,j] = b[i,j]/det;
+            return this;
         }
         
 
-        /*
-         * A quick matrix inversion for homogenous matricies ONLY.
-         * 
-         * 1) transpose the 3x3 matrix from [0,0] to [2,2]
-         * 2) negate the 4th column from index 0 to index 2
-         */
-        public void FastInvert()
+        /// <summary>
+        /// A quick matrix inversion. This will only work if the matrix is actually homogenous.
+        /// </summary>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 FastInvert()
         {
             backingArray[0,0] = backingArray[0,0];
 	        backingArray[0,1] = backingArray[1,0];
@@ -461,9 +675,17 @@ namespace SousChef
 	        backingArray[3,0] = -backingArray[3,0];
 	        backingArray[3,1] = -backingArray[3,1];
 	        backingArray[3,2] = -backingArray[3,2];
+
+            return this;
         }
 
-        public void Scale(float scalar)
+      
+        ///<summary>
+        /// Multiplies all values in the matrix by this scalar (including the homogenous coordinate)
+        /// </summary>
+        /// <param name="scalar"></param>
+        /// <returns>A reference to this Matrix4</returns>
+        public Matrix4 Scale(float scalar)
         {
 	        for(int ii = 0; ii < 4; ii++)
 	        {
@@ -472,8 +694,11 @@ namespace SousChef
 			        backingArray[ii,jj] *= scalar;
 		        }
 	        }
+            return this;
         }
-
+        /// <summary>
+        /// Prints the values in the matrix to the console.
+        /// </summary>
         public void Print()
         {
 	        Console.WriteLine("Matrix4: \n" +
@@ -483,7 +708,11 @@ namespace SousChef
 			        backingArray[0,3] + ", " + backingArray[1,3] + ", " + backingArray[2,3] + ", " + backingArray[3,3] + "\n" );
         }
 
-        public void HermiteInverse()
+        /// <summary>
+        /// Sets the matrix to be the inverse of the Hermite matrix, commonly used for animation easing.
+        /// </summary>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 HermiteInverse()
         {
 	        backingArray[0,0] = 2;
 	        backingArray[0,1] = -3;
@@ -504,9 +733,16 @@ namespace SousChef
 	        backingArray[3,1] = -1;
 	        backingArray[3,2] = 0;
 	        backingArray[3,3] = 0;
+
+            return this;
         }
 
-        public void CopyRot(Matrix4 mat)
+        /// <summary>
+        /// Copies the rotation compoment of the matrix (the square defined by 0,0 to 2,2)
+        /// </summary>
+        /// <param name="mat"></param>
+        /// <returns>A reference to this matrix</returns>
+        public Matrix4 CopyRot(Matrix4 mat)
         {
             backingArray[0,0] = mat[0, 0];
             backingArray[0,1] = mat[0, 1];
@@ -517,8 +753,13 @@ namespace SousChef
             backingArray[2,0] = mat[2, 0];
             backingArray[2,1] = mat[2, 1];
             backingArray[2,2] = mat[2, 2];
+
+            return this;
         }
 
+        /// <summary>
+        /// Updates the OpenGL array
+        /// </summary>
         private void UpdateGLArray()
         {
             glArray[0]  = backingArray[0, 0];

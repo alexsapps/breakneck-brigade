@@ -99,8 +99,12 @@ namespace DeCuisine
             catch (IOException)
             {
                 //if connected, client ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
-                if (IsConnected)
-                    lock (Lock) { Disconnect(); }
+
+                lock (Lock)
+                {
+                    if (IsConnected)
+                        Disconnect();
+                }
                 return;
             }
             catch (Exception ex)
@@ -116,35 +120,57 @@ namespace DeCuisine
         public List<ServerMessage> ServerMessages { get; private set; }
         private void send()
         {
-            using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
+            try
             {
-                lock (ServerMessages)
+                using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
                 {
-                    while (IsConnected)
+                    lock (ServerMessages)
                     {
-                        foreach (var message in ServerMessages)
+                        while (IsConnected)
                         {
-                            writer.Write((byte)message.Type);
-                            switch (message.Type)
+                            foreach (var message in ServerMessages)
                             {
-                                case ServerMessageType.GameModeUpdate:
-                                    writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
-                                    break;
-                                case ServerMessageType.GameStateUpdate:
-                                    var msg = (ServerGameStateUpdateMessage)message;
-                                    writer.Write(msg.GameObjects.Count);
-                                    foreach (var obj in msg.GameObjects)
-                                    {
-                                        writer.Write(obj.Key);
-                                        writer.Write(obj.Value);
-                                    }
-                                    break;
+                                writer.Write((byte)message.Type);
+                                switch (message.Type)
+                                {
+                                    case ServerMessageType.GameModeUpdate:
+                                        writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
+                                        break;
+                                    case ServerMessageType.GameStateUpdate:
+                                        var msg = (ServerGameStateUpdateMessage)message;
+                                        writer.Write(msg.GameObjects.Count);
+                                        foreach (var obj in msg.GameObjects)
+                                        {
+                                            writer.Write(obj.Key);
+                                            for (int i = 0; i < 4; i++)
+                                                writer.Write((int)obj.Value.pos[i]);
+                                        }
+                                        break;
+                                }
                             }
+                            ServerMessages.Clear();
+                            Monitor.Wait(ServerMessages);
                         }
-                        ServerMessages.Clear();
-                        Monitor.Wait(ServerMessages);
                     }
                 }
+            }
+            catch (IOException)
+            {
+                //if connected, client ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
+
+                lock (Lock)
+                {
+                    if (IsConnected)
+                        Disconnect();
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debugger.Break();
+                //TODO: log error message ex
+                lock (Lock) { Disconnect(); }
+                throw;
             }
         }
 
@@ -165,8 +191,6 @@ namespace DeCuisine
                 connection.Close(); //close receiver thread
             }
             catch { }
-
-            
 
             Disconnected(this, EventArgs.Empty);
         }

@@ -11,11 +11,11 @@ namespace Breakneck_Brigade
     {
         public BBLock Lock = new BBLock();
 
-        public Dictionary<string, string> gameObjects { get; private set; }
+        public Dictionary<int, GameObject> gameObjects { get; private set; }
 
         public Game()
         {
-            gameObjects = new Dictionary<string, string>();
+            gameObjects = new Dictionary<int, GameObject>();
         }
 
     }

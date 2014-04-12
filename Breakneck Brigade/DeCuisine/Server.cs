@@ -51,12 +51,35 @@ namespace DeCuisine
     
         public Server()
         {
-            
+            lock (Lock)
+            {
+                loadConfig();
+            }
         }
         public Server(IPAddress ip, int port) : this()
         {
             this.IP = ip;
             this.Port = port;
+        }
+
+        public void ReloadConfig()
+        {
+            Lock.AssertHeld();
+
+            loadConfig();
+
+            if (Game != null)
+            {
+                lock (Game.Lock)
+                {
+                    Game.ReloadConfig();
+                }
+            }
+        }
+
+        void loadConfig()
+        {
+            Lock.AssertHeld();
         }
 
         TcpListener listener;
@@ -101,14 +124,20 @@ namespace DeCuisine
                 //listener.Stop();
                 listener = null;
 
-                foreach (var client in clients)
+                lock (Lock)
                 {
-                    lock (client.Lock)
+                    foreach (var client in new List<Client>(clients))
                     {
-                        client.Disconnect(); //TODO: synchronize.  what if we are reading data from client?
+                        lock (client.Lock)
+                        {
+                            client.Disconnect(); //TODO: synchronize.  what if we are reading data from client?
+                        }
+                    }
+                    while (clients.Count > 0)
+                    {
+                        Monitor.Wait(Lock, 10);
                     }
                 }
-                clients.Clear();
 
                 lock (Game.Lock)
                 {
@@ -192,8 +221,11 @@ namespace DeCuisine
 
         void client_Disconnected(object sender, EventArgs e)
         {
-            clients.Remove((Client)sender);
-            ClientLeave(this, new ClientEventArgs((Client)sender));
+            lock (Lock)
+            {
+                clients.Remove((Client)sender);
+                ClientLeave(this, new ClientEventArgs((Client)sender));
+            }
         }
     }
 }

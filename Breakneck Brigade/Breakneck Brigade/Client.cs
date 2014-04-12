@@ -89,9 +89,13 @@ namespace Breakneck_Brigade
                                 int len = reader.ReadInt32();
                                 for (int i = 0; i < len; i++)
                                 {
-                                    string key = reader.ReadString();
-                                    string value = reader.ReadString();
-                                    Game.gameObjects.Add(key, value);
+                                    int id = reader.ReadInt32();
+                                    Game.gameObjects.Add(id,
+                                        new Ingredient(id, "banana") { pos = new Vector4(
+                                                reader.ReadInt32(),
+                                                reader.ReadInt32(),
+                                                reader.ReadInt32(),
+                                                reader.ReadInt32()) });
                                 }
                                 break;
                             default:
@@ -103,9 +107,11 @@ namespace Breakneck_Brigade
             catch(IOException)
             {
                 //if connected, server ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
-                if (IsConnected)
+
+                lock (Lock)
                 {
-                    lock (Lock) { Disconnect(); }
+                    if (IsConnected) 
+                        Disconnect();
                 }
                 return;
             }
@@ -122,28 +128,49 @@ namespace Breakneck_Brigade
         public List<ClientEvent> ClientEvents { get; private set; }
         private void send()
         {
-            using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
+            try
             {
-                lock (ClientEvents)
+                using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
                 {
-                    while (IsConnected)
+                    lock (ClientEvents)
                     {
-                        foreach(var clientEvent in ClientEvents)
+                        while (IsConnected)
                         {
-                            writer.Write((byte)ClientMessageType.ClientEvent);
-                            writer.Write((byte)clientEvent.Type);
-                            writer.Write(clientEvent.Args.Count);
-                            foreach(var pair in clientEvent.Args)
+                            foreach (var clientEvent in ClientEvents)
                             {
-                                writer.Write(pair.Key);
-                                writer.Write(pair.Value);
+                                writer.Write((byte)ClientMessageType.ClientEvent);
+                                writer.Write((byte)clientEvent.Type);
+                                writer.Write(clientEvent.Args.Count);
+                                foreach (var pair in clientEvent.Args)
+                                {
+                                    writer.Write(pair.Key);
+                                    writer.Write(pair.Value);
+                                }
                             }
-                        }
-                        ClientEvents.Clear();
+                            ClientEvents.Clear();
 
-                        Monitor.Wait(ClientEvents);
+                            Monitor.Wait(ClientEvents);
+                        }
                     }
-                }   
+                }
+            }
+            catch (IOException)
+            {
+                //if connected, server ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
+
+                lock (Lock)
+                {
+                    if (IsConnected)
+                        Disconnect();
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debugger.Break();
+                //TODO: log error message ex
+                lock (Lock) { Disconnect(); }
+                throw;
             }
         }
 
