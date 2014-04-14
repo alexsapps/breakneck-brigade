@@ -29,7 +29,7 @@ namespace SousChef
         public delegate List<T> BBXListHandler<T>(XmlReader node);
         public delegate T BBXItemHandler<T>(XmlReader node);
 
-        public List<Ingredient> GetIngredients()
+        public List<IngredientType> GetIngredients()
         {
             return new BBXIngredientsFileParser(this).LoadFile();
         }

@@ -8,18 +8,12 @@ namespace SousChef
 {
     public class Recipe 
     {
-        public List<Ingredient> Ingredients;
-        public string Cooker; 
-        public Ingredient FinalProduct;
+        public List<IngredientType> Ingredients { get; private set; }
+        public IngredientType FinalProduct;
         
-        public Recipe(List<Ingredient> ingredients, string cooker, Ingredient finalProduct, string modelLoc)
+        public Recipe(List<IngredientType> ingredients, IngredientType finalProduct)
         {
-            this.Ingredients = new List<Ingredient>();
-            foreach(var ingredient in ingredients)
-            {
-                this.Ingredients.Add(ingredient);
-            }
-            this.Cooker = cooker;
+            this.Ingredients = ingredients;
             this.FinalProduct = finalProduct;
         }
     }

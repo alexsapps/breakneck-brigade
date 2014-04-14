@@ -7,14 +7,14 @@ using System.Xml;
 
 namespace SousChef
 {
-    public class BBXIngredientsFileParser : BBXFileParser<Ingredient>
+    public class BBXIngredientsFileParser : BBXFileParser<IngredientType>
     {
         public BBXIngredientsFileParser(GameObjectConfig config) : base(config) { }
         protected override string getRootNodeName() { return "ingredients"; }
         protected override string getListItemNodeName() { return "ingredient"; }
-        public override BBXItemParser<Ingredient> getItemParser() { return new IngredientParser(config); }
+        public override BBXItemParser<IngredientType> getItemParser() { return new IngredientParser(config); }
     }
-    public class IngredientParser : BBXItemParser<Ingredient>
+    public class IngredientParser : BBXItemParser<IngredientType>
     {
         public IngredientParser(GameObjectConfig config) : base(config) { }
         protected override void handleSubtree(XmlReader reader)
@@ -24,12 +24,12 @@ namespace SousChef
 
             if (reader.Name == "innerIngredients")
             {
-                List<Ingredient> subIngredients = ParseList(reader.ReadSubtree(), new IngredientParser(config));
+                List<IngredientType> subIngredients = ParseList(reader.ReadSubtree(), new IngredientParser(config));
                 Console.WriteLine(subIngredients);
             }
             else if (reader.Name == "innerIngredient")
             {
-                Ingredient ingredient = parseSubItem<Ingredient>(reader.ReadSubtree(), new IngredientParser(config));
+                IngredientType ingredient = parseSubItem<IngredientType>(reader.ReadSubtree(), new IngredientParser(config));
                 Console.WriteLine(ingredient);
             }
             else if (reader.Name == "innerStrList")
@@ -40,10 +40,10 @@ namespace SousChef
                 list = null;
             }
         }
-        protected override Ingredient returnItem()
+        protected override IngredientType returnItem()
         {
             Console.WriteLine("parsed! " + attributes["name"]);
-            return new Ingredient(config.IdGetter(), attributes["name"]);
+            return new IngredientType(attributes["name"], null);
         }
     }
 }

@@ -142,7 +142,7 @@ namespace DeCuisine
                                     break;
                                 case ClientEventType.RequestTestObject:
                                     int id = getId();
-                                    GameObjects.Add(id, new Ingredient(id, null) { pos = new Vector4(random.Next(100), random.Next(100), random.Next(100), random.Next(100)) });
+                                    GameObjects.Add(id, new Ingredient(id, new IngredientType("cheese", null) ) { Position = new Vector4(random.Next(100), random.Next(100), random.Next(100), random.Next(100)) });
                                     break;
                                 default:
                                     //error

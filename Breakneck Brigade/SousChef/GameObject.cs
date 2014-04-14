@@ -8,19 +8,19 @@ namespace SousChef
 {
     public abstract class GameObject
     {
-        public int id { get; set; }
-        public Vector4 pos { get; set; }
+        public int Id { get; set; }
+        public Vector4 Position { get; set; }
 
         public GameObject(int id)
         {
-            this.id = id;
-            this.pos = new Vector4();
+            this.Id = id;
+            this.Position = new Vector4();
         }
 
          public GameObject(int id, Vector4 position)
          : this(id)
         {
-            this.pos = pos;
+            this.Position = Position;
         } 
 
         public abstract void Update();

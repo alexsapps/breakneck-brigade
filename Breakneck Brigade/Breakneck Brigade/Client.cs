@@ -91,7 +91,7 @@ namespace Breakneck_Brigade
                                 {
                                     int id = reader.ReadInt32();
                                     Game.gameObjects.Add(id,
-                                        new Ingredient(id, "banana") { pos = new Vector4(
+                                        new Ingredient(id, new IngredientType("cheese", null)) { Position = new Vector4(
                                                 reader.ReadInt32(),
                                                 reader.ReadInt32(),
                                                 reader.ReadInt32(),

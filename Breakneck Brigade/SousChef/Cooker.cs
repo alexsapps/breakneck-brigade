@@ -8,22 +8,19 @@ namespace SousChef
 {
     public class Cooker : GameObject
     {
+        public CookerType Type { get; set; }
+        public List<Recipe> Contents { get; private set; }
 
-        public string Name { get; set; }
-        public List<Ingredient> Ingredients;
-        public List<Recipe> Recipes; //Not an Infiniter cooker
-
-        public Cooker(int id, string name)
+        public Cooker (int id, CookerType type)
             : base(id)
         {
-            this.Name = name;
+            this.Type = type;
+            Contents = new List<Recipe>();
         }
 
         public override void Update()
         {
             throw new NotImplementedException();
         }
-
-
     }
 }

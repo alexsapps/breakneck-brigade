@@ -8,17 +8,19 @@ namespace SousChef
 {
     public class Ingredient : GameObject
     {
-        public string Name { get; set; }
-    
-        public Ingredient (int id, string name)
+        public IngredientType Type { get; set; }
+        public int Cleanliness { get; set; }
+
+        public Ingredient (int id, IngredientType type)
             : base(id)
         {
-            this.Name = name;
+            this.Type = type;
+            Cleanliness = 0;
         }
 
         public override void Update()
         {
-            this.pos[1]--;
+            this.Position[1]--; //TODO: not this
         }
     }
 }

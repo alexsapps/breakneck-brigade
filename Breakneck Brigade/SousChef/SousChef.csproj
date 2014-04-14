@@ -50,11 +50,14 @@
     <Compile Include="Config\Ingredients.cs" />
     <Compile Include="Config\BBXItemParser.cs" />
     <Compile Include="BB.cs" />
+    <Compile Include="Cooker.cs" />
+    <Compile Include="GameObjectType.cs" />
+    <Compile Include="IngredientType.cs" />
     <Compile Include="Utils\BBLock.cs" />
     <Compile Include="Network\ClientEvent.cs" />
     <Compile Include="Network\ClientEventType.cs" />
     <Compile Include="Network\ClientMessageType.cs" />
-    <Compile Include="Cooker.cs" />
+    <Compile Include="CookerType.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Ingredient.cs" />
