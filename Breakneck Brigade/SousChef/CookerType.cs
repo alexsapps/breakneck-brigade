@@ -9,7 +9,8 @@ namespace SousChef
 {
     public class CookerType : GameObjectType
     {
-        public List<Recipe> Recipes { get; set; } //Not an Infiniter cooker
+        public Dictionary<string, Recipe> Recipes { get; set; }
+        public Dictionary<string, bool> ValidIngredients { get; set; } //bools not used, just need the lookup time of a dict
         public string Model { get; set; }
 
         public CookerType(string name, List<Recipe> recipes, string model)
@@ -17,7 +18,19 @@ namespace SousChef
         {
             Debug.Assert(recipes != null);
 
-            this.Recipes = recipes;
+            foreach (var recipe in recipes)
+            {
+                foreach (var ing in recipe.Ingredients)
+                {
+                    if (!ValidIngredients.ContainsKey(ing.Name))
+                    {
+                        //add to valid ingredient dict
+                        ValidIngredients.Add(ing.Name, true);
+                    }
+                }
+                //add recipe to hash by a string from the ingredients
+                Recipes.Add(recipe.hash(), recipe);
+            }
             this.Model = model;
         }
 

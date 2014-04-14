@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SousChef;
 
 namespace SharpBytes
 {
@@ -11,6 +10,7 @@ namespace SharpBytes
     {
         static void Main(string[] args)
         {
+            //make some ingredients. 
             System.Diagnostics.Debugger.Break();
         }
     }
