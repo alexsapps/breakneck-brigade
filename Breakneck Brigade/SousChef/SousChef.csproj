@@ -45,11 +45,13 @@
     <Compile Include="Config\BBXFileParser.cs" />
     <Compile Include="Config\BBXml.cs" />
     <Compile Include="Config\ConfigSalad.cs" />
+    <Compile Include="Config\Cookers.cs" />
     <Compile Include="Config\GlobalsConfigFile.cs" />
     <Compile Include="Config\GlobalsConfigFolder.cs" />
     <Compile Include="Config\Ingredients.cs" />
     <Compile Include="Config\BBXItemParser.cs" />
     <Compile Include="BB.cs" />
+    <Compile Include="Config\Recipes.cs" />
     <Compile Include="Cooker.cs" />
     <Compile Include="GameObjectType.cs" />
     <Compile Include="IngredientType.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Math\Vector4.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\example.txt" />
     <Content Include="Config\use cases.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

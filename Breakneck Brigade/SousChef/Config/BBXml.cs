@@ -43,13 +43,21 @@ exit 0
                 return Path.Combine(folder, file);
             else
             {
-                string[] paths = new string[] { @".\Config", @"..\..\Config", @"..\..\..\Config" };
+                string[] paths = new string[]
+                { 
+                    @".\Config", 
+                    @"..\Config",
+                    @"..\..\Config",
+                    @"..\..\..\Config" 
+                }; //i'm really sorry about this
+
                 foreach (var path in paths)
                 {
                     string result = Path.Combine(path, file);
                     if (File.Exists(result))
                         return result;
                 }
+
                 return null;
             }
         }

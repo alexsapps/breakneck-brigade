@@ -1,0 +1,25 @@
+<recipes>
+  <recipe product="ice cream">
+    <ingredient>sugar</ingredient>
+    <ingredient>ice</ingredient>
+  </recipe>
+  <recipe product="milkshake">
+    <ingredient>milk</ingredient>
+    <ingredient>ice cream</ingredient>
+  </recipe>
+  <recipe product="fruit smoothie">
+    <ingredient>blueberries</ingredient>
+    <ingredient>strawberries</ingredient>
+    <ingredient>ice cream</ingredient>
+  </recipe>
+  <recipe product="grilled cheese">
+    <ingredient>bread</ingredient>
+    <ingredient>butter</ingredient>
+    <ingredient>cheese</ingredient>
+  </recipe>
+  <recipe product="garden burger">
+    <ingredient>bun</ingredient>
+    <ingredient>patty</ingredient>
+    <ingredient>lettuce</ingredient>
+  </recipe>
+</recipes>

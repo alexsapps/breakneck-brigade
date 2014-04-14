@@ -1,0 +1,11 @@
+<cookers>
+  <cooker name="blender">
+    <recipe>milkshake</recipe>
+    <recipe>ice cream</recipe>
+    <recipe>fruit smoothie</recipe>
+  </cooker>
+  <cooker name="grill">
+    <recipe>grilled cheese</recipe>
+    <recipe>garden burger</recipe>
+  </cooker>
+</cookers>

@@ -14,20 +14,39 @@ namespace SousChef
 
         protected Dictionary<string, string> attributes;
 
+        bool _needsReset = false;
         public T Parse(XmlReader reader)
         {
+            if (_needsReset)
+                _reset();
+            else
+                _needsReset = true;
+
             reader.MoveToContent();
             attributes = getAttributes(reader);
-            while (reader.Read())
+            ParseContents(reader);
+
+            return returnItem();
+        }
+
+        public virtual void ParseContents(XmlReader reader)
+        {
+            while (reader.Read()) //could we already be positioned on the next element?
             {
                 if (reader.NodeType == XmlNodeType.Element)
                     handleSubtree(reader.ReadSubtree());
             }
-
-            return returnItem();
         }
+
         protected abstract void handleSubtree(XmlReader reader);
         protected abstract T returnItem();
+
+        private void _reset()
+        {
+            attributes = null;
+            reset();
+        }
+        protected abstract void reset();
 
         protected List<T> parseList(XmlReader reader, BBXItemParser<T> itemParser)
         {
@@ -46,9 +65,16 @@ namespace SousChef
         }
         protected List<string> parseStringList(XmlReader reader, string tagName)
         {
+            return parseStringList(reader, tagName, true);
+        }
+        protected List<string> parseStringList(XmlReader reader, string tagName, bool readParent)
+        {
             List<string> items = new List<string>();
-            reader.MoveToContent();
-            reader.Read();
+            if (readParent)
+            {
+                reader.MoveToContent();
+                reader.Read();
+            }
             while (true)
             {
                 if (reader.NodeType != XmlNodeType.Element)

@@ -1,0 +1,18 @@
+<ingredients>  
+  <ingredient name="sugar" points="10" />
+  <ingredient name="ice" points="5" />
+  <ingredient name="milk" points="30" />
+  <ingredient name="ice cream" points="40" />
+  <ingredient name="blueberries" points="20" />
+  <ingredient name="strawberries" points="20" />
+  <ingredient name="bread" points="15" />
+  <ingredient name="butter" points="10" />
+  <ingredient name="cheese" points="15" />
+  <ingredient name="bun" points="20" />
+  <ingredient name="patty" points="30" />
+  <ingredient name="lettuce" points="10" />
+  <ingredient name="milkshake" points="70" />
+  <ingredient name="fruit smoothie" points="80" />
+  <ingredient name="grilled cheese" points="50" />
+  <ingredient name="garden burger" points="110" />
+</ingredients>
