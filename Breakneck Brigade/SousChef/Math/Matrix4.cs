@@ -62,22 +62,22 @@ namespace SousChef
             backingArray    = new float[4, 4];
             glArray         = new float[16];
 
-            backingArray[0,0] = m00;
-            backingArray[0,1] = m01;
-            backingArray[0,2] = m02;
-            backingArray[0,3] = m03;
-            backingArray[1,0] = m10;
-            backingArray[1,1] = m11;
-            backingArray[1,2] = m12;
-            backingArray[1,3] = m13;
-            backingArray[2,0] = m20;
-            backingArray[2,1] = m21;
-            backingArray[2,2] = m22;
-            backingArray[2,3] = m23;
-            backingArray[3,0] = m30;
-            backingArray[3,1] = m31;
-            backingArray[3,2] = m32;
-            backingArray[3,3] = m33;
+            this[0,0] = m00;
+            this[0,1] = m01;
+            this[0,2] = m02;
+            this[0,3] = m03;
+            this[1,0] = m10;
+            this[1,1] = m11;
+            this[1,2] = m12;
+            this[1,3] = m13;
+            this[2,0] = m20;
+            this[2,1] = m21;
+            this[2,2] = m22;
+            this[2,3] = m23;
+            this[3,0] = m30;
+            this[3,1] = m31;
+            this[3,2] = m32;
+            this[3,3] = m33;
             UpdateGLArray();
         }
 
@@ -112,22 +112,22 @@ namespace SousChef
         {
             backingArray    = new float[4, 4];
             glArray         = new float[16];
-            backingArray[0,0] = (float) m00;
-            backingArray[0,1] = (float) m01;
-            backingArray[0,2] = (float) m02;
-            backingArray[0,3] = (float) m03;
-            backingArray[1,0] = (float) m10;
-            backingArray[1,1] = (float) m11;
-            backingArray[1,2] = (float) m12;
-            backingArray[1,3] = (float) m13;
-            backingArray[2,0] = (float) m20;
-            backingArray[2,1] = (float) m21;
-            backingArray[2,2] = (float) m22;
-            backingArray[2,3] = (float) m23;
-            backingArray[3,0] = (float) m30;
-            backingArray[3,1] = (float) m31;
-            backingArray[3,2] = (float) m32;
-            backingArray[3,3] = (float) m33;
+            this[0,0] = (float) m00;
+            this[0,1] = (float) m01;
+            this[0,2] = (float) m02;
+            this[0,3] = (float) m03;
+            this[1,0] = (float) m10;
+            this[1,1] = (float) m11;
+            this[1,2] = (float) m12;
+            this[1,3] = (float) m13;
+            this[2,0] = (float) m20;
+            this[2,1] = (float) m21;
+            this[2,2] = (float) m22;
+            this[2,3] = (float) m23;
+            this[3,0] = (float) m30;
+            this[3,1] = (float) m31;
+            this[3,2] = (float) m32;
+            this[3,3] = (float) m33;
             UpdateGLArray();
         }
 
@@ -148,22 +148,22 @@ namespace SousChef
                             float m02, float m12, float m22, float m32,
                             float m03, float m13, float m23, float m33 )
         {
-            backingArray[0,0] = m00;
-            backingArray[0,1] = m01;
-            backingArray[0,2] = m02;
-            backingArray[0,3] = m03;
-            backingArray[1,0] = m10;
-            backingArray[1,1] = m11;
-            backingArray[1,2] = m12;
-            backingArray[1,3] = m13;
-            backingArray[2,0] = m20;
-            backingArray[2,1] = m21;
-            backingArray[2,2] = m22;
-            backingArray[2,3] = m23;
-            backingArray[3,0] = m30; 
-            backingArray[3,1] = m31; 
-            backingArray[3,2] = m32; 
-            backingArray[3,3] = m33;
+            this[0,0] = m00;
+            this[0,1] = m01;
+            this[0,2] = m02;
+            this[0,3] = m03;
+            this[1,0] = m10;
+            this[1,1] = m11;
+            this[1,2] = m12;
+            this[1,3] = m13;
+            this[2,0] = m20;
+            this[2,1] = m21;
+            this[2,2] = m22;
+            this[2,3] = m23;
+            this[3,0] = m30; 
+            this[3,1] = m31; 
+            this[3,2] = m32; 
+            this[3,3] = m33;
             UpdateGLArray();
         }
 
@@ -198,22 +198,22 @@ namespace SousChef
                             double m02, double m12, double m22, double m32,
                             double m03, double m13, double m23, double m33 )
         {
-            backingArray[0,0] = (float) m00;
-            backingArray[0,1] = (float) m01;
-            backingArray[0,2] = (float) m02;
-            backingArray[0,3] = (float) m03;
-            backingArray[1,0] = (float) m10;
-            backingArray[1,1] = (float) m11;
-            backingArray[1,2] = (float) m12;
-            backingArray[1,3] = (float) m13;
-            backingArray[2,0] = (float) m20;
-            backingArray[2,1] = (float) m21;
-            backingArray[2,2] = (float) m22;
-            backingArray[2,3] = (float) m23;
-            backingArray[3,0] = (float) m30; 
-            backingArray[3,1] = (float) m31; 
-            backingArray[3,2] = (float) m32; 
-            backingArray[3,3] = (float) m33;
+            this[0,0] = (float) m00;
+            this[0,1] = (float) m01;
+            this[0,2] = (float) m02;
+            this[0,3] = (float) m03;
+            this[1,0] = (float) m10;
+            this[1,1] = (float) m11;
+            this[1,2] = (float) m12;
+            this[1,3] = (float) m13;
+            this[2,0] = (float) m20;
+            this[2,1] = (float) m21;
+            this[2,2] = (float) m22;
+            this[2,3] = (float) m23;
+            this[3,0] = (float) m30; 
+            this[3,1] = (float) m31; 
+            this[3,2] = (float) m32; 
+            this[3,3] = (float) m33;
             return this;
         }
 
@@ -234,7 +234,7 @@ namespace SousChef
 		        {
 			        for(int kk = 0; kk < 4; kk++)
 			        {
-				        result[ii,jj] += backingArray[kk,jj] * other[ii,kk];
+				        this[ii,jj] += this[kk,jj] * other[ii,kk];
 			        }
 		        }
 	        }
@@ -254,7 +254,7 @@ namespace SousChef
             {
                 for (int jj = 0; jj < 4; jj++)
                 {
-                    result[ii] += backingArray[jj, ii] * other[jj];
+                    result[ii] += this[jj, ii] * other[jj];
                 }
             }
             return result;
@@ -281,7 +281,7 @@ namespace SousChef
 	        {
 		        for(int jj = 0; jj < 4; jj++)
 		        {
-			        backingArray[ii,jj] /= backingArray[3,3];
+			        this[ii,jj] /= this[3,3];
 		        }
 	        }
             return this;
@@ -307,22 +307,22 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateX(float angle)
         {
-	        backingArray[0,0] = 1;
-	        backingArray[0,1] = 0;
-	        backingArray[0,2] = 0;
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = 0;
-	        backingArray[1,1] = (float) Math.Cos(angle);
-	        backingArray[1,2] = (float) Math.Sin(angle);
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = 0;
-	        backingArray[2,1] = (float) - Math.Sin(angle);
-	        backingArray[2,2] = (float) Math.Cos(angle);
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = 0;
-	        backingArray[3,1] = 0;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 1;
+	        this[0,0] = 1;
+	        this[0,1] = 0;
+	        this[0,2] = 0;
+	        this[0,3] = 0;
+	        this[1,0] = 0;
+	        this[1,1] = (float) Math.Cos(angle);
+	        this[1,2] = (float) Math.Sin(angle);
+	        this[1,3] = 0;
+	        this[2,0] = 0;
+	        this[2,1] = (float) - Math.Sin(angle);
+	        this[2,2] = (float) Math.Cos(angle);
+	        this[2,3] = 0;
+	        this[3,0] = 0;
+	        this[3,1] = 0;
+	        this[3,2] = 0;
+	        this[3,3] = 1;
             return this;
         }
 
@@ -333,22 +333,22 @@ namespace SousChef
         /// <returns>A reference to this Matrix</returns>
         public Matrix4 RotateY(float angle)
         {
-	        backingArray[0,0] = (float) Math.Cos(angle);
-	        backingArray[0,1] = 0;
-	        backingArray[0,2] = (float) -Math.Sin(angle);
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = 0;
-	        backingArray[1,1] = 1;
-	        backingArray[1,2] = 0;
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = (float) Math.Sin(angle);
-	        backingArray[2,1] = 0;
-	        backingArray[2,2] = (float) Math.Cos(angle);
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = 0;
-	        backingArray[3,1] = 0;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 1;
+	        this[0,0] = (float) Math.Cos(angle);
+	        this[0,1] = 0;
+	        this[0,2] = (float) -Math.Sin(angle);
+	        this[0,3] = 0;
+	        this[1,0] = 0;
+	        this[1,1] = 1;
+	        this[1,2] = 0;
+	        this[1,3] = 0;
+	        this[2,0] = (float) Math.Sin(angle);
+	        this[2,1] = 0;
+	        this[2,2] = (float) Math.Cos(angle);
+	        this[2,3] = 0;
+	        this[3,0] = 0;
+	        this[3,1] = 0;
+	        this[3,2] = 0;
+	        this[3,3] = 1;
             return this;
         }
 
@@ -359,22 +359,22 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateZ(float angle)
         {
-	        backingArray[0,0] = (float) Math.Cos(angle);
-	        backingArray[0,1] = (float) Math.Sin(angle);
-	        backingArray[0,2] = 0;
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = (float) -Math.Sin(angle);
-	        backingArray[1,1] = (float) Math.Cos(angle);
-	        backingArray[1,2] = 0;
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = 0;
-	        backingArray[2,1] = 0;
-	        backingArray[2,2] = 1;
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = 0;
-	        backingArray[3,1] = 0;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 1;
+	        this[0,0] = (float) Math.Cos(angle);
+	        this[0,1] = (float) Math.Sin(angle);
+	        this[0,2] = 0;
+	        this[0,3] = 0;
+	        this[1,0] = (float) -Math.Sin(angle);
+	        this[1,1] = (float) Math.Cos(angle);
+	        this[1,2] = 0;
+	        this[1,3] = 0;
+	        this[2,0] = 0;
+	        this[2,1] = 0;
+	        this[2,2] = 1;
+	        this[2,3] = 0;
+	        this[3,0] = 0;
+	        this[3,1] = 0;
+	        this[3,2] = 0;
+	        this[3,3] = 1;
             return this;
         }
 
@@ -387,22 +387,22 @@ namespace SousChef
         {
 	        angle = (angle/180.0f) * MathConstants.INVERSE_PI;
 
-	        backingArray[0,0] = 1;
-	        backingArray[0,1] = 0;
-	        backingArray[0,2] = 0;
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = 0;
-	        backingArray[1,1] = (float) Math.Cos(angle);
-	        backingArray[1,2] = (float) Math.Sin(angle);
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = 0;
-	        backingArray[2,1] = (float) - Math.Sin(angle);
-	        backingArray[2,2] = (float) Math.Cos(angle);
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = 0;
-	        backingArray[3,1] = 0;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 1;
+	        this[0,0] = 1;
+	        this[0,1] = 0;
+	        this[0,2] = 0;
+	        this[0,3] = 0;
+	        this[1,0] = 0;
+	        this[1,1] = (float) Math.Cos(angle);
+	        this[1,2] = (float) Math.Sin(angle);
+	        this[1,3] = 0;
+	        this[2,0] = 0;
+	        this[2,1] = (float) - Math.Sin(angle);
+	        this[2,2] = (float) Math.Cos(angle);
+	        this[2,3] = 0;
+	        this[3,0] = 0;
+	        this[3,1] = 0;
+	        this[3,2] = 0;
+	        this[3,3] = 1;
 
             return this;
         }
@@ -416,22 +416,22 @@ namespace SousChef
         {
             angle = (angle/180.0f) * MathConstants.INVERSE_PI;
 
-	        backingArray[0,0] = (float) Math.Cos(angle);
-	        backingArray[0,1] = 0;
-	        backingArray[0,2] = (float) -Math.Sin(angle);
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = 0;
-	        backingArray[1,1] = 1;
-	        backingArray[1,2] = 0;
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = (float) Math.Sin(angle);
-	        backingArray[2,1] = 0;
-	        backingArray[2,2] = (float) Math.Cos(angle);
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = 0;
-	        backingArray[3,1] = 0;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 1;
+	        this[0,0] = (float) Math.Cos(angle);
+	        this[0,1] = 0;
+	        this[0,2] = (float) -Math.Sin(angle);
+	        this[0,3] = 0;
+	        this[1,0] = 0;
+	        this[1,1] = 1;
+	        this[1,2] = 0;
+	        this[1,3] = 0;
+	        this[2,0] = (float) Math.Sin(angle);
+	        this[2,1] = 0;
+	        this[2,2] = (float) Math.Cos(angle);
+	        this[2,3] = 0;
+	        this[3,0] = 0;
+	        this[3,1] = 0;
+	        this[3,2] = 0;
+	        this[3,3] = 1;
 
             return this;
         }
@@ -445,22 +445,22 @@ namespace SousChef
         {
             angle = (float) (angle/180.0) * MathConstants.INVERSE_PI;
 
-	        backingArray[0,0] = (float) Math.Cos(angle);
-	        backingArray[0,1] = (float) Math.Sin(angle);
-	        backingArray[0,2] = 0;
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = (float) -Math.Sin(angle);
-	        backingArray[1,1] = (float) Math.Cos(angle);
-	        backingArray[1,2] = 0;
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = 0;
-	        backingArray[2,1] = 0;
-	        backingArray[2,2] = 1;
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = 0;
-	        backingArray[3,1] = 0;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 1;
+	        this[0,0] = (float) Math.Cos(angle);
+	        this[0,1] = (float) Math.Sin(angle);
+	        this[0,2] = 0;
+	        this[0,3] = 0;
+	        this[1,0] = (float) -Math.Sin(angle);
+	        this[1,1] = (float) Math.Cos(angle);
+	        this[1,2] = 0;
+	        this[1,3] = 0;
+	        this[2,0] = 0;
+	        this[2,1] = 0;
+	        this[2,2] = 1;
+	        this[2,3] = 0;
+	        this[3,0] = 0;
+	        this[3,1] = 0;
+	        this[3,2] = 0;
+	        this[3,3] = 1;
 
             return this;
         }
@@ -480,22 +480,22 @@ namespace SousChef
             float ay = axis[1];
             float az = axis[2];
 
-            backingArray[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
-            backingArray[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
-            backingArray[0, 2] = ax*az*(1-cTheta) - ay*sTheta;
-            backingArray[0, 3] = 0;
-            backingArray[1, 0] = ax*ay*(1-cTheta) - az * sTheta;
-            backingArray[1, 1] = (float)(Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
-            backingArray[1, 2] = ay*az*(1-cTheta) + ax*sTheta;
-            backingArray[1, 3] = 0;
-            backingArray[2, 0] = ax*az*(1-cTheta) + ay*sTheta;
-            backingArray[2, 1] = ay*az*(1-cTheta)-ax*sTheta;
-            backingArray[2, 2] = (float)(Math.Pow(az, 2) + cTheta*(1-Math.Pow(az, 2)));
-            backingArray[2, 3] = 0;
-            backingArray[3, 0] = 0;
-            backingArray[3, 1] = 0;
-            backingArray[3, 2] = 0;
-            backingArray[3, 3] = 1;
+            this[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
+            this[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
+            this[0, 2] = ax*az*(1-cTheta) - ay*sTheta;
+            this[0, 3] = 0;
+            this[1, 0] = ax*ay*(1-cTheta) - az * sTheta;
+            this[1, 1] = (float)(Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
+            this[1, 2] = ay*az*(1-cTheta) + ax*sTheta;
+            this[1, 3] = 0;
+            this[2, 0] = ax*az*(1-cTheta) + ay*sTheta;
+            this[2, 1] = ay*az*(1-cTheta)-ax*sTheta;
+            this[2, 2] = (float)(Math.Pow(az, 2) + cTheta*(1-Math.Pow(az, 2)));
+            this[2, 3] = 0;
+            this[3, 0] = 0;
+            this[3, 1] = 0;
+            this[3, 2] = 0;
+            this[3, 3] = 1;
 
             return this;
         }
@@ -517,22 +517,22 @@ namespace SousChef
 
             float[,] t = new float[4,4];
 
-            backingArray[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
-            backingArray[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
-            backingArray[0, 2] = ax*az*(1-cTheta) - ay*sTheta;
-            backingArray[0, 3] = 0;
-            backingArray[1, 0] = ax*ay*(1-cTheta) - az * sTheta;
-            backingArray[1, 1] = (float)(Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
-            backingArray[1, 2] = ay*az*(1-cTheta) + ax*sTheta;
-            backingArray[1, 3] = 0;
-            backingArray[2, 0] = ax*az*(1-cTheta) + ay*sTheta;
-            backingArray[2, 1] = ay*az*(1-cTheta)-ax*sTheta;
-            backingArray[2, 2] = (float)(Math.Pow(az, 2) + cTheta*(1-Math.Pow(az, 2)));
-            backingArray[2, 3] = 0;
-            backingArray[3, 0] = 0;
-            backingArray[3, 1] = 0;
-            backingArray[3, 2] = 0;
-            backingArray[3, 3] = 1;
+            this[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
+            this[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
+            this[0, 2] = ax*az*(1-cTheta) - ay*sTheta;
+            this[0, 3] = 0;
+            this[1, 0] = ax*ay*(1-cTheta) - az * sTheta;
+            this[1, 1] = (float)(Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
+            this[1, 2] = ay*az*(1-cTheta) + ax*sTheta;
+            this[1, 3] = 0;
+            this[2, 0] = ax*az*(1-cTheta) + ay*sTheta;
+            this[2, 1] = ay*az*(1-cTheta)-ax*sTheta;
+            this[2, 2] = (float)(Math.Pow(az, 2) + cTheta*(1-Math.Pow(az, 2)));
+            this[2, 3] = 0;
+            this[3, 0] = 0;
+            this[3, 1] = 0;
+            this[3, 2] = 0;
+            this[3, 3] = 1;
     
             return this;
         }
@@ -547,22 +547,22 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 ScalingMat(float x, float y, float z)
         {
-	        backingArray[0,0] = x;
-	        backingArray[0,1] = 0;
-	        backingArray[0,2] = 0;
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = 0;
-	        backingArray[1,1] = y;
-	        backingArray[1,2] = 0;
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = 0;
-	        backingArray[2,1] = 0;
-	        backingArray[2,2] = z;
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = 0;
-	        backingArray[3,1] = 0;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 1;
+	        this[0,0] = x;
+	        this[0,1] = 0;
+	        this[0,2] = 0;
+	        this[0,3] = 0;
+	        this[1,0] = 0;
+	        this[1,1] = y;
+	        this[1,2] = 0;
+	        this[1,3] = 0;
+	        this[2,0] = 0;
+	        this[2,1] = 0;
+	        this[2,2] = z;
+	        this[2,3] = 0;
+	        this[3,0] = 0;
+	        this[3,1] = 0;
+	        this[3,2] = 0;
+	        this[3,3] = 1;
             
             return this;
 
@@ -576,22 +576,22 @@ namespace SousChef
         /// <param name="z"></param>
         public Matrix4 TranslationMat(float x, float y, float z)
         {
-	        backingArray[0,0] = 1;
-	        backingArray[0,1] = 0;
-	        backingArray[0,2] = 0;
-	        backingArray[0,3] = 0;
-	        backingArray[1,0] = 0;
-	        backingArray[1,1] = 1;
-	        backingArray[1,2] = 0;
-	        backingArray[1,3] = 0;
-	        backingArray[2,0] = 0;
-	        backingArray[2,1] = 0;
-	        backingArray[2,2] = 1;
-	        backingArray[2,3] = 0;
-	        backingArray[3,0] = x;
-	        backingArray[3,1] = y;
-	        backingArray[3,2] = z;
-	        backingArray[3,3] = 1;
+	        this[0,0] = 1;
+	        this[0,1] = 0;
+	        this[0,2] = 0;
+	        this[0,3] = 0;
+	        this[1,0] = 0;
+	        this[1,1] = 1;
+	        this[1,2] = 0;
+	        this[1,3] = 0;
+	        this[2,0] = 0;
+	        this[2,1] = 0;
+	        this[2,2] = 1;
+	        this[2,3] = 0;
+	        this[3,0] = x;
+	        this[3,1] = y;
+	        this[3,2] = z;
+	        this[3,3] = 1;
 
             return this;
         }
@@ -607,9 +607,9 @@ namespace SousChef
 	        {
 		        for(int jj = ii-1; jj >=0; jj--)
 		        {
-			        temp = backingArray[ii,jj];
-			        backingArray[ii,jj] = backingArray[jj,ii];
-			        backingArray[jj,ii] = temp;
+			        temp = this[ii,jj];
+			        this[ii,jj] = this[jj,ii];
+			        this[jj,ii] = temp;
 		        }
 	        }
             return this;
@@ -622,34 +622,34 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 Invert()
         {
-            float det = backingArray[0,0]*backingArray[1,1]*backingArray[2,2]*backingArray[3,3]+backingArray[0,0]*backingArray[1,2]*backingArray[2,3]*backingArray[3,1]+backingArray[0,0]*backingArray[1,3]*backingArray[2,1]*backingArray[3,2]
-            +backingArray[0,1]*backingArray[1,0]*backingArray[2,3]*backingArray[3,2]+backingArray[0,1]*backingArray[1,2]*backingArray[2,0]*backingArray[3,3]+backingArray[0,1]*backingArray[1,3]*backingArray[2,2]*backingArray[3,0]
-            +backingArray[0,2]*backingArray[1,0]*backingArray[2,1]*backingArray[3,3]+backingArray[0,2]*backingArray[1,1]*backingArray[2,3]*backingArray[3,0]+backingArray[0,2]*backingArray[1,3]*backingArray[2,0]*backingArray[3,1]
-            +backingArray[0,3]*backingArray[1,0]*backingArray[2,2]*backingArray[3,1]+backingArray[0,3]*backingArray[1,1]*backingArray[2,0]*backingArray[3,2]+backingArray[0,3]*backingArray[1,2]*backingArray[2,1]*backingArray[3,0]
-            -backingArray[0,0]*backingArray[1,1]*backingArray[2,3]*backingArray[3,2]-backingArray[0,0]*backingArray[1,2]*backingArray[2,1]*backingArray[3,3]-backingArray[0,0]*backingArray[1,3]*backingArray[2,2]*backingArray[3,1]
-            -backingArray[0,1]*backingArray[1,0]*backingArray[2,2]*backingArray[3,3]-backingArray[0,1]*backingArray[1,2]*backingArray[2,3]*backingArray[3,0]-backingArray[0,1]*backingArray[1,3]*backingArray[2,0]*backingArray[3,2]
-            -backingArray[0,2]*backingArray[1,0]*backingArray[2,3]*backingArray[3,1]-backingArray[0,2]*backingArray[1,1]*backingArray[2,0]*backingArray[3,3]-backingArray[0,2]*backingArray[1,3]*backingArray[2,1]*backingArray[3,0]
-            -backingArray[0,3]*backingArray[1,0]*backingArray[2,1]*backingArray[3,2]-backingArray[0,3]*backingArray[1,1]*backingArray[2,2]*backingArray[3,0]-backingArray[0,3]*backingArray[1,2]*backingArray[2,0]*backingArray[3,1];
+            float det = this[0,0]*this[1,1]*this[2,2]*this[3,3]+this[0,0]*this[1,2]*this[2,3]*this[3,1]+this[0,0]*this[1,3]*this[2,1]*this[3,2]
+            +this[0,1]*this[1,0]*this[2,3]*this[3,2]+this[0,1]*this[1,2]*this[2,0]*this[3,3]+this[0,1]*this[1,3]*this[2,2]*this[3,0]
+            +this[0,2]*this[1,0]*this[2,1]*this[3,3]+this[0,2]*this[1,1]*this[2,3]*this[3,0]+this[0,2]*this[1,3]*this[2,0]*this[3,1]
+            +this[0,3]*this[1,0]*this[2,2]*this[3,1]+this[0,3]*this[1,1]*this[2,0]*this[3,2]+this[0,3]*this[1,2]*this[2,1]*this[3,0]
+            -this[0,0]*this[1,1]*this[2,3]*this[3,2]-this[0,0]*this[1,2]*this[2,1]*this[3,3]-this[0,0]*this[1,3]*this[2,2]*this[3,1]
+            -this[0,1]*this[1,0]*this[2,2]*this[3,3]-this[0,1]*this[1,2]*this[2,3]*this[3,0]-this[0,1]*this[1,3]*this[2,0]*this[3,2]
+            -this[0,2]*this[1,0]*this[2,3]*this[3,1]-this[0,2]*this[1,1]*this[2,0]*this[3,3]-this[0,2]*this[1,3]*this[2,1]*this[3,0]
+            -this[0,3]*this[1,0]*this[2,1]*this[3,2]-this[0,3]*this[1,1]*this[2,2]*this[3,0]-this[0,3]*this[1,2]*this[2,0]*this[3,1];
             float[,] b = new float[4,4];
-            b[0,0] = backingArray[1,1]*backingArray[2,2]*backingArray[3,3]+backingArray[1,2]*backingArray[2,3]*backingArray[3,1]+backingArray[1,3]*backingArray[2,1]*backingArray[3,2]-backingArray[1,1]*backingArray[2,3]*backingArray[3,2]-backingArray[1,2]*backingArray[2,1]*backingArray[3,3]-backingArray[1,3]*backingArray[2,2]*backingArray[3,1];
-            b[0,1] = backingArray[0,1]*backingArray[2,3]*backingArray[3,2]+backingArray[0,2]*backingArray[2,1]*backingArray[3,3]+backingArray[0,3]*backingArray[2,2]*backingArray[3,1]-backingArray[0,1]*backingArray[2,2]*backingArray[3,3]-backingArray[0,2]*backingArray[2,3]*backingArray[3,1]-backingArray[0,3]*backingArray[2,1]*backingArray[3,2];
-            b[0,2] = backingArray[0,1]*backingArray[1,2]*backingArray[3,3]+backingArray[0,2]*backingArray[1,3]*backingArray[3,1]+backingArray[0,3]*backingArray[1,1]*backingArray[3,2]-backingArray[0,1]*backingArray[1,3]*backingArray[3,2]-backingArray[0,2]*backingArray[1,1]*backingArray[3,3]-backingArray[0,3]*backingArray[1,2]*backingArray[3,1];
-            b[0,3] = backingArray[0,1]*backingArray[1,3]*backingArray[2,2]+backingArray[0,2]*backingArray[1,1]*backingArray[2,3]+backingArray[0,3]*backingArray[1,2]*backingArray[2,1]-backingArray[0,1]*backingArray[1,2]*backingArray[2,3]-backingArray[0,2]*backingArray[1,3]*backingArray[2,1]-backingArray[0,3]*backingArray[1,1]*backingArray[2,2];
-            b[1,0] = backingArray[1,0]*backingArray[2,3]*backingArray[3,2]+backingArray[1,2]*backingArray[2,0]*backingArray[3,3]+backingArray[1,3]*backingArray[2,2]*backingArray[3,0]-backingArray[1,0]*backingArray[2,2]*backingArray[3,3]-backingArray[1,2]*backingArray[2,3]*backingArray[3,0]-backingArray[1,3]*backingArray[2,0]*backingArray[3,2];
-            b[1,1] = backingArray[0,0]*backingArray[2,2]*backingArray[3,3]+backingArray[0,2]*backingArray[2,3]*backingArray[3,0]+backingArray[0,3]*backingArray[2,0]*backingArray[3,2]-backingArray[0,0]*backingArray[2,3]*backingArray[3,2]-backingArray[0,2]*backingArray[2,0]*backingArray[3,3]-backingArray[0,3]*backingArray[2,2]*backingArray[3,0];
-            b[1,2] = backingArray[0,0]*backingArray[1,3]*backingArray[3,2]+backingArray[0,2]*backingArray[1,0]*backingArray[3,3]+backingArray[0,3]*backingArray[1,2]*backingArray[3,0]-backingArray[0,0]*backingArray[1,2]*backingArray[3,3]-backingArray[0,2]*backingArray[1,3]*backingArray[3,0]-backingArray[0,3]*backingArray[1,0]*backingArray[3,2];
-            b[1,3] = backingArray[0,0]*backingArray[1,2]*backingArray[2,3]+backingArray[0,2]*backingArray[1,3]*backingArray[2,0]+backingArray[0,3]*backingArray[1,0]*backingArray[2,2]-backingArray[0,0]*backingArray[1,3]*backingArray[2,2]-backingArray[0,2]*backingArray[1,0]*backingArray[2,3]-backingArray[0,3]*backingArray[1,2]*backingArray[2,0];
-            b[2,0] = backingArray[1,0]*backingArray[2,1]*backingArray[3,3]+backingArray[1,1]*backingArray[2,3]*backingArray[3,0]+backingArray[1,3]*backingArray[2,0]*backingArray[3,1]-backingArray[1,0]*backingArray[2,3]*backingArray[3,1]-backingArray[1,1]*backingArray[2,0]*backingArray[3,3]-backingArray[1,3]*backingArray[2,1]*backingArray[3,0];
-            b[2,1] = backingArray[0,0]*backingArray[2,3]*backingArray[3,1]+backingArray[0,1]*backingArray[2,0]*backingArray[3,3]+backingArray[0,3]*backingArray[2,1]*backingArray[3,0]-backingArray[0,0]*backingArray[2,1]*backingArray[3,3]-backingArray[0,1]*backingArray[2,3]*backingArray[3,0]-backingArray[0,3]*backingArray[2,0]*backingArray[3,1];
-            b[2,2] = backingArray[0,0]*backingArray[1,1]*backingArray[3,3]+backingArray[0,1]*backingArray[1,3]*backingArray[3,0]+backingArray[0,3]*backingArray[1,0]*backingArray[3,1]-backingArray[0,0]*backingArray[1,3]*backingArray[3,1]-backingArray[0,1]*backingArray[1,0]*backingArray[3,3]-backingArray[0,3]*backingArray[1,1]*backingArray[3,0];
-            b[2,3] = backingArray[0,0]*backingArray[1,3]*backingArray[2,1]+backingArray[0,1]*backingArray[1,0]*backingArray[2,3]+backingArray[0,3]*backingArray[1,1]*backingArray[2,0]-backingArray[0,0]*backingArray[1,1]*backingArray[2,3]-backingArray[0,1]*backingArray[1,3]*backingArray[2,0]-backingArray[0,3]*backingArray[1,0]*backingArray[2,1];
-            b[3,0] = backingArray[1,0]*backingArray[2,2]*backingArray[3,1]+backingArray[1,1]*backingArray[2,0]*backingArray[3,2]+backingArray[1,2]*backingArray[2,1]*backingArray[3,0]-backingArray[1,0]*backingArray[2,1]*backingArray[3,2]-backingArray[1,1]*backingArray[2,2]*backingArray[3,0]-backingArray[1,2]*backingArray[2,0]*backingArray[3,1];
-            b[3,1] = backingArray[0,0]*backingArray[2,1]*backingArray[3,2]+backingArray[0,1]*backingArray[2,2]*backingArray[3,0]+backingArray[0,2]*backingArray[2,0]*backingArray[3,1]-backingArray[0,0]*backingArray[2,2]*backingArray[3,1]-backingArray[0,1]*backingArray[2,0]*backingArray[3,2]-backingArray[0,2]*backingArray[2,1]*backingArray[3,0];
-            b[3,2] = backingArray[0,0]*backingArray[1,2]*backingArray[3,1]+backingArray[0,1]*backingArray[1,0]*backingArray[3,2]+backingArray[0,2]*backingArray[1,1]*backingArray[3,0]-backingArray[0,0]*backingArray[1,1]*backingArray[3,2]-backingArray[0,1]*backingArray[1,2]*backingArray[3,0]-backingArray[0,2]*backingArray[1,0]*backingArray[3,1];
-            b[3,3] = backingArray[0,0]*backingArray[1,1]*backingArray[2,2]+backingArray[0,1]*backingArray[1,2]*backingArray[2,0]+backingArray[0,2]*backingArray[1,0]*backingArray[2,1]-backingArray[0,0]*backingArray[1,2]*backingArray[2,1]-backingArray[0,1]*backingArray[1,0]*backingArray[2,2]-backingArray[0,2]*backingArray[1,1]*backingArray[2,0];
+            b[0,0] = this[1,1]*this[2,2]*this[3,3]+this[1,2]*this[2,3]*this[3,1]+this[1,3]*this[2,1]*this[3,2]-this[1,1]*this[2,3]*this[3,2]-this[1,2]*this[2,1]*this[3,3]-this[1,3]*this[2,2]*this[3,1];
+            b[0,1] = this[0,1]*this[2,3]*this[3,2]+this[0,2]*this[2,1]*this[3,3]+this[0,3]*this[2,2]*this[3,1]-this[0,1]*this[2,2]*this[3,3]-this[0,2]*this[2,3]*this[3,1]-this[0,3]*this[2,1]*this[3,2];
+            b[0,2] = this[0,1]*this[1,2]*this[3,3]+this[0,2]*this[1,3]*this[3,1]+this[0,3]*this[1,1]*this[3,2]-this[0,1]*this[1,3]*this[3,2]-this[0,2]*this[1,1]*this[3,3]-this[0,3]*this[1,2]*this[3,1];
+            b[0,3] = this[0,1]*this[1,3]*this[2,2]+this[0,2]*this[1,1]*this[2,3]+this[0,3]*this[1,2]*this[2,1]-this[0,1]*this[1,2]*this[2,3]-this[0,2]*this[1,3]*this[2,1]-this[0,3]*this[1,1]*this[2,2];
+            b[1,0] = this[1,0]*this[2,3]*this[3,2]+this[1,2]*this[2,0]*this[3,3]+this[1,3]*this[2,2]*this[3,0]-this[1,0]*this[2,2]*this[3,3]-this[1,2]*this[2,3]*this[3,0]-this[1,3]*this[2,0]*this[3,2];
+            b[1,1] = this[0,0]*this[2,2]*this[3,3]+this[0,2]*this[2,3]*this[3,0]+this[0,3]*this[2,0]*this[3,2]-this[0,0]*this[2,3]*this[3,2]-this[0,2]*this[2,0]*this[3,3]-this[0,3]*this[2,2]*this[3,0];
+            b[1,2] = this[0,0]*this[1,3]*this[3,2]+this[0,2]*this[1,0]*this[3,3]+this[0,3]*this[1,2]*this[3,0]-this[0,0]*this[1,2]*this[3,3]-this[0,2]*this[1,3]*this[3,0]-this[0,3]*this[1,0]*this[3,2];
+            b[1,3] = this[0,0]*this[1,2]*this[2,3]+this[0,2]*this[1,3]*this[2,0]+this[0,3]*this[1,0]*this[2,2]-this[0,0]*this[1,3]*this[2,2]-this[0,2]*this[1,0]*this[2,3]-this[0,3]*this[1,2]*this[2,0];
+            b[2,0] = this[1,0]*this[2,1]*this[3,3]+this[1,1]*this[2,3]*this[3,0]+this[1,3]*this[2,0]*this[3,1]-this[1,0]*this[2,3]*this[3,1]-this[1,1]*this[2,0]*this[3,3]-this[1,3]*this[2,1]*this[3,0];
+            b[2,1] = this[0,0]*this[2,3]*this[3,1]+this[0,1]*this[2,0]*this[3,3]+this[0,3]*this[2,1]*this[3,0]-this[0,0]*this[2,1]*this[3,3]-this[0,1]*this[2,3]*this[3,0]-this[0,3]*this[2,0]*this[3,1];
+            b[2,2] = this[0,0]*this[1,1]*this[3,3]+this[0,1]*this[1,3]*this[3,0]+this[0,3]*this[1,0]*this[3,1]-this[0,0]*this[1,3]*this[3,1]-this[0,1]*this[1,0]*this[3,3]-this[0,3]*this[1,1]*this[3,0];
+            b[2,3] = this[0,0]*this[1,3]*this[2,1]+this[0,1]*this[1,0]*this[2,3]+this[0,3]*this[1,1]*this[2,0]-this[0,0]*this[1,1]*this[2,3]-this[0,1]*this[1,3]*this[2,0]-this[0,3]*this[1,0]*this[2,1];
+            b[3,0] = this[1,0]*this[2,2]*this[3,1]+this[1,1]*this[2,0]*this[3,2]+this[1,2]*this[2,1]*this[3,0]-this[1,0]*this[2,1]*this[3,2]-this[1,1]*this[2,2]*this[3,0]-this[1,2]*this[2,0]*this[3,1];
+            b[3,1] = this[0,0]*this[2,1]*this[3,2]+this[0,1]*this[2,2]*this[3,0]+this[0,2]*this[2,0]*this[3,1]-this[0,0]*this[2,2]*this[3,1]-this[0,1]*this[2,0]*this[3,2]-this[0,2]*this[2,1]*this[3,0];
+            b[3,2] = this[0,0]*this[1,2]*this[3,1]+this[0,1]*this[1,0]*this[3,2]+this[0,2]*this[1,1]*this[3,0]-this[0,0]*this[1,1]*this[3,2]-this[0,1]*this[1,2]*this[3,0]-this[0,2]*this[1,0]*this[3,1];
+            b[3,3] = this[0,0]*this[1,1]*this[2,2]+this[0,1]*this[1,2]*this[2,0]+this[0,2]*this[1,0]*this[2,1]-this[0,0]*this[1,2]*this[2,1]-this[0,1]*this[1,0]*this[2,2]-this[0,2]*this[1,1]*this[2,0];
             for(int i=0;i<4;i++)
                 for(int j=0;j<4;j++)
-                    backingArray[i,j] = b[i,j]/det;
+                    this[i,j] = b[i,j]/det;
             return this;
         }
         
@@ -660,21 +660,21 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 FastInvert()
         {
-            backingArray[0,0] = backingArray[0,0];
-	        backingArray[0,1] = backingArray[1,0];
-	        backingArray[0,2] = backingArray[2,0];
+            this[0,0] = this[0,0];
+	        this[0,1] = this[1,0];
+	        this[0,2] = this[2,0];
 
-	        backingArray[1,0] = backingArray[0,1];
-	        backingArray[1,1] = backingArray[1,1];
-	        backingArray[1,2] = backingArray[2,1];
+	        this[1,0] = this[0,1];
+	        this[1,1] = this[1,1];
+	        this[1,2] = this[2,1];
 
-	        backingArray[2,0] = backingArray[0,2];
-            backingArray[2,1] = backingArray[1,2];
-            backingArray[2,2] = backingArray[2,2];
+	        this[2,0] = this[0,2];
+            this[2,1] = this[1,2];
+            this[2,2] = this[2,2];
 
-	        backingArray[3,0] = -backingArray[3,0];
-	        backingArray[3,1] = -backingArray[3,1];
-	        backingArray[3,2] = -backingArray[3,2];
+	        this[3,0] = -this[3,0];
+	        this[3,1] = -this[3,1];
+	        this[3,2] = -this[3,2];
 
             return this;
         }
@@ -691,7 +691,7 @@ namespace SousChef
 	        {
 		        for(int jj = 0; jj < 4; jj++)
 		        {
-			        backingArray[ii,jj] *= scalar;
+			        this[ii,jj] *= scalar;
 		        }
 	        }
             return this;
@@ -702,10 +702,10 @@ namespace SousChef
         public void Print()
         {
 	        Console.WriteLine("Matrix4: \n" +
-                    backingArray[0,0] + ", " + backingArray[1,0] + ", " + backingArray[2,0] + ", " + backingArray[3,0] + "\n" +
-			        backingArray[0,1] + ", " + backingArray[1,1] + ", " + backingArray[2,1] + ", " + backingArray[3,1] + "\n" +
-			        backingArray[0,2] + ", " + backingArray[1,2] + ", " + backingArray[2,2] + ", " + backingArray[3,2] + "\n" +
-			        backingArray[0,3] + ", " + backingArray[1,3] + ", " + backingArray[2,3] + ", " + backingArray[3,3] + "\n" );
+                    this[0,0] + ", " + this[1,0] + ", " + this[2,0] + ", " + this[3,0] + "\n" +
+			        this[0,1] + ", " + this[1,1] + ", " + this[2,1] + ", " + this[3,1] + "\n" +
+			        this[0,2] + ", " + this[1,2] + ", " + this[2,2] + ", " + this[3,2] + "\n" +
+			        this[0,3] + ", " + this[1,3] + ", " + this[2,3] + ", " + this[3,3] + "\n" );
         }
 
         /// <summary>
@@ -714,25 +714,25 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 HermiteInverse()
         {
-	        backingArray[0,0] = 2;
-	        backingArray[0,1] = -3;
-	        backingArray[0,2] = 0;
-	        backingArray[0,3] = 1;
+	        this[0,0] = 2;
+	        this[0,1] = -3;
+	        this[0,2] = 0;
+	        this[0,3] = 1;
 
-	        backingArray[1,0] = -2;
-	        backingArray[1,1] = 3;
-	        backingArray[1,2] = 0;
-	        backingArray[1,3] = 0;
+	        this[1,0] = -2;
+	        this[1,1] = 3;
+	        this[1,2] = 0;
+	        this[1,3] = 0;
 
-	        backingArray[2,0] = 1;
-	        backingArray[2,1] = -2;
-	        backingArray[2,2] = 1;
-	        backingArray[2,3] = 0;
+	        this[2,0] = 1;
+	        this[2,1] = -2;
+	        this[2,2] = 1;
+	        this[2,3] = 0;
 
-	        backingArray[3,0] = 1;
-	        backingArray[3,1] = -1;
-	        backingArray[3,2] = 0;
-	        backingArray[3,3] = 0;
+	        this[3,0] = 1;
+	        this[3,1] = -1;
+	        this[3,2] = 0;
+	        this[3,3] = 0;
 
             return this;
         }
@@ -744,15 +744,15 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 CopyRot(Matrix4 mat)
         {
-            backingArray[0,0] = mat[0, 0];
-            backingArray[0,1] = mat[0, 1];
-            backingArray[0,2] = mat[0, 2];
-            backingArray[1,0] = mat[1, 0];
-            backingArray[1,1] = mat[1, 1];
-            backingArray[1,2] = mat[1, 2];
-            backingArray[2,0] = mat[2, 0];
-            backingArray[2,1] = mat[2, 1];
-            backingArray[2,2] = mat[2, 2];
+            this[0,0] = mat[0, 0];
+            this[0,1] = mat[0, 1];
+            this[0,2] = mat[0, 2];
+            this[1,0] = mat[1, 0];
+            this[1,1] = mat[1, 1];
+            this[1,2] = mat[1, 2];
+            this[2,0] = mat[2, 0];
+            this[2,1] = mat[2, 1];
+            this[2,2] = mat[2, 2];
 
             return this;
         }
@@ -762,22 +762,22 @@ namespace SousChef
         /// </summary>
         private void UpdateGLArray()
         {
-            glArray[0]  = backingArray[0, 0];
-            glArray[1]  = backingArray[0, 1];
-            glArray[2]  = backingArray[0, 2];
-            glArray[3]  = backingArray[0, 3];
-            glArray[4]  = backingArray[1, 0];
-            glArray[5]  = backingArray[1, 1];
-            glArray[6]  = backingArray[1, 2];
-            glArray[7]  = backingArray[1, 3];
-            glArray[8]  = backingArray[2, 0];
-            glArray[9]  = backingArray[2, 1];
-            glArray[10] = backingArray[2, 2];
-            glArray[11] = backingArray[2, 3];
-            glArray[12] = backingArray[3, 0];
-            glArray[13] = backingArray[3, 1];
-            glArray[14] = backingArray[3, 2];
-            glArray[15] = backingArray[3, 3];
+            glArray[0]  = this[0, 0];
+            glArray[1]  = this[0, 1];
+            glArray[2]  = this[0, 2];
+            glArray[3]  = this[0, 3];
+            glArray[4]  = this[1, 0];
+            glArray[5]  = this[1, 1];
+            glArray[6]  = this[1, 2];
+            glArray[7]  = this[1, 3];
+            glArray[8]  = this[2, 0];
+            glArray[9]  = this[2, 1];
+            glArray[10] = this[2, 2];
+            glArray[11] = this[2, 3];
+            glArray[12] = this[3, 0];
+            glArray[13] = this[3, 1];
+            glArray[14] = this[3, 2];
+            glArray[15] = this[3, 3];
         }
     }
 }

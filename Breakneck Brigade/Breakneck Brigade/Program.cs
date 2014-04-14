@@ -17,6 +17,7 @@ namespace Breakneck_Brigade
          * Runs GLFW initialization code, terminiating if initialization failed
          */
         static Camera mainCamera;
+        static List<Object3D> Object3Ds;
 
         /// <summary>
         /// Initializes all settings for GLFW (window rendering and handling)
@@ -35,6 +36,71 @@ namespace Breakneck_Brigade
         {
             Glfw.glfwCloseWindow();
             Glfw.glfwTerminate();
+        }
+
+        /// <summary>
+        /// Builds a snowman and adds it to the list of things to be rendered.
+        /// </summary>
+        static void makeAnnaHappy()
+        {
+            ColoredGluSphere snowmanBase    = new ColoredGluSphere(3, 10, 10);
+            ColoredGluSphere snowmanBody    = new ColoredGluSphere(2.5, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.0f,4.0f,0.0f));
+            ColoredGluSphere snowmanHead    = new ColoredGluSphere(2, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.0f,3.0f,0.0f));
+
+            //Buttons
+            ColoredGluSphere button0        = new ColoredGluSphere(0.5, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.0f, 0.0f, -2.25f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere button1        = new ColoredGluSphere(0.5, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.0f, 1.0f, -2.0f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere button2        = new ColoredGluSphere(0.5, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.0f, -1.0f, -2.0f),
+                                                0, 0, 0, 1);
+
+            //Face
+            ColoredGluSphere eyeL           = new ColoredGluSphere(0.3, 10, 10,
+                                                (new Matrix4()).TranslationMat(-0.75f, 1.0f, -1.75f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere eyeR           = new ColoredGluSphere(0.3, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.75f, 1.0f, -1.75f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere nose           = new ColoredGluSphere(0.3, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.0f, 0.5f, -2.0f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere mouth0         = new ColoredGluSphere(0.3, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.95f, 0.2f, -1.75f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere mouth1         = new ColoredGluSphere(0.3, 10, 10,
+                                                (new Matrix4()).TranslationMat(0.35f, -0.1f, -2.0f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere mouth2         = new ColoredGluSphere(0.3, 10, 10,
+                                                (new Matrix4()).TranslationMat(-0.35f, -0.1f, -2.0f),
+                                                0, 0, 0, 1);
+            ColoredGluSphere mouth3         = new ColoredGluSphere(0.3, 10, 10,
+                                                (new Matrix4()).TranslationMat(-0.95f, 0.2f, -1.75f),
+                                                0, 0, 0, 1);
+
+
+            snowmanHead.Children.Add(eyeL);
+            snowmanHead.Children.Add(eyeR);
+            snowmanHead.Children.Add(nose);
+            snowmanHead.Children.Add(mouth0);
+            snowmanHead.Children.Add(mouth1);
+            snowmanHead.Children.Add(mouth2);
+            snowmanHead.Children.Add(mouth3);
+
+            snowmanBody.Children.Add(snowmanHead);
+            snowmanBody.Children.Add(button0);
+            snowmanBody.Children.Add(button1);
+            snowmanBody.Children.Add(button2);
+
+            snowmanBase.Children.Add(snowmanBody);
+
+            Object3Ds.Add(snowmanBase);
+
         }
 
         /// <summary>
@@ -57,6 +123,8 @@ namespace Breakneck_Brigade
             /* RENDERING SETTINGS */
             //Enables depth buffering for standard GL calls (glu rendering calls, etc.)
             Gl.glEnable(Gl.GL_DEPTH_TEST); 
+            //Enables manual setting of colors and materials of primatives (through glColor__, etc)
+            Gl.glEnable(Gl.GL_COLOR_MATERIAL);
             //For basic polygons, draws both a front and back face. (May disable for performance reasons later)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL); 
             //What shading model to use for rendering Gl prims
@@ -64,19 +132,13 @@ namespace Breakneck_Brigade
 
             /* CAMERA */
             mainCamera = new Camera();
-            mainCamera.Distance = 50.0f;
+            mainCamera.Distance = 25.0f;
             mainCamera.Incline  = 20.0f;
-        }
 
-        static void DrawSphere(float x, float y, float z, float radius)
-        {
-            Matrix4 transform = new Matrix4();
-            transform = transform * ((new Matrix4()).TranslationMat(x, y, z));
-            Gl.glPushMatrix();
-            Gl.glLoadMatrixf(transform.glArray);
-            Glu.GLUquadric quad = Glu.gluNewQuadric();
-            Glu.gluSphere(quad, radius, 20, 20);
-            Gl.glPopMatrix();
+            Object3Ds = new List<Object3D>();
+
+            /* TESTING MODES */
+            makeAnnaHappy(); //Do you want to build a snowman?
         }
 
         static void Render()
@@ -92,9 +154,10 @@ namespace Breakneck_Brigade
             mainCamera.Update();
             mainCamera.Render();
 
-            DrawSphere(1, 1, 1, 2);
-            DrawSphere(-20, 1, 5, 2);
-            DrawSphere(0, 0, 10, 2);
+            foreach(Object3D obj3D in Object3Ds)
+            {
+                obj3D.Render();
+            }
 
             Glfw.glfwSwapBuffers();
             Glfw.glfwPollEvents();

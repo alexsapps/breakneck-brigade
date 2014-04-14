@@ -11,7 +11,7 @@ namespace Breakneck_Brigade.Graphics
     /// <summary>
     /// A container for an OpenGL primative represented as a collection of polygons and a 
     /// </summary>
-    class TexturedMesh
+    class TexturedMesh : Object3D
     {
         /// <summary>
         /// A list of polygons that comprise the primative.
@@ -25,30 +25,60 @@ namespace Breakneck_Brigade.Graphics
         /// The mode OpenGL should be set to in order to draw this mesh.
         /// </summary>
         public int                  GlDrawMode;
+
         /// <summary>
-        /// The transformation for this mesh, relative to its parent. If this is the
-        /// root node, set this to the identity matrix.
+        /// Instanciates a mesh with no transformations applied and an empty list of polygons.
         /// </summary>
-        public Matrix4              Transformation;
-        /// <summary>
-        /// Direct children of this node.
-        /// </summary>
-        public List<TexturedMesh>   Children; //TODO: Might need to have textured mesh inherit from a common interface if we want to use GLU prims later
         public TexturedMesh()
         {
-            Polygons = new List<Polygon>();
+            Transformation  = new Matrix4();
+            Children        = new List<Object3D>();
+            Polygons        = new List<Polygon>();
         }
 
-        public void Render()
+        /// <summary>
+        /// Just sets the transform of the object, leaving the Children and Polygons lists empty
+        /// </summary>
+        /// <param name="trans"></param>
+        public TexturedMesh(Matrix4 trans)
         {
-            Gl.glLoadMatrixf(Transformation.glArray);
+            Transformation  = trans;
+            Children        = new List<Object3D>();
+            Polygons        = new List<Polygon>();
+        }
+
+        /// <summary>
+        /// Sets all member variables of the mesh
+        /// </summary>
+        /// <param name="trans"></param>
+        /// <param name="children"></param>
+        /// <param name="polys"></param>
+        public TexturedMesh(Matrix4 trans, List<Object3D> children, List<Polygon> polys)
+        {
+            Transformation  = trans;
+            Children        = children;
+            Polygons        = polys;
+        }
+
+        /// <summary>
+        /// Renders the mesh, setting the appropriate draw mode for the polygons.
+        /// </summary>
+        public override void Render()
+        {
             Gl.glPushMatrix();
+            Gl.glMultMatrixf(Transformation.glArray);
             //Gl.glBindTexture(Gl.GL_TEXTURE_2D, GluTextureID);
+
+            //Render parent
             foreach(Polygon p in Polygons)
             {
-                p.Render();
+                Gl.glBegin(GlDrawMode);
+                    p.Render();
+                Gl.glEnd();
             }
-            foreach(TexturedMesh c in Children)
+
+            //Render children, preserving the parent transformations
+            foreach(Object3D c in Children)
             {
                 c.Render();
             }
