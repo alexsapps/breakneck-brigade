@@ -19,31 +19,20 @@ namespace SousChef
         public IngredientParser(GameObjectConfig config) : base(config) { }
         protected override void handleSubtree(XmlReader reader)
         {
-            // example uses
-            reader.MoveToContent();
-
-            if (reader.Name == "innerIngredients")
-            {
-                List<IngredientType> subIngredients = ParseList(reader.ReadSubtree(), new IngredientParser(config));
-                Console.WriteLine(subIngredients);
-            }
-            else if (reader.Name == "innerIngredient")
-            {
-                IngredientType ingredient = parseSubItem<IngredientType>(reader.ReadSubtree(), new IngredientParser(config));
-                Console.WriteLine(ingredient);
-            }
-            else if (reader.Name == "innerStrList")
-            {
-                Dictionary<string, string> attirbs = getAttributes(reader);
-                List<string> list = parseStringList(reader);
-                Console.WriteLine(list);
-                list = null;
-            }
+            throw new Exception("content not allowed in ingredient tag");
         }
         protected override IngredientType returnItem()
         {
-            Console.WriteLine("parsed! " + attributes["name"]);
-            return new IngredientType(attributes["name"], null);
+            string name = attributes["name"];
+            int points = int.Parse(attributes["points"]);
+            string model;
+
+            if (!attributes.TryGetValue("model", out model))
+                model = name;
+
+            return new IngredientType(name, points, model);
         }
+
+        protected override void reset() { }
     }
 }
