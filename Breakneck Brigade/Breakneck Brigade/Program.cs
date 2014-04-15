@@ -146,6 +146,7 @@ namespace Breakneck_Brigade
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);
             float ratio = (float)width / height;
+            //Re-init mouse stuff! Call InputMan's MousePosInit() method
 
             Gl.glViewport(0, 0, width, height);
             //Always clear both color and depth
@@ -160,7 +161,8 @@ namespace Breakneck_Brigade
             }
 
             Glfw.glfwSwapBuffers();
-            Glfw.glfwPollEvents();
+            // glfwSwapBuffers should implicitly call glfwPollEvents() by default
+            // Glfw.glfwPollEvents();
         }
 
         static void Main(string[] args)
