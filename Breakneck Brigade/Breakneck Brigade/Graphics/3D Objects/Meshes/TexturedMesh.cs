@@ -11,20 +11,20 @@ namespace Breakneck_Brigade.Graphics
     /// <summary>
     /// A container for an OpenGL primative represented as a collection of polygons and a 
     /// </summary>
-    class TexturedMesh : Object3D
+    class TexturedMesh : AObject3D
     {
         /// <summary>
         /// A list of polygons that comprise the primative.
         /// </summary>
-        public List<Polygon>        Polygons;
+        public List<TexturedPolygon>    Polygons;
         /// <summary>
         /// The texture ID glu assigned to this mesh's texture at load time.
         /// </summary>
-        public int                  GluTextureID;
+        public int                      GluTextureID;
         /// <summary>
         /// The mode OpenGL should be set to in order to draw this mesh.
         /// </summary>
-        public int                  GlDrawMode;
+        public int                      GlDrawMode;
 
         /// <summary>
         /// Instanciates a mesh with no transformations applied and an empty list of polygons.
@@ -32,8 +32,8 @@ namespace Breakneck_Brigade.Graphics
         public TexturedMesh()
         {
             Transformation  = new Matrix4();
-            Children        = new List<Object3D>();
-            Polygons        = new List<Polygon>();
+            Children        = new List<AObject3D>();
+            Polygons        = new List<TexturedPolygon>();
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Breakneck_Brigade.Graphics
         public TexturedMesh(Matrix4 trans)
         {
             Transformation  = trans;
-            Children        = new List<Object3D>();
-            Polygons        = new List<Polygon>();
+            Children        = new List<AObject3D>();
+            Polygons        = new List<TexturedPolygon>();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="trans"></param>
         /// <param name="children"></param>
         /// <param name="polys"></param>
-        public TexturedMesh(Matrix4 trans, List<Object3D> children, List<Polygon> polys)
+        public TexturedMesh(Matrix4 trans, List<AObject3D> children, List<TexturedPolygon> polys)
         {
             Transformation  = trans;
             Children        = children;
@@ -70,7 +70,7 @@ namespace Breakneck_Brigade.Graphics
             //Gl.glBindTexture(Gl.GL_TEXTURE_2D, GluTextureID);
 
             //Render parent
-            foreach(Polygon p in Polygons)
+            foreach (TexturedPolygon p in Polygons)
             {
                 Gl.glBegin(GlDrawMode);
                     p.Render();
@@ -78,7 +78,7 @@ namespace Breakneck_Brigade.Graphics
             }
 
             //Render children, preserving the parent transformations
-            foreach(Object3D c in Children)
+            foreach(AObject3D c in Children)
             {
                 c.Render();
             }

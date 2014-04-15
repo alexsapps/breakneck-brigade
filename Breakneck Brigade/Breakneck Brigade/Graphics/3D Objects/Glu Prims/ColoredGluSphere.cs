@@ -8,7 +8,7 @@ using Tao.OpenGl;
 
 namespace Breakneck_Brigade.Graphics
 {
-    class ColoredGluSphere : Object3D
+    class ColoredGluSphere : AObject3D
     {
         /// <summary>
         /// A vector representing color:
@@ -37,13 +37,11 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="radius">Radius of the sphere</param>
         /// <param name="slices">The number of slices to use when rendering this sphere (i.e.: how many verticle cross sections)</param>
         /// <param name="stacks">The number of stacks to use when rendering this sphere (i.e.: how many horizontal cross sections)</param>
-        public ColoredGluSphere(double radius, int slices, int stacks)
+        public ColoredGluSphere(double radius, int slices, int stacks) : base()
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Children        = new List<Object3D>();
-            Transformation  = new Matrix4();
             Color           = new Vector4(1.0, 1.0, 1.0, 1.0);
         }
 
@@ -54,13 +52,11 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="radius">Radius of the sphere</param>
         /// <param name="slices">The number of slices to use when rendering this sphere (i.e.: how many verticle cross sections)</param>
         /// <param name="stacks">The number of stacks to use when rendering this sphere (i.e.: how many horizontal cross sections)</param>
-        public ColoredGluSphere(double radius, int slices, int stacks, Matrix4 trans)
+        public ColoredGluSphere(double radius, int slices, int stacks, Matrix4 trans) : base(trans)
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Children        = new List<Object3D>();
-            Transformation  = trans;
             Color           = new Vector4(1.0, 1.0, 1.0, 1.0);
         }
 
@@ -74,13 +70,11 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="green"></param>
         /// <param name="blue"></param>
         /// <param name="alpha"></param>
-        public ColoredGluSphere(double radius, int slices, int stacks, float red, float green, float blue, float alpha)
+        public ColoredGluSphere(double radius, int slices, int stacks, float red, float green, float blue, float alpha) : base()
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Children        = new List<Object3D>();
-            Transformation  = new Matrix4();
             Color           = new Vector4(red, green, blue, alpha);
         }
         
@@ -95,13 +89,11 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="green"></param>
         /// <param name="blue"></param>
         /// <param name="alpha"></param>
-        public ColoredGluSphere(double radius, int slices, int stacks, Matrix4 trans, float red, float green, float blue, float alpha)
+        public ColoredGluSphere(double radius, int slices, int stacks, Matrix4 trans, float red, float green, float blue, float alpha) : base(trans)
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Children        = new List<Object3D>();
-            Transformation  = trans;
             Color           = new Vector4(red, green, blue, alpha);
         }
 
@@ -114,12 +106,12 @@ namespace Breakneck_Brigade.Graphics
                 Gl.glGetFloatv(Gl.GL_CURRENT_COLOR, prevColor);
                 Gl.glColor4f(Color[0], Color[1], Color[2], Color[3]);
 
-                Glu.gluSphere(Object3D.gluQuadric,Radius,Slices, Stacks);
+                Glu.gluSphere(AObject3D.gluQuadric,Radius,Slices, Stacks);
 
                 //Restore previous color
                 Gl.glColor4fv(prevColor);
 
-                foreach(Object3D child in Children)
+                foreach(AObject3D child in Children)
                 {
                     child.Render();
                 }

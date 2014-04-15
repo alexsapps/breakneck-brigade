@@ -17,7 +17,7 @@ namespace Breakneck_Brigade
          * Runs GLFW initialization code, terminiating if initialization failed
          */
         static Camera mainCamera;
-        static List<Object3D> Object3Ds;
+        static List<AObject3D> Object3Ds;
 
         /// <summary>
         /// Initializes all settings for GLFW (window rendering and handling)
@@ -135,7 +135,7 @@ namespace Breakneck_Brigade
             mainCamera.Distance = 25.0f;
             mainCamera.Incline  = 20.0f;
 
-            Object3Ds = new List<Object3D>();
+            Object3Ds = new List<AObject3D>();
 
             /* TESTING MODES */
             makeAnnaHappy(); //Do you want to build a snowman?
@@ -154,7 +154,7 @@ namespace Breakneck_Brigade
             mainCamera.Update();
             mainCamera.Render();
 
-            foreach(Object3D obj3D in Object3Ds)
+            foreach(AObject3D obj3D in Object3Ds)
             {
                 obj3D.Render();
             }

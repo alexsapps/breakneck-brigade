@@ -33,7 +33,7 @@ namespace Breakneck_Brigade.Graphics
             //Front face
             TexturedMesh front = new TexturedMesh();
             front.GlDrawMode = Gl.GL_QUADS;
-            Polygon frontPoly = new Polygon();
+            APolygon frontPoly = new APolygon();
             frontPoly.Vertexes.Add(v5);
             frontPoly.Vertexes.Add(v7);
             frontPoly.Vertexes.Add(v8);
@@ -45,7 +45,7 @@ namespace Breakneck_Brigade.Graphics
             //Back face
             TexturedMesh back = new TexturedMesh();
             front.GlDrawMode = Gl.GL_QUADS;
-            Polygon backPoly = new Polygon();
+            APolygon backPoly = new APolygon();
             frontPoly.Vertexes.Add(v5);
             frontPoly.Vertexes.Add(v7);
             frontPoly.Vertexes.Add(v8);

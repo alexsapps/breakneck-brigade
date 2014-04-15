@@ -112,7 +112,9 @@
       <DependentUpon>FakeClient.cs</DependentUpon>
     </Compile>
     <Compile Include="Game.cs" />
-    <Compile Include="Graphics\Glu Prims\ColoredGluSphere.cs" />
+    <Compile Include="Graphics\3D Objects\ColoredPolygon.cs" />
+    <Compile Include="Graphics\3D Objects\Glu Prims\ColoredGluSphere.cs" />
+    <Compile Include="Graphics\3D Objects\TexturedPolygon.cs" />
     <Compile Include="Graphics\Model.cs" />
     <Compile Include="Graphics\Obj Loader\Common\StringExtensions.cs" />
     <Compile Include="Graphics\Obj Loader\Data\DataStore\DataStore.cs" />
@@ -158,9 +160,9 @@
     <Compile Include="Graphics\Obj Loader\TypeParsers\TypeParserBase.cs" />
     <Compile Include="Graphics\Obj Loader\TypeParsers\UseMaterialParser.cs" />
     <Compile Include="Graphics\Obj Loader\TypeParsers\VertexParser.cs" />
-    <Compile Include="Graphics\Object3D.cs" />
-    <Compile Include="Graphics\Polygon.cs" />
-    <Compile Include="Graphics\TexturedMesh.cs" />
+    <Compile Include="Graphics\3D Objects\AObject3D.cs" />
+    <Compile Include="Graphics\3D Objects\APolygon.cs" />
+    <Compile Include="Graphics\3D Objects\Meshes\TexturedMesh.cs" />
     <Compile Include="Graphics\Renderer.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Vertex.cs" />

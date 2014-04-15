@@ -12,7 +12,7 @@ namespace Breakneck_Brigade.Graphics
     /// A common interface for 3D representations of objects should inherit from. Implements a very simple scene graph-like interface: all
     /// children's transformations are relative to their parent's transformations.
     /// </summary>
-    abstract class Object3D
+    abstract class AObject3D
     {
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -26,7 +26,29 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// Direct children of this node. All children inherit their parents' transformations
         /// </summary>
-        public List<Object3D>   Children;
+        public List<AObject3D>   Children;
+
+        public AObject3D()
+        { 
+            Transformation  = new Matrix4();
+            Children        = new List<AObject3D>();
+        }
+        public AObject3D(Matrix4 trans)
+        {
+            Transformation  = trans;
+            Children        = new List<AObject3D>();
+        }
+        public AObject3D(List<AObject3D> children)
+        {
+            Transformation  = new Matrix4();
+            Children        = children;
+        }
+        public AObject3D(Matrix4 trans, List<AObject3D> children)
+        {
+            Transformation  = trans;
+            Children        = children;
+        }
+         
 
         /// <summary>
         /// GL calls to actually render this object. Rendering is done relative to the object's parents' transformations
