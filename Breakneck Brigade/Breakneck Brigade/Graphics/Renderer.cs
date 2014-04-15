@@ -17,44 +17,6 @@ namespace Breakneck_Brigade.Graphics
         {
             world   = new Matrix4();
             objects = new List<Model>();
-#if PROJECT_GRAPHICS_MODE
-            Model cube = new Model();
-
-            //Verts
-            Vertex v1 = new Vertex(-1.0,-1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            Vertex v2 = new Vertex(-1.0, 1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            Vertex v3 = new Vertex( 1.0,-1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            Vertex v4 = new Vertex( 1.0, 1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            Vertex v5 = new Vertex(-1.0,-1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            Vertex v6 = new Vertex( 1.0,-1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            Vertex v7 = new Vertex(-1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            Vertex v8 = new Vertex( 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-
-            //Front face
-            TexturedMesh front = new TexturedMesh();
-            front.GlDrawMode = Gl.GL_QUADS;
-            APolygon frontPoly = new APolygon();
-            frontPoly.Vertexes.Add(v5);
-            frontPoly.Vertexes.Add(v7);
-            frontPoly.Vertexes.Add(v8);
-            frontPoly.Vertexes.Add(v6);
-
-            front.Polygons.Add(frontPoly);
-            cube.Meshes.Add(front);
-
-            //Back face
-            TexturedMesh back = new TexturedMesh();
-            front.GlDrawMode = Gl.GL_QUADS;
-            APolygon backPoly = new APolygon();
-            frontPoly.Vertexes.Add(v5);
-            frontPoly.Vertexes.Add(v7);
-            frontPoly.Vertexes.Add(v8);
-            frontPoly.Vertexes.Add(v6);
-
-            front.Polygons.Add(backPoly);
-            cube.Meshes.Add(back);
-            
-#endif
         }
 
         public void Render()

@@ -15,12 +15,13 @@ namespace Breakneck_Brigade.Graphics
     class Model
     {
         public  Matrix4             Transformation  { get; set; }
-        public  List<TexturedMesh>  Meshes          { get; private set; }
+        public  List<AObject3D>  Meshes          { get; private set; }
         //public  TexturedMesh        Root            { get { return Meshes[0]; } private set;}
 
         public Model()
         {
-            Meshes  = new List<TexturedMesh>();
+            Meshes          = new List<AObject3D>();
+            Transformation  = new Matrix4();
             //Root = null;
         }
 
@@ -33,7 +34,7 @@ namespace Breakneck_Brigade.Graphics
         {
             Gl.glPushMatrix();
             Gl.glLoadMatrixf(Transformation.glArray);
-            foreach(TexturedMesh m in Meshes)
+            foreach(AObject3D m in Meshes)
             {
                 m.Render();
             }

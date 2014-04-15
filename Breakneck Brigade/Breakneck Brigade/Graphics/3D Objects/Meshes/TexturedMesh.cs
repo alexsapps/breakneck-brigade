@@ -11,40 +11,60 @@ namespace Breakneck_Brigade.Graphics
     /// <summary>
     /// A container for an OpenGL primative represented as a collection of polygons and a 
     /// </summary>
-    class TexturedMesh : AObject3D
+    class TexturedMesh : AMesh
     {
-        /// <summary>
-        /// A list of polygons that comprise the primative.
-        /// </summary>
-        public List<TexturedPolygon>    Polygons;
-        /// <summary>
-        /// The texture ID glu assigned to this mesh's texture at load time.
-        /// </summary>
-        public int                      GluTextureID;
-        /// <summary>
-        /// The mode OpenGL should be set to in order to draw this mesh.
-        /// </summary>
-        public int                      GlDrawMode;
+        Texture Texture;
 
         /// <summary>
         /// Instanciates a mesh with no transformations applied and an empty list of polygons.
+        /// Assigns a blank texture to the object
         /// </summary>
-        public TexturedMesh()
+        public TexturedMesh() : base()
         {
-            Transformation  = new Matrix4();
-            Children        = new List<AObject3D>();
-            Polygons        = new List<TexturedPolygon>();
+            Texture = new Texture();
+        }
+        
+        /// <summary>
+        /// Instanciates a mesh with no transformations applied and an empty list of polygons.
+        /// Assigns a blank texture to the object
+        /// </summary>
+        /// <param name="texture"></param>
+        public TexturedMesh(Texture texture) : base()
+        {
+            Texture = texture;
+        }        
+
+        /// <summary>
+        /// Just sets the transform of the object, leaving the Children and Polygons lists empty. 
+        /// Assigns a blank texture to the object
+        /// </summary>
+        /// <param name="trans"></param>
+        public TexturedMesh(Matrix4 trans) : base(trans)
+        {
+            Texture = new Texture();
         }
 
         /// <summary>
-        /// Just sets the transform of the object, leaving the Children and Polygons lists empty
+        /// Just sets the transform of the object, leaving the Children and Polygons lists empty. 
         /// </summary>
         /// <param name="trans"></param>
-        public TexturedMesh(Matrix4 trans)
+        /// <param name="texture"></param>
+        public TexturedMesh(Matrix4 trans, Texture texture)
+            : base(trans)
         {
-            Transformation  = trans;
-            Children        = new List<AObject3D>();
-            Polygons        = new List<TexturedPolygon>();
+            Texture = texture;
+        }
+
+        /// <summary>
+        /// Sets all member variables of the mesh
+        /// Assigns a blank texture to the object
+        /// </summary>
+        /// <param name="trans"></param>
+        /// <param name="children"></param>
+        /// <param name="polys"></param>
+        public TexturedMesh(Matrix4 trans, List<AObject3D> children, List<APolygon> polys) : base(trans, children, polys)
+        {
+            Texture = new Texture();
         }
 
         /// <summary>
@@ -53,11 +73,10 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="trans"></param>
         /// <param name="children"></param>
         /// <param name="polys"></param>
-        public TexturedMesh(Matrix4 trans, List<AObject3D> children, List<TexturedPolygon> polys)
+        /// <param name="texture"></param>
+        public TexturedMesh(Matrix4 trans, List<AObject3D> children, List<APolygon> polys, Texture texture) : base(trans, children, polys)
         {
-            Transformation  = trans;
-            Children        = children;
-            Polygons        = polys;
+            Texture = texture;
         }
 
         /// <summary>

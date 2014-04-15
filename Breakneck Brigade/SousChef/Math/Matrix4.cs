@@ -234,7 +234,7 @@ namespace SousChef
 		        {
 			        for(int kk = 0; kk < 4; kk++)
 			        {
-				        this[ii,jj] += this[kk,jj] * other[ii,kk];
+				        result[ii,jj] += this[kk,jj] * other[ii,kk];
 			        }
 		        }
 	        }

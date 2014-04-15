@@ -45,16 +45,21 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public float Incline;
 
+        public Matrix4 Transform;
+
 		public Camera() 
 		{
+            Transform = new Matrix4();
 			Reset();
 		}
 
 		public void Update() 
         {
-            float newVal = Azimuth + 1f;
+            /* cam rotation */
+            float newVal = Azimuth + 0.25f;
             Azimuth = newVal > 360f ? 
                 0.0f : newVal;
+             
         }
 
         public void Reset() 
@@ -67,6 +72,7 @@ namespace Breakneck_Brigade.Graphics
 			Distance=50.0f;
 			Azimuth=0.0f;
 			Incline=0.0f;
+            Transform.Identity();
 		}
 
         public void Render() 
@@ -82,6 +88,8 @@ namespace Breakneck_Brigade.Graphics
 			Gl.glTranslatef(0,0,-Distance);
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
+
+            Gl.glMultMatrixf(Transform.glArray);
 
 			// Return to modelview matrix mode
 			Gl.glMatrixMode(Gl.GL_MODELVIEW);
