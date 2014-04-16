@@ -84,9 +84,11 @@ namespace Breakneck_Brigade
 
                                 break;
                             case ServerMessageType.GameStateUpdate:
-                                
+                                lock (Game.Lock)
+                                {
                                 Game.gameObjects.Clear();
                                 int len = reader.ReadInt32();
+
                                 for (int i = 0; i < len; i++)
                                 {
                                     int id = reader.ReadInt32();
@@ -95,7 +97,9 @@ namespace Breakneck_Brigade
                                                 reader.ReadInt32(),
                                                 reader.ReadInt32(),
                                                 reader.ReadInt32(),
-                                                reader.ReadInt32()) });
+                                                    reader.ReadInt32())
+                                            });
+                                    }
                                 }
                                 break;
                             default:
