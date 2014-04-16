@@ -9,18 +9,18 @@ namespace SousChef
     public abstract class GameObject
     {
         public int Id { get; set; }
-        public Vector4 Position { get; set; }
+        public Vector4 Transform { get; set; }
 
         public GameObject(int id)
         {
             this.Id = id;
-            this.Position = new Vector4();
+            this.Transform = new Vector4();
         }
 
-         public GameObject(int id, Vector4 position)
+         public GameObject(int id, Vector4 transform)
          : this(id)
         {
-            this.Position = Position;
+            this.Transform = transform;
         } 
 
         public abstract void Update();

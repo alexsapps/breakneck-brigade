@@ -54,6 +54,8 @@
     <Compile Include="Config\Recipes.cs" />
     <Compile Include="Cooker.cs" />
     <Compile Include="GameObjectType.cs" />
+    <Compile Include="IGameObject.cs" />
+    <Compile Include="IIngredient.cs" />
     <Compile Include="IngredientType.cs" />
     <Compile Include="Utils\BBLock.cs" />
     <Compile Include="Network\ClientEvent.cs" />
