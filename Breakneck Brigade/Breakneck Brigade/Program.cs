@@ -151,7 +151,7 @@ namespace Breakneck_Brigade
             Models = new List<Model>();
 
             /* TESTING MODES */
-            makeAnnaHappy(); //Do you want to build a snowman?
+            //makeAnnaHappy(); //Do you want to build a snowman?
             //testParser("apple.obj"); //Load a object file from the current dir
         }
 
