@@ -105,6 +105,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="ClientGameObject.cs" />
+    <Compile Include="ClientIngredient.cs" />
     <Compile Include="FakeClient.cs">
       <SubType>Form</SubType>
     </Compile>
