@@ -10,7 +10,7 @@ namespace SousChef
     {
         public CookerType Type { get; set; }
         public List<Ingredient> Contents { get; private set; }
-        private string ContentsHash { get; set; }
+        private string HashCache { get; set; }
 
         public Cooker (int id, CookerType type)
             : base(id)
@@ -19,18 +19,16 @@ namespace SousChef
             Contents = new List<Ingredient>();
         }
 
-
         /*
          * Adds the ingredient to the list. Keeps the list in sorted order. If the 
          * ingredient to add isn't in the valid ingredient table, don't add and return false
          */
-        public bool AddIng(Ingredient ingToAdd)
+        public bool AddIngredient(Ingredient ingredient)
         {
-            if (Type.ValidIngredients.ContainsKey(ingToAdd.Type.Name))
+            HashCache = null;
+            if (Type.ValidIngredients.ContainsKey(ingredient.Type.Name))
             {
-                Contents.Add(ingToAdd);
-                Contents = Contents.OrderBy(o => o.Type.Name).ToList();//should keep in sorted order
-                this.ContentsHash = Recipe.Hash(Contents.ConvertAll<IngredientType>(x => x.Type));
+                Contents.Add(ingredient);
                 return true;
             }
             return false;
@@ -43,9 +41,16 @@ namespace SousChef
          */
         public IngredientType Cook()
         {
-            if (Type.Recipes.ContainsKey(this.ContentsHash))
+            if (HashCache == null)
             {
-                return Type.Recipes[this.ContentsHash].FinalProduct;
+                //recompute hash since an item was added since last cook
+                Contents = Contents.OrderBy(o => o.Type.Name).ToList();//put in sorted order before hashing
+                this.HashCache = Recipe.Hash(Contents.ConvertAll<IngredientType>(x => x.Type));
+            }
+
+            if (Type.Recipes.ContainsKey(this.HashCache))
+            {
+                return Type.Recipes[this.HashCache].FinalProduct;
             }
             return null;
         }

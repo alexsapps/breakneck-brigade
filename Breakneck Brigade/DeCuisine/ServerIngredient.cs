@@ -17,14 +17,12 @@ namespace DeCuisine
             : base(id, new Vector4(), server)
         {
             this.Type = type;
-            this.Cleanliness = 100;
         }
 
         public ServerIngredient(int id, IngredientType type, Vector4 transform, Server server)
             : base(id, transform, server)
         {
             this.Type = type;
-            this.Cleanliness = 100;
         }
 
         void writeSerialization(StreamWriter stream)
