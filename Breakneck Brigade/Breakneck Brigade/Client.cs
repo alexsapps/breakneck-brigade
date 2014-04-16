@@ -84,18 +84,24 @@ namespace Breakneck_Brigade
 
                                 break;
                             case ServerMessageType.GameStateUpdate:
-                                
-                                Game.gameObjects.Clear();
-                                int len = reader.ReadInt32();
-                                for (int i = 0; i < len; i++)
+                                lock (Game.Lock)
                                 {
-                                    int id = reader.ReadInt32();
-                                    Game.gameObjects.Add(id,
-                                        new Ingredient(id, new IngredientType("cheese", 10, null)) { Position = new Vector4(
-                                                reader.ReadInt32(),
-                                                reader.ReadInt32(),
-                                                reader.ReadInt32(),
-                                                reader.ReadInt32()) });
+                                    Game.gameObjects.Clear();
+                                    int len = reader.ReadInt32();
+
+                                    for (int i = 0; i < len; i++)
+                                    {
+                                        int id = reader.ReadInt32();
+                                        Game.gameObjects.Add(id,
+                                            new Ingredient(id, new IngredientType("cheese", 10, null))
+                                            {
+                                                Position = new Vector4(
+                                                    reader.ReadInt32(),
+                                                    reader.ReadInt32(),
+                                                    reader.ReadInt32(),
+                                                    reader.ReadInt32())
+                                            });
+                                    }
                                 }
                                 break;
                             default:
