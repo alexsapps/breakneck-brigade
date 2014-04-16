@@ -143,7 +143,7 @@ namespace DeCuisine
                                         {
                                             writer.Write(obj.Key);
                                             for (int i = 0; i < 4; i++)
-                                                writer.Write((int)obj.Value.Position[i]);
+                                                writer.Write((int)obj.Value.Transform[i]);
                                         }
                                         break;
                                 }

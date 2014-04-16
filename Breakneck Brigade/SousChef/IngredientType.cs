@@ -8,8 +8,8 @@ namespace SousChef
 {
     public class IngredientType : GameObjectType
     {
-        public string Model { get; set; }
         public int DefaultPoints { get; set; }
+        public string Model { get; set; } //TODO: 
 
         public IngredientType(string name, int defaultPoints, string model) 
             : base(name)

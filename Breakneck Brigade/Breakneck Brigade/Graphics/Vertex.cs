@@ -16,6 +16,13 @@ namespace Breakneck_Brigade.Graphics
         public Vector4 Normal;
         public Vector4 TextureCoordinates;
 
+        public Vertex()
+        {
+            this.Position           = new Vector4();
+            this.Normal             = new Vector4();
+            this.TextureCoordinates = new Vector4();
+        }
+
         public Vertex(Vector4 pos, Vector4 norm, Vector4 tc)
         {
             this.Position           = pos;

@@ -86,19 +86,17 @@ namespace Breakneck_Brigade
                             case ServerMessageType.GameStateUpdate:
                                 lock (Game.Lock)
                                 {
-                                    Game.gameObjects.Clear();
-                                    int len = reader.ReadInt32();
+                                Game.gameObjects.Clear();
+                                int len = reader.ReadInt32();
 
-                                    for (int i = 0; i < len; i++)
-                                    {
-                                        int id = reader.ReadInt32();
-                                        Game.gameObjects.Add(id,
-                                            new Ingredient(id, new IngredientType("cheese", 10, null))
-                                            {
-                                                Position = new Vector4(
-                                                    reader.ReadInt32(),
-                                                    reader.ReadInt32(),
-                                                    reader.ReadInt32(),
+                                for (int i = 0; i < len; i++)
+                                {
+                                    int id = reader.ReadInt32();
+                                    Game.gameObjects.Add(id,
+                                        new Ingredient(id, new IngredientType("cheese", 10, null)) { Transform = new Vector4(
+                                                reader.ReadInt32(),
+                                                reader.ReadInt32(),
+                                                reader.ReadInt32(),
                                                     reader.ReadInt32())
                                             });
                                     }

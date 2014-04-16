@@ -17,7 +17,7 @@ namespace Breakneck_Brigade
          * Runs GLFW initialization code, terminiating if initialization failed
          */
         static Camera mainCamera;
-        static List<AObject3D> Object3Ds;
+        static List<Model> Models;
 
         /// <summary>
         /// Initializes all settings for GLFW (window rendering and handling)
@@ -36,6 +36,13 @@ namespace Breakneck_Brigade
         {
             Glfw.glfwCloseWindow();
             Glfw.glfwTerminate();
+        }
+
+        static void testParser(string filename)
+        {
+            Parser parser = new Parser();
+            Model model = parser.ParseFile(filename);
+            Models.Add(model);
         }
 
         /// <summary>
@@ -99,7 +106,9 @@ namespace Breakneck_Brigade
 
             snowmanBase.Children.Add(snowmanBody);
 
-            Object3Ds.Add(snowmanBase);
+            Model snowman = new Model();
+            snowman.Meshes.Add(snowmanBase);
+            Models.Add(snowman);
 
         }
 
@@ -110,7 +119,8 @@ namespace Breakneck_Brigade
         {
             /* LIGHTING */
             Gl.glEnable(Gl.GL_LIGHTING);
-            float[] position        = { 0, 5, -1 };
+
+            float[] position        = { 0, 1000, 1000};
             float[] ambientColor    = { 0, 0, 0, 1 };
             float[] diffuseColor    = { 1, 1, 1, 1 };
             float[] specularColor   = { 1, 1, 1, 1 };
@@ -125,6 +135,8 @@ namespace Breakneck_Brigade
             Gl.glEnable(Gl.GL_DEPTH_TEST); 
             //Enables manual setting of colors and materials of primatives (through glColor__, etc)
             Gl.glEnable(Gl.GL_COLOR_MATERIAL);
+            //Generates normals for objects which do not specify normals
+            Gl.glEnable(Gl.GL_AUTO_NORMAL);
             //For basic polygons, draws both a front and back face. (May disable for performance reasons later)
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL); 
             //What shading model to use for rendering Gl prims
@@ -133,12 +145,14 @@ namespace Breakneck_Brigade
             /* CAMERA */
             mainCamera = new Camera();
             mainCamera.Distance = 25.0f;
-            mainCamera.Incline  = 20.0f;
+            mainCamera.Incline  = 0.0f;
+            mainCamera.Transform.TranslationMat(0, 0, 0);
 
-            Object3Ds = new List<AObject3D>();
+            Models = new List<Model>();
 
             /* TESTING MODES */
-            makeAnnaHappy(); //Do you want to build a snowman?
+            //makeAnnaHappy(); //Do you want to build a snowman?
+            //testParser("apple.obj"); //Load a object file from the current dir
         }
 
         static void Render()
@@ -146,6 +160,7 @@ namespace Breakneck_Brigade
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);
             float ratio = (float)width / height;
+            //Re-init mouse stuff! Call InputMan's MousePosInit() method
 
             Gl.glViewport(0, 0, width, height);
             //Always clear both color and depth
@@ -154,13 +169,15 @@ namespace Breakneck_Brigade
             mainCamera.Update();
             mainCamera.Render();
 
-            foreach(AObject3D obj3D in Object3Ds)
+            foreach(Model model in Models)
             {
-                obj3D.Render();
+                //model.Transformation = model.Transformation * (new Matrix4()).RotateYDeg(5);
+                model.Render();
             }
 
             Glfw.glfwSwapBuffers();
-            Glfw.glfwPollEvents();
+            // glfwSwapBuffers should implicitly call glfwPollEvents() by default
+            // Glfw.glfwPollEvents();
         }
 
         static void Main(string[] args)

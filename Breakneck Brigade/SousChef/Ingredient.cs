@@ -20,7 +20,7 @@ namespace SousChef
 
         public override void Update()
         {
-            this.Position[1]--; //TODO: not this
+            this.Transform[1]--; //TODO: not this
         }
     }
 }

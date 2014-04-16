@@ -132,6 +132,18 @@ namespace SousChef
         }
 
         /// <summary>
+        /// Initializes a matrix that is transformed to position from the origin
+        /// </summary>
+        /// <param name="position"></param>
+        public Matrix4(Vector4 position)
+        {
+            backingArray    = new float[4, 4];
+            glArray         = new float[16];
+            this.TranslationMat(position[0], position[1], position[2]);
+            UpdateGLArray();
+        }
+
+        /// <summary>
         /// Quick method to set a value in the matrix.
         /// </summary>
         /// <param name="x">Column</param>
@@ -234,7 +246,7 @@ namespace SousChef
 		        {
 			        for(int kk = 0; kk < 4; kk++)
 			        {
-				        this[ii,jj] += this[kk,jj] * other[ii,kk];
+				        result[ii,jj] += this[kk,jj] * other[ii,kk];
 			        }
 		        }
 	        }
