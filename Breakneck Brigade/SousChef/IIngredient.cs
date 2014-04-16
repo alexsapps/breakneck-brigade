@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    interface IIngredient
+    public interface IIngredient
     {
         IngredientType Type { get; set; }
         int Cleanliness { get; set; }

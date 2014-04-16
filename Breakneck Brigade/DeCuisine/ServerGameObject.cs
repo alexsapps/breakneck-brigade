@@ -10,11 +10,11 @@ namespace DeCuisine
     /// <summary>
     /// Top level server game object. All server game objects should inherit. 
     /// </summary>
-    public abstract class ServerGameObject : IGameObject
+    abstract class ServerGameObject : IGameObject
     {
         public int Id { get; set; }
         public Matrix4 Transform { get; set; }
-        Server Server;
+        public Server Server;
 
         /// <summary>
         /// Base constructor. For every servergameobject create their should be a 
@@ -33,6 +33,6 @@ namespace DeCuisine
         /// <summary>
         /// Specific to each subclass. 
         /// </summary>
-        abstract void Update();
+        public abstract void Update();
     }
 }

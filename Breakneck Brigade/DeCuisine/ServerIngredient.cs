@@ -10,8 +10,8 @@ namespace DeCuisine
 {
     class ServerIngredient : ServerGameObject, IIngredient 
     {
-        IngredientType Type { get; set; }
-        int Cleanliness { get; set; }
+        public IngredientType Type { get; set; }
+        public int Cleanliness { get; set; }
 
         public ServerIngredient (int id, IngredientType type, Server server)
             : base(id, new Vector4(), server)
@@ -30,7 +30,7 @@ namespace DeCuisine
 
         }
 
-        void Update()
+        public override void Update()
         {
             //move the object
         }
