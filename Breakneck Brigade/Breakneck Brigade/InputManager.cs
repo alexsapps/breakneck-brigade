@@ -140,13 +140,15 @@ namespace Breakneck_Brigade
         static const int GLFW_MOUSE_BUTTON_RIGHT = GLFW_MOUSE_BUTTON_2;
 
         GlobalsConfigFile globalConfig;
-        Hashtable keys = new Hashtable();
+        
 
         // Game-related stuff
+        Hashtable keys = new Hashtable();
+        Vector4 rot = new Vector4();
+
         bool fpsMode = false;        
         int originX = 0;
-        int originY = 0;
-        Vector4 rot = new Vector4();
+        int originY = 0;        
         float sens = 1.0f;
         bool invertY = false;
 
@@ -200,9 +202,6 @@ namespace Breakneck_Brigade
                 {
                     rot[0] += tempY * sens;
                 }
-
-                // constrain rotation amounts
-                // To be implemented; radian or degrees?
 
                 // Reset mouse to origin
                 Glfw.glfwSetMousePos(originX, originY);
