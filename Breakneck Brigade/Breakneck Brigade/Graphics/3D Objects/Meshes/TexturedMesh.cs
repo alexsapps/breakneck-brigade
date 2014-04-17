@@ -13,7 +13,10 @@ namespace Breakneck_Brigade.Graphics
     /// </summary>
     class TexturedMesh : AMesh
     {
-        Texture Texture;
+        /// <summary>
+        /// The texture for this mesh
+        /// </summary>
+        public Texture Texture;
 
         /// <summary>
         /// Instanciates a mesh with no transformations applied and an empty list of polygons.
@@ -21,7 +24,7 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public TexturedMesh() : base()
         {
-            Texture = new Texture();
+            Texture = null;
         }
         
         /// <summary>
@@ -41,7 +44,7 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="trans"></param>
         public TexturedMesh(Matrix4 trans) : base(trans)
         {
-            Texture = new Texture();
+            Texture = null;
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="polys"></param>
         public TexturedMesh(Matrix4 trans, List<AObject3D> children, List<APolygon> polys) : base(trans, children, polys)
         {
-            Texture = new Texture();
+            Texture = null;
         }
 
         /// <summary>
@@ -86,7 +89,8 @@ namespace Breakneck_Brigade.Graphics
         {
             Gl.glPushMatrix();
             Gl.glMultMatrixf(Transformation.glArray);
-            //Gl.glBindTexture(Gl.GL_TEXTURE_2D, GluTextureID);
+            
+            Texture.Bind();
 
             //Render parent
             foreach (TexturedPolygon p in Polygons)

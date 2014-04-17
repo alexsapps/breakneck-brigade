@@ -16,8 +16,9 @@ namespace Breakneck_Brigade
         /**
          * Runs GLFW initialization code, terminiating if initialization failed
          */
-        static Camera mainCamera;
+        static Camera MainCamera;
         static List<Model> Models;
+        private static int setDisplacement;
 
         /// <summary>
         /// Initializes all settings for GLFW (window rendering and handling)
@@ -40,8 +41,10 @@ namespace Breakneck_Brigade
 
         static void testParser(string filename)
         {
+            setDisplacement += 50;
             Parser parser = new Parser();
             Model model = parser.ParseFile(filename);
+            model.Transformation.TranslationMat(setDisplacement, 0, 0);
             Models.Add(model);
         }
 
@@ -141,18 +144,22 @@ namespace Breakneck_Brigade
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL); 
             //What shading model to use for rendering Gl prims
             Gl.glShadeModel(Gl.GL_SMOOTH);
+            //Turn on texturing
+            Gl.glEnable(Gl.GL_TEXTURE_2D);
+
 
             /* CAMERA */
-            mainCamera = new Camera();
-            mainCamera.Distance = 200.0f;
-            mainCamera.Incline  = 0.0f;
-            mainCamera.Transform.TranslationMat(0, -50, 0);
+            MainCamera = new Camera();
+            MainCamera.Distance = 100.0f;
+            MainCamera.Incline  = 0.0f;
+            MainCamera.Transform.TranslationMat(0, -25, 0);
 
             Models = new List<Model>();
 
             /* TESTING MODES */
             //makeAnnaHappy(); //Do you want to build a snowman?
-            testParser("bottle.obj"); //Load a object file from the current dir
+            testParser("orange.obj"); //Load a object file from the current dir
+            testParser("orange.obj");
         }
 
         static void Render()
@@ -166,8 +173,8 @@ namespace Breakneck_Brigade
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
-            mainCamera.Update();
-            mainCamera.Render();
+            MainCamera.Update();
+            MainCamera.Render();
 
             foreach(Model model in Models)
             {

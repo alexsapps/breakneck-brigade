@@ -21,7 +21,8 @@ namespace Breakneck_Brigade.Graphics
                 foreach(Vertex v in Vertexes)
                 {
                     Gl.glColor3f(1.0f, 1.0f,1.0f);
-                    //Gl.glTexCoord2f(v.TextureCoordinates[0], v.TextureCoordinates[1]);
+
+                    Gl.glTexCoord2f(v.TextureCoordinates[0], v.TextureCoordinates[1]);
                     if (v.Normal != null)
                         Gl.glNormal3f(v.Normal[0], v.Normal[1], v.Normal[2]);
                     if(v.TextureCoordinates != null)
