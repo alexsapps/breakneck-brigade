@@ -136,18 +136,29 @@ namespace Breakneck_Brigade
 
         static const int GLFW_MOUSE_BUTTON_1    = 0;
         static const int GLFW_MOUSE_BUTTON_2    = 1;
+        static const int GLFW_MOUSE_BUTTON_LEFT = GLFW_MOUSE_BUTTON_1;
+        static const int GLFW_MOUSE_BUTTON_RIGHT = GLFW_MOUSE_BUTTON_2;
 
-        bool fpsMode = false;
-
+        GlobalsConfigFile globalConfig;
         Hashtable keys = new Hashtable();
+
+        // Game-related stuff
+        bool fpsMode = false;        
         int originX = 0;
         int originY = 0;
-        GlobalsConfigFile globalConfig;
+        Vector4 rot = new Vector4();
+        float sens = 1.0f;
+        bool invertY = false;
 
         public InputManager()
         {
+            // callback for keyboard; will trigger KeyboardInput() on every keypress or release
             Glfw.glfwSetKeyCallback(KeyboardInput);
+            // callback for mouse; will trigger MousePos() on every mouse movement
             Glfw.glfwSetMousePosCallback(MousePos);
+            // callback for mouse; will trigger MouseButton() on every mouse click/release
+            Glfw.glfwSetMouseButtonCallback(MouseButton);
+
             globalConfig = new GlobalsConfigFolder(BBXml.GetLocalConfigFolder()).Open("keys.xml");
 
             keys[GLFW_KEY_W] = 0;
@@ -156,6 +167,9 @@ namespace Breakneck_Brigade
             keys[GLFW_KEY_D] = 0;
             keys[GLFW_KEY_SPACE] = 0;
             keys[GLFW_KEY_ESCAPE] = 0;
+
+            keys[GLFW_MOUSE_BUTTON_LEFT] = 0;
+            keys[GLFW_MOUSE_BUTTON_RIGHT] = 0;
         }
 
         void KeyboardInput(int key, int action)
@@ -169,7 +183,29 @@ namespace Breakneck_Brigade
         {
             if (fpsMode)
             {
-                // To be implemented
+                // Get difference of mouse pos & origin
+                int tempX = originX - x;
+                int tempY = originY - y;
+
+                // add movement to rotation modified by sensitivity setting
+                // positive X movement negatively rotates around Y axis
+                rot[1] -= tempX * sens;
+
+                if (!invertY)
+                {
+                    // positive Y movement negatively rotates around X axis with no invert
+                    rot[0] -= tempY * sens;
+                }
+                else
+                {
+                    rot[0] += tempY * sens;
+                }
+
+                // constrain rotation amounts
+                // To be implemented; radian or degrees?
+
+                // Reset mouse to origin
+                Glfw.glfwSetMousePos(originX, originY);
             }
         }
 
@@ -183,6 +219,22 @@ namespace Breakneck_Brigade
 
             Glfw.glfwSetMousePos(width/2, height/2);
             Glfw.glfwGetMousePos(out originX, out originY);
+
+            // To-be-implemented; get sens from config
+            // To-be-implemented; get invertY from config
+            // To-be-implemented; swap left/right click
+            /* if(swapFlag)
+             * {
+             *      mouse button left = mouse button 2;
+             *      mouse button right = mouse button 1;
+             * }
+             */
+        }
+
+        void MouseButton(int button, int action)
+        {
+            bool pressed = action == Glfw.GLFW_PRESS ? true : false;
+            keys[button] = pressed;
         }
 
         /// <summary>
