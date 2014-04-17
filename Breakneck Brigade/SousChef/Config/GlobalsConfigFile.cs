@@ -10,7 +10,7 @@ namespace SousChef
 {
     public class GlobalsConfigFile
     {
-        string filename;
+        string filename; //can be null if no file exists.  only defaults will be used.
         Dictionary<string, string> config = new Dictionary<string, string>();
         GlobalsConfigFolder context;
 
@@ -29,24 +29,27 @@ namespace SousChef
         protected void Load()
         {
             config.Clear();
-            using (XmlReader reader = XmlReader.Create(filename, BBXml.getSettings()))
+            if (filename != null)
             {
-                if (reader.MoveToContent() == XmlNodeType.Element)
+                using (XmlReader reader = XmlReader.Create(filename, BBXml.getSettings()))
                 {
-                    if (reader.Name == "settings")
+                    if (reader.MoveToContent() == XmlNodeType.Element)
                     {
-                        reader.Read();
-                        while (true)
+                        if (reader.Name == "settings")
                         {
-                            if (reader.NodeType != XmlNodeType.Element)
-                                if (!reader.Read())
-                                    break;
-                            config.Add(reader.Name, reader.ReadElementContentAsString());
+                            reader.Read();
+                            while (true)
+                            {
+                                if (reader.NodeType != XmlNodeType.Element)
+                                    if (!reader.Read())
+                                        break;
+                                config.Add(reader.Name, reader.ReadElementContentAsString());
+                            }
                         }
-                    }
-                    else
-                    {
-                        throw new Exception();
+                        else
+                        {
+                            throw new Exception();
+                        }
                     }
                 }
             }

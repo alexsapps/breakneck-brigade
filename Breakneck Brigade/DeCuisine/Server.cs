@@ -86,7 +86,7 @@ namespace DeCuisine
         Thread listener_thread;
         List<Client> clients = new List<Client>();
 
-        public Game Game { get; private set; }
+        public ServerGame Game { get; private set; }
 
         public void Start()
         {
@@ -97,7 +97,7 @@ namespace DeCuisine
                 throw new Exception("Already started.");
             }
 
-            Game = new Game(this);
+            Game = new ServerGame(this);
 
             cancel_listen = false;
             listener = new TcpListener(IP, Port);

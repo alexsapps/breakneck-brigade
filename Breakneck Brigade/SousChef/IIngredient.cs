@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    public class ServerGameStateUpdateMessage : ServerMessage
+    public interface IIngredient
     {
-
-        public Dictionary<int,GameObject> GameObjects { get; set; }
+        IngredientType Type { get; set; }
+        int Cleanliness { get; set; }
     }
 }

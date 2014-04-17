@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace DeCuisine
 {
-    class Game : IDisposable
+    class ServerGame : IDisposable
     {
         public BBLock Lock = new BBLock();
 
         public GameMode Mode { get; private set; }
 
-        private Dictionary<int, GameObject> GameObjects = new Dictionary<int, GameObject>(); //TODO: this should be string (id) to GameObject
+        private Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>(); //TODO: this should be string (id) to GameObject
 
         private Thread runThread;
 
@@ -24,7 +24,7 @@ namespace DeCuisine
 
         int frameRate;
 
-        public Game(Server server)
+        public ServerGame(Server server)
         {
             Mode = GameMode.Init; //start in init mode
             this.server = server;
@@ -142,7 +142,7 @@ namespace DeCuisine
                                     break;
                                 case ClientEventType.RequestTestObject:
                                     int id = getId();
-                                    GameObjects.Add(id, new Ingredient(id, new IngredientType("cheese", 10, null) ) { Position = new Vector4(random.Next(100), random.Next(100), random.Next(100), random.Next(100)) });
+                                    GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null),  new Vector4(), server ));
                                     break;
                                 default:
                                     //error

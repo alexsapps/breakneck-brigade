@@ -20,7 +20,7 @@ namespace DeCuisine
         public bool IsConnected { get; private set; }
 
         public Server Server { get; set; }
-        public Game Game { get { return Server.Game; } }
+        public ServerGame Game { get { return Server.Game; } }
 
         private Thread _receiveThread;
         public Thread receiveThread
@@ -143,7 +143,8 @@ namespace DeCuisine
                                         {
                                             writer.Write(obj.Key);
                                             for (int i = 0; i < 4; i++)
-                                                writer.Write((int)obj.Value.Position[i]);
+                                                //TODO: Passing a matrix value that is most likely wrong
+                                                writer.Write((int)obj.Value.Transform[i,i]);
                                         }
                                         break;
                                 }
