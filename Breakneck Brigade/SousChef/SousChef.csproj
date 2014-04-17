@@ -52,7 +52,6 @@
     <Compile Include="Config\BBXItemParser.cs" />
     <Compile Include="BB.cs" />
     <Compile Include="Config\Recipes.cs" />
-    <Compile Include="Cooker.cs" />
     <Compile Include="GameObjectType.cs" />
     <Compile Include="IGameObject.cs" />
     <Compile Include="IIngredient.cs" />
@@ -63,16 +62,11 @@
     <Compile Include="Network\ClientMessageType.cs" />
     <Compile Include="CookerType.cs" />
     <Compile Include="GameMode.cs" />
-    <Compile Include="GameObject.cs" />
-    <Compile Include="Ingredient.cs" />
     <Compile Include="Math\MathConstants.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Config\GameObjectConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recipe.cs" />
-    <Compile Include="Network\ServerGameModeUpdateMessage.cs" />
-    <Compile Include="Network\ServerGameStateUpdateMessage.cs" />
-    <Compile Include="Network\ServerMessage.cs" />
     <Compile Include="Network\ServerMessageType.cs" />
     <Compile Include="Math\Vector4.cs" />
   </ItemGroup>

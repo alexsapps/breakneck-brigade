@@ -113,7 +113,7 @@
     <Compile Include="FakeClient.Designer.cs">
       <DependentUpon>FakeClient.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game.cs" />
+    <Compile Include="ClientGame.cs" />
     <Compile Include="Graphics\3D Objects\Glu Prims\ColoredGluSphere.cs" />
     <Compile Include="Graphics\3D Objects\Meshes\AMesh.cs" />
     <Compile Include="Graphics\3D Objects\TexturedPolygon.cs" />

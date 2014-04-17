@@ -9,10 +9,10 @@ namespace Breakneck_Brigade
 {
     public class RenderableGameObject 
     {
-        public GameObject Obj;
+        public IGameObject Obj;
         public string Texture;
 
-        public RenderableGameObject(GameObject obj, string texture)
+        public RenderableGameObject(IGameObject obj, string texture)
         {
             this.Obj = obj;
             this.Texture = texture;

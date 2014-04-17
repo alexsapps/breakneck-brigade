@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Breakneck_Brigade
 {
-    class Game
+    class ClientGame
     {
         public BBLock Lock = new BBLock();
 
-        public Dictionary<int, GameObject> gameObjects { get; private set; }
+        public Dictionary<int, ClientGameObject> gameObjects { get; private set; }
 
-        public Game()
+        public ClientGame()
         {
-            gameObjects = new Dictionary<int, GameObject>();
+            gameObjects = new Dictionary<int, ClientGameObject>();
         }
 
     }

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SousChef
+namespace DeCuisine
 {
     public class ServerGameStateUpdateMessage : ServerMessage
     {
 
-        public Dictionary<int,GameObject> GameObjects { get; set; }
+        public Dictionary<int,ServerGameObject> GameObjects { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace Breakneck_Brigade
         public BBLock Lock = new BBLock();
         TcpClient connection;
         public bool IsConnected { get; private set; }
-        public Game Game { get; private set; }
+        public ClientGame Game { get; private set; }
         public GameMode GameMode {get; private set; }
         public event EventHandler Disconnected;
 
@@ -70,7 +70,7 @@ namespace Breakneck_Brigade
                                     case GameMode.Init:
                                         break;
                                     case GameMode.Started:
-                                        Game = new Game();
+                                        Game = new ClientGame();
                                         break;
                                     case GameMode.Stopping:
                                         break;
@@ -93,12 +93,14 @@ namespace Breakneck_Brigade
                                 {
                                     int id = reader.ReadInt32();
                                     Game.gameObjects.Add(id,
-                                        new Ingredient(id, new IngredientType("cheese", 10, null)) { Transform = new Vector4(
-                                                reader.ReadInt32(),
-                                                reader.ReadInt32(),
-                                                reader.ReadInt32(),
-                                                    reader.ReadInt32())
-                                            });
+                                        new ClientIngredient(id, 
+                                                             new IngredientType("cheese", 10, null),
+                                                             new Vector4( reader.ReadInt32(), 
+                                                                          reader.ReadInt32(),
+                                                                          reader.ReadInt32(),
+                                                                          reader.ReadInt32()), 
+                                                             this, 
+                                                             new Graphics.Model()));
                                     }
                                 }
                                 break;

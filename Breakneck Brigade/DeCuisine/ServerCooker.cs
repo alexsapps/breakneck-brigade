@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SousChef;
 
-namespace SousChef
+namespace DeCuisine
 {
-    public class Cooker : GameObject
+    public class ServerCooker : ServerGameObject
     {
-        public CookerType Type { get; set; }
-        public List<Ingredient> Contents { get; private set; }
+        public List<ServerIngredient> Contents { get; private set; }
         private string HashCache { get; set; }
 
-        public Cooker (int id, CookerType type)
+        public ServerCooker (int id, Vector4 transform, Server server, CookerType type)
             : base(id)
         {
             this.Type = type;

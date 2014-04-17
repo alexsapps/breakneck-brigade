@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DeCuisine
 {
-    class DCClientEvent
+    public class DCClientEvent
     {
         public Client Client { get; set; }
         public ClientEvent Event { get; set; }
