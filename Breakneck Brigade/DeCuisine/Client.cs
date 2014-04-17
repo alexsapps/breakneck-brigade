@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DeCuisine
 {
-    public class Client
+    class Client
     {
         public BBLock Lock = new BBLock();
 

@@ -10,7 +10,7 @@ using SousChef;
 
 namespace DeCuisine
 {
-    public class Server
+    class Server
     {
         public BBLock Lock = new BBLock();
 

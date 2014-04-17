@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeCuisine
 {
-    public class ClientEventArgs
+    class ClientEventArgs
     {
         public Client Client { get; set; }
         public ClientEventArgs(Client client) { this.Client = client; }

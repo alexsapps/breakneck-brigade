@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeCuisine
 {
-    public class ServerGameStateUpdateMessage : ServerMessage
+    class ServerGameStateUpdateMessage : ServerMessage
     {
 
         public Dictionary<int,ServerGameObject> GameObjects { get; set; }
