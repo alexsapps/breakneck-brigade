@@ -49,6 +49,7 @@
     <Compile Include="Client.cs" />
     <Compile Include="ClientEventArgs.cs" />
     <Compile Include="DCClientEvent.cs" />
+    <Compile Include="ServerCooker.cs" />
     <Compile Include="ServerGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

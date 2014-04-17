@@ -7,23 +7,38 @@ using SousChef;
 
 namespace DeCuisine
 {
-    public class ServerCooker : ServerGameObject
+    /// <summary>
+    /// The server cooker object
+    /// </summary>
+    class ServerCooker : ServerGameObject
     {
+        public Dictionary<string, Recipe> Recipes { get; set; }
+        public Dictionary<string, bool> ValidIngredients { get; set; }
         public List<ServerIngredient> Contents { get; private set; }
-        private string HashCache { get; set; }
+        public CookerType Type { get; set; }
 
+        private string HashCache { get; set; }
+        
+        /// <summary>
+        /// Makes a servercooker object on the server
+        /// </summary>
+        /// <param name="id">Unique id on the server. Should be given to the client to make
+        /// a ClientCooker with the same id</param>
+        /// <param name="transform">Initial location</param>
+        /// <param name="server">The server where the cooker is made</param>
+        /// <param name="type">What type of cooker i.e "oven"</param>
         public ServerCooker (int id, Vector4 transform, Server server, CookerType type)
-            : base(id)
+            : base(id, transform, server)
         {
             this.Type = type;
-            Contents = new List<Ingredient>();
+            Contents = new List<ServerIngredient>();
         }
 
         /*
          * Adds the ingredient to the list. Keeps the list in sorted order. If the 
          * ingredient to add isn't in the valid ingredient table, don't add and return false
          */
-        public bool AddIngredient(Ingredient ingredient)
+        public bool AddIngredient(ServerIngredient ingredient)
         {
             HashCache = null;
             if (Type.ValidIngredients.ContainsKey(ingredient.Type.Name))
