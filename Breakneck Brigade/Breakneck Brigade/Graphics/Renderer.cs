@@ -13,6 +13,15 @@ namespace Breakneck_Brigade.Graphics
         private Matrix4         world;
         private List<Model>     objects; //Change to RenderableGameObjects later
 
+        /// <summary>
+        /// A singleton gluQuadric for use in Glu primative rendering functions
+        /// </summary>
+        public static Glu.GLUquadric gluQuadric = Glu.gluNewQuadric();
+        /// <summary>
+        /// A singleton gluTesselator for Glu tesselation
+        /// </summary>
+        public static Glu.GLUtesselator gluTesselator = Glu.gluNewTess();
+
         public Renderer()
         {
             world   = new Matrix4();

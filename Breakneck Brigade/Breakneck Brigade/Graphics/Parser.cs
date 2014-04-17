@@ -64,12 +64,20 @@ namespace Breakneck_Brigade.Graphics
                         {
                             normal = null;
                         }
-                        Vector4 tc = new Vector4
+                        Vector4 tc;
+                        if(textures.Count > 0)
+                        { 
+                             tc = new Vector4
                                 (
                                     textures[textInd].X,
                                     textures[textInd].Y,
                                     0
                                 );  
+                        }
+                        else
+                        {
+                            tc = null;
+                        }
 
                         Vertex v = new Vertex(position, normal, tc);
                         poly.Vertexes.Add(v);

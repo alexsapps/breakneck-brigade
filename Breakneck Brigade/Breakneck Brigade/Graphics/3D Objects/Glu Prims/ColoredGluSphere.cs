@@ -106,7 +106,7 @@ namespace Breakneck_Brigade.Graphics
                 Gl.glGetFloatv(Gl.GL_CURRENT_COLOR, prevColor);
                 Gl.glColor4f(Color[0], Color[1], Color[2], Color[3]);
 
-                Glu.gluSphere(AObject3D.gluQuadric,Radius,Slices, Stacks);
+                Glu.gluSphere(Renderer.gluQuadric,Radius,Slices, Stacks);
 
                 //Restore previous color
                 Gl.glColor4fv(prevColor);

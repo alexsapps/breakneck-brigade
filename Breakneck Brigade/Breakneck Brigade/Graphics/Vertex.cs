@@ -7,9 +7,11 @@ using SousChef;
 
 namespace Breakneck_Brigade.Graphics
 {
-    /*
-     * Holds data about a vertex, namely the location in model space and its normal;
-     */
+    
+      
+    /// <summary>
+    /// Holds data about a vertex, namely the location in model space and its normal;
+    /// </summary>
     class Vertex
     {
         public Vector4 Position;

@@ -144,15 +144,15 @@ namespace Breakneck_Brigade
 
             /* CAMERA */
             mainCamera = new Camera();
-            mainCamera.Distance = 25.0f;
+            mainCamera.Distance = 200.0f;
             mainCamera.Incline  = 0.0f;
-            mainCamera.Transform.TranslationMat(0, 0, 0);
+            mainCamera.Transform.TranslationMat(0, -50, 0);
 
             Models = new List<Model>();
 
             /* TESTING MODES */
             //makeAnnaHappy(); //Do you want to build a snowman?
-            //testParser("apple.obj"); //Load a object file from the current dir
+            testParser("bottle.obj"); //Load a object file from the current dir
         }
 
         static void Render()
