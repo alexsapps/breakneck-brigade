@@ -19,6 +19,7 @@ namespace Breakneck_Brigade
         static Camera MainCamera;
         static List<Model> Models;
         private static int setDisplacement;
+        static InputManager IM;
 
         /// <summary>
         /// Initializes all settings for GLFW (window rendering and handling)
@@ -30,7 +31,7 @@ namespace Breakneck_Brigade
                 Console.Error.WriteLine("ERROR: GLFW Initialization failed!");
                 Environment.Exit(1);
             }
-            Glfw.glfwOpenWindow(640, 480, 0, 0, 0, 8, 32, 32, Glfw.GLFW_WINDOW);
+            Glfw.glfwOpenWindow(1280, 1024, 0, 0, 0, 8, 32, 32, Glfw.GLFW_WINDOW);
         }
 
         static void DestroyGLFW()
@@ -150,16 +151,19 @@ namespace Breakneck_Brigade
 
             /* CAMERA */
             MainCamera = new Camera();
-            MainCamera.Distance = 100.0f;
+            MainCamera.Distance = 50.0f;
             MainCamera.Incline  = 0.0f;
-            MainCamera.Transform.TranslationMat(0, -25, 0);
+            //MainCamera.Transform.TranslationMat(0, -25, 0);
+            IM = new InputManager();
+            IM.TurnOnFPSMode();
+            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
 
             Models = new List<Model>();
 
             /* TESTING MODES */
-            //makeAnnaHappy(); //Do you want to build a snowman?
-            testParser("orange.obj"); //Load a object file from the current dir
-            testParser("orange.obj");
+            makeAnnaHappy(); //Do you want to build a snowman?
+            //testParser("orange.obj"); //Load a object file from the current dir
+            //testParser("orange.obj");
         }
 
         static void Render()
@@ -173,8 +177,15 @@ namespace Breakneck_Brigade
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
-            MainCamera.Update();
+            MainCamera.Update(IM.GetRotX(), IM.GetRotY());
             MainCamera.Render();
+            IM.Clear();
+
+            if (Convert.ToInt32(IM.keys[InputManager.GLFW_KEY_ESCAPE]) == 1)
+            {
+                IM.TurnOffFPSMode();
+                Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
+            }
 
             foreach(Model model in Models)
             {
