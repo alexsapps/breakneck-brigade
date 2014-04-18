@@ -64,18 +64,27 @@ namespace Breakneck_Brigade.Graphics
                         {
                             normal = null;
                         }
-                        Vector4 tc = new Vector4
+                        Vector4 tc;
+                        if(textures.Count > 0)
+                        { 
+                             tc = new Vector4
                                 (
                                     textures[textInd].X,
                                     textures[textInd].Y,
                                     0
                                 );  
+                        }
+                        else
+                        {
+                            tc = null;
+                        }
 
                         Vertex v = new Vertex(position, normal, tc);
                         poly.Vertexes.Add(v);
                     }
                     mesh.Polygons.Add(poly);
                 }
+                //Set up polygon rendering mode for this mesh
                 switch (ii+1)
                 {
                     case 3:
@@ -88,6 +97,20 @@ namespace Breakneck_Brigade.Graphics
                         mesh.GlDrawMode = Gl.GL_POLYGON;
                         break;
                 }
+
+                //Texturing
+                Texture diffuseTexture;
+                if(Renderer.Textures.ContainsKey(g.Material.DiffuseTextureMap))
+                {
+                    diffuseTexture = Renderer.Textures[g.Material.DiffuseTextureMap];
+                }
+                else
+                {
+                    diffuseTexture = new Texture(g.Material.DiffuseTextureMap);
+                    Renderer.Textures[g.Material.DiffuseTextureMap] = diffuseTexture;
+                }
+                mesh.Texture = diffuseTexture;
+
                 result.Meshes.Add(mesh);
             }
 

@@ -15,10 +15,6 @@ namespace Breakneck_Brigade.Graphics
     abstract class AObject3D
     {
         /// <summary>
-        /// A singleton gluQuadric for use in Glu primative rendering functions
-        /// </summary>
-        protected static Glu.GLUquadric gluQuadric = Glu.gluNewQuadric();
-        /// <summary>
         /// The transformation for this mesh, relative to its parent. If this is the
         /// root node, set this to the identity matrix.
         /// </summary>
