@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Tao.Ode;
+
 namespace DeCuisine
 {
     class ServerGame : IDisposable
@@ -22,7 +24,13 @@ namespace DeCuisine
 
         private Random random = new Random();
 
-        int frameRate;
+        int frameRate; // Tick time in milliseconds
+
+        private IntPtr world;
+
+        private IntPtr space;
+
+        private IntPtr contactgroup;
 
         public ServerGame(Server server)
         {
@@ -120,73 +128,106 @@ namespace DeCuisine
             long rate = milliseconds * millisecond_ticks; //rate to wait in ticks
             long next = start;
 
-            while (Mode == GameMode.Started)
+            /* initialize physics */
+            Ode.dInitODE();
+            world = Ode.dWorldCreate(); // Create dynamic world
+            space = Ode.dHashSpaceCreate(IntPtr.Zero); // Create dynamic space
+            contactgroup = Ode.dJointGroupCreate(0);
+            Ode.dWorldSetGravity(world, 0, 0, -0.5);
+            Ode.dCreatePlane(space, 0, 0, 1, 0); // Create a ground
+            try
             {
-                next += rate;
-                lock (Lock)
+                while (Mode == GameMode.Started)
                 {
-                    /*
-                     * handle client input, e.g. move
-                     */
-                    lock (ClientInput)
+                    next += rate;
+                    lock (Lock)
                     {
-                        foreach (DCClientEvent input in ClientInput)
+                        /*
+                         * handle client input, e.g. move
+                         */
+                        lock (ClientInput)
                         {
-                            switch (input.Event.Type)
+                            foreach (DCClientEvent input in ClientInput)
                             {
-                                case ClientEventType.Enter:
-                                    break;
-                                case ClientEventType.Leave:
-                                    break;
-                                case ClientEventType.Move:
-                                    break;
-                                case ClientEventType.RequestTestObject:
-                                    int id = getId();
-                                    GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null),  new Vector4(), server ));
-                                    break;
-                                default:
-                                    //error
-                                    break;
+                                switch (input.Event.Type)
+                                {
+                                    case ClientEventType.Enter:
+                                        break;
+                                    case ClientEventType.Leave:
+                                        break;
+                                    case ClientEventType.Move:
+                                        break;
+                                    case ClientEventType.RequestTestObject:
+                                        int id = getId();
+                                        GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null), new Vector4(), server));
+                                        break;
+                                    default:
+                                        //error
+                                        break;
+                                }
+                            }
+                            ClientInput.Clear();
+                        }
+
+                        /*
+                         * Physics happens here.
+                         */
+                        {
+                            Ode.dSpaceCollide(space, IntPtr.Zero, dNearCallback);
+                            Ode.dWorldStep(world, 0.001 * frameRate);
+                            Ode.dJointGroupEmpty(contactgroup);
+                        }
+
+                        /*
+                         * handle an instant in time, e.g. gravity, collisions
+                         */
+                        foreach (var obj in GameObjects)
+                        {
+                            obj.Value.Update();
+                        }
+
+                        /*
+                         * send updates to clients
+                         */
+                        {
+                            foreach (Client client in clients)
+                            {
+                                lock (client.ServerMessages)
+                                {
+                                    client.ServerMessages.Add(new ServerGameStateUpdateMessage()
+                                    {
+                                        Type = ServerMessageType.GameStateUpdate,
+                                        GameObjects = GameObjects
+                                    });
+                                    Monitor.PulseAll(client.ServerMessages);
+                                }
                             }
                         }
-                        ClientInput.Clear();
-                    }
-                    
-                    /*
-                     * handle an instant in time, e.g. gravity, collisions
-                     */
-                    foreach (var obj in GameObjects)
-                    {
-                        obj.Value.Update();
                     }
 
                     /*
-                     * send updates to clients
+                     * wait until end of tick
                      */
-                    {
-                        foreach (Client client in clients)
-                        {
-                            lock (client.ServerMessages)
-                            {
-                                client.ServerMessages.Add(new ServerGameStateUpdateMessage() { 
-                                    Type = ServerMessageType.GameStateUpdate, 
-                                    GameObjects = GameObjects });
-                                Monitor.PulseAll(client.ServerMessages);
-                            }
-                        }
-                    }
+                    long waitTime = next - DateTime.UtcNow.Ticks;
+                    if (waitTime > 0)
+                        Thread.Sleep(new TimeSpan(waitTime));
+                    //TODO:  if not more than zero, log item -- rate too fast!
                 }
-                
-                /*
-                 * wait until end of tick
-                 */
-                long waitTime = next - DateTime.UtcNow.Ticks;
-                if (waitTime > 0)
-                    Thread.Sleep(new TimeSpan(waitTime));
-                //TODO:  if not more than zero, log item -- rate too fast!
+            }
+            finally
+            {
+                Ode.dWorldDestroy(world);
+                Ode.dCloseODE();
             }
         }
 
+        
+        
+        private void dNearCallback(IntPtr data, IntPtr o1, IntPtr o2)
+        {
+            // is o1 a charcter? check list of players
+            // list
+        }
 
         private void SendModeChangeUpdate()
         {

@@ -44,6 +44,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.Ode">
+      <HintPath>..\Breakneck Brigade\lib\Tao.Ode.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Ode.Tests">
+      <HintPath>..\Breakneck Brigade\lib\Tao.Ode.Tests.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
@@ -71,8 +77,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>echo "Copying in dependancies"
+pushd $(ProjectDir)
+robocopy lib\deps $(OutDir) /s
+popd
+exit 0</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
