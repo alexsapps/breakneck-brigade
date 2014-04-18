@@ -47,10 +47,18 @@ namespace Breakneck_Brigade.Graphics
 
         public Matrix4 Transform;
 
+        public float xPos;
+        public float yPos;
+        public float zPos;
+
 		public Camera() 
 		{
             Transform = new Matrix4();
 			Reset();
+
+            xPos = 0.0f;
+            yPos = 0.0f;
+            zPos = 0.0f;
 		}
 
 		public void Update(float rotx, float roty) 
@@ -91,6 +99,8 @@ namespace Breakneck_Brigade.Graphics
 			// Place camera
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
+
+
             Gl.glTranslatef(0, 0, -Distance);
 
             Gl.glMultMatrixf(Transform.glArray);
