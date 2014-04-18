@@ -22,6 +22,8 @@ namespace DeCuisine
 
         private Server server;
 
+        public ConfigSalad Config { get; private set; }
+
         private Random random = new Random();
 
         int frameRate; // Tick time in milliseconds
@@ -54,6 +56,8 @@ namespace DeCuisine
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
             frameRate = int.Parse(config.GetSetting("frame-rate", 1000));
+
+            Config = new GameObjectConfig().GetConfigSalad();
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -297,6 +301,7 @@ namespace DeCuisine
 
         public ServerGameObject GeomToObj(IntPtr geom)
         {
+            Lock.AssertHeld();
             return GameObjects[geom.ToInt32()];
         }
     }
