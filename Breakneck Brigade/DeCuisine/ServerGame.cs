@@ -1,11 +1,11 @@
 ﻿using SousChef;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Tao.Ode;
 
 namespace DeCuisine
@@ -26,11 +26,9 @@ namespace DeCuisine
 
         int frameRate; // Tick time in milliseconds
 
-        private IntPtr world;
-
-        private IntPtr space;
-
-        private IntPtr contactgroup;
+        public IntPtr World { get; protected set; }
+        public IntPtr Space { get; protected set; }
+        public IntPtr ContactGroup { get; protected set; }
 
         public ServerGame(Server server)
         {
@@ -130,11 +128,11 @@ namespace DeCuisine
 
             /* initialize physics */
             Ode.dInitODE();
-            world = Ode.dWorldCreate(); // Create dynamic world
-            space = Ode.dHashSpaceCreate(IntPtr.Zero); // Create dynamic space
-            contactgroup = Ode.dJointGroupCreate(0);
-            Ode.dWorldSetGravity(world, 0, 0, -0.5);
-            Ode.dCreatePlane(space, 0, 0, 1, 0); // Create a ground
+            World = Ode.dWorldCreate(); // Create dynamic world
+            Space = Ode.dHashSpaceCreate(IntPtr.Zero); // Create dynamic space
+            ContactGroup = Ode.dJointGroupCreate(0);
+            Ode.dWorldSetGravity(World, 0, 0, -0.5); //TODO: read gravity from config file
+            Ode.dCreatePlane(Space, 0, 0, 1, 0); // Create a ground //TODO:  remove this line of test code (read from config file instead)
             try
             {
                 while (Mode == GameMode.Started)
@@ -159,7 +157,7 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.RequestTestObject:
                                         int id = getId();
-                                        GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null), new Vector4(), this));
+                                        GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null), this));
                                         break;
                                     default:
                                         //error
@@ -173,9 +171,9 @@ namespace DeCuisine
                          * Physics happens here.
                          */
                         {
-                            Ode.dSpaceCollide(space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldStep(world, 0.001 * frameRate);
-                            Ode.dJointGroupEmpty(contactgroup);
+                            Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
+                            Ode.dWorldStep(World, 0.001 * frameRate);
+                            Ode.dJointGroupEmpty(ContactGroup);
                         }
 
                         /*
@@ -190,6 +188,22 @@ namespace DeCuisine
                          * send updates to clients
                          */
                         {
+                            byte[] bin;
+                            int binlen;
+
+                            using (MemoryStream membin = new MemoryStream())
+                            {
+                                using (BinaryWriter writer = new BinaryWriter(membin))
+                                {
+                                    foreach (var obj in GameObjects)
+                                    {
+                                        obj.Value.Serialize(writer);
+                                    }
+                                }
+                                bin = membin.ToArray();
+                                binlen = bin.Length;
+                            }
+
                             foreach (Client client in clients)
                             {
                                 lock (client.ServerMessages)
@@ -197,7 +211,8 @@ namespace DeCuisine
                                     client.ServerMessages.Add(new ServerGameStateUpdateMessage()
                                     {
                                         Type = ServerMessageType.GameStateUpdate,
-                                        GameObjects = GameObjects
+                                        Binary = bin,
+                                        Length = binlen
                                     });
                                     Monitor.PulseAll(client.ServerMessages);
                                 }
@@ -216,12 +231,14 @@ namespace DeCuisine
             }
             finally
             {
-                Ode.dWorldDestroy(world);
+                Ode.dJointGroupDestroy(ContactGroup);
+                Ode.dSpaceDestroy(Space);
+                Ode.dWorldDestroy(World);
                 Ode.dCloseODE();
 
-                world = IntPtr.Zero;
-                space = IntPtr.Zero;
-                contactgroup = IntPtr.Zero;
+                World = IntPtr.Zero;
+                Space = IntPtr.Zero;
+                ContactGroup = IntPtr.Zero;
             }
         }
 
@@ -230,7 +247,10 @@ namespace DeCuisine
         private void dNearCallback(IntPtr data, IntPtr o1, IntPtr o2)
         {
             // is o1 a charcter? check list of players
-            // list
+
+            var obj1 = GeomToObj(o1);
+            var obj2 = GeomToObj(o2);
+
         }
 
         private void SendModeChangeUpdate()
@@ -273,6 +293,11 @@ namespace DeCuisine
         {
             Lock.AssertHeld();
             GameObjects.Remove(obj.Id);
+        }
+
+        public ServerGameObject GeomToObj(IntPtr geom)
+        {
+            return GameObjects[geom.ToInt32()];
         }
     }
 }

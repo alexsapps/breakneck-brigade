@@ -112,6 +112,10 @@ namespace Breakneck_Brigade
                 {
                     lock (client.Game.Lock)
                     {
+                        /*
+                         * render
+                         */
+
                         foreach (var x in client.Game.gameObjects)
                         {
                             v.AppendLine(x.Key + " { " + x.Value.Transform.ToString() + " } ");

@@ -124,28 +124,37 @@ namespace DeCuisine
             {
                 using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
                 {
-                    lock (ServerMessages)
+                    while (true)
                     {
-                        while (IsConnected)
+                        List<ServerMessage> svrMsgs;
+
+                        lock (Lock)
                         {
-                            foreach (var message in ServerMessages)
+                            if (!IsConnected)
+                                break;
+
+                            lock (ServerMessages)
                             {
-                                writer.Write((byte)message.Type);
-                                switch (message.Type)
-                                {
-                                    case ServerMessageType.GameModeUpdate:
-                                        writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
-                                        break;
-                                    case ServerMessageType.GameStateUpdate:
-                                        var msg = (ServerGameStateUpdateMessage)message;
-                                        writer.Write(msg.GameObjects.Count);
-                                        foreach (var obj in msg.GameObjects.Values)
-                                            obj.Serialize(writer);
-                                        break;
-                                }
+                                while (ServerMessages.Count == 0)
+                                    Monitor.Wait(ServerMessages);
+                                svrMsgs = new List<ServerMessage>(ServerMessages);
+                                ServerMessages.Clear();
                             }
-                            ServerMessages.Clear();
-                            Monitor.Wait(ServerMessages);
+                        }
+
+                        foreach (var message in svrMsgs)
+                        {
+                            writer.Write((byte)message.Type);
+                            switch (message.Type)
+                            {
+                                case ServerMessageType.GameModeUpdate:
+                                    writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
+                                    break;
+                                case ServerMessageType.GameStateUpdate:
+                                    var msg = (ServerGameStateUpdateMessage)message;
+                                    writer.Write(msg.Binary, 0, msg.Length);
+                                    break;
+                            }
                         }
                     }
                 }

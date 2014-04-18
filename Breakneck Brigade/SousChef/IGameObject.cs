@@ -12,6 +12,5 @@ namespace SousChef
     public interface IGameObject
     {
         int Id { get; set; }
-        Matrix4 Transform { get; set; } // position + the rotation of the object
     }
 }

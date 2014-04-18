@@ -14,8 +14,8 @@ namespace DeCuisine
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
-        public ServerIngredient(int id, IngredientType type, Vector4 transform, ServerGame game)
-            : base(id, transform, game)
+        public ServerIngredient(int id, IngredientType type, ServerGame game)
+            : base(id, game)
         {
             this.Type = type;
         }

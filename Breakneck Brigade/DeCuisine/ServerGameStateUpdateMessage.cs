@@ -8,7 +8,11 @@ namespace DeCuisine
 {
     class ServerGameStateUpdateMessage : ServerMessage
     {
+        //public List<int> DeletedGameObjects { get; set; }
+        //public List<ServerGameObject> ChangedGameObjects { get; set; }
+        //public List<ServerGameObject> NewGameObjects { get; set; }
 
-        public Dictionary<int,ServerGameObject> GameObjects { get; set; }
+        public byte[] Binary;
+        public int Length;
     }
 }
