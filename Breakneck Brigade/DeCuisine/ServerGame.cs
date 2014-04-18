@@ -159,7 +159,7 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.RequestTestObject:
                                         int id = getId();
-                                        GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null), new Vector4(), server));
+                                        GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null), new Vector4(), this));
                                         break;
                                     default:
                                         //error
@@ -218,6 +218,10 @@ namespace DeCuisine
             {
                 Ode.dWorldDestroy(world);
                 Ode.dCloseODE();
+
+                world = IntPtr.Zero;
+                space = IntPtr.Zero;
+                contactgroup = IntPtr.Zero;
             }
         }
 
@@ -254,6 +258,21 @@ namespace DeCuisine
         public void Dispose()
         {
             
+        }
+
+        /*
+         * this should be called only by ServerGameObject constructor
+         */
+        public void ObjectAdded(ServerGameObject obj)
+        {
+            Lock.AssertHeld();
+            GameObjects.Add(obj.Id, obj);
+        }
+
+        public void ObjectRemoved(ServerGameObject obj)
+        {
+            Lock.AssertHeld();
+            GameObjects.Remove(obj.Id);
         }
     }
 }

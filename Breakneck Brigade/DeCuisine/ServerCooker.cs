@@ -27,8 +27,8 @@ namespace DeCuisine
         /// <param name="transform">Initial location</param>
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
-        public ServerCooker (int id, Vector4 transform, Server server, CookerType type)
-            : base(id, transform, server)
+        public ServerCooker(int id, Vector4 transform, CookerType type, ServerGame game)
+            : base(id, transform, game)
         {
             this.Type = type;
             Contents = new List<ServerIngredient>();
