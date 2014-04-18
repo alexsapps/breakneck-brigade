@@ -47,19 +47,31 @@ namespace Breakneck_Brigade.Graphics
 
         public Matrix4 Transform;
 
+        public float xPos;
+        public float yPos;
+        public float zPos;
+
 		public Camera() 
 		{
             Transform = new Matrix4();
 			Reset();
+
+            xPos = 0.0f;
+            yPos = 0.0f;
+            zPos = 0.0f;
 		}
 
-		public void Update() 
+		public void Update(float rotx, float roty) 
         {
             /* cam rotation */
-            float newVal = Azimuth + 0.25f;
+            /*float newVal = Azimuth + roty;
             Azimuth = newVal > 360f ? 
                 0.0f : newVal;
-             
+             */
+
+            Azimuth = Azimuth + roty > 360.0f ? Azimuth + roty - 360.0f : Azimuth + roty;
+
+            Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;             
         }
 
         public void Reset() 
@@ -85,9 +97,11 @@ namespace Breakneck_Brigade.Graphics
 			Glu.gluPerspective(FOV,Aspect,NearClip,FarClip);
 
 			// Place camera
-			Gl.glTranslatef(0,0,-Distance);
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
+
+
+            Gl.glTranslatef(0, 0, -Distance);
 
             Gl.glMultMatrixf(Transform.glArray);
 

@@ -40,7 +40,10 @@ exit 0
         public static string CombinePath(string folder, string file)
         {
             if (folder != null)
-                return Path.Combine(folder, file);
+            {
+                string result = Path.Combine(folder, file);
+                return File.Exists(result) ? result : null;
+            }
             else
             {
                 string[] paths = new string[]
