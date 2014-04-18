@@ -139,13 +139,8 @@ namespace DeCuisine
                                     case ServerMessageType.GameStateUpdate:
                                         var msg = (ServerGameStateUpdateMessage)message;
                                         writer.Write(msg.GameObjects.Count);
-                                        foreach (var obj in msg.GameObjects)
-                                        {
-                                            writer.Write(obj.Key);
-                                            for (int i = 0; i < 4; i++)
-                                                //TODO: Passing a matrix value that is most likely wrong
-                                                writer.Write((int)obj.Value.Transform[i,i]);
-                                        }
+                                        foreach (var obj in msg.GameObjects.Values)
+                                            obj.Serialize(writer);
                                         break;
                                 }
                             }

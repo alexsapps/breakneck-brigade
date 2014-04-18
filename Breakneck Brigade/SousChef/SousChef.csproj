@@ -52,6 +52,7 @@
     <Compile Include="Config\BBXItemParser.cs" />
     <Compile Include="BB.cs" />
     <Compile Include="Config\Recipes.cs" />
+    <Compile Include="GameObjectClass.cs" />
     <Compile Include="GameObjectType.cs" />
     <Compile Include="IGameObject.cs" />
     <Compile Include="IIngredient.cs" />

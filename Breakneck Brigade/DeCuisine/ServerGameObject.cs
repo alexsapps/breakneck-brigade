@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SousChef;
+using System.IO;
 
 namespace DeCuisine
 {
@@ -13,6 +14,7 @@ namespace DeCuisine
     abstract class ServerGameObject : IGameObject
     {
         public int Id { get; set; }
+        public abstract GameObjectClass ObjectClass { get; }
         public Matrix4 Transform { get; set; }
         public ServerGame Game;
 
@@ -44,6 +46,13 @@ namespace DeCuisine
         public virtual void Remove()
         {
             Game.ObjectRemoved(this);
+        }
+
+        public virtual void Serialize(BinaryWriter stream)
+        {
+            stream.Write((Int32)Id);
+            stream.Write((Int16)ObjectClass);
+            //TODO: write geom info
         }
     }
 }

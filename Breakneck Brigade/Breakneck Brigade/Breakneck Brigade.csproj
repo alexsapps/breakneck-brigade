@@ -84,9 +84,6 @@
     <Reference Include="Tao.Glfw">
       <HintPath>lib\Tao.Glfw.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.Ode">
-      <HintPath>lib\Tao.Ode.dll</HintPath>
-    </Reference>
     <Reference Include="Tao.OpenAl">
       <HintPath>lib\Tao.OpenAl.dll</HintPath>
     </Reference>
@@ -174,6 +171,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderableGameObject.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

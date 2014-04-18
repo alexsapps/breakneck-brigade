@@ -17,7 +17,7 @@ namespace Breakneck_Brigade
         TcpClient connection;
         public bool IsConnected { get; private set; }
         public ClientGame Game { get; private set; }
-        public GameMode GameMode {get; private set; }
+        public GameMode GameMode { get; private set; }
         public event EventHandler Disconnected;
 
         public Client()
@@ -86,21 +86,21 @@ namespace Breakneck_Brigade
                             case ServerMessageType.GameStateUpdate:
                                 lock (Game.Lock)
                                 {
-                                Game.gameObjects.Clear();
-                                int len = reader.ReadInt32();
+                                    Game.gameObjects.Clear();
+                                    int len = reader.ReadInt32();
 
-                                for (int i = 0; i < len; i++)
-                                {
-                                    int id = reader.ReadInt32();
-                                    Game.gameObjects.Add(id,
-                                        new ClientIngredient(id, 
-                                                             new IngredientType("cheese", 10, null),
-                                                             new Vector4( reader.ReadInt32(), 
-                                                                          reader.ReadInt32(),
-                                                                          reader.ReadInt32(),
-                                                                          reader.ReadInt32()), 
-                                                             this, 
-                                                             new Graphics.Model()));
+                                    for (int i = 0; i < len; i++)
+                                    {
+                                        int id = reader.ReadInt32();
+                                        ClientGameObject obj;
+                                        if (Game.gameObjects.TryGetValue(id, out obj))
+                                        {
+                                            obj.Update(reader);
+                                        }
+                                        else
+                                        {
+                                            obj = ClientGameObject.Deserialize(id, reader, Game);
+                                        }
                                     }
                                 }
                                 break;

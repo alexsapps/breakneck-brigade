@@ -10,6 +10,7 @@ namespace DeCuisine
 {
     class ServerIngredient : ServerGameObject, IIngredient 
     {
+        public override GameObjectClass ObjectClass { get { return GameObjectClass.Ingredient; } }
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
@@ -19,9 +20,11 @@ namespace DeCuisine
             this.Type = type;
         }
 
-        void writeSerialization(StreamWriter stream)
+        public override void Serialize(BinaryWriter stream)
         {
-
+            base.Serialize(stream);
+            stream.Write(Type.Name);
+            stream.Write((int)Cleanliness);
         }
 
         public override void Update()

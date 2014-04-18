@@ -12,6 +12,7 @@ namespace DeCuisine
     /// </summary>
     class ServerCooker : ServerGameObject
     {
+        public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
         public Dictionary<string, Recipe> Recipes { get; set; }
         public Dictionary<string, bool> ValidIngredients { get; set; }
         public List<ServerIngredient> Contents { get; private set; }
