@@ -31,9 +31,9 @@ namespace SousChef
 
         public virtual void ParseContents(XmlReader reader)
         {
-            while (reader.Read()) //could we already be positioned on the next element?
+            while (reader.Read())
             {
-                if (reader.NodeType == XmlNodeType.Element)
+                while (reader.NodeType == XmlNodeType.Element)
                     handleSubtree(reader.ReadSubtree());
             }
         }
@@ -73,16 +73,15 @@ namespace SousChef
             if (readParent)
             {
                 reader.MoveToContent();
-                reader.Read();
             }
-            while (true)
+            while (reader.Read())
             {
-                if (reader.NodeType != XmlNodeType.Element)
-                    if (!reader.Read())
-                        break;
-                if (reader.Name != tagName)
-                    throw new Exception();
-                items.Add(reader.ReadElementContentAsString());
+                while (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (reader.Name != tagName)
+                        throw new Exception();
+                    items.Add(reader.ReadElementContentAsString());
+                }
             }
             return items;
         }
