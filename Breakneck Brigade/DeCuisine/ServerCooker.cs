@@ -75,5 +75,10 @@ namespace DeCuisine
         {
             throw new NotImplementedException();
         }
+
+        public override GeometryInfo GeomInfo
+        {
+            get { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
+        }
     }
 }
