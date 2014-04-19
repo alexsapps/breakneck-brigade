@@ -32,10 +32,8 @@ namespace SousChef
         public virtual void ParseContents(XmlReader reader)
         {
             while (reader.Read())
-            {
-                while (reader.NodeType == XmlNodeType.Element)
+                if (reader.NodeType == XmlNodeType.Element)
                     handleSubtree(reader.ReadSubtree());
-            }
         }
 
         protected abstract void handleSubtree(XmlReader reader);
