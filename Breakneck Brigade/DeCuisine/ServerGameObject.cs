@@ -33,9 +33,6 @@ namespace DeCuisine
         /// Base constructor. For every servergameobject create their should be a 
         /// coresponding ClientGameObject on each client with the same ID.
         /// </summary>
-        /// <param name="id">Should be unique across all server objects but the same as clients</param>
-        /// <param name="transform">Initial position</param>
-        /// <param name="server">What server to put the object on</param>
         public ServerGameObject(int id, ServerGame game) 
         {
             this.Id = id;
@@ -57,6 +54,9 @@ namespace DeCuisine
         {
             this.RemoveFromWorld();
             this.Game.ObjectRemoved(this);
+
+            // Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+            // Ode.dGeomGetRotation(this.Geom);
         }
 
         /// <summary>
@@ -133,6 +133,18 @@ namespace DeCuisine
             stream.Write((Int32)Id);
             stream.Write((Int16)ObjectClass);
             //TODO: write geom info
+        }
+
+        /// <summary>
+        /// Updates the stream with the position. 
+        /// </summary>
+        /// <param name="stream"></param>
+        public virtual void UpdateStream(BinaryWriter stream)
+        {
+            Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+            stream.Write(m3.X);
+            stream.Write(m3.Y);
+            stream.Write(m3.Z);
         }
     }
 }

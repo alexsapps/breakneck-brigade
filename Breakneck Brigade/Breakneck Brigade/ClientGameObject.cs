@@ -29,18 +29,19 @@ namespace Breakneck_Brigade
             construct(id, new Matrix4(transform), game);
         }
 
+        public ClientGameObject(int id, BinaryReader reader, ClientGame game)
+        {
+            Matrix4 transform = getPositionMatrix(reader);
+            construct(id, transform, game);
+        }
+
         private void construct(int id, Matrix4 transform, ClientGame game) {
             //set properties that never change here
             this.Id = id;
             this.Game = game;
-            update(transform);
+            Update(transform);
         }
 
-        private void update(Matrix4 transform)
-        {
-            //set properties that might change here.  this is seperated so it can be reused by public Update function.
-            this.Transform = transform;
-        }
 
         public static ClientGameObject Deserialize(int id, BinaryReader reader, ClientGame game)
         {
@@ -49,24 +50,52 @@ namespace Breakneck_Brigade
             return (ClientGameObject)Activator.CreateInstance(type, id, reader, game);
         }
 
-        public ClientGameObject(int id, BinaryReader reader, ClientGame game)
-        {
-            Matrix4 transform = new Matrix4(); //todo: read geom info from reader
-            construct(id, transform, game);
-        }
-
         /// <summary>
         /// Renders the game object in the world.
         /// </summary>
+        public abstract void Render();
+
+
+        /// <summary>
+        /// Update values from the stream "server", just the posistions are handled
+        /// in the base class. Should call the Update for the transform and 
+        /// be overriden by the specific update implementations
+        /// function as well
+        /// </summary>
+        /// <param name="reader"></param>
+        public virtual void StreamUpdate(BinaryReader reader)
+        {
+            Matrix4 NewPosition = getPositionMatrix(reader);
+            Update(NewPosition);
+        }
+
         public virtual void Render()
         {
             Model.Render();
         }
-
-        public virtual void Update(BinaryReader reader)
+        /// <summary>
+        /// the next three values to be read from the reader should be the x, y 
+        /// and z coordinates.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        private Matrix4 getPositionMatrix(BinaryReader reader)
         {
-            var transform = new Matrix4(); //todo: read geom info from reader
-            update(transform);
+            double x, y, z;
+            x = reader.ReadDouble();
+            y = reader.ReadDouble();
+            z = reader.ReadDouble();
+            return new Matrix4(new Vector4(x, y, z));
         }
+
+        /// <summary>
+        /// Updates the position of the current objects transfrom.
+        /// </summary>
+        /// <param name="transform"></param>
+        public void Update(Matrix4 transform)
+        {
+            this.Transform = transform; 
+        }
+
     }
 }
