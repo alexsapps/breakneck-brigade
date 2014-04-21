@@ -8,16 +8,12 @@ using Tao.OpenGl;
 
 namespace Breakneck_Brigade.Graphics
 {
-    class ColoredGluSphere : AObject3D
+    class TexturedGluSphere : AObject3D
     {
         /// <summary>
-        /// A vector representing color:
-        /// - Color[0] = Red
-        /// - Color[1] = Green
-        /// - Color[2] = Blue
-        /// - Color[3] = Alpha
+        /// The texture to use on this sphere
         /// </summary>
-        public  Vector4     Color;
+        public  Texture     Texture;
         /// <summary>
         /// The radius of the sphere
         /// </summary>
@@ -37,12 +33,12 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="radius">Radius of the sphere</param>
         /// <param name="slices">The number of slices to use when rendering this sphere (i.e.: how many verticle cross sections)</param>
         /// <param name="stacks">The number of stacks to use when rendering this sphere (i.e.: how many horizontal cross sections)</param>
-        public ColoredGluSphere(double radius, int slices, int stacks) : base()
+        public TexturedGluSphere(double radius, int slices, int stacks) : base()
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Color           = new Vector4(1.0, 1.0, 1.0, 1.0);
+            Texture         = Renderer.DefaultTexture;
         }
 
         /// <summary>
@@ -52,12 +48,12 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="radius">Radius of the sphere</param>
         /// <param name="slices">The number of slices to use when rendering this sphere (i.e.: how many verticle cross sections)</param>
         /// <param name="stacks">The number of stacks to use when rendering this sphere (i.e.: how many horizontal cross sections)</param>
-        public ColoredGluSphere(double radius, int slices, int stacks, Matrix4 trans) : base(trans)
+        public TexturedGluSphere(double radius, int slices, int stacks, Matrix4 trans) : base(trans)
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Color           = new Vector4(1.0, 1.0, 1.0, 1.0);
+            Texture         = Renderer.DefaultTexture;
         }
 
         /// <summary>
@@ -70,12 +66,12 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="green"></param>
         /// <param name="blue"></param>
         /// <param name="alpha"></param>
-        public ColoredGluSphere(double radius, int slices, int stacks, float red, float green, float blue, float alpha) : base()
+        public TexturedGluSphere(double radius, int slices, int stacks, Texture texture) : base()
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Color           = new Vector4(red, green, blue, alpha);
+            Texture         = texture;
         }
         
         /// <summary>
@@ -89,12 +85,12 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="green"></param>
         /// <param name="blue"></param>
         /// <param name="alpha"></param>
-        public ColoredGluSphere(double radius, int slices, int stacks, Matrix4 trans, float red, float green, float blue, float alpha) : base(trans)
+        public TexturedGluSphere(double radius, int slices, int stacks, Matrix4 trans, Texture texture) : base(trans)
         {
             Radius          = radius;
             Slices          = slices;
             Stacks          = stacks;
-            Color           = new Vector4(red, green, blue, alpha);
+            Texture         = texture;
         }
 
         public override void Render()
@@ -104,8 +100,10 @@ namespace Breakneck_Brigade.Graphics
                 //Store previous color
                 float[] prevColor = new float[4]; 
                 Gl.glGetFloatv(Gl.GL_CURRENT_COLOR, prevColor);
-                Gl.glColor4f(Color[0], Color[1], Color[2], Color[3]);
+                Gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+                Glu.gluQuadricTexture(Renderer.gluQuadric, Gl.GL_TRUE);      //Enables texturing of Glu opbjects
+                Texture.Bind();
                 Glu.gluSphere(Renderer.gluQuadric,Radius,Slices, Stacks);
 
                 //Restore previous color

@@ -14,20 +14,43 @@ using Tao.OpenGl;
 
 namespace Breakneck_Brigade.Graphics
 {
-    class Parser
+    class ParserMaterialStreamProvider : IMaterialStreamProvider
     {
-        IObjLoader loader;
-        public Parser()
+        MaterialStreamProvider msp;
+
+        string Filename;
+        public ParserMaterialStreamProvider(string filename)
         {
-            ObjLoaderFactory olFactory = new ObjLoaderFactory();
-            loader = olFactory.Create();
+            msp = new MaterialStreamProvider();
+            Filename = filename;
+        }
+        public Stream Open(string path)
+        {
+            return msp.Open(Filename);
+        }
+    }
+
+    class ObjParser
+    {
+        private const string MODEL_DIRECTORY    = "res\\models\\";
+        private const string MTL_DIRECTORY      = "res\\materials\\";
+
+        ObjLoaderFactory olFactory;
+        IObjLoader loader;
+        public ObjParser()
+        {
+            olFactory = new ObjLoaderFactory();
         }
 
-        public Model ParseFile(string filename)
+        public Model ParseFile(string modelName)
         {
+            FileStream objFileStream = new FileStream(MODEL_DIRECTORY + modelName + ".obj", FileMode.Open);
+            IMaterialStreamProvider msp = new ParserMaterialStreamProvider(MTL_DIRECTORY + modelName + ".mtl");
+
+            loader = olFactory.Create(msp);
             Model result = new Model();
-            FileStream fileStream = new FileStream(filename, FileMode.Open);
-            LoadResult parsedFile = loader.Load(fileStream);
+         
+            LoadResult parsedFile = loader.Load(objFileStream);
             IList<OL_Vertex> positions  = parsedFile.Vertices;
             IList<OL_Normal> normals    = parsedFile.Normals;
             IList<OL_Texture> textures  = parsedFile.Textures;
@@ -114,7 +137,7 @@ namespace Breakneck_Brigade.Graphics
                 result.Meshes.Add(mesh);
             }
 
-            fileStream.Close();
+            objFileStream.Close();
             return result;
         }
     }

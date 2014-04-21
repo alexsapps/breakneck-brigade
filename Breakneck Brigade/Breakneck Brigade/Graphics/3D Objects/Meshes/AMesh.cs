@@ -17,10 +17,6 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public List<APolygon> Polygons;
         /// <summary>
-        /// The texture ID glu assigned to this mesh's texture at load time.
-        /// </summary>
-        public int GluTextureID;
-        /// <summary>
         /// The mode OpenGL should be set to in order to draw this mesh.
         /// </summary>
         public int GlDrawMode;

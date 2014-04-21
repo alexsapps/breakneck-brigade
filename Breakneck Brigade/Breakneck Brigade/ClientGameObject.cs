@@ -14,7 +14,7 @@ namespace Breakneck_Brigade
         protected ClientGame Game { get; set; }
         public int Id { get; set; }
         public Matrix4 Transform { get; set; }
-        public Model Model { get; private set; }
+        public Model Model { get; protected set; }
 
         /// <summary>
         /// Base constructor. For every ClientGameObject, the parameters should be recieved from
@@ -58,7 +58,10 @@ namespace Breakneck_Brigade
         /// <summary>
         /// Renders the game object in the world.
         /// </summary>
-        public abstract void Render();
+        public virtual void Render()
+        {
+            Model.Render();
+        }
 
         public virtual void Update(BinaryReader reader)
         {
