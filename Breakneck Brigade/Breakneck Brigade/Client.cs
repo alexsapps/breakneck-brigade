@@ -95,7 +95,7 @@ namespace Breakneck_Brigade
                                         ClientGameObject obj;
                                         if (Game.gameObjects.TryGetValue(id, out obj))
                                         {
-                                            obj.Update(reader);
+                                            obj.StreamUpdate(reader);
                                         }
                                         else
                                         {

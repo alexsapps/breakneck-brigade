@@ -53,7 +53,7 @@ namespace DeCuisine
          * return object and return a final product with the attatched score. 
          * TODO: Make it do that^
          */
-        public IngredientType Cook()
+        public ServerGameObject Cook()
         {
             if (HashCache == null)
             {
@@ -64,7 +64,8 @@ namespace DeCuisine
 
             if (Type.Recipes.ContainsKey(this.HashCache))
             {
-                return Type.Recipes[this.HashCache].FinalProduct;
+
+                return new ServerIngredient(Game.getId(), Type.Recipes[this.HashCache].FinalProduct, Game);
             }
             return null;
         }

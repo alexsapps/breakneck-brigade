@@ -18,7 +18,8 @@ namespace Breakneck_Brigade
         }
 
         //called by ClientGameObject.Deserialize
-        public ClientCooker(int id, BinaryReader reader, ClientGame game) : base(id, reader, game)
+        public ClientCooker(int id, BinaryReader reader, ClientGame game) 
+            : base(id, reader, game)
         {
             construct();
         }
@@ -33,9 +34,9 @@ namespace Breakneck_Brigade
 
         }
 
-        public override void Update(BinaryReader reader)
+        public override void StreamUpdate(BinaryReader reader)
         {
-            base.Update(reader);
+            base.StreamUpdate(reader);
 
             update();
         }
