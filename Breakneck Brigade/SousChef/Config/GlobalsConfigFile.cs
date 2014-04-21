@@ -37,13 +37,12 @@ namespace SousChef
                     {
                         if (reader.Name == "settings")
                         {
-                            reader.Read();
-                            while (true)
+                            while (reader.Read())
                             {
-                                if (reader.NodeType != XmlNodeType.Element)
-                                    if (!reader.Read())
-                                        break;
-                                config.Add(reader.Name, reader.ReadElementContentAsString());
+                                while (reader.NodeType == XmlNodeType.Element)
+                                {
+                                    config.Add(reader.Name, reader.ReadElementContentAsString());
+                                }
                             }
                         }
                         else

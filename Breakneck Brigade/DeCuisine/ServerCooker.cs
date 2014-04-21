@@ -13,8 +13,6 @@ namespace DeCuisine
     class ServerCooker : ServerGameObject
     {
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
-        public Dictionary<string, Recipe> Recipes { get; set; }
-        public Dictionary<string, bool> ValidIngredients { get; set; }
         public List<ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
 
@@ -42,7 +40,7 @@ namespace DeCuisine
         public bool AddIngredient(ServerIngredient ingredient)
         {
             HashCache = null;
-            if (Type.ValidIngredients.ContainsKey(ingredient.Type.Name))
+            if (Type.ValidIngredients.Contains(ingredient.Type.Name))
             {
                 Contents.Add(ingredient);
                 return true;
@@ -74,6 +72,11 @@ namespace DeCuisine
         public override void Update()
         {
             throw new NotImplementedException();
+        }
+
+        public override GeometryInfo GeomInfo
+        {
+            get { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
         }
     }
 }

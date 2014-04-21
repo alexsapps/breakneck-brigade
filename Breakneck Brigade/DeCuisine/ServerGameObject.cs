@@ -23,7 +23,9 @@ namespace DeCuisine
         public IntPtr Geom { get; set; }
         public virtual bool HasBody { get { return true; } } //false for walls
         public IntPtr Body { get; set; } //null for walls
-        public GeomShape Shape { get; set; }
+        public GeomShape GeomShape { get; set; }
+
+        public abstract GeometryInfo GeomInfo { get; }
 
         public ServerGame Game;
 
@@ -53,40 +55,76 @@ namespace DeCuisine
         /// </summary>
         public virtual void Remove()
         {
-            Game.ObjectRemoved(this);
+            this.RemoveFromWorld();
+            this.Game.ObjectRemoved(this);
         }
 
-        public void AddToWorld()
+        /// <summary>
+        /// Add the object into the physical world.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void AddToWorld(double x, double y, double z)
         {
             Debug.Assert(!InWorld);
-            
 
-            if(HasBody)
-                Body = Ode.dBodyCreate(Game.World);
-
-            switch(Shape)
+            switch (GeomInfo.Shape)
             {
                 case GeomShape.Box:
-                    //Geom = Ode.dCreateBox(space,  );
+                    this.Geom = Ode.dCreateBox(this.Game.Space, GeomInfo.Sides[0], GeomInfo.Sides[1], GeomInfo.Sides[2]);
                     break;
                 case GeomShape.Sphere:
-                    //Geom = Ode.dCreateSphere(space, );
+                    Geom = Ode.dCreateSphere(this.Game.Space, GeomInfo.Sides[0]);
                     break;
                 default:
-                    throw new Exception("AddToWorld not defined for GeomShape of " + Shape.ToString());
+                    throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
+            }
+
+            Ode.dGeomSetPosition(this.Body, x, y, z);
+            if (this.HasBody)
+            {
+                Ode.dMass mass = new Ode.dMass();
+                this.Body = Ode.dBodyCreate(this.Game.World);
+                switch (GeomInfo.Shape)
+                {
+                    case GeomShape.Box:
+                        Ode.dMassSetBox(ref mass, GeomInfo.Mass, GeomInfo.Sides[0], GeomInfo.Sides[1], GeomInfo.Sides[2]);
+                        Ode.dBodySetMass(this.Body, ref mass);
+                        break;
+                    case GeomShape.Sphere:
+                        Ode.dMassSetZero(ref mass);
+                        Ode.dMassSetSphereTotal(ref mass, GeomInfo.Mass, GeomInfo.Sides[0]);
+                        Ode.dBodySetMass(this.Body, ref mass);
+                        this.Geom = Ode.dCreateSphere(this.Game.Space, GeomInfo.Sides[0]);
+                        break;
+                    default:
+                        throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
+                }
+
+                Ode.dGeomSetBody(this.Geom, this.Body);
             }
 
             Ode.dGeomSetData(Geom, new IntPtr(Id));
-
             InWorld = true;
         }
 
         public void RemoveFromWorld()
         {
             Debug.Assert(InWorld);
+
+            if(this.Geom != null)
+            {
+                Ode.dGeomDestroy(this.Geom);
+            }
+
+            if(this.Body != null)
+            {
+                Ode.dBodyDestroy(this.Body);
+            }
+
             this.Geom = IntPtr.Zero;
             this.Body = IntPtr.Zero;
-            
             InWorld = false;
         }
 

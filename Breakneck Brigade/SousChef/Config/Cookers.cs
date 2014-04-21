@@ -19,7 +19,7 @@ namespace SousChef
         public CookerParser(GameObjectConfig config) : base(config) { }
 
         List<Recipe> recipes = new List<Recipe>();
-
+        
         public override void ParseContents(XmlReader reader)
         {
             var recipes = this.parseStringList(reader, "recipe", false);

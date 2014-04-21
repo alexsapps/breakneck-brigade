@@ -32,5 +32,9 @@ namespace DeCuisine
             //move the object
         }
 
+        public override GeometryInfo GeomInfo
+        {
+            get { return this.Game.Config.Ingredients[Type.Name].GeomInfo; }
+        }
     }
 }
