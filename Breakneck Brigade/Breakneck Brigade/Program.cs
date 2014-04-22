@@ -9,6 +9,7 @@ using Tao.OpenGl;
 using System.IO;
 using Breakneck_Brigade.Graphics;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Breakneck_Brigade
 {
@@ -23,6 +24,15 @@ namespace Breakneck_Brigade
 #endif
 
 #if PROJECT_GRAPHICS_MODE
+            Renderer renderer = new Renderer();
+            while(!renderer.ShouldExit())
+            {
+                renderer.Render();
+            }
+            Environment.Exit(0);
+#endif
+
+#if PROJECT_GAMECODE_TEST
             var client = promptConnect();
             if (client != null)
             {
@@ -30,19 +40,25 @@ namespace Breakneck_Brigade
             }
             Environment.Exit(0); //TODO: do we need this?
 #endif
-
-#if PROJECT_GAMECODE_TEST
-
-#endif
         }
 
         static Client promptConnect()
         {
-            throw new NotImplementedException(); //TODO: can do if (new FakeClient().ShowDialog() == DialogResult.Yes) return new Client ( .txtServer, .txtPort ) else return null and rename FakeClient to frmConnect
+            Client retClient = new Client();
+            string  host = "127.0.0.1";
+            int     port = 54320;
+            try
+            {
+                retClient.Connect(host, port);
+            }catch(Exception ex) {
+                MessageBox.Show("Error connecting. Is the server running? " + ex.Message);
+            }
+            return retClient;
         }
 
         static void play(Client client)
         {
+
             ClientGame game;
             lock(client.Lock)
                 game = client.Game;
@@ -56,17 +72,20 @@ namespace Breakneck_Brigade
 
                     lock (client.Lock)
                         if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
-                            break;
+                            continue;
 
-                    lock (game.gameObjects)
-                    {
-                        renderer.Render();
-                        game.HasUpdates = false;
-                        do
+                    if(game != null)
+                    { 
+                        lock (game.gameObjects)
                         {
-                            Monitor.Wait(game.gameObjects);
-                        } while (!game.HasUpdates);
+                            game.HasUpdates = false;
+                            do
+                            {
+                                Monitor.Wait(game.gameObjects);
+                            } while (!game.HasUpdates);
+                        }
                     }
+                    renderer.Render();
                 }
             }
         }

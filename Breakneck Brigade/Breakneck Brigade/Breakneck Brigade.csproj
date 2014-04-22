@@ -65,6 +65,14 @@
     <DefineConstants>PROJECT_NETWORK_MODE</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GameCodeTest|AnyCPU'">
+    <OutputPath>bin\GameCodeTest\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;PROJECT_GAMECODE_TEST</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NVorbis, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -35,109 +35,116 @@ namespace Breakneck_Brigade.Graphics
         private const string MODEL_DIRECTORY    = "res\\models\\";
         private const string MTL_DIRECTORY      = "res\\materials\\";
 
-        ObjLoaderFactory olFactory;
+        ObjLoaderFactory olFactory = new ObjLoaderFactory();
         IObjLoader loader;
         public ObjParser()
         {
-            olFactory = new ObjLoaderFactory();
         }
 
         public Model ParseFile(string modelName)
         {
-            FileStream objFileStream = new FileStream(MODEL_DIRECTORY + modelName + ".obj", FileMode.Open);
-            IMaterialStreamProvider msp = new ParserMaterialStreamProvider(MTL_DIRECTORY + modelName + ".mtl");
-
-            loader = olFactory.Create(msp);
             Model result = new Model();
-         
-            LoadResult parsedFile = loader.Load(objFileStream);
-            IList<OL_Vertex> positions  = parsedFile.Vertices;
-            IList<OL_Normal> normals    = parsedFile.Normals;
-            IList<OL_Texture> textures  = parsedFile.Textures;
-
-            foreach(Group g in parsedFile.Groups)  //meshes
+            using(var objFileStream = new FileStream(MODEL_DIRECTORY + modelName + ".obj", FileMode.Open))
             {
-                TexturedMesh mesh = new TexturedMesh();
-                int ii = 0;
-                foreach(Face f in g.Faces) //polys
+                IMaterialStreamProvider msp = new ParserMaterialStreamProvider(MTL_DIRECTORY + modelName + ".mtl");
+
+                loader = olFactory.Create(msp);
+         
+                LoadResult parsedFile = loader.Load(objFileStream);
+                IList<OL_Vertex> positions  = parsedFile.Vertices;
+                IList<OL_Normal> normals    = parsedFile.Normals;
+                IList<OL_Texture> textures  = parsedFile.Textures;
+
+                foreach(Group g in parsedFile.Groups)  //meshes
                 {
-                    TexturedPolygon poly = new TexturedPolygon();
-                    for(ii = 0; ii < f.Count; ii++)
+                    TexturedMesh mesh = new TexturedMesh();
+                    int ii = 0;
+                    foreach(Face f in g.Faces) //polys
                     {
-                        int posInd  = f[ii].VertexIndex - 1 ;
-                        int normInd = f[ii].NormalIndex - 1;
-                        int textInd = f[ii].TextureIndex - 1;
-                        Vector4 position = new Vector4
-                                (
-                                    positions[posInd].X,
-                                    positions[posInd].Y,
-                                    positions[posInd].Z
-                                );
-                        Vector4 normal;
-                        if(normals.Count > 0)
-                        { 
-                             normal = new Vector4
-                                (
-                                    normals[normInd].X,
-                                    normals[normInd].Y,
-                                    normals[normInd].Z
-                                );
-                        }
-                        else
+                        TexturedPolygon poly = new TexturedPolygon();
+                        for(ii = 0; ii < f.Count; ii++)
                         {
-                            normal = null;
-                        }
-                        Vector4 tc;
-                        if(textures.Count > 0)
-                        { 
-                             tc = new Vector4
-                                (
-                                    textures[textInd].X,
-                                    textures[textInd].Y,
-                                    0
-                                );  
-                        }
-                        else
-                        {
-                            tc = null;
-                        }
+                            int posInd  = f[ii].VertexIndex - 1 ;
+                            int normInd = f[ii].NormalIndex - 1;
+                            int textInd = f[ii].TextureIndex - 1;
+                            Vector4 position = new Vector4
+                                    (
+                                        positions[posInd].X,
+                                        positions[posInd].Y,
+                                        positions[posInd].Z
+                                    );
+                            Vector4 normal;
+                            if(normals.Count > 0)
+                            { 
+                                 normal = new Vector4
+                                    (
+                                        normals[normInd].X,
+                                        normals[normInd].Y,
+                                        normals[normInd].Z
+                                    );
+                            }
+                            else
+                            {
+                                normal = null;
+                            }
+                            Vector4 tc;
+                            if(textures.Count > 0)
+                            { 
+                                 tc = new Vector4
+                                    (
+                                        textures[textInd].X,
+                                        textures[textInd].Y,
+                                        0
+                                    );  
+                            }
+                            else
+                            {
+                                tc = null;
+                            }
 
-                        Vertex v = new Vertex(position, normal, tc);
-                        poly.Vertexes.Add(v);
+                            Vertex v = new Vertex(position, normal, tc);
+                            poly.Vertexes.Add(v);
+                        }
+                        mesh.Polygons.Add(poly);
                     }
-                    mesh.Polygons.Add(poly);
-                }
-                //Set up polygon rendering mode for this mesh
-                switch (ii+1)
-                {
-                    case 3:
-                        mesh.GlDrawMode = Gl.GL_TRIANGLES;
-                        break;
-                    case 4:
-                        mesh.GlDrawMode = Gl.GL_QUADS;
-                        break;
-                    default:
-                        mesh.GlDrawMode = Gl.GL_POLYGON;
-                        break;
+                    //Set up polygon rendering mode for this mesh
+                    switch (ii+1)
+                    {
+                        case 3:
+                            mesh.GlDrawMode = Gl.GL_TRIANGLES;
+                            break;
+                        case 4:
+                            mesh.GlDrawMode = Gl.GL_QUADS;
+                            break;
+                        default:
+                            mesh.GlDrawMode = Gl.GL_POLYGON;
+                            break;
+                    }
+
+                    //Texturing
+                    if(g.Material != null)
+                    {
+                        Texture diffuseTexture;
+                        if(Renderer.Textures.ContainsKey(g.Material.DiffuseTextureMap))
+                        {
+                            diffuseTexture = Renderer.Textures[g.Material.DiffuseTextureMap];
+                        }
+                        else
+                        {
+                            diffuseTexture = new Texture(g.Material.DiffuseTextureMap);
+                            Renderer.Textures[g.Material.DiffuseTextureMap] = diffuseTexture;
+                        }
+                        mesh.Texture = diffuseTexture;
+                    }
+                    else
+                    {
+                        mesh.Texture = Renderer.DefaultTexture;
+                    }
+
+                    result.Meshes.Add(mesh);
                 }
 
-                //Texturing
-                Texture diffuseTexture;
-                if(Renderer.Textures.ContainsKey(g.Material.DiffuseTextureMap))
-                {
-                    diffuseTexture = Renderer.Textures[g.Material.DiffuseTextureMap];
-                }
-                else
-                {
-                    diffuseTexture = new Texture(g.Material.DiffuseTextureMap);
-                    Renderer.Textures[g.Material.DiffuseTextureMap] = diffuseTexture;
-                }
-                mesh.Texture = diffuseTexture;
-
-                result.Meshes.Add(mesh);
             }
-
-            objFileStream.Close();
             return result;
         }
     }

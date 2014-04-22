@@ -9,8 +9,19 @@ using SousChef;
 
 namespace Breakneck_Brigade.Graphics
 {
+    enum DebugMode
+    {
+        SNOWMAN,
+        ORANGE,
+        BOTH,
+        OFF
+    };
     class Renderer : IDisposable
     {
+        private ObjParser parser;
+        private const DebugMode DEBUG_MODE = DebugMode.OFF;
+
+
         /// <summary>
         /// A mapping of filename to Model
         /// </summary>
@@ -41,6 +52,7 @@ namespace Breakneck_Brigade.Graphics
 
         public Renderer()
         {
+            parser              = new ObjParser();
             WorldTransform      = new Matrix4();
             GameObjects         = new List<ClientGameObject>();
 
@@ -49,12 +61,24 @@ namespace Breakneck_Brigade.Graphics
             InitGlu();
             InitIM();
 
-            DefaultTexture = new Texture("default.tga");
+            DefaultTexture      = new Texture("default.tga");
 
-            /* TESTING MODES */
-            //makeAnnaHappy(); //Do you want to build a snowman?
-            testParser("orange"); //Load a object file from the current dir
-            //testParser("orange.obj");
+            if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
+            { 
+                ClientGameObject orange2 = testParser("orange");
+                orange2.Model.Transformation.TranslationMat(-5, 0, 10);
+                GameObjects.Add(orange2);
+            }
+            if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
+            {
+                makeAnnaHappy();
+            }
+
+        }
+
+        public void LoadModels()
+        {
+
         }
 
         public void Render()
@@ -85,7 +109,16 @@ namespace Breakneck_Brigade.Graphics
 
             Glfw.glfwSwapBuffers();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
-            // Glfw.glfwPollEvents();
+            //Glfw.glfwPollEvents();
+        }
+
+        /// <summary>
+        /// Checks if the program should exit.
+        /// </summary>
+        /// <returns>Whether or not the program should exit</returns>
+        public bool ShouldExit()
+        {
+            return Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) != Gl.GL_TRUE;
         }
 
         /// <summary>
@@ -155,6 +188,7 @@ namespace Breakneck_Brigade.Graphics
                 Environment.Exit(1);
             }
             Glfw.glfwOpenWindow(1280, 1024, 0, 0, 0, 8, 32, 32, Glfw.GLFW_WINDOW);
+
         }
 
         /// <summary>
@@ -234,12 +268,10 @@ namespace Breakneck_Brigade.Graphics
             GameObjects.Add(snowmanGO);
         }
 
-        void testParser(string filename)
+        TestClientGameObject testParser(string filename)
         {
-            ObjParser parser = new ObjParser();
             Model model = parser.ParseFile(filename);
-            TestClientGameObject go = new TestClientGameObject(model);
-            GameObjects.Add(go);
+            return new TestClientGameObject(model);
         }
     }   
 }

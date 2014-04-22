@@ -12,6 +12,7 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		GameCodeTest|Any CPU = GameCodeTest|Any CPU
 		GameTest|Any CPU = GameTest|Any CPU
 		Graphics Test|Any CPU = Graphics Test|Any CPU
 		Network Test|Any CPU = Network Test|Any CPU
@@ -20,6 +21,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameCodeTest|Any CPU.ActiveCfg = GameCodeTest|Any CPU
+		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameCodeTest|Any CPU.Build.0 = GameCodeTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameTest|Any CPU.ActiveCfg = GraphicsTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameTest|Any CPU.Build.0 = GraphicsTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Graphics Test|Any CPU.ActiveCfg = GraphicsTest|Any CPU
@@ -30,6 +33,8 @@ Global
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.GameCodeTest|Any CPU.ActiveCfg = GameTest|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.GameCodeTest|Any CPU.Build.0 = GameTest|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.GameTest|Any CPU.ActiveCfg = GameTest|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.GameTest|Any CPU.Build.0 = GameTest|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Graphics Test|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,6 +45,8 @@ Global
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2080F31F-945A-4FFC-84AA-859852176EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2080F31F-945A-4FFC-84AA-859852176EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2080F31F-945A-4FFC-84AA-859852176EA7}.GameCodeTest|Any CPU.ActiveCfg = GameTest|Any CPU
+		{2080F31F-945A-4FFC-84AA-859852176EA7}.GameCodeTest|Any CPU.Build.0 = GameTest|Any CPU
 		{2080F31F-945A-4FFC-84AA-859852176EA7}.GameTest|Any CPU.ActiveCfg = GameTest|Any CPU
 		{2080F31F-945A-4FFC-84AA-859852176EA7}.GameTest|Any CPU.Build.0 = GameTest|Any CPU
 		{2080F31F-945A-4FFC-84AA-859852176EA7}.Graphics Test|Any CPU.ActiveCfg = Release|Any CPU

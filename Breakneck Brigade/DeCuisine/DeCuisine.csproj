@@ -36,6 +36,7 @@
     <OutputPath>bin\GameTest\</OutputPath>
     <DefineConstants>
     </DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

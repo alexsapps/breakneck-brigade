@@ -90,6 +90,8 @@ namespace DeCuisine
                             server.ReloadConfig();
                         }
                         break;
+                    case "spawn":
+
                     case "exit":
                         lock (server.Lock)
                         {
@@ -100,7 +102,7 @@ namespace DeCuisine
                         }
                         return;
                     default:
-                        Console.WriteLine(String.Format("Breakneck Brigade server does not understand command: '%0'", parts[0]));
+                        Console.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
                         break;
                 }
 
