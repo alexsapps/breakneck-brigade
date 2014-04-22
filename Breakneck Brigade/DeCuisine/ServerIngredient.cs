@@ -43,13 +43,13 @@ namespace DeCuisine
 
 
         /// <summary>
-        /// Update the stream with the needed info. Currently just the positions so 
-        /// it is handled in the base class
+        /// Update the stream with the needed info. Positions are handled by the base class
         /// </summary>
         /// <param name="stream"></param>
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
+            stream.Write(this.Cleanliness);
         }
 
         public override void Update()

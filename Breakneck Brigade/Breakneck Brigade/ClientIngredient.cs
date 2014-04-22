@@ -43,20 +43,32 @@ namespace Breakneck_Brigade
         {
             this.Type = type;
             update(cleanliness);
-        }
+        } 
 
+
+        /// <summary>
+        /// Update everything pertaining to the ingriedient. The position 
+        /// is handled by the super class.
+        /// </summary>
         private void update(int cleanliness)
         {
             this.Cleanliness = cleanliness;
         }
 
+        /// <summary>
+        /// Update everything pertaining to the ingriedient. The position 
+        /// is handled by the super class.
+        /// </summary>
+        private void update(Matrix4 transform, int cleanliness)
+        {
+            this.Update(transform);
+            this.update(cleanliness);
+        }
+
         public override void StreamUpdate(BinaryReader reader)
         {
-            //base.Update(reader);
-
-
-            int cleanliness = reader.ReadInt32();
-
+            base.StreamUpdate(reader); //updates the position of the object as well
+            int cleanliness = reader.ReadInt32(); 
             update(cleanliness);
         }
 
@@ -65,7 +77,7 @@ namespace Breakneck_Brigade
         /// </summary>
         public override void Render()
         {
-            // render the object
+            base.Render();
         }
 
     }
