@@ -50,7 +50,6 @@ namespace Breakneck_Brigade
             return (ClientGameObject)Activator.CreateInstance(type, id, reader, game);
         }
 
-
         /// <summary>
         /// Update values from the stream "server", just the posistions are handled
         /// in the base class. Should call the Update for the transform and 

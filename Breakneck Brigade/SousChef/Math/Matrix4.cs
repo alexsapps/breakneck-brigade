@@ -139,7 +139,8 @@ namespace SousChef
         {
             backingArray    = new float[4, 4];
             glArray         = new float[16];
-            this.TranslationMat(position[0], position[1], position[2]);
+            this.Identity();
+            //this.TranslationMat(position[0], position[1], position[2]);
             UpdateGLArray();
         }
 
