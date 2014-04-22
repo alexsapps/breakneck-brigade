@@ -51,12 +51,6 @@ namespace Breakneck_Brigade
         }
 
         /// <summary>
-        /// Renders the game object in the world.
-        /// </summary>
-        public abstract void Render();
-
-
-        /// <summary>
         /// Update values from the stream "server", just the posistions are handled
         /// in the base class. Should call the Update for the transform and 
         /// be overriden by the specific update implementations

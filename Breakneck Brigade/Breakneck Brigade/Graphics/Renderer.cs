@@ -52,7 +52,7 @@ namespace Breakneck_Brigade.Graphics
             DefaultTexture = new Texture("default.tga");
 
             /* TESTING MODES */
-            makeAnnaHappy(); //Do you want to build a snowman?
+            //makeAnnaHappy(); //Do you want to build a snowman?
             testParser("orange"); //Load a object file from the current dir
             //testParser("orange.obj");
         }
