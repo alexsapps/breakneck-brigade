@@ -14,6 +14,7 @@ namespace Breakneck_Brigade
 {
     class Program
     {
+        public InputManager IM = new InputManager();
 
         static void Main(string[] args)
         {
@@ -44,8 +45,13 @@ namespace Breakneck_Brigade
         static void play(Client client)
         {
             ClientGame game;
-            lock(client.Lock)
+            ClientPlayer cPlayer;
+
+            lock (client.Lock)
+            {
                 game = client.Game;
+                cPlayer = new ClientPlayer(0, new Vector4(), game);
+            }
 
             using (var renderer = new Renderer())
             {
@@ -60,7 +66,7 @@ namespace Breakneck_Brigade
 
                     lock (game.gameObjects)
                     {
-                        renderer.Render();
+                        renderer.Render(cPlayer);
                         game.HasUpdates = false;
                         do
                         {

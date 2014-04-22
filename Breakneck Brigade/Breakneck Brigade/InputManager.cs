@@ -187,6 +187,7 @@ namespace Breakneck_Brigade
         {
             if (fpsMode)
             {
+                Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
                 // Get difference of mouse pos & origin
                 int tempX = originX - x;
                 int tempY = originY - y;
@@ -207,6 +208,10 @@ namespace Breakneck_Brigade
 
                 // Reset mouse to origin
                 Glfw.glfwSetMousePos(originX, originY);
+            }
+            else
+            {
+                Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
             }
         }
 
@@ -281,6 +286,13 @@ namespace Breakneck_Brigade
         public float GetRotY()
         {
             return rot[1];
+        }
+
+        public void GetRotAndClear(out float rotx, out float roty){
+            rotx = rot[0];
+            roty = rot[1];
+
+            Clear();
         }
 
         public Hashtable GetKeys()

@@ -61,17 +61,10 @@ namespace Breakneck_Brigade.Graphics
             zPos = 0.0f;
 		}
 
-		public void Update(float rotx, float roty) 
+		public void Update(ClientPlayer cp) 
         {
-            /* cam rotation */
-            /*float newVal = Azimuth + roty;
-            Azimuth = newVal > 360f ? 
-                0.0f : newVal;
-             */
-
-            Azimuth = Azimuth + roty > 360.0f ? Azimuth + roty - 360.0f : Azimuth + roty;
-
-            Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;             
+            Azimuth = cp.Orientation;
+            Incline = cp.Incline;
         }
 
         public void Reset() 

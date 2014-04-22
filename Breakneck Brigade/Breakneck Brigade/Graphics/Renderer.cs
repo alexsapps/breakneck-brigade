@@ -28,7 +28,6 @@ namespace Breakneck_Brigade.Graphics
         private Matrix4                     WorldTransform;
         private List<ClientGameObject>      GameObjects;
         private Camera                      Camera;
-        private InputManager                IM;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -47,7 +46,6 @@ namespace Breakneck_Brigade.Graphics
             InitGLFW();
             InitGL();
             InitGlu();
-            InitIM();
 
             DefaultTexture = new Texture("default.tga");
 
@@ -57,7 +55,7 @@ namespace Breakneck_Brigade.Graphics
             //testParser("orange.obj");
         }
 
-        public void Render()
+        public void Render(ClientPlayer cp)
         {
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);
@@ -68,15 +66,8 @@ namespace Breakneck_Brigade.Graphics
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
-            Camera.Update(IM.GetRotX(), IM.GetRotY());
+            Camera.Update(cp);
             Camera.Render();
-            IM.Clear();
-
-            if (Convert.ToInt32(IM.keys[InputManager.GLFW_KEY_ESCAPE]) == 1)
-            {
-                IM.TurnOffFPSMode();
-                Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
-            }
 
             foreach(ClientGameObject cgo in GameObjects)
             {     
@@ -155,16 +146,6 @@ namespace Breakneck_Brigade.Graphics
                 Environment.Exit(1);
             }
             Glfw.glfwOpenWindow(1280, 1024, 0, 0, 0, 8, 32, 32, Glfw.GLFW_WINDOW);
-        }
-
-        /// <summary>
-        /// Initializes the input manager
-        /// </summary>
-        public void InitIM()
-        {
-            IM = new InputManager();
-            IM.TurnOnFPSMode();
-            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
         }
 
         /// <summary>
