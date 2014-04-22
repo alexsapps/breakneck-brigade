@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using SousChef;
 
 namespace DeCuisine
@@ -15,9 +16,11 @@ namespace DeCuisine
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
         public List<ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
+        public List<ServerIngredient> ToAdd { get; set; }
 
         private string HashCache { get; set; }
-        
+        private int ParticleEffect { get; set; }
+
         /// <summary>
         /// Makes a servercooker object on the server
         /// </summary>
@@ -30,8 +33,17 @@ namespace DeCuisine
             : base(id, game)
         {
             this.Type = type;
-            Contents = new List<ServerIngredient>();
+            this.Contents = new List<ServerIngredient>();
+            this.ToAdd = new List<ServerIngredient>();
         }
+
+        public override void Serialize(BinaryWriter stream)
+        {
+            base.Serialize(stream);
+            base.UpdateStream(stream); // puts position in the stream to send. Note, only need the base class updatestream for construction
+            stream.Write(Type.Name); // tell which type of cooker to make on the client
+        }
+
 
         /*
          * Adds the ingredient to the list. Keeps the list in sorted order. If the 
@@ -64,10 +76,35 @@ namespace DeCuisine
 
             if (Type.Recipes.ContainsKey(this.HashCache))
             {
-
                 return new ServerIngredient(Game.getId(), Type.Recipes[this.HashCache].FinalProduct, Game);
             }
             return null;
+        }
+
+        public override void UpdateStream(BinaryWriter stream)
+        {
+            base.UpdateStream(stream);
+            // Calvin TODO: check collision between this cooker and ingredients that are touching it. 
+            // if their is a collision, populate the list ToAdd with the ingredients. 
+            if (this.ToAdd.Count != 0)
+            {
+                // something has been added, tell the client
+                stream.Write(true);
+                stream.Write((Int16)this.ToAdd.Count); //tell how many ingredients to add
+                packageIngredientsAdded(stream);
+            }
+            else
+                stream.Write(false); // tell client nothing else is in 
+        }
+
+        private void packageIngredientsAdded(BinaryWriter stream)
+        {
+            foreach (var ingredient in ToAdd)
+            {
+                stream.Write((Int16)ingredient.Id);
+                int particleEffect = 1; //TODO: get the particle effect specific to this ingredient
+                stream.Write((Int16)particleEffect);
+            }
         }
 
         public override void Update()
@@ -75,6 +112,8 @@ namespace DeCuisine
             throw new NotImplementedException();
         }
 
+
+        
         public override GeometryInfo GeomInfo
         {
             get { return this.Game.Config.Cookers[Type.Name].GeomInfo; }

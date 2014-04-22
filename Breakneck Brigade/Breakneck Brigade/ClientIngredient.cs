@@ -61,7 +61,7 @@ namespace Breakneck_Brigade
         /// </summary>
         private void update(Matrix4 transform, int cleanliness)
         {
-            this.Update(transform);
+            base.Update(transform);
             this.update(cleanliness);
         }
 
