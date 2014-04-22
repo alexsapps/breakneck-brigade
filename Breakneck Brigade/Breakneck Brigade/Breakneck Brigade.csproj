@@ -113,6 +113,12 @@
       <DependentUpon>FakeClient.cs</DependentUpon>
     </Compile>
     <Compile Include="ClientGame.cs" />
+    <Compile Include="frmConnect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConnect.Designer.cs">
+      <DependentUpon>frmConnect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\3D Objects\Glu Prims\TexturedGluSphere.cs" />
     <Compile Include="Graphics\3D Objects\Meshes\AMesh.cs" />
     <Compile Include="Graphics\3D Objects\TexturedPolygon.cs" />
@@ -336,6 +342,9 @@
   <ItemGroup>
     <EmbeddedResource Include="FakeClient.resx">
       <DependentUpon>FakeClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmConnect.resx">
+      <DependentUpon>frmConnect.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

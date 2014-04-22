@@ -8,6 +8,7 @@ using Tao.Glfw;
 using Tao.OpenGl;
 using System.IO;
 using Breakneck_Brigade.Graphics;
+using System.Threading;
 
 namespace Breakneck_Brigade
 {
@@ -22,19 +23,52 @@ namespace Breakneck_Brigade
 #endif
 
 #if PROJECT_GRAPHICS_MODE
-            Renderer renderer = new Renderer();
-            while (Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) == Gl.GL_TRUE)
+            var client = promptConnect();
+            if (client != null)
             {
-                renderer.Render();
+                play(client);
             }
-
-            renderer.Destroy();
-            Environment.Exit(0);
+            Environment.Exit(0); //TODO: do we need this?
 #endif
 
 #if PROJECT_GAMECODE_TEST
 
 #endif
+        }
+
+        static Client promptConnect()
+        {
+            throw new NotImplementedException(); //TODO: can do if (new FakeClient().ShowDialog() == DialogResult.Yes) return new Client ( .txtServer, .txtPort ) else return null and rename FakeClient to frmConnect
+        }
+
+        static void play(Client client)
+        {
+            ClientGame game;
+            lock(client.Lock)
+                game = client.Game;
+
+            using (var renderer = new Renderer())
+            {
+                while (true)
+                {
+                    if (Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) != Gl.GL_TRUE)
+                        break;
+
+                    lock (client.Lock)
+                        if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
+                            break;
+
+                    lock (game.gameObjects)
+                    {
+                        renderer.Render();
+                        game.HasUpdates = false;
+                        do
+                        {
+                            Monitor.Wait(game.gameObjects);
+                        } while (!game.HasUpdates);
+                    }
+                }
+            }
         }
     }
 }

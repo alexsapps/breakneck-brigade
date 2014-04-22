@@ -63,10 +63,14 @@ namespace Breakneck_Brigade
             Update(NewPosition);
         }
 
+        /// <summary>
+        /// Renders the game object in the world.
+        /// </summary>
         public virtual void Render()
         {
             Model.Render();
         }
+
         /// <summary>
         /// the next three values to be read from the reader should be the x, y 
         /// and z coordinates.
