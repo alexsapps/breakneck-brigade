@@ -50,11 +50,6 @@ namespace Breakneck_Brigade
             return (ClientGameObject)Activator.CreateInstance(type, id, reader, game);
         }
 
-        /// <summary>
-        /// Renders the game object in the world.
-        /// </summary>
-        public abstract void Render();
-
 
         /// <summary>
         /// Update values from the stream "server", just the posistions are handled
@@ -69,10 +64,14 @@ namespace Breakneck_Brigade
             Update(NewPosition);
         }
 
+        /// <summary>
+        /// Renders the game object in the world.
+        /// </summary>
         public virtual void Render()
         {
             Model.Render();
         }
+
         /// <summary>
         /// the next three values to be read from the reader should be the x, y 
         /// and z coordinates.

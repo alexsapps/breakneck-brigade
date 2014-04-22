@@ -9,7 +9,7 @@ using SousChef;
 
 namespace Breakneck_Brigade.Graphics
 {
-    class Renderer
+    class Renderer : IDisposable
     {
         /// <summary>
         /// A mapping of filename to Model
@@ -91,7 +91,7 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// Runs all cleanup functions on objects needed by the renderer
         /// </summary>
-        public void Destroy()
+        public void Dispose()
         {
             DestroyGLFW();
         }
