@@ -11,12 +11,16 @@ namespace Breakneck_Brigade
     {
         public BBLock Lock = new BBLock();
 
+        //gameObjects and HasUpdates both require locking on gameObjects before accessing
         public Dictionary<int, ClientGameObject> gameObjects { get; private set; }
+        public bool HasUpdates { get; set; }
 
         public ClientGame()
         {
             gameObjects = new Dictionary<int, ClientGameObject>();
         }
 
+
+        
     }
 }

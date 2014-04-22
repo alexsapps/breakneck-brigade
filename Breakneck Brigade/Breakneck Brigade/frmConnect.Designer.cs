@@ -31,8 +31,8 @@
             this.txtConnect = new System.Windows.Forms.TextBox();
             this.cmdConnect = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
+            this.pnlConnect = new System.Windows.Forms.Panel();
+            this.pnlConnect.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtConnect
@@ -61,30 +61,31 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "ip:port";
             // 
-            // panel1
+            // pnlConnect
             // 
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.txtConnect);
-            this.panel1.Controls.Add(this.cmdConnect);
-            this.panel1.Location = new System.Drawing.Point(12, 176);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(284, 66);
-            this.panel1.TabIndex = 3;
+            this.pnlConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlConnect.Controls.Add(this.label1);
+            this.pnlConnect.Controls.Add(this.txtConnect);
+            this.pnlConnect.Controls.Add(this.cmdConnect);
+            this.pnlConnect.Location = new System.Drawing.Point(12, 176);
+            this.pnlConnect.Name = "pnlConnect";
+            this.pnlConnect.Size = new System.Drawing.Size(284, 66);
+            this.pnlConnect.TabIndex = 3;
             // 
             // frmConnect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 254);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlConnect);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.Name = "frmConnect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmConnect_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlConnect.ResumeLayout(false);
+            this.pnlConnect.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -94,6 +95,6 @@
         private System.Windows.Forms.TextBox txtConnect;
         private System.Windows.Forms.Button cmdConnect;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlConnect;
     }
 }

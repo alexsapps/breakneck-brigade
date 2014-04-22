@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Breakneck_Brigade
 {
-    public partial class frmConnect : Form
+    partial class frmConnect : Form
     {
         public frmConnect()
         {

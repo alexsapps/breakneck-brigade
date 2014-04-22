@@ -104,7 +104,7 @@ namespace Breakneck_Brigade
 
         private void tmrRender_Tick(object sender, EventArgs e)
         {
-            StringBuilder v = new StringBuilder();
+            StringBuilder b = new StringBuilder();
 
             lock(client.Lock)
             {
@@ -116,19 +116,20 @@ namespace Breakneck_Brigade
                          * render
                          */
 
-                        foreach (var x in client.Game.gameObjects)
+                        foreach (var x in client.Game.gameObjects.Values)
                         {
-                            v.AppendLine(x.Key + " { " + x.Value.Transform.ToString() + " } ");
+                            x.Render();
+                            b.AppendLine(x.Id + " { " + x.Transform.ToString() + " } ");
                         }
                     }
                 }
                 else
                 {
-                    v.AppendLine("Mode: " + client.GameMode.ToString());
+                    b.AppendLine("Mode: " + client.GameMode.ToString());
                 }
             }
             
-            txtMessages.Text = v.ToString();
+            txtMessages.Text = b.ToString();
         }
 
     }
