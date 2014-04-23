@@ -30,14 +30,14 @@ namespace Breakneck_Brigade.Graphics
         }
     }
 
-    class ObjParser
+    class ModelParser
     {
         private const string MODEL_DIRECTORY    = "res\\models\\";
         private const string MTL_DIRECTORY      = "res\\materials\\";
 
         ObjLoaderFactory olFactory = new ObjLoaderFactory();
         IObjLoader loader;
-        public ObjParser()
+        public ModelParser()
         {
         }
 

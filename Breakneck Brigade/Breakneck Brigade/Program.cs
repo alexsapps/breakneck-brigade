@@ -28,6 +28,14 @@ namespace Breakneck_Brigade
         {
 
 #if PROJECT_GRAPHICS_MODE
+            Renderer renderer = new Renderer();
+            while (!renderer.ShouldExit())
+            {
+                renderer.Render();
+            }
+            Environment.Exit(0);
+#endif
+#if PROJECT_GAMECODE_TEST
             
             globalConfig = config.Open(BB.GlobalConfigFilename);
 

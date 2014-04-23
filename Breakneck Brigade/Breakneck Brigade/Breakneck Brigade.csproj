@@ -172,7 +172,7 @@
     <Compile Include="Graphics\3D Objects\AObject3D.cs" />
     <Compile Include="Graphics\3D Objects\APolygon.cs" />
     <Compile Include="Graphics\3D Objects\Meshes\TexturedMesh.cs" />
-    <Compile Include="Graphics\Parser.cs" />
+    <Compile Include="Graphics\ModelParser.cs" />
     <Compile Include="Graphics\Renderer.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Vertex.cs" />
@@ -184,7 +184,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RenderableGameObject.cs" />
     <Compile Include="TestGameObject.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

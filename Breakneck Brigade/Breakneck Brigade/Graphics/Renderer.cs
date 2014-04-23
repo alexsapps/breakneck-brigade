@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Tao.OpenGl;
 using Tao.Glfw;
+using System.Xml;
+using System.IO;
 using SousChef;
 
 namespace Breakneck_Brigade.Graphics
@@ -18,14 +20,14 @@ namespace Breakneck_Brigade.Graphics
     };
     class Renderer : IDisposable
     {
-        private ObjParser parser;
-        private const DebugMode DEBUG_MODE = DebugMode.OFF;
-
+        private ModelParser parser;
+        private const DebugMode DEBUG_MODE = DebugMode.BOTH;
+        private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         /// <summary>
         /// A mapping of filename to Model
         /// </summary>
-        public static Dictionary<string, Model>     Model       = new Dictionary<string, Model>();
+        public static Dictionary<string, Model>     Models      = new Dictionary<string, Model>();
         /// <summary>
         /// A mapping of filename to Texture
         /// </summary>
@@ -52,7 +54,7 @@ namespace Breakneck_Brigade.Graphics
 
         public Renderer()
         {
-            parser              = new ObjParser();
+            parser              = new ModelParser();
             WorldTransform      = new Matrix4();
             GameObjects         = new List<ClientGameObject>();
 
@@ -66,7 +68,8 @@ namespace Breakneck_Brigade.Graphics
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
                 ClientGameObject orange2 = testParser("orange");
-                orange2.Model.Transformation.TranslationMat(-5, 0, 10);
+                orange2.Model.Transformation = orange2.Model.Transformation.TranslationMat(-5, 0, 20) * (new Matrix4()).ScalingMat(0.10f, 0.10f, 0.10f);
+
                 GameObjects.Add(orange2);
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
@@ -78,7 +81,35 @@ namespace Breakneck_Brigade.Graphics
 
         public void LoadModels()
         {
+            using (FileStream resFile = new FileStream(RESOURCES_XML_PATH, FileMode.Open))
+            {
+                using (XmlReader reader = XmlReader.Create(resFile))
+                {
+                    reader.ReadToFollowing("models");
+                    int numberOfModels = int.Parse(reader.GetAttribute("numberOfModels"));
+                    reader.ReadToDescendant("model");
+                    for(int ii = 0; ii < numberOfModels; ii++)
+                    {
+                        XmlReader modelSubtree = reader.ReadSubtree();
 
+                        modelSubtree.ReadToDescendant("filename");
+                        string filename = modelSubtree.ReadContentAsString();
+
+                        modelSubtree.ReadToDescendant("scaleX");
+                        float scaleX = modelSubtree.ReadContentAsFloat();
+
+                        modelSubtree.ReadToDescendant("scaleY");
+                        float scaleY = modelSubtree.ReadContentAsFloat();
+
+                        modelSubtree.ReadToDescendant("scaleZ");
+                        float scaleZ = modelSubtree.ReadContentAsFloat();
+                        
+                        Model model = parser.ParseFile(filename);
+                        Models.Add("filename", model);
+                        
+                    }
+                }
+            }
         }
 
         public void Render()

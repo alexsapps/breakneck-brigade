@@ -13,6 +13,11 @@ namespace SousChef
     /// </author>
     public class Vector4
     {
+        public float X { get { return this[0]; } set { this[0] = value; } }
+        public float Y { get { return this[1]; } set { this[1] = value; } }
+        public float Z { get { return this[2]; } set { this[2] = value; } }
+        public float W { get { return this[3]; } set { this[3] = value; } }
+
         const int size = 4;
 
         float[] v = new float[size];              //Backing array for the object

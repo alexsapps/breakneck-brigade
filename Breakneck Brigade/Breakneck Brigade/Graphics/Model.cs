@@ -14,9 +14,13 @@ namespace Breakneck_Brigade.Graphics
      */
     class Model
     {
+
+        public  Vector4             Position        { get { return Position; }  set {this.Position = value;  updateMatrix();} }
+        public  Vector4             Scale           { get { return Scale; }     set {this.Scale = value;     updateMatrix();} }
+        public  Vector4             Rotation        { get { return Rotation; }   set {this.Rotation = value;  updateMatrix();} }
+        
         public  Matrix4             Transformation  { get; set; }
-        public  List<AObject3D>  Meshes          { get; private set; }
-        //public  TexturedMesh        Root            { get { return Meshes[0]; } private set;}
+        public  List<AObject3D>     Meshes          { get; private set; }
 
         public Model()
         {
@@ -39,6 +43,23 @@ namespace Breakneck_Brigade.Graphics
                 m.Render();
             }
             Gl.glPopMatrix();
+        }
+
+        /// <summary>
+        /// Updates the matrix to reflect the properties of the model
+        /// </summary>
+        private void updateMatrix()
+        {
+            //Translate to location
+            Transformation.TranslationMat(Position.X, Position.Y, Position.Z);
+            
+            //Rotate to proper orientation: 
+            Transformation = Transformation*Matrix4.MakeRotateZ(Rotation.Z);
+            Transformation = Transformation*Matrix4.MakeRotateY(Rotation.Y);
+            Transformation = Transformation*Matrix4.MakeRotateX(Rotation.X);
+
+            //Scale
+            Transformation = Transformation*Matrix4.MakeScalingMat(Scale.X, Scale.Y, Scale.Z);
         }
     }
 }
