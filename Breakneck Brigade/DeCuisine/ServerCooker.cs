@@ -30,7 +30,7 @@ namespace DeCuisine
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
         public ServerCooker(int id, CookerType type, ServerGame game)
-            : base(id, game)
+            : base(game)
         {
             this.Type = type;
             this.Contents = new List<ServerIngredient>();
@@ -55,6 +55,8 @@ namespace DeCuisine
             if (Type.ValidIngredients.Contains(ingredient.Type.Name))
             {
                 Contents.Add(ingredient);
+                this.Game.ObjectChanged(ingredient);
+                this.Cook(); // check if you can cook. 
                 return true;
             }
             return false;
@@ -65,7 +67,7 @@ namespace DeCuisine
          * return object and return a final product with the attatched score. 
          * TODO: Make it do that^
          */
-        public ServerGameObject Cook()
+        public ServerIngredient Cook()
         {
             if (HashCache == null)
             {
@@ -76,7 +78,15 @@ namespace DeCuisine
 
             if (Type.Recipes.ContainsKey(this.HashCache))
             {
-                return new ServerIngredient(Game.getId(), Type.Recipes[this.HashCache].FinalProduct, Game);
+                foreach(var ingredeint in this.Contents)
+                {
+                    //remove all the ingredients from the game world
+                    ingredeint.MarkDeleted();
+                }
+                this.Contents = new List<ServerIngredient>(); // clear contents
+                ServerIngredient ToAdd = new ServerIngredient(Game.getId(), Type.Recipes[this.HashCache].FinalProduct, Game);
+                this.Contents.Add(ToAdd);
+                return ToAdd;
             }
             return null;
         }
@@ -86,24 +96,14 @@ namespace DeCuisine
             base.UpdateStream(stream);
             // Calvin TODO: check collision between this cooker and ingredients that are touching it. 
             // if their is a collision, populate the list ToAdd with the ingredients. 
-            if (this.ToAdd.Count != 0)
-            {
-                // something has been added, tell the client
-                stream.Write(true);
-                stream.Write((Int16)this.ToAdd.Count); //tell how many ingredients to add
-                packageIngredientsAdded(stream);
-            }
-            else
-                stream.Write(false); // tell client nothing else is in 
+            packageIngredientsAdded(stream);
         }
 
         private void packageIngredientsAdded(BinaryWriter stream)
         {
-            foreach (var ingredient in ToAdd)
+            foreach (var ingredient in this.Contents)
             {
                 stream.Write((Int16)ingredient.Id);
-                int particleEffect = 1; //TODO: get the particle effect specific to this ingredient
-                stream.Write((Int16)particleEffect);
             }
         }
 
@@ -113,7 +113,13 @@ namespace DeCuisine
         }
 
 
-        
+        public override void OnCollide(ServerGameObject obj)
+        {
+            if (obj.ObjectClass == GameObjectClass.Ingredient)
+            {
+                this.AddIngredient((ServerIngredient)obj);
+            }
+        }
         public override GeometryInfo GeomInfo
         {
             get { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
