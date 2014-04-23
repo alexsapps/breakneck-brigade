@@ -20,12 +20,11 @@ namespace Breakneck_Brigade
 
         public string DefaultHost { get; set; }
         public string DefaultPort { get; set; }
-        public Client client { get; private set; }
+        public Client ConnectionClient { get; private set; }
 
         private void frmConnect_Load(object sender, EventArgs e)
         {
             Text = Application.ProductName;
-            KeyDown += keyDown;
             txtConnect.KeyDown += keyDown;
             txtConnect.Text = DefaultHost + ":" + DefaultPort;
         }
@@ -51,6 +50,7 @@ namespace Breakneck_Brigade
                         client.Connect(host, port);
                     }
 
+                    this.ConnectionClient = client;
                     DialogResult = DialogResult.OK;
                     Close();
                 }

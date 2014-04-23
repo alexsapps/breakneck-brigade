@@ -109,10 +109,9 @@ namespace DeCuisine
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
-                //TODO: log error message ex
                 lock (Lock) { Disconnect(); }
-                throw;
             }
         }
 
@@ -172,8 +171,8 @@ namespace DeCuisine
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
-                //TODO: log error message ex
                 lock (Lock) { Disconnect(); }
                 throw;
             }

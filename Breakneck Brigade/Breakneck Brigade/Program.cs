@@ -18,7 +18,7 @@ namespace Breakneck_Brigade
         static Client client;
         static ClientGame game;
 
-        static object GameModeLock = new object();
+        static object ProgramLock = new object();
 
         static void Main(string[] args)
         {
@@ -29,21 +29,23 @@ namespace Breakneck_Brigade
             GlobalsConfigFile globalConfig;
             globalConfig = config.Open(BB.GlobalConfigFilename);
 
+            //Thread playThread = null;
+            //playThread = new Thread(new ThreadStart(play));
+            //playThread.Start();
+
             while (true)
             {
                 client = promptConnect(
                     globalConfig.GetSetting("server-host", BB.DefaultServerHost),
                     globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
-            if (client != null)
-            {
+                if (client != null)
+                {
                     client.Disconnected += client_Disconnected; //TODO: this should happen before connecting
                     client.GameModeChanged += client_GameModeChanged;
                     game = client.Game;
 
-                    Thread playThread = null;
-
-                    lock (GameModeLock)
+                    lock (ProgramLock)
                     {
                         while (true)
                         {
@@ -53,9 +55,8 @@ namespace Breakneck_Brigade
                             }
                             else if (client.GameMode == GameMode.Started)
                             {
+                                play();
                                 Console.WriteLine("Game started.");
-                                playThread = new Thread(new ThreadStart(play));
-                                playThread.Start();
                             }
                             else if (client.GameMode == GameMode.Stopping)
                             {
@@ -63,12 +64,12 @@ namespace Breakneck_Brigade
                                 break; //reconnect
                             }
 
-                            Monitor.Wait(GameModeLock);
+                            Monitor.Wait(ProgramLock);
                         }
                     }
 
-                    if(playThread != null)
-                        playThread.Join();
+                    //if(playThread != null)
+                    //    playThread.Join();
                 }
                 else
                 {
@@ -82,16 +83,18 @@ namespace Breakneck_Brigade
 
         static void client_GameModeChanged(object sender, EventArgs e)
         {
-            lock (GameModeLock)
+            lock (ProgramLock)
             {
-                Monitor.PulseAll(GameModeLock);
+                Monitor.PulseAll(ProgramLock);
             }
         }
 
         static void client_Disconnected(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //    this.BeginInvoke((ThreadStart)Close);  TODO
+            lock (ProgramLock)
+            {
+                disconnecting = true;
+            }
         }
 
         static Client promptConnect(string defaultHost, string defaultPort)
@@ -100,12 +103,14 @@ namespace Breakneck_Brigade
             {
                 prompt.DefaultHost = defaultHost;
                 prompt.DefaultPort = defaultPort;
-                if (prompt.ShowDialog() == DialogResult.Yes)
-                    return prompt.client;
+                if (prompt.ShowDialog() == DialogResult.OK)
+                    return prompt.ConnectionClient;
                 else
                     return null;
             }
         }
+
+        static bool disconnecting;
 
         static void play()
         {
@@ -122,21 +127,30 @@ namespace Breakneck_Brigade
                         onClosed();
                         break;
                     }
-
+                    
+                    lock(ProgramLock)
+                    {
+                        if (disconnecting)
+                        {
+                            disconnecting = false;
+                            break;
+                        }
+                    }
+                    
                     lock (client.Lock)
                         if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
-                            continue;
+                            break;
 
                     if(game != null)
                     { 
-                    lock (game.gameObjects)
-                    {
-                        game.HasUpdates = false;
-                        do
+                        lock (game.gameObjects)
                         {
-                            Monitor.Wait(game.gameObjects);
-                        } while (!game.HasUpdates);
-                    }
+                            game.HasUpdates = false;
+                            do
+                            {
+                                Monitor.Wait(game.gameObjects);
+                            } while (!game.HasUpdates);
+                        }
                     }
                     renderer.Render();
                 }

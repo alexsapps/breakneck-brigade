@@ -88,6 +88,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmConnect_Load);
             this.Shown += new System.EventHandler(this.frmConnect_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyDown);
             this.pnlConnect.ResumeLayout(false);
             this.pnlConnect.PerformLayout();
             this.ResumeLayout(false);
