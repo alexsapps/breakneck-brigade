@@ -24,6 +24,10 @@ namespace DeCuisine
 
         public ConfigSalad Config { get; private set; }
 
+        public List<ServerGameObject> HasAdded { get; set; }
+        public List<ServerGameObject> HasChanged { get; set; }
+        public List<ServerGameObject> HasRemoved { get; set; }
+
         private Random random = new Random();
 
         int frameRate; // Tick time in milliseconds
@@ -43,6 +47,9 @@ namespace DeCuisine
                 ClientInput = new List<DCClientEvent>();
                 loadConfig();
             }
+            HasAdded = new List<ServerGameObject>();
+            HasChanged = new List<ServerGameObject>();
+            HasRemoved = new List<ServerGameObject>();
         }
 
         public void ReloadConfig()
@@ -290,12 +297,19 @@ namespace DeCuisine
         public void ObjectAdded(ServerGameObject obj)
         {
             Lock.AssertHeld();
+            this.HasAdded.Add(obj);
             GameObjects.Add(obj.Id, obj);
+        }
+
+        public void ObjectChanged(ServerGameObject obj)
+        {
+            this.HasChanged.Add(obj);
         }
 
         public void ObjectRemoved(ServerGameObject obj)
         {
             Lock.AssertHeld();
+            this.HasRemoved.Add(obj);
             GameObjects.Remove(obj.Id);
         }
 

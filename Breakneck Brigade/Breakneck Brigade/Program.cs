@@ -35,8 +35,8 @@ namespace Breakneck_Brigade
                     globalConfig.GetSetting("server-host", BB.DefaultServerHost),
                     globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
-                if (client != null)
-                {
+            if (client != null)
+            {
                     client.Disconnected += client_Disconnected; //TODO: this should happen before connecting
                     client.GameModeChanged += client_GameModeChanged;
                     game = client.Game;
@@ -78,10 +78,6 @@ namespace Breakneck_Brigade
 
             Environment.Exit(0); //TODO: do we need this?
 #endif
-
-#if PROJECT_GAMECODE_TEST
-
-#endif
         }
 
         static void client_GameModeChanged(object sender, EventArgs e)
@@ -121,7 +117,7 @@ namespace Breakneck_Brigade
             {
                 while (true)
                 {
-                    if (Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) != Gl.GL_TRUE)
+                    if (renderer.ShouldExit())
                     {
                         onClosed();
                         break;
@@ -129,17 +125,20 @@ namespace Breakneck_Brigade
 
                     lock (client.Lock)
                         if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
-                            break;
+                            continue;
 
+                    if(game != null)
+                    { 
                     lock (game.gameObjects)
                     {
-                        renderer.Render();
                         game.HasUpdates = false;
                         do
                         {
                             Monitor.Wait(game.gameObjects);
                         } while (!game.HasUpdates);
                     }
+                    }
+                    renderer.Render();
                 }
             }
         }

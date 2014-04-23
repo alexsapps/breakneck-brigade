@@ -16,7 +16,7 @@ namespace DeCuisine
         public int Cleanliness { get; set; }
 
         public ServerIngredient(int id, IngredientType type, ServerGame game)
-            : base(id, game)
+            : base(game)
         {
             this.Type = type;
         }
@@ -26,7 +26,7 @@ namespace DeCuisine
         /// serial stream passed in.
         /// </summary>
         public ServerIngredient(int id, IngredientType type, ServerGame game, Vector4 transform, BinaryWriter stream) 
-            : base(id, game)
+            : base(game)
         {
             this.Type = type;
             this.AddToWorld(transform[0], transform[1], transform[2]);
@@ -43,13 +43,13 @@ namespace DeCuisine
 
 
         /// <summary>
-        /// Update the stream with the needed info. Currently just the positions so 
-        /// it is handled in the base class
+        /// Update the stream with the needed info. Positions are handled by the base class
         /// </summary>
         /// <param name="stream"></param>
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
+            stream.Write(this.Cleanliness);
         }
 
         public override void Update()
