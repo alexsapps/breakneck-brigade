@@ -65,6 +65,9 @@
     <DefineConstants>PROJECT_NETWORK_MODE</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Breakneck_Brigade.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NVorbis, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -106,12 +109,6 @@
     <Compile Include="ClientCooker.cs" />
     <Compile Include="ClientGameObject.cs" />
     <Compile Include="ClientIngredient.cs" />
-    <Compile Include="FakeClient.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FakeClient.Designer.cs">
-      <DependentUpon>FakeClient.cs</DependentUpon>
-    </Compile>
     <Compile Include="ClientGame.cs" />
     <Compile Include="frmConnect.cs">
       <SubType>Form</SubType>
@@ -177,6 +174,11 @@
     <Compile Include="InputManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RenderableGameObject.cs" />
     <Compile Include="TestGameObject.cs" />
     <Compile Include="Utils.cs" />
@@ -340,15 +342,19 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FakeClient.resx">
-      <DependentUpon>FakeClient.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmConnect.resx">
       <DependentUpon>frmConnect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\Camera.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -18,6 +18,7 @@ namespace Breakneck_Brigade
         public bool IsConnected { get; private set; }
         public ClientGame Game { get; private set; }
         public GameMode GameMode { get; private set; }
+        public event EventHandler GameModeChanged;
         public event EventHandler Disconnected;
 
         public Client()
@@ -71,6 +72,7 @@ namespace Breakneck_Brigade
                                         break;
                                     case GameMode.Started:
                                         Game = new ClientGame();
+                                        GameModeChanged(this, EventArgs.Empty);
                                         break;
                                     case GameMode.Stopping:
                                         break;

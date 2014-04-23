@@ -9,25 +9,73 @@ using Tao.OpenGl;
 using System.IO;
 using Breakneck_Brigade.Graphics;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Breakneck_Brigade
 {
     class Program
     {
+        static Client client;
+        static ClientGame game;
+
+        static object GameModeLock = new object();
 
         static void Main(string[] args)
         {
-#if PROJECT_NETWORK_MODE
-                (new FakeClient()).ShowDialog();
-                return;
-#endif
 
 #if PROJECT_GRAPHICS_MODE
-            var client = promptConnect();
-            if (client != null)
+            
+            GlobalsConfigFolder config = new GlobalsConfigFolder();
+            GlobalsConfigFile globalConfig;
+            globalConfig = config.Open(BB.GlobalConfigFilename);
+
+            while (true)
             {
-                play(client);
+                client = promptConnect(
+                    globalConfig.GetSetting("server-host", BB.DefaultServerHost),
+                    globalConfig.GetSetting("server-port", BB.DefaultServerPort));
+
+                if (client != null)
+                {
+                    client.Disconnected += client_Disconnected; //TODO: this should happen before connecting
+                    client.GameModeChanged += client_GameModeChanged;
+                    game = client.Game;
+
+                    Thread playThread = null;
+
+                    lock (GameModeLock)
+                    {
+                        while (true)
+                        {
+                            if (client.GameMode == GameMode.Init)
+                            {
+                                Console.WriteLine("Waiting for other players to join.");
+                            }
+                            else if (client.GameMode == GameMode.Started)
+                            {
+                                Console.WriteLine("Game started.");
+                                playThread = new Thread(new ThreadStart(play));
+                                playThread.Start();
+                            }
+                            else if (client.GameMode == GameMode.Stopping)
+                            {
+                                Console.WriteLine("Game ended.");
+                                break; //reconnect
+                            }
+
+                            Monitor.Wait(GameModeLock);
+                        }
+                    }
+
+                    if(playThread != null)
+                        playThread.Join();
+                }
+                else
+                {
+                    break;
+                }
             }
+
             Environment.Exit(0); //TODO: do we need this?
 #endif
 
@@ -36,14 +84,36 @@ namespace Breakneck_Brigade
 #endif
         }
 
-        static Client promptConnect()
+        static void client_GameModeChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException(); //TODO: can do if (new FakeClient().ShowDialog() == DialogResult.Yes) return new Client ( .txtServer, .txtPort ) else return null and rename FakeClient to frmConnect
+            lock (GameModeLock)
+            {
+                Monitor.PulseAll(GameModeLock);
+            }
         }
 
-        static void play(Client client)
+        static void client_Disconnected(object sender, EventArgs e)
         {
-            ClientGame game;
+            throw new NotImplementedException();
+            //    this.BeginInvoke((ThreadStart)Close);  TODO
+        }
+
+        static Client promptConnect(string defaultHost, string defaultPort)
+        {
+            using (var prompt = new frmConnect())
+            {
+                prompt.DefaultHost = defaultHost;
+                prompt.DefaultPort = defaultPort;
+                if (prompt.ShowDialog() == DialogResult.Yes)
+                    return prompt.client;
+                else
+                    return null;
+            }
+        }
+
+        static void play()
+        {
+            Console.Write("test"); //does this work in another thread?
             lock(client.Lock)
                 game = client.Game;
 
@@ -52,7 +122,10 @@ namespace Breakneck_Brigade
                 while (true)
                 {
                     if (Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) != Gl.GL_TRUE)
+                    {
+                        onClosed();
                         break;
+                    }
 
                     lock (client.Lock)
                         if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
@@ -70,5 +143,39 @@ namespace Breakneck_Brigade
                 }
             }
         }
+
+        static void sendEvent(ClientEvent @event)
+        {
+            lock (client.Lock)
+            {
+                if (client.GameMode == GameMode.Started)
+                {
+                    lock (client.ClientEvents)
+                    {
+                        client.ClientEvents.Add(@event);
+                        Monitor.PulseAll(client.ClientEvents);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("game hasn't started yet.  first, issue 'play' command to server.");
+                }
+            }
+        }
+
+        static void onClosed()
+        {
+            if (client != null)
+            {
+                lock (client.Lock)
+                {
+                    if (client.IsConnected) //check if connected because we don't know if we will start a disconnection by closing, or if we're closing because we got disconnected.
+                    {
+                        client.Disconnect();
+                    }
+                }
+            }
+        }
+
     }
 }
