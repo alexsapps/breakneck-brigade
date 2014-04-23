@@ -65,7 +65,7 @@ namespace DeCuisine
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public void AddToWorld(double x, double y, double z)
+        public void AddToWorld(float x, float y, float z)
         {
             Debug.Assert(!InWorld);
 

@@ -135,7 +135,7 @@ namespace DeCuisine
             World = Ode.dWorldCreate(); // Create dynamic world
             Space = Ode.dHashSpaceCreate(IntPtr.Zero); // Create dynamic space
             ContactGroup = Ode.dJointGroupCreate(0);
-            Ode.dWorldSetGravity(World, 0, 0, -0.5); //TODO: read gravity from config file
+            Ode.dWorldSetGravity(World, 0f, 0f, -0.5f); //TODO: read gravity from config file
             Ode.dCreatePlane(Space, 0, 0, 1, 0); // Create a ground //TODO:  remove this line of test code (read from config file instead)
             try
             {
@@ -176,7 +176,7 @@ namespace DeCuisine
                          */
                         {
                             Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldStep(World, 0.001 * frameRate);
+                            Ode.dWorldStep(World, 0.001f * (float)frameRate);
                             Ode.dJointGroupEmpty(ContactGroup);
                         }
 
@@ -246,8 +246,8 @@ namespace DeCuisine
             }
         }
 
-        
-        
+
+
         private void dNearCallback(IntPtr data, IntPtr o1, IntPtr o2)
         {
             // is o1 a charcter? check list of players
@@ -302,7 +302,7 @@ namespace DeCuisine
         public ServerGameObject GeomToObj(IntPtr geom)
         {
             Lock.AssertHeld();
-            return GameObjects[geom.ToInt32()];
+            return GameObjects[Ode.dGeomGetData(geom).ToInt32()];
         }
     }
 }
