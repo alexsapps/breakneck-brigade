@@ -10,76 +10,145 @@ using System.IO;
 using Breakneck_Brigade.Graphics;
 using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Breakneck_Brigade
 {
     class Program
     {
         static Client client;
-        static ClientGame game;
 
         static object ProgramLock = new object();
+
+        static GlobalsConfigFolder config = new GlobalsConfigFolder();
+        static GlobalsConfigFile globalConfig;
 
         static void Main(string[] args)
         {
 
 #if PROJECT_GRAPHICS_MODE
             
-            GlobalsConfigFolder config = new GlobalsConfigFolder();
-            GlobalsConfigFile globalConfig;
             globalConfig = config.Open(BB.GlobalConfigFilename);
 
-            //Thread playThread = null;
-            //playThread = new Thread(new ThreadStart(play));
-            //playThread.Start();
+            
 
-            while (true)
-            {
-                client = promptConnect(
-                    globalConfig.GetSetting("server-host", BB.DefaultServerHost),
-                    globalConfig.GetSetting("server-port", BB.DefaultServerPort));
+            Thread inputThread = null;
+            inputThread = new Thread(new ThreadStart(readInput));
+            inputThread.Start();
 
-                if (client != null)
-                {
-                    client.Disconnected += client_Disconnected; //TODO: this should happen before connecting
-                    client.GameModeChanged += client_GameModeChanged;
-                    game = client.Game;
+            //Thread appThread = null;
+            //appThread = new Thread(new ThreadStart(doGameCycle));
+            //appThread.Start();
 
-                    lock (ProgramLock)
-                    {
-                        while (true)
-                        {
-                            if (client.GameMode == GameMode.Init)
-                            {
-                                Console.WriteLine("Waiting for other players to join.");
-                            }
-                            else if (client.GameMode == GameMode.Started)
-                            {
-                                play();
-                                Console.WriteLine("Game started.");
-                            }
-                            else if (client.GameMode == GameMode.Stopping)
-                            {
-                                Console.WriteLine("Game ended.");
-                                break; //reconnect
-                            }
+            //appThread.Join();
 
-                            Monitor.Wait(ProgramLock);
-                        }
-                    }
+            doGameCycle();
 
-                    //if(playThread != null)
-                    //    playThread.Join();
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            Environment.Exit(0); //TODO: do we need this?
+            CloseHandle(GetStdHandle(StdHandle.Stdin)); //terminate input thread
+            inputThread.Abort();
 #endif
         }
+
+        static void readInput()
+        {
+            try
+            {
+                while (true)
+                {
+                    var line = Console.ReadLine();
+                    if (line == null)
+                        return; //thread asked to abort
+                    string[] parts = line.Split(new string[] { Environment.NewLine }, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length > 0)
+                    {
+                        switch (parts[0])
+                        {
+                            case "exit":
+                                lock (ProgramLock)
+                                {
+                                    if (client != null)
+                                    {
+                                        lock (client.Lock)
+                                        {
+                                            client.Disconnect();
+                                        }
+                                    }
+                                    Environment.Exit(0);
+                                }
+                                break;
+                            case "status":
+                                lock(ProgramLock)
+                                {
+                                    if (client == null)
+                                    {
+                                        Console.WriteLine("Not connected.");
+                                    }
+                                    else
+                                    {
+                                        lock (client.Lock)
+                                        {
+                                            Console.WriteLine("Connected.");
+                                            Console.WriteLine("GameMode: " + client.GameMode.ToString());
+                                            if (client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused)
+                                            {
+                                                Console.WriteLine(client.Game.gameObjects.Count + " game objects.");
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                Console.WriteLine("Command not recognized.");
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (ThreadAbortException)
+            {
+
+            }
+        }
+
+        static void doGameCycle()
+        {
+            while (true)
+            {
+                Console.WriteLine("Prompting to connect...");
+                client = promptConnect();
+                if (client == null)
+                    break;
+
+                lock (ProgramLock)
+                {
+                    while (!disconnecting)
+                    {
+                        if (client.GameMode == GameMode.Init)
+                        {
+                            Console.WriteLine("Waiting for other players to join.");
+                        }
+                        else if (client.GameMode == GameMode.Started)
+                        {
+                            Console.WriteLine("Game started.");
+                            //Thread playThread = new Thread(new ThreadStart(play));
+                            //playThread.Start();
+                            play();
+                            break; //game ended
+                        }
+                        else if (client.GameMode == GameMode.Stopping)
+                        {
+                            Console.WriteLine("Game ended.");
+                            break; //reconnect
+                        }
+
+                        Monitor.Wait(ProgramLock);
+                    }
+                    Console.WriteLine("Disconnected.");
+                }
+            }
+        }
+
 
         static void client_GameModeChanged(object sender, EventArgs e)
         {
@@ -93,30 +162,124 @@ namespace Breakneck_Brigade
         {
             lock (ProgramLock)
             {
-                disconnecting = true;
+                disconnecting = true; //close play thread and UI thread
+                client = null;
+                Monitor.PulseAll(ProgramLock); //close UI / render thread
             }
         }
 
-        static Client promptConnect(string defaultHost, string defaultPort)
+        static Client promptConnect()
         {
-            using (var prompt = new frmConnect())
+            ConnectPrompter prompter = new ConnectPrompter();
+            lock (prompter.Lock)
             {
-                prompt.DefaultHost = defaultHost;
-                prompt.DefaultPort = defaultPort;
-                if (prompt.ShowDialog() == DialogResult.OK)
-                    return prompt.ConnectionClient;
-                else
-                    return null;
+                prompter.Host = globalConfig.GetSetting("server-host", BB.DefaultServerHost);
+                prompter.Port = int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
+
+                prompter.BeginPrompt();
+
+                while (prompter.cont)
+                {
+                    if (prompter.TryToConnect)
+                    {
+                        try
+                        {
+                            client = new Client();
+                            lock (client.Lock)
+                            {
+                                disconnecting = false;
+                                client.Disconnected += client_Disconnected;
+                                client.GameModeChanged += client_GameModeChanged;
+                                client.Connect(prompter.Host, prompter.Port);
+                                prompter.connectedCallback();
+                                return client;
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            client.Disconnected -= client_Disconnected;
+                            client = null;
+                            prompter.errorCallback(ex.ToString());
+                        }
+                    }
+                    Monitor.Wait(prompter.Lock);
+                }
+
+                return null;
+            }
+        }
+
+        class ConnectPrompter
+        {
+            public BBLock Lock = new BBLock();
+
+            public bool cont = true;
+            
+            public bool TryToConnect;
+            public string Host;
+            public int Port;
+            frmConnect form;
+
+            Thread prompterThread;
+
+            public void BeginPrompt()
+            {
+                Lock.AssertHeld();
+                prompterThread = new Thread(new ThreadStart(promptThread));
+                prompterThread.Start();
+            }
+
+            void promptThread()
+            {
+                using (form = new frmConnect())
+                {
+                    form.Host = Host;
+                    form.Port = Port;
+                    form.ConnectClicked += prompt_ConnectClicked;
+                    form.ShowDialog();
+
+                    lock (Lock)
+                    {
+                        cont = false;
+                        Monitor.PulseAll(Lock);
+                    }
+                }
+            }
+
+            void prompt_ConnectClicked(object sender, EventArgs e)
+            {
+                lock (Lock)
+                {
+                    Host = form.Host;
+                    Port = form.Port;
+                    TryToConnect = true;
+                    Monitor.PulseAll(Lock);
+                }
+            }
+
+            public void connectedCallback()
+            {
+                Lock.AssertHeld();
+                form.Invoke(new ThreadStart(form.Close));
+            }
+
+            public void errorCallback(string message)
+            {
+                form.Invoke(new ThreadStart(() => { MessageBox.Show(message); form.Enabled = true; }));
             }
         }
 
         static bool disconnecting;
 
+        static BBLock renderLock = new BBLock();
+
         static void play()
         {
-            Console.Write("test"); //does this work in another thread?
-            lock(client.Lock)
-                game = client.Game;
+            Console.WriteLine("Playing..."); //does this work in another thread?
+
+            Debug.Assert(client.Game != null);
+
+            //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
 
             using (var renderer = new Renderer())
             {
@@ -127,34 +290,29 @@ namespace Breakneck_Brigade
                         onClosed();
                         break;
                     }
-                    
-                    lock(ProgramLock)
+
+                    lock (client.Lock)
                     {
                         if (disconnecting)
-                        {
-                            disconnecting = false;
-                            break;
-                        }
-                    }
-                    
-                    lock (client.Lock)
-                        if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
                             break;
 
-                    if(game != null)
-                    { 
-                        lock (game.gameObjects)
+                        if (client.GameMode == GameMode.Stopping)
+                            break;
+
+                        lock (client.Game.gameObjects)
                         {
-                            game.HasUpdates = false;
-                            do
+                            if (client.Game.HasUpdates)
                             {
-                                Monitor.Wait(game.gameObjects);
-                            } while (!game.HasUpdates);
+                                client.Game.HasUpdates = false;
+                                renderer.Render();
+                            }
                         }
                     }
-                    renderer.Render();
-                }
+
+                    Monitor.Wait(ProgramLock); //we *must* check if(disconnecting) after this returns
+                }   
             }
+            
         }
 
         static void sendEvent(ClientEvent @event)
@@ -189,6 +347,13 @@ namespace Breakneck_Brigade
                 }
             }
         }
+
+        // P/Invoke:
+        private enum StdHandle { Stdin = -10, Stdout = -11, Stderr = -12 };
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetStdHandle(StdHandle std);
+        [DllImport("kernel32.dll")]
+        private static extern bool CloseHandle(IntPtr hdl);
 
     }
 }

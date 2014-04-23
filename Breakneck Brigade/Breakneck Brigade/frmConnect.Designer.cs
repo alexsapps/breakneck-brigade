@@ -44,9 +44,9 @@
             // 
             // cmdConnect
             // 
-            this.cmdConnect.Location = new System.Drawing.Point(197, 40);
+            this.cmdConnect.Location = new System.Drawing.Point(197, 9);
             this.cmdConnect.Name = "cmdConnect";
-            this.cmdConnect.Size = new System.Drawing.Size(75, 23);
+            this.cmdConnect.Size = new System.Drawing.Size(75, 54);
             this.cmdConnect.TabIndex = 1;
             this.cmdConnect.Text = "connect";
             this.cmdConnect.UseVisualStyleBackColor = true;

@@ -24,9 +24,9 @@ namespace DeCuisine
 
         public ConfigSalad Config { get; private set; }
 
-        public List<ServerGameObject> HasAdded { get; set; }
-        public List<ServerGameObject> HasChanged { get; set; }
-        public List<ServerGameObject> HasRemoved { get; set; }
+        public List<ServerGameObject> HasAdded = new List<ServerGameObject>();
+        public List<ServerGameObject> HasChanged = new List<ServerGameObject>();
+        public List<int> HasRemoved = new List<int>();
 
         private Random random = new Random();
 
@@ -47,9 +47,6 @@ namespace DeCuisine
                 ClientInput = new List<DCClientEvent>();
                 loadConfig();
             }
-            HasAdded = new List<ServerGameObject>();
-            HasChanged = new List<ServerGameObject>();
-            HasRemoved = new List<ServerGameObject>();
         }
 
         public void ReloadConfig()
@@ -206,10 +203,15 @@ namespace DeCuisine
                             {
                                 using (BinaryWriter writer = new BinaryWriter(membin))
                                 {
-                                    foreach (var obj in GameObjects)
-                                    {
-                                        obj.Value.Serialize(writer);
-                                    }
+                                    writer.Write(HasAdded.Count);
+                                    foreach (var obj in HasAdded)
+                                        obj.Serialize(writer);
+                                    writer.Write(HasChanged.Count);
+                                    foreach (var obj in HasChanged)
+                                        obj.UpdateStream(writer);
+                                    writer.Write(HasRemoved.Count);
+                                    foreach (var obj in HasRemoved)
+                                        writer.Write(obj);
                                 }
                                 bin = membin.ToArray();
                                 binlen = bin.Length;
@@ -303,13 +305,14 @@ namespace DeCuisine
 
         public void ObjectChanged(ServerGameObject obj)
         {
+            Lock.AssertHeld();
             this.HasChanged.Add(obj);
         }
 
         public void ObjectRemoved(ServerGameObject obj)
         {
             Lock.AssertHeld();
-            this.HasRemoved.Add(obj);
+            this.HasRemoved.Add(obj.Id);
             GameObjects.Remove(obj.Id);
         }
 
