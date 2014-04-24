@@ -29,7 +29,7 @@ namespace DeCuisine
         /// <param name="transform">Initial location</param>
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
-        public ServerCooker(int id, CookerType type, ServerGame game)
+        public ServerCooker(CookerType type, ServerGame game)
             : base(game)
         {
             this.Type = type;
@@ -84,7 +84,7 @@ namespace DeCuisine
                     ingredeint.MarkDeleted();
                 }
                 this.Contents = new List<ServerIngredient>(); // clear contents
-                ServerIngredient ToAdd = new ServerIngredient(Game.getId(), Type.Recipes[this.HashCache].FinalProduct, Game);
+                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game);
                 this.Contents.Add(ToAdd);
                 return ToAdd;
             }

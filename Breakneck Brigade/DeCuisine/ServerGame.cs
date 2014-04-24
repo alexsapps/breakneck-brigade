@@ -141,6 +141,15 @@ namespace DeCuisine
             ContactGroup = Ode.dJointGroupCreate(0);
             Ode.dWorldSetGravity(World, 0f, 0f, -0.5f); //TODO: read gravity from config file
             Ode.dCreatePlane(Space, 0, 0, 1, 0); // Create a ground //TODO:  remove this line of test code (read from config file instead)
+
+            /* test */
+            lock (Lock)
+            {
+                new ServerIngredient(Config.Ingredients["banana"], this, new Vector4(0, 0, 10));
+                new ServerIngredient(Config.Ingredients["ice cream"], this, new Vector4(0, 4, 15));
+            }
+            /* test */
+
             try
             {
                 while (Mode == GameMode.Started)
@@ -162,10 +171,6 @@ namespace DeCuisine
                                     case ClientEventType.Leave:
                                         break;
                                     case ClientEventType.Move:
-                                        break;
-                                    case ClientEventType.RequestTestObject:
-                                        int id = getId();
-                                        GameObjects.Add(id, new ServerIngredient(id, new IngredientType("cheese", 10, null), this));
                                         break;
                                     default:
                                         //error
@@ -280,12 +285,6 @@ namespace DeCuisine
                     Monitor.PulseAll(client.ServerMessages);
                 }
             }
-        }
-
-        int _lastId;
-
-        public int getId() {
-            return _lastId++;
         }
 
         public void Dispose()

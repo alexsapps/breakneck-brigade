@@ -15,7 +15,7 @@ namespace DeCuisine
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
-        public ServerIngredient(int id, IngredientType type, ServerGame game)
+        public ServerIngredient(IngredientType type, ServerGame game)
             : base(game)
         {
             this.Type = type;
@@ -25,12 +25,11 @@ namespace DeCuisine
         /// Create the object and add it to the game world at vector4. Also added it to the 
         /// serial stream passed in.
         /// </summary>
-        public ServerIngredient(int id, IngredientType type, ServerGame game, Vector4 transform, BinaryWriter stream) 
+        public ServerIngredient(IngredientType type, ServerGame game, Vector4 transform) 
             : base(game)
         {
             this.Type = type;
             this.AddToWorld(transform[0], transform[1], transform[2]);
-            this.Serialize(stream); // add it to the stream to be created
         }
 
         public override void Serialize(BinaryWriter stream)

@@ -10,8 +10,6 @@ namespace SousChef
     {
         Enter,
         Leave,
-        Move,
-        RequestTestObject
-
+        Move
     }
 }
