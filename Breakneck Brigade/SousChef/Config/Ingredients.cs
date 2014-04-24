@@ -30,7 +30,9 @@ namespace SousChef
             if (!attributes.TryGetValue("model", out model))
                 model = name;
 
-            return new IngredientType(name, points, model);
+            var geomInfo = getGeomInfo(attributes);
+
+            return new IngredientType(name, geomInfo, points, model);
         }
 
         protected override void reset() { }
