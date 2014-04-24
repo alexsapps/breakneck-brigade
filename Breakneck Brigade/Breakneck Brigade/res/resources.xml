@@ -1,10 +1,29 @@
 <?xml version="1.0"?>
-<models>
+
+<models numberOfModels = "4">
   <model>
     <filename>orange</filename>
-    <scaleX></scaleX>
-    <scaleY></scaleY>
-    <scaleZ></scaleZ>
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>
+  </model>
+  <model>
+    <filename>twoballplate</filename>
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>
+  </model>
+  <model>
+    <filename>twocyl</filename>
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>
+  </model>
+  <model>
+    <filename>bottle</filename>
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>
   </model>
   
 </models>

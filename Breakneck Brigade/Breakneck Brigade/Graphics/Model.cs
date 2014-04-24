@@ -15,9 +15,12 @@ namespace Breakneck_Brigade.Graphics
     class Model
     {
 
-        public  Vector4             Position        { get { return Position; }  set {this.Position = value;  updateMatrix();} }
-        public  Vector4             Scale           { get { return Scale; }     set {this.Scale = value;     updateMatrix();} }
-        public  Vector4             Rotation        { get { return Rotation; }   set {this.Rotation = value;  updateMatrix();} }
+        private Vector4             _position;
+        public  Vector4             Position        { get { return this._position; }    set {this._position = value;  updateMatrix();} }
+        private Vector4             _scale;
+        public  Vector4             Scale           { get { return this._scale; }       set {this._scale = value;     updateMatrix();} }
+        private Vector4             _rotation;
+        public  Vector4             Rotation        { get { return this._rotation; }    set {this._rotation = value;  updateMatrix();} }
         
         public  Matrix4             Transformation  { get; set; }
         public  List<AObject3D>     Meshes          { get; private set; }
@@ -26,16 +29,14 @@ namespace Breakneck_Brigade.Graphics
         {
             Meshes          = new List<AObject3D>();
             Transformation  = new Matrix4();
-            //Root = null;
-        }
-
-        public void LoadModelFromFile(string filename)
-        {
-            //Collada parsing method calls here
+            _position        = new Vector4();
+            _scale           = new Vector4();
+            _rotation        = new Vector4();
         }
 
         public void Render()
         {
+            updateMatrix();
             Gl.glPushMatrix();
             Gl.glLoadMatrixf(Transformation.glArray);
             foreach(AObject3D m in Meshes)

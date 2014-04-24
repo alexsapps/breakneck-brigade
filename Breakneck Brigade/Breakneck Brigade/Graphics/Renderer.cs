@@ -21,7 +21,7 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         private ModelParser parser;
-        private const DebugMode DEBUG_MODE = DebugMode.BOTH;
+        private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         /// <summary>
@@ -63,20 +63,26 @@ namespace Breakneck_Brigade.Graphics
             InitGlu();
             InitIM();
 
-            DefaultTexture      = new Texture("default.tga");
+            LoadResources();          
 
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
-                ClientGameObject orange2 = testParser("orange");
-                orange2.Model.Transformation = orange2.Model.Transformation.TranslationMat(-5, 0, 20) * (new Matrix4()).ScalingMat(0.10f, 0.10f, 0.10f);
+                ClientGameObject orange = new TestClientGameObject(Models["twoballplate"]);
+                orange.Model.Position = new Vector4(-5, 0, 20);
 
-                GameObjects.Add(orange2);
+                GameObjects.Add(orange);
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
             {
                 makeAnnaHappy();
             }
 
+        }
+
+        public void LoadResources()
+        {
+            DefaultTexture = new Texture("default.tga");
+            LoadModels();
         }
 
         public void LoadModels()
@@ -93,20 +99,26 @@ namespace Breakneck_Brigade.Graphics
                         XmlReader modelSubtree = reader.ReadSubtree();
 
                         modelSubtree.ReadToDescendant("filename");
-                        string filename = modelSubtree.ReadContentAsString();
+                        string filename = modelSubtree.ReadElementContentAsString();
 
-                        modelSubtree.ReadToDescendant("scaleX");
-                        float scaleX = modelSubtree.ReadContentAsFloat();
+                        modelSubtree.ReadToNextSibling("scaleX");
+                        float scaleX = modelSubtree.ReadElementContentAsFloat();
 
-                        modelSubtree.ReadToDescendant("scaleY");
-                        float scaleY = modelSubtree.ReadContentAsFloat();
+                        modelSubtree.ReadToNextSibling("scaleY");
+                        float scaleY = modelSubtree.ReadElementContentAsFloat();
 
-                        modelSubtree.ReadToDescendant("scaleZ");
-                        float scaleZ = modelSubtree.ReadContentAsFloat();
+                        modelSubtree.ReadToNextSibling("scaleZ");
+                        float scaleZ = modelSubtree.ReadElementContentAsFloat();
                         
                         Model model = parser.ParseFile(filename);
-                        Models.Add("filename", model);
-                        
+                        model.Scale.X = scaleX;
+                        model.Scale.Y = scaleY;
+                        model.Scale.Z = scaleZ;
+                        Models.Add(filename, model);
+
+                        if(ii != numberOfModels - 1)
+                            reader.ReadEndElement();
+                            reader.ReadToNextSibling("model");
                     }
                 }
             }

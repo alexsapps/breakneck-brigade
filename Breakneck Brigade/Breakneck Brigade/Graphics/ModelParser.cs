@@ -122,7 +122,7 @@ namespace Breakneck_Brigade.Graphics
                     }
 
                     //Texturing
-                    if(g.Material != null)
+                    if(g.Material != null && g.Material.DiffuseTextureMap != null)
                     {
                         Texture diffuseTexture;
                         if(Renderer.Textures.ContainsKey(g.Material.DiffuseTextureMap))
