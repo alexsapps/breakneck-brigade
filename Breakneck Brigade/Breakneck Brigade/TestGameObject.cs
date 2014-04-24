@@ -17,5 +17,10 @@ namespace Breakneck_Brigade
         {
             Model = model;
         }
+
+        public override string ModelName
+        {
+            get { return "should be ignored"; }
+        }
     }
 }

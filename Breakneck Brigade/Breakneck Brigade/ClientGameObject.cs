@@ -15,6 +15,7 @@ namespace Breakneck_Brigade
         public int Id { get; set; }
         public Vector4 Transform { get; set; }
         public Model Model { get; protected set; }
+        public abstract string ModelName { get; }
 
         /// <summary>
         /// Base constructor. For every ClientGameObject, the parameters should be recieved from

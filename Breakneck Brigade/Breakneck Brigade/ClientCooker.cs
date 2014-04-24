@@ -20,18 +20,24 @@ namespace Breakneck_Brigade
             construct(type);
         }
 
+        public override string ModelName
+        {
+            get { return Type.Name; }
+        }
+
         //called by ClientGameObject.Deserialize
         public ClientCooker(int id, BinaryReader reader, ClientGame game) 
             : base(id, reader, game)
         {
             //CookerType type = reader.ReadString();
             CookerType type = game.Config.Cookers[reader.ReadString()];
-            construct(type); //TODO: make it use the dynamic cooker type from above
+            construct(type);
         }
 
         private void construct(CookerType type)
         {
             this.Type = type;
+            Model = Renderer.Models[ModelName];
         }
 
         private void update()

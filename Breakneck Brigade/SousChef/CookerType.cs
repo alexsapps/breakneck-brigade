@@ -11,9 +11,8 @@ namespace SousChef
     {
         public Dictionary<string, Recipe> Recipes { get; set; }
         public HashSet<string> ValidIngredients { get; set; }
-        public string Model { get; set; }
 
-        public CookerType(string name, GeometryInfo geomInfo, List<Recipe> recipes, string model)
+        public CookerType(string name, GeometryInfo geomInfo, List<Recipe> recipes)
             : base(name, geomInfo)
         {
             Debug.Assert(recipes != null);
@@ -29,7 +28,6 @@ namespace SousChef
                 }
                 Recipes.Add(recipe.hash(), recipe);
             }
-            this.Model = model;
         }
 
     }

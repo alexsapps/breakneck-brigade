@@ -14,6 +14,11 @@ namespace Breakneck_Brigade
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
+        public override string ModelName
+        {
+            get { return Type.Name; }
+        }
+
         /// <summary>
         /// Creates an Ingredient of the type passed in at the center of the game world. Used for 
         /// objects not created on the server
@@ -30,7 +35,7 @@ namespace Breakneck_Brigade
         }
 
         //called by ClientGameObject.Deserialize. Used by objects that were created on the server
-        public ClientIngredient(int id, BinaryReader reader, ClientGame game) 
+        public ClientIngredient(int id, BinaryReader reader, ClientGame game)
             : base(id, reader, game)
         {
             string ingrname = reader.ReadString();
@@ -43,6 +48,7 @@ namespace Breakneck_Brigade
         {
             this.Type = type;
             update(cleanliness);
+            Model = Renderer.Models[ModelName];
         } 
 
 
