@@ -27,7 +27,7 @@ namespace Breakneck_Brigade
         static void Main(string[] args)
         {
 
-#if PROJECT_GRAPHICS_MODE
+#if PROJECT_GRAPHICS_TEST
             Renderer renderer = new Renderer();
             while (!renderer.ShouldExit())
             {
