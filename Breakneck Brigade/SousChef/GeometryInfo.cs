@@ -24,11 +24,11 @@ namespace SousChef
         /// <summary>
         /// Gets the list of sides of the object
         /// </summary>
-        public List<float> Sides { get; protected set; }
+        public float[] Sides { get; set; }
 
         public GeometryInfo()
         {
-            this.Sides = new List<float>();
+            
         }
     }
 }

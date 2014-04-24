@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -107,6 +108,26 @@ namespace SousChef
                 if (reader.NodeType == XmlNodeType.Element)
                     items.Add(itemParser.Parse(reader.ReadSubtree()));
             return items;
+        }
+
+        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes)
+        {
+            var shape = BB.ParseGeomShape(attributes["shape"]);
+            string sidesstr = attributes["sides"];
+            string[] sidesstrarr = sidesstr.Split(',');
+            float[] sides = new float[sidesstrarr.Length];
+            for (int i = 0; i < sidesstrarr.Length; i++)
+                sides[i] = float.Parse(sidesstrarr[i].Trim());
+
+            GeometryInfo info = new GeometryInfo()
+            {
+                Shape = shape,
+                Mass = float.Parse(attributes["mass"]),
+                Sides = sides
+            };
+            
+            return info;
+
         }
     }
 }

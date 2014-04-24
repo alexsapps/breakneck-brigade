@@ -1,10 +1,10 @@
 <cookers>
-  <cooker name="blender">
+  <cooker name="blender" shape="box" sides="2,2,2" mass="2">
     <recipe>milkshake</recipe>
     <recipe>ice cream</recipe>
     <recipe>fruit smoothie</recipe>
   </cooker>
-  <cooker name="grill">
+  <cooker name="grill" shape="box" sides="2,2,2" mass="2">
     <recipe>grilled cheese</recipe>
     <recipe>garden burger</recipe>
   </cooker>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    public class BB
+    public partial class BB
     {
         public const string ProtocolNo = "1"; //increment when protocol changes
         public const string ServerProtocolHandshakeStr = "BreakneckBrigadeSrvr." + ProtocolNo; //server sends this

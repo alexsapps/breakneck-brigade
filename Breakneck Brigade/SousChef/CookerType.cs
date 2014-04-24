@@ -13,8 +13,8 @@ namespace SousChef
         public HashSet<string> ValidIngredients { get; set; }
         public string Model { get; set; }
 
-        public CookerType(string name, List<Recipe> recipes, string model)
-            : base(name)
+        public CookerType(string name, GeometryInfo geomInfo, List<Recipe> recipes, string model)
+            : base(name, geomInfo)
         {
             Debug.Assert(recipes != null);
             
