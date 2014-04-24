@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace SousChef
 {
-    public abstract class BBXItemParser<T> where T : class
+    public abstract class BBXItemParser<T>
     {
         protected GameObjectConfig config;
         public BBXItemParser(GameObjectConfig config) { this.config = config; }

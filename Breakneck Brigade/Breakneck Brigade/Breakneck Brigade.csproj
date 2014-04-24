@@ -34,7 +34,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PROJECT_GAMECODE_TEST</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -55,7 +55,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GraphicsTest|AnyCPU' ">
     <OutputPath>bin\GraphicsTest\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PROJECT_GRAPHICS_MODE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PROJECT_GAMECODE_TEST</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
@@ -65,22 +65,14 @@
     <DefineConstants>PROJECT_NETWORK_MODE</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GameCodeTest|AnyCPU'">
-    <OutputPath>bin\GameCodeTest\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GameTest|AnyCPU'">
+    <OutputPath>bin\GameTest\</OutputPath>
     <DefineConstants>DEBUG;TRACE;PROJECT_GAMECODE_TEST</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'test configuration|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\test configuration\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;PROJECT_GAMECODE_TEST</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NVorbis, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
