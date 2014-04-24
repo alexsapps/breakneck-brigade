@@ -211,12 +211,15 @@ namespace DeCuisine
                                     writer.Write(HasAdded.Count);
                                     foreach (var obj in HasAdded)
                                         obj.Serialize(writer);
+                                    HasAdded.Clear();
                                     writer.Write(HasChanged.Count);
                                     foreach (var obj in HasChanged)
                                         obj.UpdateStream(writer);
+                                    HasChanged.Clear();
                                     writer.Write(HasRemoved.Count);
                                     foreach (var obj in HasRemoved)
                                         writer.Write(obj);
+                                    HasRemoved.Clear();
                                 }
                                 bin = membin.ToArray();
                                 binlen = bin.Length;

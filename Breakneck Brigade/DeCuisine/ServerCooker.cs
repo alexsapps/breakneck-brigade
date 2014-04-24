@@ -40,8 +40,7 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            base.UpdateStream(stream); // puts position in the stream to send. Note, only need the base class updatestream for construction
-            stream.Write(Type.Name); // tell which type of cooker to make on the client
+            UpdateStream(stream); // puts position in the stream to send. Note, only need the base class updatestream for construction
         }
 
 
@@ -96,16 +95,13 @@ namespace DeCuisine
             base.UpdateStream(stream);
             // Calvin TODO: check collision between this cooker and ingredients that are touching it. 
             // if their is a collision, populate the list ToAdd with the ingredients. 
-            packageIngredientsAdded(stream);
+            stream.Write(Type.Name); // tell which type of cooker to make on the client
+            stream.Write(Contents.Count);
+            foreach (var ingredient in Contents)
+                stream.Write((Int32)ingredient.Id);
         }
 
-        private void packageIngredientsAdded(BinaryWriter stream)
-        {
-            foreach (var ingredient in this.Contents)
-            {
-                stream.Write((Int16)ingredient.Id);
-            }
-        }
+        
 
         public override void Update()
         {

@@ -35,11 +35,8 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            this.UpdateStream(stream);
-            stream.Write(Type.Name);
-            stream.Write((int)Cleanliness);
+            UpdateStream(stream);
         }
-
 
         /// <summary>
         /// Update the stream with the needed info. Positions are handled by the base class
@@ -48,6 +45,7 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
+            stream.Write(Type.Name);
             stream.Write(this.Cleanliness);
         }
 

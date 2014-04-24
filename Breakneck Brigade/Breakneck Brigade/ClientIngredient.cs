@@ -33,8 +33,8 @@ namespace Breakneck_Brigade
         public ClientIngredient(int id, BinaryReader reader, ClientGame game) 
             : base(id, reader, game)
         {
-            //todo: get type from string (config file): Type = f(reader.ReadString());
-            IngredientType type = null;
+            string ingrname = reader.ReadString();
+            IngredientType type = game.Config.Ingredients[ingrname];
             var cleanliness = reader.ReadInt32();
             construct(type, cleanliness);
         }

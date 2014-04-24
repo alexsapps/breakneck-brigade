@@ -81,7 +81,7 @@ namespace DeCuisine
                     throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
             }
 
-            Ode.dGeomSetPosition(this.Body, x, y, z);
+            Ode.dGeomSetPosition(this.Geom, x, y, z);
             if (this.HasBody)
             {
                 Ode.dMass mass = new Ode.dMass();
