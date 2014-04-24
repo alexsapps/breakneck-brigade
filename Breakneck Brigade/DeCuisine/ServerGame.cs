@@ -31,6 +31,7 @@ namespace DeCuisine
         private Random random = new Random();
 
         int frameRate; // Tick time in milliseconds
+        int MAX_CONTACTS = 8;
 
         public IntPtr World { get; protected set; }
         public IntPtr Space { get; protected set; }
@@ -267,11 +268,38 @@ namespace DeCuisine
 
         private void dNearCallback(IntPtr data, IntPtr o1, IntPtr o2)
         {
-            // is o1 a charcter? check list of players
+            // exit without doing anything if the two bodies are connected by a joint
+            IntPtr b1 = Ode.dGeomGetBody(o1);
+            IntPtr b2 = Ode.dGeomGetBody(o2);
+            if (b1 != null && b2 != null && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
 
-            var obj1 = GeomToObj(o1);
-            var obj2 = GeomToObj(o2);
+            Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
+            Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
+            int numc = Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
+            if (numc > 0)
+            {
+                for (int i = 0; i < numc; i++)
+                {
+                    // Collision physics parameters
+                    contact[i].surface.mode = (int)Ode.dContactFlags.dContactBounce | (int)Ode.dContactFlags.dContactSoftCFM;
+                    contact[i].surface.mu = 1;
+                    contact[i].surface.mu2 = 0;
+                    contact[i].surface.bounce = 0.1;
+                    contact[i].surface.bounce_vel = 0.1;
+                    contact[i].surface.soft_cfm = 0.01;
+                    contact[i].geom = contactGeoms[i];
 
+                    IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
+                    Ode.dJointAttach(c, b1, b2);
+                }
+            }
+
+            // Call the objects onCollision() method
+            IntPtr gameObjectId1 = Ode.dGeomGetData(o1);
+            IntPtr gameObjectId2 = Ode.dGeomGetData(o2);
+            ServerGameObject gameObject1 = GameObjects[gameObjectId1.ToInt32()];
+            ServerGameObject gameObject2 = GameObjects[gameObjectId2.ToInt32()];
+            gameObject1.OnCollide(gameObject2);
         }
 
         private void SendModeChangeUpdate()
