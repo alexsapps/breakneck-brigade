@@ -44,7 +44,7 @@ namespace Breakneck_Brigade
         /// Update everything pertaining to the ingriedient. Note this is 
         /// mainly for ease of testing, shouldn't be called by the stream
         /// </summary>
-        private void update(Matrix4 transform, int cleanliness)
+        private void update(Vector4 transform, int cleanliness)
         {
             base.Update(transform);
             this.update();

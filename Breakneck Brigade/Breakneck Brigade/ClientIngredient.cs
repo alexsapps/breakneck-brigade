@@ -59,7 +59,7 @@ namespace Breakneck_Brigade
         /// Update everything pertaining to the ingriedient. The position 
         /// is handled by the super class.
         /// </summary>
-        private void update(Matrix4 transform, int cleanliness)
+        private void update(Vector4 transform, int cleanliness)
         {
             base.Update(transform);
             this.update(cleanliness);
