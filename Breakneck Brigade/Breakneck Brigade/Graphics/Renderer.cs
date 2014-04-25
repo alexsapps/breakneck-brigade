@@ -21,7 +21,7 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         private ModelParser parser;
-        private const DebugMode DEBUG_MODE = DebugMode.OFF;
+        private const DebugMode DEBUG_MODE = DebugMode.BOTH;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         /// <summary>
@@ -40,13 +40,12 @@ namespace Breakneck_Brigade.Graphics
 
         public IList<ClientGameObject>    GameObjects { get; set; }
 
-        private Matrix4                         WorldTransform;
-        private ClientGame                      Game;
-        private Camera                          Camera;
-        private InputManager                    IM;
-        private int aspectX;
-        private int aspectY;
-        private bool getAspect = true;
+        private     Matrix4         WorldTransform;
+        private     Camera          Camera;
+        private     int             _aspectX;
+        private     int             _aspectY;
+        private     float           _ratio;
+        private     bool            _getAspect      = true;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -132,18 +131,28 @@ namespace Breakneck_Brigade.Graphics
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);
             
-            // force aspect ratio
-            if (getAspect)
+            // force aspect ratio, use saved aspect ratio
+            if (_getAspect)
             {
-                aspectX = width;
-                aspectY = height;
-                getAspect = false;
+                _aspectX = width;
+                _aspectY = height;
+                _ratio = (float)_aspectY / (float)_aspectX;
+                _getAspect = false;
             }
 
-            //float ratio = (float)width / height;
-            //Re-init mouse stuff! Call InputMan's MousePosInit() method
-
-            Gl.glViewport(0, 0, width + (width - aspectX), height + (height - aspectY));
+            if ((float)height / (float)width > _ratio)
+            {
+                Gl.glViewport(0, 0, (int)((float)height / _ratio), height);
+            }
+            else if ((float)height / (float)width < _ratio)
+            {
+                Gl.glViewport(0, 0, width, (int)((float)width * _ratio));
+            }
+            else
+            {
+                Gl.glViewport(0, 0, width, height);
+            }
+            
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
