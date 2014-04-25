@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using SousChef;
 using Breakneck_Brigade.Graphics;
 using System.IO;
-using SousChef;
 
 namespace Breakneck_Brigade
 {

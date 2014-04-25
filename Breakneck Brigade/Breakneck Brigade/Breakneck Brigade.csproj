@@ -124,6 +124,10 @@
     </Compile>
     <Compile Include="Graphics\3D Objects\Glu Prims\TexturedGluSphere.cs" />
     <Compile Include="Graphics\3D Objects\Meshes\AMesh.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\AParticle.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\Particle3D.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\AParticleSpawner.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\PSFountain.cs" />
     <Compile Include="Graphics\3D Objects\TexturedPolygon.cs" />
     <Compile Include="Graphics\Model.cs" />
     <Compile Include="Graphics\Obj Loader\Common\StringExtensions.cs" />

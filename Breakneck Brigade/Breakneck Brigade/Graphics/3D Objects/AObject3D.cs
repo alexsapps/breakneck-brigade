@@ -18,30 +18,30 @@ namespace Breakneck_Brigade.Graphics
         /// The transformation for this mesh, relative to its parent. If this is the
         /// root node, set this to the identity matrix.
         /// </summary>
-        public Matrix4          Transformation;
+        protected   Matrix4           _transform;
         /// <summary>
         /// Direct children of this node. All children inherit their parents' transformations
         /// </summary>
-        public List<AObject3D>   Children;
+        public      List<AObject3D>   Children;
 
         public AObject3D()
         { 
-            Transformation  = new Matrix4();
+            _transform  = new Matrix4();
             Children        = new List<AObject3D>();
         }
         public AObject3D(Matrix4 trans)
         {
-            Transformation  = trans;
+            _transform  = trans;
             Children        = new List<AObject3D>();
         }
         public AObject3D(List<AObject3D> children)
         {
-            Transformation  = new Matrix4();
+            _transform  = new Matrix4();
             Children        = children;
         }
         public AObject3D(Matrix4 trans, List<AObject3D> children)
         {
-            Transformation  = trans;
+            _transform  = trans;
             Children        = children;
         }
          
