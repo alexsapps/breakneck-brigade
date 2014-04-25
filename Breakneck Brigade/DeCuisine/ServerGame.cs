@@ -159,15 +159,6 @@ namespace DeCuisine
                 p.LoadFile(1);
             }
 
-
-            /* test */
-            lock (Lock)
-            {
-                new ServerIngredient(Config.Ingredients["banana"], this, new Coordinate(0, 200, 0));
-                new ServerIngredient(Config.Ingredients["ice cream"], this, new Coordinate(0, 100, 0));
-            }
-            /* test */
-
             try
             {
                 while (Mode == GameMode.Started)

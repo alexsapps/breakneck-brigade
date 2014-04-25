@@ -94,6 +94,9 @@
     <None Include="config\settings.xml" />
     <None Include="config\world_1.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config\world_example.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo "Copying in dependancies"
