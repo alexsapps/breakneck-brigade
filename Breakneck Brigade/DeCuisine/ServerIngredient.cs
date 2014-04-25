@@ -31,12 +31,24 @@ namespace DeCuisine
             this.Type = type;
             this.AddToWorld(transform[0], transform[1], transform[2]);
         }
-
+        /// <summary>
+        /// write the packet. Everything above the ==== is handled in the base class. Below is handled 
+        /// by this class.
+        /// int32  id
+        /// int16  objectclass
+        /// double X
+        /// double Y
+        /// double Z
+        /// ===========
+        /// string name
+        /// int32  cleanliness
+        /// </summary>
+        /// <param name="stream"></param>
         public override void Serialize(BinaryWriter stream)
-        {
+        { 
             base.Serialize(stream);
             stream.Write(Type.Name);
-            UpdateStream(stream);
+            stream.Write((Int32)this.Cleanliness);
         }
 
         /// <summary>

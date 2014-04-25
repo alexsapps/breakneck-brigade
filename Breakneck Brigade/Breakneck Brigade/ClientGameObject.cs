@@ -31,19 +31,38 @@ namespace Breakneck_Brigade
             this.Game = game;
         }
 
-        protected virtual void construct(BinaryReader reader)
+
+        /// <summary>
+        /// Instatiates client objects from data in the reader.
+        /// The packet will look as follows. Class specific data will be written after this. 
+        /// double x
+        /// double y
+        /// double z
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="game"></param>
+        /// <param name="reader"></param>
+        public ClientGameObject(int id, ClientGame game, BinaryReader reader)
         {
-            Vector4 transform = getPositionMatrix(reader);
-            Update(transform);
-        }
-
-        protected virtual void construct(Vector4 transform, ClientGame game) {
-            //set properties that never change here
+            this.Id = id;
             this.Game = game;
-            Update(transform);
+            double x, y, z;
+            x = reader.ReadDouble();
+            y = reader.ReadDouble();
+            z = reader.ReadDouble();
+            this.Transform =  new Vector4(x, y, z);
         }
 
 
+        /// <summary>
+        /// Read the serialized data from the packet. 
+        /// int16  objectclass
+        /// double X
+        /// double Y
+        /// double Z
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public static ClientGameObject Deserialize(int id, BinaryReader reader, ClientGame game)
         {
             GameObjectClass cls = (GameObjectClass)reader.ReadInt16();

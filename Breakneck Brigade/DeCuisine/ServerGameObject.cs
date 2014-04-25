@@ -43,6 +43,26 @@ namespace DeCuisine
         }
 
         /// <summary>
+        /// The start the stream packet. Class specific data will always be
+        /// written AFTER this data is writen. The packet will look as follows:
+        /// int32  id
+        /// int16  objectclass
+        /// double X
+        /// double Y
+        /// double Z
+        /// </summary>
+        /// <param name="stream"></param>
+        public virtual void Serialize(BinaryWriter stream)
+        {
+            stream.Write((Int32)Id);
+            stream.Write((Int16)ObjectClass);
+            Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+            stream.Write((double)m3.X);
+            stream.Write((double)m3.Y);
+            stream.Write((double)m3.Z);
+        }
+
+        /// <summary>
         /// Specific to each subclass. 
         /// </summary>
         public abstract void Update();
@@ -128,19 +148,13 @@ namespace DeCuisine
             InWorld = false;
         }
 
-        public virtual void Serialize(BinaryWriter stream)
-        {
-            stream.Write((Int32)Id);
-            stream.Write((Int16)ObjectClass);
-            //TODO: write geom info
-        }
-
         /// <summary>
         /// Updates the stream with the position. 
         /// </summary>
         /// <param name="stream"></param>
         public virtual void UpdateStream(BinaryWriter stream)
         {
+            stream.Write((Int32)Id);
             Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
             stream.Write((double)m3.X);
             stream.Write((double)m3.Y);
