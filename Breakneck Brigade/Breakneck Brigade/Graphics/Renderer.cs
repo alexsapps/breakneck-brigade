@@ -38,10 +38,11 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
-        private Matrix4                     WorldTransform;
-        private List<ClientGameObject>      GameObjects;
-        private Camera                      Camera;
-        private InputManager                IM;
+        private Matrix4                         WorldTransform;
+        private ClientGame                      Game;
+        private IEnumerable<ClientGameObject>   GameObjects { get { return Game.gameObjects.Values; }}
+        private Camera                          Camera;
+        private InputManager                    IM;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -52,11 +53,11 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Glu.GLUtesselator gluTesselator = Glu.gluNewTess();
 
-        public Renderer()
+        public Renderer(ClientGame game)
         {
-            parser              = new ModelParser();
-            WorldTransform      = new Matrix4();
-            GameObjects         = new List<ClientGameObject>();
+            parser          = new ModelParser();
+            WorldTransform  = new Matrix4();
+            Game            = game;
 
             InitGLFW();
             InitGL();
@@ -67,10 +68,10 @@ namespace Breakneck_Brigade.Graphics
 
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
-                ClientGameObject orange = new TestClientGameObject(Models["twoballplate"]);
+                var orange = new TestClientGameObject(Models["twoballplate"]) { Id = 50000000 };
                 orange.Model.Position = new Vector4(-5, 0, 20);
 
-                GameObjects.Add(orange);
+                Game.gameObjects.Add(orange.Id, orange);
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
             {
@@ -308,7 +309,7 @@ namespace Breakneck_Brigade.Graphics
             snowman.Meshes.Add(snowmanBase);
 
             TestClientGameObject snowmanGO = new TestClientGameObject(snowman);
-            GameObjects.Add(snowmanGO);
+            Game.gameObjects.Add(snowmanGO.Id, snowmanGO);
         }
 
         TestClientGameObject testParser(string filename)

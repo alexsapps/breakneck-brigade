@@ -1,6 +1,7 @@
 ﻿using SousChef;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -171,10 +172,8 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.Leave:
                                         break;
-                                    case ClientEventType.Move:
-                                        break;
                                     default:
-                                        //error
+                                        Debugger.Break();
                                         break;
                                 }
                             }
@@ -275,6 +274,8 @@ namespace DeCuisine
 
             Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
             Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
+            for (int i = 0; i < MAX_CONTACTS; i++)
+                contactGeoms[i] = new Ode.dContactGeom();
             int numc = Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
             if (numc > 0)
             {

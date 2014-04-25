@@ -289,7 +289,15 @@ namespace Breakneck_Brigade
 
             //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
 
-            using (var renderer = new Renderer())
+            Renderer renderer;
+            lock(client.Lock) {
+                if (!disconnecting)
+                    renderer = new Renderer(client.Game);
+                else
+                    return;
+            }
+
+            using (renderer)
             {
                 while (true)
                 {
@@ -307,7 +315,10 @@ namespace Breakneck_Brigade
                         if (client.GameMode == GameMode.Stopping)
                             break;
 
-                        renderer.Render();
+                        lock (client.Game.Lock)
+                        {
+                            renderer.Render();
+                        }
                     }
 
                     //Monitor.Wait(ProgramLock); //we *must* check if(disconnecting) after this returns
