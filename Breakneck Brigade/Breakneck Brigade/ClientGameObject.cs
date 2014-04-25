@@ -40,7 +40,7 @@ namespace Breakneck_Brigade
             this.Game = game;
             Transformation  = new Matrix4();
             _position       = new Vector4();
-            _scale          = new Vector4();
+            _scale          = new Vector4(1.0f, 1.0f, 1.0f);
             _rotation       = new Vector4();
         }
 
@@ -59,11 +59,11 @@ namespace Breakneck_Brigade
         {
             this.Id = id;
             this.Game = game;
+            _position = new Vector4();
+            _scale = new Vector4(1.0f, 1.0f, 1.0f);
+            _rotation = new Vector4();
+            Transformation = new Matrix4();
             this.Position = getPositionVector(reader);
-            Transformation  = new Matrix4();
-            _position       = new Vector4();
-            _scale          = new Vector4();
-            _rotation       = new Vector4();
         }
 
 

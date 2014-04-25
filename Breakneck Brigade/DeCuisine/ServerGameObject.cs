@@ -28,6 +28,8 @@ namespace DeCuisine
         public abstract GeometryInfo GeomInfo { get; }
         public ServerGame Game;
 
+        public Coordinate Position { get; set; }
+
         private static int nextId;
         /// <summary>
         /// Base constructor. For every servergameobject create their should be a 
@@ -56,6 +58,7 @@ namespace DeCuisine
         {
             stream.Write((Int32)Id);
             stream.Write((Int16)ObjectClass);
+
             Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
             stream.Write((float)m3.X);
             stream.Write((float)m3.Y);
@@ -74,9 +77,6 @@ namespace DeCuisine
         {
             this.RemoveFromWorld();
             this.Game.ObjectRemoved(this);
-
-            // Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            // Ode.dGeomGetRotation(this.Geom);
         }
 
         /// <summary>
@@ -87,6 +87,7 @@ namespace DeCuisine
         /// <param name="z"></param>
         public void AddToWorld(Coordinate coordinate)
         {
+            this.Position = coordinate;
             Debug.Assert(!InWorld);
 
             switch (GeomInfo.Shape)
@@ -100,7 +101,6 @@ namespace DeCuisine
                 default:
                     throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
             }
-
             Ode.dGeomSetPosition(this.Geom, coordinate.x, coordinate.y, coordinate.z);
             if (this.HasBody)
             {
@@ -125,7 +125,9 @@ namespace DeCuisine
                 Ode.dGeomSetBody(this.Geom, this.Body);
             }
 
-            Ode.dGeomSetData(Geom, new IntPtr(Id));
+            Ode.dGeomSetData(this.Geom, new IntPtr(Id));
+            Ode.dGeomSetPosition(this.Geom, coordinate.x, coordinate.y, coordinate.z);
+            var m3 = Ode.dGeomGetPosition(this.Geom);
             InWorld = true;
         }
 
@@ -160,10 +162,15 @@ namespace DeCuisine
         public virtual void UpdateStream(BinaryWriter stream)
         {
             stream.Write((Int32)Id);
+
             Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
             stream.Write((float)m3.X);
             stream.Write((float)m3.Y);
             stream.Write((float)m3.Z);
+
+            Position.x = (float) m3.X;
+            Position.y = (float) m3.Y;
+            Position.z = (float) m3.Z;
         }
 
         public virtual void OnCollide(ServerGameObject obj)

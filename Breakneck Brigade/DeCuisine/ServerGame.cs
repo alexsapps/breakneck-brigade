@@ -128,6 +128,19 @@ namespace DeCuisine
         // clients Lock(ClientInput) without locking the whole server, just to specify their input
         public List<DCClientEvent> ClientInput { get; private set; }
 
+        void monitor()
+        {
+            lock (Lock)
+            {
+                Console.Clear();
+                Console.WriteLine("MONITOR:");
+                foreach (ServerGameObject sgo in GameObjects.Values)
+                {
+                    Console.WriteLine("Position: " + sgo.Position.x + ", " + sgo.Position.y + ", " + sgo.Position.z);
+                }
+            }
+        }
+
         public void Run()
         {
             long start = DateTime.UtcNow.Ticks;
@@ -141,14 +154,14 @@ namespace DeCuisine
             World = Ode.dWorldCreate(); // Create dynamic world
             Space = Ode.dHashSpaceCreate(IntPtr.Zero); // Create dynamic space
             ContactGroup = Ode.dJointGroupCreate(0);
-            Ode.dWorldSetGravity(World, 0f, -0.5f, 0); //TODO: read gravity from config file
+            Ode.dWorldSetGravity(World, 0f, -0.5f, 0f); //-0.5f, 0); //TODO: read gravity from config file
             Ode.dCreatePlane(Space, 0, 0, 1, 0); // Create a ground //TODO:  remove this line of test code (read from config file instead)
 
             /* test */
             lock (Lock)
             {
-                new ServerIngredient(Config.Ingredients["banana"], this, new Coordinate(0, 0, 0));
-                new ServerIngredient(Config.Ingredients["ice cream"], this, new Coordinate(50, 50, 0));
+                new ServerIngredient(Config.Ingredients["banana"], this, new Coordinate(0, 200, 0));
+                new ServerIngredient(Config.Ingredients["ice cream"], this, new Coordinate(0, 100, 0));
             }
             /* test */
 
@@ -180,6 +193,8 @@ namespace DeCuisine
                             ClientInput.Clear();
                         }
 
+                        Ode.dVector3 m3 = Ode.dGeomGetPosition(GameObjects[0].Geom);
+                        Ode.dVector3 m4 = Ode.dGeomGetPosition(GameObjects[1].Geom);
                         /*
                          * Physics happens here.
                          */
@@ -241,6 +256,7 @@ namespace DeCuisine
                         }
                     }
 
+                    //monitor();
                     /*
                      * wait until end of tick
                      */

@@ -19,8 +19,6 @@ namespace Breakneck_Brigade
         public bool IsConnected { get; private set; }
         public ClientGame Game { get; private set; }
         public GameMode GameMode { get; private set; }
-        public event EventHandler GameModeChanged;
-        public event EventHandler Disconnected;
 
         public Client()
         {
@@ -77,7 +75,6 @@ namespace Breakneck_Brigade
                                             break;
                                         case GameMode.Started:
                                             Game = new ClientGame();
-                                            new Thread(new ThreadStart(() => { GameModeChanged(this, EventArgs.Empty); })).Start();
                                             break;
                                         case GameMode.Stopping:
                                             break;
@@ -195,8 +192,8 @@ namespace Breakneck_Brigade
             Debug.Assert(IsConnected);
 
             Lock.AssertHeld();
-            GameMode = SousChef.GameMode.Stopping;
 
+            GameMode = SousChef.GameMode.Stopping;
             IsConnected = false;
 
             lock (ClientEvents)
@@ -205,12 +202,20 @@ namespace Breakneck_Brigade
             }
 
             connection.Close(); //close receiver thread
-            
-            if(senderThread != Thread.CurrentThread)
-                senderThread.Join();
 
-            if(receiverThread != Thread.CurrentThread)
-                receiverThread.Join();
+            Monitor.Exit(Lock);
+            {
+                //receiver thread creates sender thread, so end receiver first
+                if (receiverThread != Thread.CurrentThread)
+                    receiverThread.Join();
+
+                //then end sender thread if it was already created
+                if (senderThread != null)
+                    if (senderThread != Thread.CurrentThread)
+                        senderThread.Join();
+                
+            }
+            Monitor.Enter(Lock);
 
             //NOTE: game thread constantly checks IsConnected to know when to terminate
 
@@ -223,10 +228,8 @@ namespace Breakneck_Brigade
             //    }
             //}
 
-            new Thread(new ThreadStart(() => { Disconnected(this, EventArgs.Empty); })).Start(); //close the renderer thread
 
             Game = null;
         }
-
     }
 }

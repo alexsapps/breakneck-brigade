@@ -75,10 +75,10 @@ namespace Breakneck_Brigade
         //public const int GLFW_KEY_BACKSPACE     = 259;
         //public const int GLFW_KEY_INSERT        = 260;
         //public const int GLFW_KEY_DELETE        = 261;
-        //public const int GLFW_KEY_RIGHT         = 262;
-        //public const int GLFW_KEY_LEFT          = 263;
-        //public const int GLFW_KEY_DOWN          = 264;
-        //public const int GLFW_KEY_UP            = 265;
+        public const int GLFW_KEY_RIGHT = 286;
+        public const int GLFW_KEY_LEFT = 285;
+        public const int GLFW_KEY_DOWN = 284;
+        public const int GLFW_KEY_UP = 283;
         //public const int GLFW_KEY_PAGE_UP       = 266;
         //public const int GLFW_KEY_PAGE_DOWN     = 267;
         //public const int GLFW_KEY_HOME          = 268;
@@ -207,6 +207,11 @@ namespace Breakneck_Brigade
             keys[GLFW_KEY_D]                = false;
             keys[GLFW_KEY_SPACE]            = false;
             keys[GLFW_KEY_ESCAPE]           = false;
+            keys[GLFW_KEY_LEFT]             = false;
+            keys[GLFW_KEY_RIGHT]            = false;
+            keys[GLFW_KEY_UP]               = false;
+            keys[GLFW_KEY_DOWN]             = false;
+
 
             keys[GLFW_MOUSE_BUTTON_LEFT]    = false;
             keys[GLFW_MOUSE_BUTTON_RIGHT]   = false;
