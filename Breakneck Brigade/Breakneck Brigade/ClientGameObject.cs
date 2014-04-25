@@ -12,11 +12,18 @@ namespace Breakneck_Brigade
 {
     abstract class ClientGameObject : IGameObject
     {
+        private Vector4 _position;
+        public Vector4 Position { get { return this._position; } set { this._position = value; updateMatrix(); } }
+        private Vector4 _scale;
+        public Vector4 Scale { get { return this._scale; } set { this._scale = value; updateMatrix(); } }
+        private Vector4 _rotation;
+        public Vector4 Rotation { get { return this._rotation; } set { this._rotation = value; updateMatrix(); } }
+
+        private Matrix4 Transformation { get; set; }
+
         protected ClientGame Game { get; set; }
         public int Id { get; set; }
-        public Matrix4 Transform { get; set; }
         public Model Model { get; protected set; }
-        public Vector4 Position { get; set; }
         public abstract string ModelName { get; }
 
         /// <summary>
@@ -31,7 +38,10 @@ namespace Breakneck_Brigade
         {
             this.Id = id;
             this.Game = game;
-            this.Transform = new Matrix4();
+            Transformation  = new Matrix4();
+            _position       = new Vector4();
+            _scale          = new Vector4();
+            _rotation       = new Vector4();
         }
 
 
@@ -50,7 +60,10 @@ namespace Breakneck_Brigade
             this.Id = id;
             this.Game = game;
             this.Position = getPositionVector(reader);
-            this.Transform = new Matrix4();
+            Transformation  = new Matrix4();
+            _position       = new Vector4();
+            _scale          = new Vector4();
+            _rotation       = new Vector4();
         }
 
 
@@ -92,7 +105,7 @@ namespace Breakneck_Brigade
         public virtual void Render()
         {
             Gl.glPushMatrix();
-            Gl.glMultMatrixf(Transform.glArray);
+            Gl.glMultMatrixf(Transformation.glArray);
                 Model.Render();
             Gl.glPopMatrix();
         }
@@ -126,7 +139,16 @@ namespace Breakneck_Brigade
 
         private void updateMatrix()
         {
-            Transform.TranslationMat(Position.X, Position.Y, Position.Z);
+            //Translate to location
+            Transformation.TranslationMat(Position.X, Position.Y, Position.Z);
+
+            //Rotate to proper orientation: 
+            Transformation = Transformation*Matrix4.MakeRotateZ(Rotation.Z);
+            Transformation = Transformation*Matrix4.MakeRotateY(Rotation.Y);
+            Transformation = Transformation*Matrix4.MakeRotateX(Rotation.X);
+
+            //Scale
+            Transformation = Transformation*Matrix4.MakeScalingMat(Scale.X, Scale.Y, Scale.Z);
         }
 
     }

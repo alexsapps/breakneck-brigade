@@ -71,7 +71,7 @@ namespace Breakneck_Brigade.Graphics
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
                 var orange = new TestClientGameObject(Models["twoballplate"]) { Id = 50000000 };
-                orange.Model.Position = new Vector4(-5, 0, 20);
+                orange.Position = new Vector4(-5, 0, 20);
                 GameObjects = new List<ClientGameObject>();
                 GameObjects.Add(orange);
             }
@@ -114,9 +114,9 @@ namespace Breakneck_Brigade.Graphics
                         float scaleZ = modelSubtree.ReadElementContentAsFloat();
                         
                         Model model = parser.ParseFile(filename);
-                        model.Scale.X = scaleX;
-                        model.Scale.Y = scaleY;
-                        model.Scale.Z = scaleZ;
+                        model.InitialScale.X = scaleX;
+                        model.InitialScale.Y = scaleY;
+                        model.InitialScale.Z = scaleZ;
                         Models.Add(filename, model);
 
                         if(ii != numberOfModels - 1)

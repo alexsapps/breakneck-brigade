@@ -96,10 +96,14 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// Function called when the particle is created
         /// </summary>
-        public abstract void OnCreate();
+        public virtual void OnCreate()
+        {
+        }
         /// <summary>
         /// Function called when the particle is destroyed
         /// </summary>
-        public abstract void OnDestroy();
+        public virtual void OnDestroy()
+        { 
+        }
     }
 }
