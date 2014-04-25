@@ -139,7 +139,8 @@ namespace Breakneck_Brigade.Graphics
                 _ratio = (float)_aspectY / (float)_aspectX;
                 _getAspect = false;
             }
-
+            
+            // setting window viewport aspect to saved ratio
             if ((float)height / (float)width > _ratio)
             {
                 Gl.glViewport(0, 0, (int)((float)height / _ratio), height);
