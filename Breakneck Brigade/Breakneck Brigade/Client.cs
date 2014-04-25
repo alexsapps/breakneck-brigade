@@ -52,7 +52,8 @@ namespace Breakneck_Brigade
                     connection.ReceiveTimeout = 10000;
                     if (!reader.ReadString().Equals(BB.ServerProtocolHandshakeStr))
                     {
-                        Disconnect();
+                        lock (Lock)
+                            Disconnect();
                         return;
                     }
                     connection.ReceiveTimeout = 0;
