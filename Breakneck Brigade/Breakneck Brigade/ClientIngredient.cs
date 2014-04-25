@@ -81,7 +81,7 @@ namespace Breakneck_Brigade
         public override void StreamUpdate(BinaryReader reader)
         {
             base.StreamUpdate(reader); //updates the position of the object as well
-            int cleanliness = reader.ReadInt32(); 
+            this.Cleanliness = reader.ReadInt16(); 
         }
 
         /// <summary>

@@ -20,7 +20,8 @@ namespace Breakneck_Brigade
 
         public ClientPlayer()
         {
-            Position = new Vector4();
+            this.Position = new Vector4();
+            this.Velocity = new Vector4();
         }
 
         public void Update(InputManager IM)

@@ -37,7 +37,7 @@ namespace DeCuisine
         {
             this.Id = nextId++;
             this.Game = game;
-
+            
             game.Lock.AssertHeld();
             Game.ObjectAdded(this);
         }
@@ -149,7 +149,12 @@ namespace DeCuisine
         }
 
         /// <summary>
-        /// Updates the stream with the position. 
+        /// Updates the stream with the position. Reads all of the positions from the packet
+        /// The packet will should look as follows
+        /// int32  id
+        /// double x
+        /// double y
+        /// double z
         /// </summary>
         /// <param name="stream"></param>
         public virtual void UpdateStream(BinaryWriter stream)

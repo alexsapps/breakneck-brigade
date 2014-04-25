@@ -147,8 +147,8 @@ namespace DeCuisine
             /* test */
             lock (Lock)
             {
-                new ServerIngredient(Config.Ingredients["banana"], this, new Vector4(0, 0, 10));
-                new ServerIngredient(Config.Ingredients["ice cream"], this, new Vector4(0, 4, 15));
+                new ServerIngredient(Config.Ingredients["banana"], this, new Vector4(0, 0, 0));
+                new ServerIngredient(Config.Ingredients["ice cream"], this, new Vector4(50, 50, 0));
             }
             /* test */
 
@@ -276,7 +276,11 @@ namespace DeCuisine
             Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
             for (int i = 0; i < MAX_CONTACTS; i++)
                 contactGeoms[i] = new Ode.dContactGeom();
-            int numc = Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
+            int numc;
+            unsafe
+            {
+                numc = 0; // Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
+            }
             if (numc > 0)
             {
                 for (int i = 0; i < numc; i++)

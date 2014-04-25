@@ -143,6 +143,7 @@ namespace Breakneck_Brigade
                         else if (client.GameMode == GameMode.Started)
                         {
                             Console.WriteLine("Game started.");
+                            renderer.GameObjects = client.Game.gameObjects.Values;
                             //Thread playThread = new Thread(new ThreadStart(play));
                             //playThread.Start();
                             play();
@@ -205,7 +206,6 @@ namespace Breakneck_Brigade
                                 client.Connect(prompter.Host, prompter.Port);
 
                                 renderer = new Renderer();
-                                renderer.GameObjects = client.Game.gameObjects.Values;
 
                                 prompter.connectedCallback();
                                 return client;
