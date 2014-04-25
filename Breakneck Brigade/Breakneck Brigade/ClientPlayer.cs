@@ -7,6 +7,9 @@ using SousChef;
 
 namespace Breakneck_Brigade
 {
+    /// <summary>
+    /// Client-side player object.
+    /// </summary>
     public class ClientPlayer
     {
         public Vector4 Position;

@@ -9,8 +9,14 @@ using SousChef;
 
 namespace Breakneck_Brigade
 {
+    /// <summary>
+    /// Input interface that stores the keypress states of keyboard keys and mouse.
+    /// </summary>
     public class InputManager
     {
+        /// <summary>
+        /// Keyboard codes and mouse button codes
+        /// </summary>
         public const int GLFW_KEY_UNKNOWN       = -1; 
         public const int GLFW_KEY_SPACE         = 32;
         //public const int GLFW_KEY_APOSTROPHE    = 39; // ' 
@@ -140,18 +146,42 @@ namespace Breakneck_Brigade
         public const int GLFW_MOUSE_BUTTON_RIGHT = GLFW_MOUSE_BUTTON_2;
 
         GlobalsConfigFile globalConfig;
-        
 
         // Game-related stuff
+        /// <summary>
+        /// States of keys being tracked
+        /// </summary>
         public Hashtable keys = new Hashtable();
+
+        /// <summary>
+        /// Current rotation amount for current update cycle
+        /// </summary>
         Vector4 rot = new Vector4();
 
+        /// <summary>
+        /// fpsMode means locking mouse to center of screen and hiding the cursor
+        /// </summary>
         bool fpsMode = false;        
+
+        /// <summary>
+        /// Variables for storing the "center" mouse position
+        /// </summary>
         int originX = 0;
-        int originY = 0;        
+        int originY = 0;
+
+        /// <summary>
+        /// Mouse sensitivity modifier
+        /// </summary>
         float sens = 1.0f;
+
+        /// <summary>
+        /// Should the mouse Y axis be inverted? Most first person games support this.
+        /// </summary>
         bool invertY = false;
 
+        /// <summary>
+        /// Variables for GLFW callbacks
+        /// </summary>
         private Glfw.GLFWkeyfun         keyboardCallback;
         private Glfw.GLFWmouseposfun    mouseMoveCallback;
         private Glfw.GLFWmousebuttonfun mouseButtonCallback;
@@ -159,7 +189,7 @@ namespace Breakneck_Brigade
         public InputManager()
         {
             // callback for keyboard; will trigger KeyboardInput() on every keypress or release
-            keyboardCallback = KeyboardInput; //Need to follow this convention for declaring callbacks so C# does not GC the reference immediately
+            keyboardCallback = KeyboardInput;               //Need to follow this convention for declaring callbacks so C# does not GC the reference immediately
             Glfw.glfwSetKeyCallback(keyboardCallback);
             // callback for mouse; will trigger MousePos() on every mouse movement
             mouseMoveCallback = MousePos;
@@ -181,6 +211,11 @@ namespace Breakneck_Brigade
             keys[GLFW_MOUSE_BUTTON_RIGHT] = false;
         }
 
+        /// <summary>
+        /// Callback method for keyboard inputs
+        /// </summary>
+        /// <param name="key">Keyboard code</param>
+        /// <param name="action">GLFW_PRESS or GLFW_RELEASE</param>
         void KeyboardInput(int key, int action)
         {
             bool pressed = action == Glfw.GLFW_PRESS ? true : false;
@@ -190,6 +225,11 @@ namespace Breakneck_Brigade
             Console.WriteLine("key " + temp + (pressed ? " pressed." : " released."));
         }
 
+        /// <summary>
+        /// Callback method that updates the mouse delta
+        /// </summary>
+        /// <param name="x">position of mouse x position at callback</param>
+        /// <param name="y">position of mouse y position at callback</param>
         void MousePos(int x, int y)
         {
             if (fpsMode)
@@ -246,6 +286,11 @@ namespace Breakneck_Brigade
              */
         }
 
+        /// <summary>
+        /// Callback for mouse button presses
+        /// </summary>
+        /// <param name="button">Mouse button code</param>
+        /// <param name="action">GLFW_PRESS or GLFW_RELEASE</param>
         void MouseButton(int button, int action)
         {
             bool pressed = action == Glfw.GLFW_PRESS ? true : false;
@@ -273,18 +318,20 @@ namespace Breakneck_Brigade
         /// <summary>
         /// Methods for toggling FPS mouse mode.
         /// </summary>
-        public void TurnOnFPSMode()
+        public void EnableFPSMode()
         {
             MousePosInit();
             fpsMode = true;
             
         }
-
-        public void TurnOffFPSMode()
+        public void DisableFPSMode()
         {
             fpsMode = false;
         }
 
+        /// <summary>
+        /// Public access methods for getting current rotation amount
+        /// </summary>
         public float GetRotX()
         {
             return rot[0];
@@ -295,6 +342,11 @@ namespace Breakneck_Brigade
             return rot[1];
         }
 
+        /// <summary>
+        /// More frequently called method for getting the rotation for the camera
+        /// </summary>
+        /// <param name="rotx"></param>
+        /// <param name="roty"></param>
         public void GetRotAndClear(out float rotx, out float roty){
             rotx = rot[0];
             roty = rot[1];

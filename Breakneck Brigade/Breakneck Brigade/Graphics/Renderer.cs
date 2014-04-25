@@ -44,6 +44,9 @@ namespace Breakneck_Brigade.Graphics
         private ClientGame                      Game;
         private Camera                          Camera;
         private InputManager                    IM;
+        private int aspectX;
+        private int aspectY;
+        private bool getAspect = true;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -129,10 +132,19 @@ namespace Breakneck_Brigade.Graphics
         {
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);
-            float ratio = (float)width / height;
+            
+            // force aspect ratio
+            if (getAspect)
+            {
+                aspectX = width;
+                aspectY = width;
+                getAspect = false;
+            }
+
+            //float ratio = (float)width / height;
             //Re-init mouse stuff! Call InputMan's MousePosInit() method
 
-            Gl.glViewport(0, 0, width, height);
+            Gl.glViewport(0, 0, width + (width - aspectX), height + (height - aspectY));
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
