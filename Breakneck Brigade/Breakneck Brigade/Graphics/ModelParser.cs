@@ -61,7 +61,20 @@ namespace Breakneck_Brigade.Graphics
                     int ii = 0;
                     foreach(Face f in g.Faces) //polys
                     {
-                        TexturedPolygon poly = new TexturedPolygon();
+                        int drawMode;
+                        switch (f.Count)
+                        {
+                            case 3:
+                                drawMode = Gl.GL_TRIANGLES;
+                                break;
+                            case 4:
+                                drawMode = Gl.GL_QUADS;
+                                break;
+                            default:
+                                drawMode = Gl.GL_POLYGON;
+                                break;
+                        }
+                        TexturedPolygon poly = new TexturedPolygon(drawMode);
                         for(ii = 0; ii < f.Count; ii++)
                         {
                             int posInd  = f[ii].VertexIndex - 1 ;
@@ -103,23 +116,14 @@ namespace Breakneck_Brigade.Graphics
                             }
 
                             Vertex v = new Vertex(position, normal, tc);
+
                             poly.Vertexes.Add(v);
                         }
+
                         mesh.Polygons.Add(poly);
                     }
                     //Set up polygon rendering mode for this mesh
-                    switch (ii+1)
-                    {
-                        case 3:
-                            mesh.GlDrawMode = Gl.GL_TRIANGLES;
-                            break;
-                        case 4:
-                            mesh.GlDrawMode = Gl.GL_QUADS;
-                            break;
-                        default:
-                            mesh.GlDrawMode = Gl.GL_POLYGON;
-                            break;
-                    }
+
 
                     //Texturing
                     if(g.Material != null && g.Material.DiffuseTextureMap != null)

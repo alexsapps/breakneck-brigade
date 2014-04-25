@@ -16,10 +16,6 @@ namespace Breakneck_Brigade.Graphics
         /// A list of polygons that comprise the primative.
         /// </summary>
         public List<APolygon> Polygons;
-        /// <summary>
-        /// The mode OpenGL should be set to in order to draw this mesh.
-        /// </summary>
-        public int GlDrawMode;
 
         /// <summary>
         /// Instanciates a mesh with no transformations applied and an empty list of polygons.

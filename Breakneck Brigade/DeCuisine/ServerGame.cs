@@ -128,6 +128,19 @@ namespace DeCuisine
         // clients Lock(ClientInput) without locking the whole server, just to specify their input
         public List<DCClientEvent> ClientInput { get; private set; }
 
+        void monitor()
+        {
+            lock (Lock)
+            {
+                Console.Clear();
+                Console.WriteLine("MONITOR:");
+                foreach (ServerGameObject sgo in GameObjects.Values)
+                {
+                    Console.WriteLine("Position: " + sgo.Position.x + ", " + sgo.Position.y + ", " + sgo.Position.z);
+                }
+            }
+        }
+
         public void Run()
         {
             long start = DateTime.UtcNow.Ticks;
@@ -139,8 +152,8 @@ namespace DeCuisine
             /* initialize physics */
             lock (Lock)
             {
-                Ode.dInitODE();
-                ContactGroup = Ode.dJointGroupCreate(0);
+            Ode.dInitODE();
+            ContactGroup = Ode.dJointGroupCreate(0);
 
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
@@ -150,8 +163,8 @@ namespace DeCuisine
             /* test */
             lock (Lock)
             {
-                new ServerIngredient(Config.Ingredients["banana"], this, new Coordinate(0, 0, 0));
-                new ServerIngredient(Config.Ingredients["ice cream"], this, new Coordinate(50, 50, 0));
+                new ServerIngredient(Config.Ingredients["banana"], this, new Coordinate(0, 200, 0));
+                new ServerIngredient(Config.Ingredients["ice cream"], this, new Coordinate(0, 100, 0));
             }
             /* test */
 
@@ -244,6 +257,7 @@ namespace DeCuisine
                         }
                     }
 
+                    //monitor();
                     /*
                      * wait until end of tick
                      */
@@ -282,7 +296,7 @@ namespace DeCuisine
             int numc;
             unsafe
             {
-                numc = Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
+                numc =  Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, sizeof(Ode.dContactGeom));
             }
             if (numc > 0)
             {

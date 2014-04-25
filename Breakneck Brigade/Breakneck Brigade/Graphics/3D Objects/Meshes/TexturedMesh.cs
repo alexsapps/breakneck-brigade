@@ -95,9 +95,7 @@ namespace Breakneck_Brigade.Graphics
             //Render parent
             foreach (TexturedPolygon p in Polygons)
             {
-                Gl.glBegin(GlDrawMode);
-                    p.Render();
-                Gl.glEnd();
+                p.Render();
             }
 
             //Render children, preserving the parent transformations
