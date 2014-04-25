@@ -25,16 +25,19 @@ namespace Breakneck_Brigade
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
 
-        static public ClientPlayer cPlayer;
+        static public ClientPlayer cPlayer = new ClientPlayer();
+        static public InputManager IM;
 
         static void Main(string[] args)
         {
-            cPlayer = new ClientPlayer();
 
 #if PROJECT_GRAPHICS_TEST
             Renderer renderer = new Renderer();
+            IM = new InputManager();
+            IM.EnableFPSMode();
             while (!renderer.ShouldExit())
             {
+                cPlayer.Update(IM);
                 renderer.Render(cPlayer);
             }
             Environment.Exit(0);
@@ -143,7 +146,6 @@ namespace Breakneck_Brigade
                         else if (client.GameMode == GameMode.Started)
                         {
                             Console.WriteLine("Game started.");
-                            renderer.GameObjects = client.Game.gameObjects.Values;
                             //Thread playThread = new Thread(new ThreadStart(play));
                             //playThread.Start();
                             play();
@@ -206,6 +208,7 @@ namespace Breakneck_Brigade
                                 client.Connect(prompter.Host, prompter.Port);
 
                                 renderer = new Renderer();
+                                renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
 
                                 prompter.connectedCallback();
                                 return client;
@@ -292,7 +295,6 @@ namespace Breakneck_Brigade
         static void play()
         {
             ClientGame game;
-            InputManager IM = new InputManager(); ;
 
             lock (client.Lock)
             {
@@ -306,7 +308,7 @@ namespace Breakneck_Brigade
 
             using (renderer)
             {
-                renderer.GameObjects = client.Game.gameObjects.Values;
+                renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
                 while (true)
                 {
                     if (renderer.ShouldExit())
@@ -325,7 +327,7 @@ namespace Breakneck_Brigade
 
                         lock (client.Game.Lock)
                         {                            
-                            cPlayer.Update(IM);
+                            //cPlayer.Update(IM);
                             renderer.Render(cPlayer);
                         }
                     }

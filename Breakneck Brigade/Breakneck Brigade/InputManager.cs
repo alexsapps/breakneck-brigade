@@ -200,15 +200,17 @@ namespace Breakneck_Brigade
 
             globalConfig = new GlobalsConfigFolder(BBXml.GetLocalConfigFolder()).Open("keys.xml");
 
-            keys[GLFW_KEY_W] = false;
-            keys[GLFW_KEY_A] = false;
-            keys[GLFW_KEY_S] = false;
-            keys[GLFW_KEY_D] = false;
-            keys[GLFW_KEY_SPACE] = false;
-            keys[GLFW_KEY_ESCAPE] = false;
+            keys[GLFW_KEY_W]                = false;
+            keys[GLFW_KEY_A]                = false;
+            keys[GLFW_KEY_S]                = false;
+            keys[GLFW_KEY_D]                = false;
+            keys[GLFW_KEY_SPACE]            = false;
+            keys[GLFW_KEY_ESCAPE]           = false;
 
-            keys[GLFW_MOUSE_BUTTON_LEFT] = false;
-            keys[GLFW_MOUSE_BUTTON_RIGHT] = false;
+            keys[GLFW_MOUSE_BUTTON_LEFT]    = false;
+            keys[GLFW_MOUSE_BUTTON_RIGHT]   = false;
+
+            Console.WriteLine("This happened.");
         }
 
         /// <summary>

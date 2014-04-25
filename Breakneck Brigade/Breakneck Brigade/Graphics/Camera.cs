@@ -93,12 +93,10 @@ namespace Breakneck_Brigade.Graphics
 			// Set perspective projection
 			Glu.gluPerspective(FOV,Aspect,NearClip,FarClip);
 
-			// Place camera
-            Gl.glTranslatef(0, 0, -Distance);
+			// Place camera            
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
-
-            
+            Gl.glTranslatef(xPos, yPos, zPos);           
 
             Gl.glMultMatrixf(Transform.glArray);
 

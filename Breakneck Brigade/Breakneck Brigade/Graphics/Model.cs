@@ -14,6 +14,14 @@ namespace Breakneck_Brigade.Graphics
      */
     class Model
     {
+        private     Vector4             _position;
+        public      Vector4             Position        { get { return this._position; }    set {this._position = value;  updateMatrix();} }
+        private     Vector4             _scale;
+        public      Vector4             Scale           { get { return this._scale; }       set {this._scale = value;     updateMatrix();} }
+        private     Vector4             _rotation;
+        public      Vector4             Rotation        { get { return this._rotation; }    set {this._rotation = value;  updateMatrix();} }
+        
+        private     Matrix4             Transformation  { get; set; }
         public      List<AObject3D>     Meshes          { get; private set; }
 
         public Model()
