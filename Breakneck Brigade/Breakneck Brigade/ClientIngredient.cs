@@ -64,7 +64,7 @@ namespace Breakneck_Brigade
             if (Renderer.Models.ContainsKey(ModelName))
                 Model = Renderer.Models[ModelName];
             else
-                Model = Renderer.Models["orange"];
+                Model = Renderer.Models["bottle"];
             this.Scale = Model.InitialScale;
         } 
 

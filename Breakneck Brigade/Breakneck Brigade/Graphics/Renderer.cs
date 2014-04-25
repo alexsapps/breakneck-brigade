@@ -21,7 +21,7 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         private ModelParser parser;
-        private const DebugMode DEBUG_MODE = DebugMode.BOTH;
+        private const DebugMode DEBUG_MODE = DebugMode.ORANGE;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace Breakneck_Brigade.Graphics
 
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
-                var orange = new TestClientGameObject(Models["twoballplate"]) { Id = 50000000 };
-                orange.Position = new Vector4(-5, 0, 20);
+                var orange = new TestClientGameObject(Models["orange"]) { Id = 50000000 };
+                orange.Position = new Vector4(0, -25, 0);
                 GameObjects = new List<ClientGameObject>();
                 GameObjects.Add(orange);
             }
