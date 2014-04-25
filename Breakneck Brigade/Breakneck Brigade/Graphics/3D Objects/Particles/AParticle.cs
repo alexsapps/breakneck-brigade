@@ -67,13 +67,13 @@ namespace Breakneck_Brigade.Graphics
         {
             if(Age == 0.0f)
             {
-                OnCreate();
+                //OnCreate();
             }
             Age += timestep;
             if(Age > Lifetime)
             {
                 ShouldDie = true;
-                OnDestroy();
+                //OnDestroy();
                 return; // Don't need to continue to updating
             }
             Velocity += Acceleration*timestep;
@@ -96,10 +96,10 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// Function called when the particle is created
         /// </summary>
-        public abstract void OnCreate();
+        //public abstract void OnCreate();
         /// <summary>
         /// Function called when the particle is destroyed
         /// </summary>
-        public abstract void OnDestroy();
+       // public abstract void OnDestroy();
     }
 }

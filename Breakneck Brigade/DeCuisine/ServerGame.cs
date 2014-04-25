@@ -334,6 +334,7 @@ namespace DeCuisine
         public void ObjectAdded(ServerGameObject obj)
         {
             Lock.AssertHeld();
+            Ode.dVector3 m3 = Ode.dGeomGetPosition(obj.Geom);
             this.HasAdded.Add(obj);
             GameObjects.Add(obj.Id, obj);
         }

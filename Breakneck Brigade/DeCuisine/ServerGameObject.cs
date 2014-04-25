@@ -57,9 +57,9 @@ namespace DeCuisine
             stream.Write((Int32)Id);
             stream.Write((Int16)ObjectClass);
             Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            stream.Write((double)m3.X);
-            stream.Write((double)m3.Y);
-            stream.Write((double)m3.Z);
+            stream.Write((float)m3.X);
+            stream.Write((float)m3.Y);
+            stream.Write((float)m3.Z);
         }
 
         /// <summary>
@@ -161,9 +161,9 @@ namespace DeCuisine
         {
             stream.Write((Int32)Id);
             Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            stream.Write((double)m3.X);
-            stream.Write((double)m3.Y);
-            stream.Write((double)m3.Z);
+            stream.Write((float)m3.X);
+            stream.Write((float)m3.Y);
+            stream.Write((float)m3.Z);
         }
 
         public virtual void OnCollide(ServerGameObject obj)
