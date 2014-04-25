@@ -18,6 +18,8 @@ namespace Breakneck_Brigade
         public Vector4 Velocity;
         public float MoveSpeed = 0.1f;
 
+        private bool _fpsToggle = true;
+
         public ClientPlayer()
         {
             Position = new Vector4(0.0f,0.0f,-50.0f);
@@ -34,8 +36,31 @@ namespace Breakneck_Brigade
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
             // Velocity update
-            Velocity[0] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_A]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_D]) ? MoveSpeed : 0.0f;
-            Velocity[2] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_S]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_W]) ? MoveSpeed : 0.0f;         
+            Velocity[0] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_A]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_D]) ? 1 * MoveSpeed : 0.0f;
+            Velocity[2] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_S]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_W]) ? MoveSpeed : 0.0f;
+
+            Position[0] += Velocity[2] * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Cos((Orientation / 180.0f * Math.PI));
+            Position[2] += Velocity[2] * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Sin((Orientation / 180.0f * Math.PI));
+
+            if(Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_ESCAPE]))
+            {
+                if (_fpsToggle)
+                {
+                    if (IM.fpsMode)
+                    {
+                        IM.DisableFPSMode();  
+                    }
+                    else
+                    {
+                        IM.EnableFPSMode();
+                    }
+                    _fpsToggle = false;
+                }
+            }
+            else
+            {
+                _fpsToggle = true;
+            }
         }
     }
 }

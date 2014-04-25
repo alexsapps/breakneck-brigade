@@ -136,7 +136,7 @@ namespace Breakneck_Brigade.Graphics
             if (getAspect)
             {
                 aspectX = width;
-                aspectY = width;
+                aspectY = height;
                 getAspect = false;
             }
 
