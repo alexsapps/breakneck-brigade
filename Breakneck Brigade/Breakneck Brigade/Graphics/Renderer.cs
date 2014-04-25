@@ -25,9 +25,9 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
-        private Matrix4                     WorldTransform;
-        private List<ClientGameObject>      GameObjects;
-        private Camera                      Camera;
+        public Matrix4                     WorldTransform;
+        public List<ClientGameObject>      GameObjects;
+        public Camera                      Camera;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions

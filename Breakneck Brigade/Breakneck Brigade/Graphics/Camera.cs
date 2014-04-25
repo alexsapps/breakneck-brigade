@@ -65,6 +65,10 @@ namespace Breakneck_Brigade.Graphics
         {
             Azimuth = cp.Orientation;
             Incline = cp.Incline;
+
+            xPos = cp.Position[0];
+            yPos = cp.Position[1];
+            zPos = cp.Position[2];
         }
 
         public void Reset() 
@@ -90,11 +94,11 @@ namespace Breakneck_Brigade.Graphics
 			Glu.gluPerspective(FOV,Aspect,NearClip,FarClip);
 
 			// Place camera
+            Gl.glTranslatef(0, 0, -Distance);
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
 
-
-            Gl.glTranslatef(0, 0, -Distance);
+            
 
             Gl.glMultMatrixf(Transform.glArray);
 

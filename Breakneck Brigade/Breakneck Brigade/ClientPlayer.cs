@@ -7,18 +7,20 @@ using SousChef;
 
 namespace Breakneck_Brigade
 {
-    class ClientPlayer : ClientGameObject
+    public class ClientPlayer
     {
-        Vector4 position;
+        public Vector4 Position;
         public float Orientation { get; set; }
         public float Incline { get; set; }
+        public Vector4 Velocity;
+        public float MoveSpeed = 0.1f;
 
-        public ClientPlayer(int id, Vector4 transform, ClientGame game) : base(id,transform,game)
+        public ClientPlayer()
         {
-            position = new Vector4();
+            Position = new Vector4();
         }
 
-        void Update(InputManager IM)
+        public void Update(InputManager IM)
         {
             // Orientation & Incline update
             float rotx, roty;
@@ -27,7 +29,9 @@ namespace Breakneck_Brigade
             Orientation = Orientation + roty > 360.0f ? Orientation + roty - 360.0f : Orientation + roty;
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
-            // Position update
+            // Velocity update
+            Velocity[0] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_A]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_D]) ? MoveSpeed : 0.0f;
+            Velocity[2] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_S]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_W]) ? MoveSpeed : 0.0f;         
         }
     }
 }

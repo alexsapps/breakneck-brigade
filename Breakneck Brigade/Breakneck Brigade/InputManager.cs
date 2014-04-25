@@ -9,7 +9,7 @@ using SousChef;
 
 namespace Breakneck_Brigade
 {
-    class InputManager
+    public class InputManager
     {
         public const int GLFW_KEY_UNKNOWN       = -1; 
         public const int GLFW_KEY_SPACE         = 32;
@@ -163,15 +163,15 @@ namespace Breakneck_Brigade
 
             globalConfig = new GlobalsConfigFolder(BBXml.GetLocalConfigFolder()).Open("keys.xml");
 
-            keys[GLFW_KEY_W] = 0;
-            keys[GLFW_KEY_A] = 0;
-            keys[GLFW_KEY_S] = 0;
-            keys[GLFW_KEY_D] = 0;
-            keys[GLFW_KEY_SPACE] = 0;
-            keys[GLFW_KEY_ESCAPE] = 0;
+            keys[GLFW_KEY_W] = false;
+            keys[GLFW_KEY_A] = false;
+            keys[GLFW_KEY_S] = false;
+            keys[GLFW_KEY_D] = false;
+            keys[GLFW_KEY_SPACE] = false;
+            keys[GLFW_KEY_ESCAPE] = false;
 
-            keys[GLFW_MOUSE_BUTTON_LEFT] = 0;
-            keys[GLFW_MOUSE_BUTTON_RIGHT] = 0;
+            keys[GLFW_MOUSE_BUTTON_LEFT] = false;
+            keys[GLFW_MOUSE_BUTTON_RIGHT] = false;
         }
 
         void KeyboardInput(int key, int action)
