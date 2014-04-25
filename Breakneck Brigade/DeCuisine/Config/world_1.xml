@@ -6,6 +6,6 @@
 		<ingredient type="cheese" coordinate="0,0,5" />
 		<ingredient type="milk" coordinate="0,3,5" />
 		<cooker type="blender" coordinate="0,3,2" />
-		<cooker type="stove" coordinate="0,3,2" />
+		<cooker type="grill" coordinate="0,3,2" />
 	</space>
 </world>

@@ -34,8 +34,8 @@ namespace DeCuisine
         int frameRate; // Tick time in milliseconds
         int MAX_CONTACTS = 8;
 
-        public IntPtr World { get; protected set; }
-        public IntPtr Space { get; protected set; }
+        public IntPtr World { get; set; }
+        public IntPtr Space { get; set; }
         public IntPtr ContactGroup { get; protected set; }
 
         public ServerGame(Server server)
@@ -137,12 +137,15 @@ namespace DeCuisine
             long next = start;
 
             /* initialize physics */
-            Ode.dInitODE();
-            World = Ode.dWorldCreate(); // Create dynamic world
-            Space = Ode.dHashSpaceCreate(IntPtr.Zero); // Create dynamic space
-            ContactGroup = Ode.dJointGroupCreate(0);
-            Ode.dWorldSetGravity(World, 0f, -0.5f, 0); //TODO: read gravity from config file
-            Ode.dCreatePlane(Space, 0, 0, 1, 0); // Create a ground //TODO:  remove this line of test code (read from config file instead)
+            lock (Lock)
+            {
+                Ode.dInitODE();
+                ContactGroup = Ode.dJointGroupCreate(0);
+
+                WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
+                p.LoadFile(1);
+            }
+
 
             /* test */
             lock (Lock)
@@ -279,7 +282,7 @@ namespace DeCuisine
             int numc;
             unsafe
             {
-                numc = 0; // Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
+                numc = Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
             }
             if (numc > 0)
             {

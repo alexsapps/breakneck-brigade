@@ -29,12 +29,13 @@ namespace DeCuisine
         /// <param name="transform">Initial location</param>
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
-        public ServerCooker(CookerType type, ServerGame game)
+        public ServerCooker(CookerType type, ServerGame game, Coordinate transform)
             : base(game)
         {
             this.Type = type;
             this.Contents = new List<ServerIngredient>();
             this.ToAdd = new List<ServerIngredient>();
+            AddToWorld(transform);
         }
 
         public override void Serialize(BinaryWriter stream)

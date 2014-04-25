@@ -25,11 +25,16 @@ namespace SousChef
 
             reader.MoveToContent();
             attributes = getAttributes(reader);
+            HandleAttributes();
             ParseContents(reader);
 
             return returnItem();
         }
 
+        //this is for processing after attributes are available but before parsing contents.  useful if processing contents depends on result of processing attributes.
+        protected virtual void HandleAttributes() { }
+
+        //process any contents inside an xml element.  by default, handle each element individually
         public virtual void ParseContents(XmlReader reader)
         {
             while (reader.Read())
@@ -37,7 +42,10 @@ namespace SousChef
                     handleSubtree(reader.ReadSubtree());
         }
 
+        //process a single element inside this element
         protected virtual void handleSubtree(XmlReader reader) { throw new NotImplementedException("not expecting content inside this tag."); }
+        
+        //after all processing has completed, returns the result of the parsing
         protected abstract T returnItem();
 
         private void _reset()
@@ -45,6 +53,8 @@ namespace SousChef
             attributes = null;
             reset();
         }
+
+        //this function is guaranteed to be called between re-uses of this parser.  reset state here to cleanly begin parsing the next object.
         protected abstract void reset();
 
         protected List<T> parseList(XmlReader reader, BBXItemParser<T> itemParser)
@@ -110,7 +120,7 @@ namespace SousChef
             return items;
         }
 
-        protected static GeometryInfo getGeomInfo(Dictionary<string, string> attributes)
+        protected GeometryInfo getGeomInfo(Dictionary<string, string> attributes)
         {
             var shape = BB.ParseGeomShape(attributes["shape"]);
             string sidesstr = attributes["sides"];
@@ -125,7 +135,7 @@ namespace SousChef
             return info;
         }
 
-        protected static float[] getFloats(string str)
+        protected float[] getFloats(string str)
         {
             string[] sidesstrarr = str.Split(',');
             float[] sides = new float[sidesstrarr.Length];
