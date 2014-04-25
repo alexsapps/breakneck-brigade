@@ -21,7 +21,7 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         private ModelParser parser;
-        private const DebugMode DEBUG_MODE = DebugMode.OFF;
+        private const DebugMode DEBUG_MODE = DebugMode.BOTH;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
-        public IEnumerable<ClientGameObject>    GameObjects { get; set; }
+        public IList<ClientGameObject>    GameObjects { get; set; }
 
         private Matrix4                         WorldTransform;
         private ClientGame                      Game;
@@ -72,9 +72,8 @@ namespace Breakneck_Brigade.Graphics
             { 
                 var orange = new TestClientGameObject(Models["twoballplate"]) { Id = 50000000 };
                 orange.Model.Position = new Vector4(-5, 0, 20);
-                List<ClientGameObject> debugGOsList = new List<ClientGameObject>();
-                GameObjects = debugGOsList;
-                debugGOsList.Add(orange);
+                GameObjects = new List<ClientGameObject>();
+                GameObjects.Add(orange);
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
             {
@@ -303,7 +302,7 @@ namespace Breakneck_Brigade.Graphics
             snowman.Meshes.Add(snowmanBase);
 
             TestClientGameObject snowmanGO = new TestClientGameObject(snowman);
-            Game.gameObjects.Add(snowmanGO.Id, snowmanGO);
+            GameObjects.Add(snowmanGO);
         }
 
         TestClientGameObject testParser(string filename)
