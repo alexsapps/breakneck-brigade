@@ -307,17 +307,10 @@ namespace Breakneck_Brigade
                         if (client.GameMode == GameMode.Stopping)
                             break;
 
-                        lock (client.Game.gameObjects)
-                        {
-                            if (client.Game.HasUpdates)
-                            {
-                                client.Game.HasUpdates = false;
-                                renderer.Render();
-                            }
-                        }
+                        renderer.Render();
                     }
 
-                    Monitor.Wait(ProgramLock); //we *must* check if(disconnecting) after this returns
+                    //Monitor.Wait(ProgramLock); //we *must* check if(disconnecting) after this returns
                 }   
             }
             

@@ -14,7 +14,6 @@ namespace Breakneck_Brigade
         //gameObjects and HasUpdates both require locking on gameObjects before accessing
         public Dictionary<int, ClientGameObject> gameObjects { get; private set; }
         public ConfigSalad Config { get; private set; }
-        public bool HasUpdates { get; set; } //indicates that data has been received from the network or the game has ended.
 
         public ClientGame()
         {

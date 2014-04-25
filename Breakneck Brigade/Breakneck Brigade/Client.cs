@@ -89,8 +89,6 @@ namespace Breakneck_Brigade
                             case ServerMessageType.GameStateUpdate:
                                 lock (Game.gameObjects)
                                 {
-                                    Game.HasUpdates = true;
-
                                     int len;
                                     len = reader.ReadInt32();
                                     for (int i = 0; i < len; i++)
@@ -184,7 +182,7 @@ namespace Breakneck_Brigade
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
-                //TODO: log error message ex
+                Console.WriteLine(ex.ToString());
                 lock (Lock) { Disconnect(); }
                 throw;
             }
@@ -210,14 +208,16 @@ namespace Breakneck_Brigade
             if(receiverThread != Thread.CurrentThread)
                 receiverThread.Join();
 
-            if (Game != null) //e.g. if quitting before game started (init phase)
-            {
-                lock (Game.gameObjects)
-                {
-                    Game.HasUpdates = true; //the update is that the game has ended
-                    //Monitor.PulseAll(Game.gameObjects); //close renderer thread --we do this below now
-                }
-            }
+            //NOTE: game thread constantly checks IsConnected to know when to terminate
+
+            //if (Game != null) //e.g. if quitting before game started (init phase)
+            //{
+            //    lock (Game.gameObjects)
+            //    {
+            //        //Game.HasUpdates = true; //the update is that the game has ended
+            //        //Monitor.PulseAll(Game.gameObjects); //close renderer thread --we do this below now
+            //    }
+            //}
 
             new Thread(new ThreadStart(() => { Disconnected(this, EventArgs.Empty); })).Start(); //close the renderer thread
 
