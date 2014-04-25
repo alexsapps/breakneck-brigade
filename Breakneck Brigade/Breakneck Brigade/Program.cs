@@ -206,6 +206,8 @@ namespace Breakneck_Brigade
                                 client.Connect(prompter.Host, prompter.Port);
 
                                 renderer = new Renderer();
+                                IM = new InputManager();
+                                IM.EnableFPSMode();
 
                                 prompter.connectedCallback();
                                 return client;
@@ -324,7 +326,7 @@ namespace Breakneck_Brigade
 
                         lock (client.Game.Lock)
                         {                            
-                            //cPlayer.Update(IM);
+                            cPlayer.Update(IM);
                             renderer.Render(cPlayer);
                         }
                     }
