@@ -28,17 +28,23 @@ namespace SousChef
                 return parseFile(reader);
             }
         }
-        public List<T> parseFile(XmlReader reader)
+
+        public virtual List<T> parseFile(XmlReader reader)
         {
             if (reader.MoveToContent() == XmlNodeType.Element
                 && reader.Name == getRootNodeName())
             {
-                return BBXItemParser<T>.ParseList(reader.ReadSubtree(), getItemParser());
+                return parseRoot(reader);
             }
             else
             {
                 throw new Exception("bad xml file (1)");
             }
+        }
+
+        protected virtual List<T> parseRoot(XmlReader reader)
+        {
+            return BBXItemParser<T>.ParseList(reader.ReadSubtree(), getItemParser());
         }
     }
 }
