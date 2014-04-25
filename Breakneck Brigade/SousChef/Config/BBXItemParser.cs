@@ -37,7 +37,7 @@ namespace SousChef
                     handleSubtree(reader.ReadSubtree());
         }
 
-        protected abstract void handleSubtree(XmlReader reader);
+        protected virtual void handleSubtree(XmlReader reader) { throw new NotImplementedException("not expecting content inside this tag."); }
         protected abstract T returnItem();
 
         private void _reset()

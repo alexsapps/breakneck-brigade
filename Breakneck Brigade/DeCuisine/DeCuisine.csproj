@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="ClientEventArgs.cs" />
+    <Compile Include="config parsing\WorldParser.cs" />
     <Compile Include="DCClientEvent.cs" />
     <Compile Include="ServerCooker.cs" />
     <Compile Include="ServerGame.cs" />
@@ -84,6 +85,10 @@
       <Project>{a4f5d1bb-0cbc-4fde-8cbf-2ad542dee53b}</Project>
       <Name>SousChef</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\settings.xml" />
+    <Content Include="config\world_1.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
