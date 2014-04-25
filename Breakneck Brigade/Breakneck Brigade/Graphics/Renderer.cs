@@ -38,9 +38,10 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
+        public IEnumerable<ClientGameObject>    GameObjects { get; set; }
+
         private Matrix4                         WorldTransform;
         private ClientGame                      Game;
-        private IEnumerable<ClientGameObject>   GameObjects { get { return Game.gameObjects.Values; }}
         private Camera                          Camera;
         private InputManager                    IM;
 
@@ -138,10 +139,9 @@ namespace Breakneck_Brigade.Graphics
             Camera.Update(cp);
             Camera.Render();
 
-            foreach(ClientGameObject cgo in GameObjects)
-            {     
-                cgo.Render();
-            }
+            if (GameObjects != null)
+                foreach (ClientGameObject cgo in GameObjects)
+                    cgo.Render();
 
             Glfw.glfwSwapBuffers();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default

@@ -17,9 +17,10 @@ namespace Breakneck_Brigade
 {
     class Program
     {
-        static Client client;
-
         static object ProgramLock = new object();
+
+        static Client client;
+        static Renderer renderer;
 
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
@@ -199,6 +200,9 @@ namespace Breakneck_Brigade
                                 client.Disconnected += client_Disconnected;
                                 client.GameModeChanged += client_GameModeChanged;
                                 client.Connect(prompter.Host, prompter.Port);
+
+                                renderer = new Renderer(client.Game);
+
                                 prompter.connectedCallback();
                                 return client;
                             }
@@ -298,16 +302,9 @@ namespace Breakneck_Brigade
 
             //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
 
-            Renderer renderer;
-            lock(client.Lock) {
-                if (!disconnecting)
-                    renderer = new Renderer(client.Game);
-                else
-                    return;
-            }
-
             using (renderer)
             {
+                renderer.GameObjects = client.Game.gameObjects.Values;
                 while (true)
                 {
                     if (renderer.ShouldExit())

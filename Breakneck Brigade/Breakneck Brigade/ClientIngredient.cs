@@ -29,14 +29,14 @@ namespace Breakneck_Brigade
         /// <param name="client">The client making this object</param>
         /// <param name="model">The ingame model of the ingredient</param>
         public ClientIngredient(int id, IngredientType type, Vector4 transform, int cleanliness, ClientGame game)
-            : base(id, transform, game)
+            : base(id, game)
         {
             construct(type, cleanliness);
         }
 
         //called by ClientGameObject.Deserialize. Used by objects that were created on the server
         public ClientIngredient(int id, BinaryReader reader, ClientGame game)
-            : base(id, reader, game)
+            : base(id, game)
         {
             string ingrname = reader.ReadString();
             IngredientType type = game.Config.Ingredients[ingrname];
@@ -44,22 +44,16 @@ namespace Breakneck_Brigade
             construct(type, cleanliness);
         }
 
-        private void construct(IngredientType type, int cleanliness)
+        override void construct(IngredientType type, int cleanliness)
         {
             this.Type = type;
             update(cleanliness);
-            Model = Renderer.Models[ModelName];
+            if (Renderer.Models.ContainsKey(ModelName))
+                Model = Renderer.Models[ModelName];
+            else
+                Model = Renderer.Models["orange"];
         } 
 
-
-        /// <summary>
-        /// Update everything pertaining to the ingriedient. The position 
-        /// is handled by the super class.
-        /// </summary>
-        private void update(int cleanliness)
-        {
-            this.Cleanliness = cleanliness;
-        }
 
         /// <summary>
         /// Update everything pertaining to the ingriedient. The position 
@@ -68,7 +62,7 @@ namespace Breakneck_Brigade
         private void update(Vector4 transform, int cleanliness)
         {
             base.Update(transform);
-            this.update(cleanliness);
+            this.Cleanliness = cleanliness;
         }
 
         public override void StreamUpdate(BinaryReader reader)

@@ -35,6 +35,7 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
+            stream.Write(Type.Name);
             UpdateStream(stream);
         }
 
@@ -45,7 +46,6 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
-            stream.Write(Type.Name);
             stream.Write(this.Cleanliness);
         }
 

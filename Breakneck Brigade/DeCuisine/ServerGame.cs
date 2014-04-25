@@ -26,7 +26,7 @@ namespace DeCuisine
         public ConfigSalad Config { get; private set; }
 
         public List<ServerGameObject> HasAdded = new List<ServerGameObject>();
-        public List<ServerGameObject> HasChanged = new List<ServerGameObject>();
+        public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
         private Random random = new Random();

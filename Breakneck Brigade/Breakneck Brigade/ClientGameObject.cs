@@ -25,20 +25,20 @@ namespace Breakneck_Brigade
         /// servers. Should be recieved from the server</param>
         /// <param name="transform">Initial position</param>
         /// <param name="game">The game where the object is created</param>
-        public ClientGameObject(int id, Vector4 transform, ClientGame game) 
+        public ClientGameObject(int id, ClientGame game) 
         {
-            construct(id, new Vector4(transform), game);
+            this.Id = id;
+            this.Game = game;
         }
 
-        public ClientGameObject(int id, BinaryReader reader, ClientGame game)
+        protected virtual void construct(BinaryReader reader)
         {
             Vector4 transform = getPositionMatrix(reader);
-            construct(id, transform, game);
+            Update(transform);
         }
 
-        private void construct(int id, Vector4 transform, ClientGame game) {
+        protected virtual void construct(Vector4 transform, ClientGame game) {
             //set properties that never change here
-            this.Id = id;
             this.Game = game;
             Update(transform);
         }

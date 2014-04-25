@@ -1,6 +1,7 @@
 ﻿using SousChef;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -190,6 +191,8 @@ namespace Breakneck_Brigade
 
         public void Disconnect()
         {
+            Debug.Assert(!IsConnected);
+
             Lock.AssertHeld();
             GameMode = SousChef.GameMode.Stopping;
 

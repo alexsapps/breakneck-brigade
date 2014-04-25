@@ -142,9 +142,9 @@ namespace DeCuisine
         public virtual void UpdateStream(BinaryWriter stream)
         {
             Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            stream.Write(m3.X);
-            stream.Write(m3.Y);
-            stream.Write(m3.Z);
+            stream.Write((double)m3.X);
+            stream.Write((double)m3.Y);
+            stream.Write((double)m3.Z);
         }
 
         public virtual void OnCollide(ServerGameObject obj)
