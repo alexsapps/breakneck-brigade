@@ -9,14 +9,25 @@ using System.IO;
 
 namespace Breakneck_Brigade
 {
-    class ClientCooker : ClientGameObject
+    class ClientCooker //: ClientGameObject
     {
         public CookerType Type { get; set; }
         public List<ClientIngredient> Contents { get; set; }
+       public ClientCooker()
+        {
+
+        }
+
+        /*
         public ClientCooker(int id, CookerType type, Vector4 transform, ClientGame game)
             : base(id, new Vector4(), game)
         {
             construct(type);
+        }
+
+        public override string ModelName
+        {
+            get { return Type.Name; }
         }
 
         //called by ClientGameObject.Deserialize
@@ -24,14 +35,14 @@ namespace Breakneck_Brigade
             : base(id, reader, game)
         {
             //CookerType type = reader.ReadString();
-            string name = reader.ReadString(); //TODO: will need to read the name and then
-                                               //assign it the correct recipe using the config file
-            construct(null); //TODO: make it use the dynamic cooker type from above
+            CookerType type = game.Config.Cookers[reader.ReadString()];
+            construct(type);
         }
 
         private void construct(CookerType type)
         {
             this.Type = type;
+            Model = Renderer.Models[ModelName];
         }
 
         private void update()
@@ -62,21 +73,17 @@ namespace Breakneck_Brigade
 
         private void processIngredientsAdded(BinaryReader reader)
         {
-            for (int x = 0; x < reader.ReadInt16(); x++)
-            {
-                //TODO: Find the ingredient with the ID and put it in the contents of 
-                //this cooker. 
-                int id = reader.ReadInt16();
-
-                //TODO: Find the effect to play and then play it. 
-                int effect = reader.ReadInt16();
-            }
+            this.Contents.Clear();
+            int len = reader.ReadInt32();
+            for (int i = 0; i < len; i++)
+                Contents.Add((ClientIngredient)Game.gameObjects[reader.ReadInt32()]); //TODO: Find the effect to play and then play it.
         }
 
         public override void Render()
         {
             base.Render();
-        }
+        }*/
     }
+
 
 }

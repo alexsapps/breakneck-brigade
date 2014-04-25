@@ -13,9 +13,15 @@ namespace Breakneck_Brigade
     /// </summary>
     class TestClientGameObject : ClientGameObject
     {
-        public TestClientGameObject(Model model) : base(-1, new Vector4(0,0,0), null)
+        static int testId = -133709999;
+        public TestClientGameObject(Model model) : base(testId++, null)
         {
             Model = model;
+        }
+
+        public override string ModelName
+        {
+            get { return "should be ignored"; }
         }
     }
 }

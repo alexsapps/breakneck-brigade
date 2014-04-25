@@ -25,14 +25,10 @@ namespace SousChef
         {
             string name = attributes["name"];
             int points = int.Parse(attributes["points"]);
-            string model;
-
-            if (!attributes.TryGetValue("model", out model))
-                model = name;
 
             var geomInfo = getGeomInfo(attributes);
 
-            return new IngredientType(name, geomInfo, points, model);
+            return new IngredientType(name, geomInfo, points);
         }
 
         protected override void reset() { }

@@ -17,26 +17,30 @@ namespace Breakneck_Brigade
 {
     class Program
     {
-        static Client client;
-
         static object ProgramLock = new object();
+
+        static Client client;
+        static Renderer renderer;
 
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
 
+        static public ClientPlayer cPlayer;
+
         static void Main(string[] args)
         {
+            cPlayer = new ClientPlayer();
 
 #if PROJECT_GRAPHICS_TEST
             Renderer renderer = new Renderer();
             while (!renderer.ShouldExit())
             {
-                renderer.Render();
+                renderer.Render(cPlayer);
             }
             Environment.Exit(0);
 #endif
 #if PROJECT_GAMECODE_TEST
-            
+
             globalConfig = config.Open(BB.GlobalConfigFilename);
 
             
@@ -75,8 +79,8 @@ namespace Breakneck_Brigade
                             case "exit":
                                 lock (ProgramLock)
                                 {
-                                    if (client != null)
-                                    {
+            if (client != null)
+            {
                                         lock (client.Lock)
                                         {
                                             client.Disconnect();
@@ -148,7 +152,7 @@ namespace Breakneck_Brigade
                         {
                             Console.WriteLine("Game ended.");
                             break; //reconnect
-                        }
+            }
 
                         Monitor.Wait(ProgramLock);
                     }
@@ -173,7 +177,7 @@ namespace Breakneck_Brigade
                 disconnecting = true; //close play thread and UI thread
                 client = null;
                 Monitor.PulseAll(ProgramLock); //close UI / render thread
-            }
+        }
         }
 
         static Client promptConnect()
@@ -199,6 +203,10 @@ namespace Breakneck_Brigade
                                 client.Disconnected += client_Disconnected;
                                 client.GameModeChanged += client_GameModeChanged;
                                 client.Connect(prompter.Host, prompter.Port);
+
+                                renderer = new Renderer();
+                                renderer.GameObjects = client.Game.gameObjects.Values;
+
                                 prompter.connectedCallback();
                                 return client;
                             }
@@ -283,14 +291,22 @@ namespace Breakneck_Brigade
 
         static void play()
         {
-            Console.WriteLine("Playing..."); //does this work in another thread?
+            ClientGame game;
+            InputManager IM = new InputManager(); ;
+
+            lock (client.Lock)
+            {
+                game = client.Game;
+
+            }
 
             Debug.Assert(client.Game != null);
 
             //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
 
-            using (var renderer = new Renderer())
+            using (renderer)
             {
+                renderer.GameObjects = client.Game.gameObjects.Values;
                 while (true)
                 {
                     if (renderer.ShouldExit())
@@ -307,17 +323,14 @@ namespace Breakneck_Brigade
                         if (client.GameMode == GameMode.Stopping)
                             break;
 
-                        lock (client.Game.gameObjects)
-                        {
-                            if (client.Game.HasUpdates)
-                            {
-                                client.Game.HasUpdates = false;
-                                renderer.Render();
-                            }
+                        lock (client.Game.Lock)
+                        {                            
+                            cPlayer.Update(IM);
+                            renderer.Render(cPlayer);
                         }
                     }
 
-                    Monitor.Wait(ProgramLock); //we *must* check if(disconnecting) after this returns
+                    //Monitor.Wait(ProgramLock); //we *must* check if(disconnecting) after this returns
                 }   
             }
             
@@ -349,7 +362,7 @@ namespace Breakneck_Brigade
                 lock (client.Lock)
                 {
                     if (client.IsConnected) //check if connected because we don't know if we will start a disconnection by closing, or if we're closing because we got disconnected.
-                    {
+                        {
                         client.Disconnect();
                     }
                 }

@@ -38,10 +38,15 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
-        private Matrix4                     WorldTransform;
-        private List<ClientGameObject>      GameObjects;
-        private Camera                      Camera;
-        private InputManager                IM;
+        public IEnumerable<ClientGameObject>    GameObjects { get; set; }
+
+        private Matrix4                         WorldTransform;
+        private ClientGame                      Game;
+        private Camera                          Camera;
+        private InputManager                    IM;
+        private int aspectX;
+        private int aspectY;
+        private bool getAspect = true;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -54,23 +59,22 @@ namespace Breakneck_Brigade.Graphics
 
         public Renderer()
         {
-            parser              = new ModelParser();
-            WorldTransform      = new Matrix4();
-            GameObjects         = new List<ClientGameObject>();
+            parser          = new ModelParser();
+            WorldTransform  = new Matrix4();
 
             InitGLFW();
             InitGL();
             InitGlu();
-            InitIM();
 
             LoadResources();          
 
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
-                ClientGameObject orange = new TestClientGameObject(Models["twoballplate"]);
+                var orange = new TestClientGameObject(Models["twoballplate"]) { Id = 50000000 };
                 orange.Model.Position = new Vector4(-5, 0, 20);
-
-                GameObjects.Add(orange);
+                List<ClientGameObject> debugGOsList = new List<ClientGameObject>();
+                GameObjects = debugGOsList;
+                debugGOsList.Add(orange);
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
             {
@@ -124,31 +128,32 @@ namespace Breakneck_Brigade.Graphics
             }
         }
 
-        public void Render()
+        public void Render(ClientPlayer cp)
         {
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);
-            float ratio = (float)width / height;
+            
+            // force aspect ratio
+            if (getAspect)
+            {
+                aspectX = width;
+                aspectY = width;
+                getAspect = false;
+            }
+
+            //float ratio = (float)width / height;
             //Re-init mouse stuff! Call InputMan's MousePosInit() method
 
-            Gl.glViewport(0, 0, width, height);
+            Gl.glViewport(0, 0, width + (width - aspectX), height + (height - aspectY));
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
-            Camera.Update(IM.GetRotX(), IM.GetRotY());
+            Camera.Update(cp);
             Camera.Render();
-            IM.Clear();
 
-            if (Convert.ToInt32(IM.keys[InputManager.GLFW_KEY_ESCAPE]) == 1)
-            {
-                IM.TurnOffFPSMode();
-                Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
-            }
-
-            foreach(ClientGameObject cgo in GameObjects)
-            {     
-                cgo.Render();
-            }
+            if (GameObjects != null)
+                foreach (ClientGameObject cgo in GameObjects)
+                    cgo.Render();
 
             Glfw.glfwSwapBuffers();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
@@ -235,16 +240,6 @@ namespace Breakneck_Brigade.Graphics
         }
 
         /// <summary>
-        /// Initializes the input manager
-        /// </summary>
-        public void InitIM()
-        {
-            IM = new InputManager();
-            IM.TurnOnFPSMode();
-            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
-        }
-
-        /// <summary>
         /// Runs all cleanup functions for GLFW
         /// </summary>
         private void DestroyGLFW()
@@ -308,7 +303,7 @@ namespace Breakneck_Brigade.Graphics
             snowman.Meshes.Add(snowmanBase);
 
             TestClientGameObject snowmanGO = new TestClientGameObject(snowman);
-            GameObjects.Add(snowmanGO);
+            Game.gameObjects.Add(snowmanGO.Id, snowmanGO);
         }
 
         TestClientGameObject testParser(string filename)
