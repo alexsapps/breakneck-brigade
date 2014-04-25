@@ -38,9 +38,9 @@ namespace Breakneck_Brigade
         /// called by ClientGameObject.Deserialize. Used by objects that were created on the server
         /// The packet for reader will look as follows. Everything above ==== is read by the 
         /// constructor so the constructor only reads the stuff below it.
-        /// double X
-        /// double Y
-        /// double Z
+        /// float X
+        /// float Y
+        /// float Z
         /// ===========
         /// string name
         /// int32 cleanliness

@@ -30,9 +30,9 @@ namespace DeCuisine
         /// by this class.
         /// int32  id
         /// int16  objectclass
-        /// double X
-        /// double Y
-        /// double Z
+        /// float X
+        /// float Y
+        /// float Z
         /// ===========
         /// string name of the type of ingredient. 
         /// int32  cleanliness
@@ -65,7 +65,7 @@ namespace DeCuisine
 
         public override void Update()
         {
-            
+
         }
 
         public override GeometryInfo GeomInfo
