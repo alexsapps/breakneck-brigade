@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SousChef;
 using Breakneck_Brigade.Graphics;
 using System.IO;
+using Tao.OpenGl;
 
 namespace Breakneck_Brigade
 {
@@ -13,8 +14,9 @@ namespace Breakneck_Brigade
     {
         protected ClientGame Game { get; set; }
         public int Id { get; set; }
-        public Vector4 Transform { get; set; }
+        public Matrix4 Transform { get; set; }
         public Model Model { get; protected set; }
+        public Vector4 Position { get; set; }
         public abstract string ModelName { get; }
 
         /// <summary>
@@ -29,6 +31,7 @@ namespace Breakneck_Brigade
         {
             this.Id = id;
             this.Game = game;
+            this.Transform = new Matrix4();
         }
 
 
@@ -46,11 +49,8 @@ namespace Breakneck_Brigade
         {
             this.Id = id;
             this.Game = game;
-            double x, y, z;
-            x = reader.ReadDouble();
-            y = reader.ReadDouble();
-            z = reader.ReadDouble();
-            this.Transform =  new Vector4(x, y, z);
+            this.Position = getPositionVector(reader);
+            this.Transform = new Matrix4();
         }
 
 
@@ -71,16 +71,19 @@ namespace Breakneck_Brigade
         }
 
         /// <summary>
-        /// Update values from the stream "server", just the posistions are handled
-        /// in the base class. Should call the Update for the transform and 
-        /// be overriden by the specific update implementations
-        /// function as well
+        /// Update values from the stream "server", The position is the only thing
+        /// handled by the base class. 
+        /// The packet looks as follows. Client specific data will be read after 
+        /// this data.
+        /// double x
+        /// double y
+        /// double z
         /// </summary>
         /// <param name="reader"></param>
         public virtual void StreamUpdate(BinaryReader reader)
         {
-            Vector4 NewPosition = getPositionMatrix(reader);
-            Update(NewPosition);
+            this.Position = getPositionVector(reader);
+            updateMatrix();
         }
 
         /// <summary>
@@ -88,16 +91,22 @@ namespace Breakneck_Brigade
         /// </summary>
         public virtual void Render()
         {
-            Model.Render();
+            Gl.glPushMatrix();
+            Gl.glMultMatrixf(Transform.glArray);
+                Model.Render();
+            Gl.glPopMatrix();
         }
 
         /// <summary>
         /// the next three values to be read from the reader should be the x, y 
-        /// and z coordinates.
+        /// and z coordinates. THe packet should look like:
+        /// double x
+        /// double y
+        /// double z
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        private Vector4 getPositionMatrix(BinaryReader reader)
+        private Vector4 getPositionVector(BinaryReader reader)
         {
             double x, y, z;
             x = reader.ReadDouble();
@@ -112,7 +121,12 @@ namespace Breakneck_Brigade
         /// <param name="transform"></param>
         public void Update(Vector4 transform)
         {
-            this.Transform = transform; 
+
+        }
+
+        private void updateMatrix()
+        {
+            Transform.TranslationMat(Position.X, Position.Y, Position.Z);
         }
 
     }
