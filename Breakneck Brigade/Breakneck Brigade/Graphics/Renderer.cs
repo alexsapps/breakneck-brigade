@@ -21,7 +21,7 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         private ModelParser parser;
-        private const DebugMode DEBUG_MODE = DebugMode.BOTH;
+        private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         /// <summary>

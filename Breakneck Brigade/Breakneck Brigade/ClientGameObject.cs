@@ -126,7 +126,7 @@ namespace Breakneck_Brigade
 
         private void updateMatrix()
         {
-            Transform.TranslationMat(Position.X, Position.Y, Position.Z);
+
         }
 
     }
