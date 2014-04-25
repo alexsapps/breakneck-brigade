@@ -19,23 +19,23 @@ namespace DeCuisine
         public abstract GameObjectClass ObjectClass { get; }
 
         public bool InWorld { get; protected set; }
+        public bool DirtyBit { get; set; }
 
         public IntPtr Geom { get; set; }
         public virtual bool HasBody { get { return true; } } //false for walls
         public IntPtr Body { get; set; } //null for walls
-        public GeomShape GeomShape { get; set; }
-
+        public GeomShape GeomShape { get; set;} 
         public abstract GeometryInfo GeomInfo { get; }
-
         public ServerGame Game;
 
+        private static int nextId;
         /// <summary>
         /// Base constructor. For every servergameobject create their should be a 
         /// coresponding ClientGameObject on each client with the same ID.
         /// </summary>
-        public ServerGameObject(int id, ServerGame game) 
+        public ServerGameObject(ServerGame game) 
         {
-            this.Id = id;
+            this.Id = nextId++;
             this.Game = game;
 
             game.Lock.AssertHeld();
@@ -65,7 +65,7 @@ namespace DeCuisine
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public void AddToWorld(double x, double y, double z)
+        public void AddToWorld(float x, float y, float z)
         {
             Debug.Assert(!InWorld);
 
@@ -81,7 +81,7 @@ namespace DeCuisine
                     throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
             }
 
-            Ode.dGeomSetPosition(this.Body, x, y, z);
+            Ode.dGeomSetPosition(this.Geom, x, y, z);
             if (this.HasBody)
             {
                 Ode.dMass mass = new Ode.dMass();
@@ -145,6 +145,21 @@ namespace DeCuisine
             stream.Write(m3.X);
             stream.Write(m3.Y);
             stream.Write(m3.Z);
+        }
+
+        public virtual void OnCollide(ServerGameObject obj)
+        {
+            this.MarkDirty();
+        }
+
+        public void MarkDirty()
+        {
+            this.Game.ObjectChanged(this);
+        }
+
+        public void MarkDeleted()
+        {
+            this.Game.ObjectRemoved(this);
         }
     }
 }

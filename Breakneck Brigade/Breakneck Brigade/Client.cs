@@ -18,6 +18,7 @@ namespace Breakneck_Brigade
         public bool IsConnected { get; private set; }
         public ClientGame Game { get; private set; }
         public GameMode GameMode { get; private set; }
+        public event EventHandler GameModeChanged;
         public event EventHandler Disconnected;
 
         public Client()
@@ -64,45 +65,52 @@ namespace Breakneck_Brigade
                         switch (type)
                         {
                             case ServerMessageType.GameModeUpdate:
-                                GameMode = (GameMode)reader.ReadByte();
-                                switch (GameMode)
+                                var mode = (GameMode)reader.ReadByte();
+                                lock (Lock)
                                 {
-                                    case GameMode.Init:
-                                        break;
-                                    case GameMode.Started:
-                                        Game = new ClientGame();
-                                        break;
-                                    case GameMode.Stopping:
-                                        break;
-                                    default:
-                                        lock (Lock)
-                                        {
+                                    GameMode = mode;
+                                    switch (GameMode)
+                                    {
+                                        case GameMode.Init:
+                                            break;
+                                        case GameMode.Started:
+                                            Game = new ClientGame();
+                                            new Thread(new ThreadStart(() => { GameModeChanged(this, EventArgs.Empty); })).Start();
+                                            break;
+                                        case GameMode.Stopping:
+                                            break;
+                                        default:
                                             Disconnect();
-                                        }
-                                        return;
+                                            return;
+                                    }
                                 }
 
                                 break;
                             case ServerMessageType.GameStateUpdate:
-                                lock (Game.Lock)
+                                lock (Game.gameObjects)
                                 {
-                                    Game.gameObjects.Clear();
-                                    int len = reader.ReadInt32();
-
+                                    int len;
+                                    len = reader.ReadInt32();
                                     for (int i = 0; i < len; i++)
                                     {
                                         int id = reader.ReadInt32();
-                                        ClientGameObject obj;
-                                        if (Game.gameObjects.TryGetValue(id, out obj))
-                                        {
-                                            obj.StreamUpdate(reader);
-                                        }
-                                        else
-                                        {
-                                            obj = ClientGameObject.Deserialize(id, reader, Game);
-                                        }
+                                        ClientGameObject obj = ClientGameObject.Deserialize(id, reader, Game);
+                                        Game.gameObjects.Add(obj.Id, obj);
+                                    }
+                                    len = reader.ReadInt32();
+                                    for (int i = 0; i < len; i++)
+                                    {
+                                        int id = reader.ReadInt32();
+                                        Game.gameObjects[id].StreamUpdate(reader);
+                                    }
+                                    len = reader.ReadInt32();
+                                    for (int i = 0; i < len; i++)
+                                    {
+                                        int id = reader.ReadInt32();
+                                        Game.gameObjects.Remove(id);
                                     }
                                 }
+                                
                                 break;
                             default:
                                 break;
@@ -123,8 +131,8 @@ namespace Breakneck_Brigade
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
-                //TODO: log error message ex
                 lock (Lock) { Disconnect(); }
                 throw;
             }
@@ -174,7 +182,7 @@ namespace Breakneck_Brigade
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
-                //TODO: log error message ex
+                Console.WriteLine(ex.ToString());
                 lock (Lock) { Disconnect(); }
                 throw;
             }
@@ -183,6 +191,7 @@ namespace Breakneck_Brigade
         public void Disconnect()
         {
             Lock.AssertHeld();
+            GameMode = SousChef.GameMode.Stopping;
 
             IsConnected = false;
 
@@ -192,7 +201,27 @@ namespace Breakneck_Brigade
             }
 
             connection.Close(); //close receiver thread
-            Disconnected(this, EventArgs.Empty);
+            
+            if(senderThread != Thread.CurrentThread)
+                senderThread.Join();
+
+            if(receiverThread != Thread.CurrentThread)
+                receiverThread.Join();
+
+            //NOTE: game thread constantly checks IsConnected to know when to terminate
+
+            //if (Game != null) //e.g. if quitting before game started (init phase)
+            //{
+            //    lock (Game.gameObjects)
+            //    {
+            //        //Game.HasUpdates = true; //the update is that the game has ended
+            //        //Monitor.PulseAll(Game.gameObjects); //close renderer thread --we do this below now
+            //    }
+            //}
+
+            new Thread(new ThreadStart(() => { Disconnected(this, EventArgs.Empty); })).Start(); //close the renderer thread
+
+            Game = null;
         }
 
     }

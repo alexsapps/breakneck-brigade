@@ -14,6 +14,11 @@ namespace Breakneck_Brigade
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
+        public override string ModelName
+        {
+            get { return Type.Name; }
+        }
+
         /// <summary>
         /// Creates an Ingredient of the type passed in at the center of the game world. Used for 
         /// objects not created on the server
@@ -30,11 +35,11 @@ namespace Breakneck_Brigade
         }
 
         //called by ClientGameObject.Deserialize. Used by objects that were created on the server
-        public ClientIngredient(int id, BinaryReader reader, ClientGame game) 
+        public ClientIngredient(int id, BinaryReader reader, ClientGame game)
             : base(id, reader, game)
         {
-            //todo: get type from string (config file): Type = f(reader.ReadString());
-            IngredientType type = null;
+            string ingrname = reader.ReadString();
+            IngredientType type = game.Config.Ingredients[ingrname];
             var cleanliness = reader.ReadInt32();
             construct(type, cleanliness);
         }
@@ -43,20 +48,33 @@ namespace Breakneck_Brigade
         {
             this.Type = type;
             update(cleanliness);
-        }
+            Model = Renderer.Models[ModelName];
+        } 
 
+
+        /// <summary>
+        /// Update everything pertaining to the ingriedient. The position 
+        /// is handled by the super class.
+        /// </summary>
         private void update(int cleanliness)
         {
             this.Cleanliness = cleanliness;
         }
 
+        /// <summary>
+        /// Update everything pertaining to the ingriedient. The position 
+        /// is handled by the super class.
+        /// </summary>
+        private void update(Vector4 transform, int cleanliness)
+        {
+            base.Update(transform);
+            this.update(cleanliness);
+        }
+
         public override void StreamUpdate(BinaryReader reader)
         {
-            //base.Update(reader);
-
-
-            int cleanliness = reader.ReadInt32();
-
+            base.StreamUpdate(reader); //updates the position of the object as well
+            int cleanliness = reader.ReadInt32(); 
             update(cleanliness);
         }
 
@@ -65,7 +83,7 @@ namespace Breakneck_Brigade
         /// </summary>
         public override void Render()
         {
-            // render the object
+            base.Render();
         }
 
     }

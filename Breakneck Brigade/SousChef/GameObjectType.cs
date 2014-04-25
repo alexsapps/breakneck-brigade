@@ -22,9 +22,10 @@ namespace SousChef
 
         }
 
-        public GameObjectType(string name)
+        public GameObjectType(string name, GeometryInfo geomInfo)
         {
             this.Name = name;
+            this.GeomInfo = geomInfo;
         }
     }
 }

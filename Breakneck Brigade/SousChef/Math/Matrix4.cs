@@ -610,6 +610,81 @@ namespace SousChef
         }
 
         /// <summary>
+        /// Generates an rotation matrix about the object's X axis.
+        /// </summary>
+        /// <param name="angle">Angle in radians</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotateX(float angle) { return (new Matrix4()).RotateX(angle); }
+        /// <summary>
+        /// Generates an rotation matrix about the object's Y axis.
+        /// </summary>
+        /// <param name="angle">Angle in radians</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotateY(float angle) { return (new Matrix4()).RotateY(angle); }
+        /// <summary>
+        /// Generates an rotation matrix about the object's Z axis.
+        /// </summary>
+        /// <param name="angle">Angle in radians</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotateZ(float angle) { return (new Matrix4()).RotateZ(angle); }
+
+        /// <summary>
+        /// Generates an rotation matrix about the object's X axis.
+        /// </summary>
+        /// <param name="angle">Angle in degrees</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotateXDeg(float angle) { return (new Matrix4()).RotateXDeg(angle); }
+        /// <summary>
+        /// Generates an rotation matrix about the object's Y axis.
+        /// </summary>
+        /// <param name="angle">Angle in degrees</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotateYDeg(float angle) { return (new Matrix4()).RotateYDeg(angle); }
+        /// <summary>
+        /// Generates an rotation matrix about the object's Z axis.
+        /// </summary>
+        /// <param name="angle">Angle in degrees</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotateZDeg(float angle) { return (new Matrix4()).RotateZDeg(angle); }
+
+        /// <summary>
+        /// Generates an rotation matrix about an arbitrary object axis.
+        /// </summary>
+        /// <param name="axis">The axis of rotation</param>
+        /// <param name="angle">Angle in radians</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotate(Vector4 axis, float angle) { return (new Matrix4()).Rotate(axis, angle); }
+
+        /// <summary>
+        /// Generates an rotation matrix about an arbitrary object axis.
+        /// </summary>
+        /// <param name="axis">The axis of rotation</param>
+        /// <param name="angle">Angle in degrees</param>
+        /// <returns>The rotation matrix</returns>
+        public static Matrix4 MakeRotateDeg(Vector4 axis, float angle) { return (new Matrix4()).RotateDeg(axis, angle); }
+
+        /// <summary>
+        /// Generates a scaling matrix, scaling each dimension by
+        /// the corresponding paremeter.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns>A reference to this matrix</returns>
+        public static Matrix4 MakeScalingMat(float x, float y, float z) { return (new Matrix4()).ScalingMat(x, y, z); }
+
+        /// <summary>
+        /// Generates a translation matrix, translating the
+        /// coordinate by the arguments in each specified dimension.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public static Matrix4 MakeTranslationMat(float x, float y, float z) { return (new Matrix4()).TranslationMat(x, y, z); }
+
+
+
+        /// <summary>
         /// Transposes the matrix (that is, reflects across the down-right diagonal)
         /// </summary>
         /// <returns>A reference to this matrix</returns>

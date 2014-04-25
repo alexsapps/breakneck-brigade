@@ -152,14 +152,21 @@ namespace Breakneck_Brigade
         float sens = 1.0f;
         bool invertY = false;
 
+        private Glfw.GLFWkeyfun         keyboardCallback;
+        private Glfw.GLFWmouseposfun    mouseMoveCallback;
+        private Glfw.GLFWmousebuttonfun mouseButtonCallback;
+
         public InputManager()
         {
             // callback for keyboard; will trigger KeyboardInput() on every keypress or release
-            Glfw.glfwSetKeyCallback(KeyboardInput);
+            keyboardCallback = KeyboardInput; //Need to follow this convention for declaring callbacks so C# does not GC the reference immediately
+            Glfw.glfwSetKeyCallback(keyboardCallback);
             // callback for mouse; will trigger MousePos() on every mouse movement
-            Glfw.glfwSetMousePosCallback(MousePos);
+            mouseMoveCallback = MousePos;
+            Glfw.glfwSetMousePosCallback(mouseMoveCallback);
             // callback for mouse; will trigger MouseButton() on every mouse click/release
-            Glfw.glfwSetMouseButtonCallback(MouseButton);
+            mouseButtonCallback = MouseButton;
+            Glfw.glfwSetMouseButtonCallback(mouseButtonCallback);
 
             globalConfig = new GlobalsConfigFolder(BBXml.GetLocalConfigFolder()).Open("keys.xml");
 

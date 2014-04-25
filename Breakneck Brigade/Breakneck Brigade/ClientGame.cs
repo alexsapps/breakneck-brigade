@@ -13,11 +13,12 @@ namespace Breakneck_Brigade
 
         //gameObjects and HasUpdates both require locking on gameObjects before accessing
         public Dictionary<int, ClientGameObject> gameObjects { get; private set; }
-        public bool HasUpdates { get; set; }
+        public ConfigSalad Config { get; private set; }
 
         public ClientGame()
         {
             gameObjects = new Dictionary<int, ClientGameObject>();
+            Config = new GameObjectConfig().GetConfigSalad();
         }
 
 

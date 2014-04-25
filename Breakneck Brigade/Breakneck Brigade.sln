@@ -18,18 +18,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameTest|Any CPU.ActiveCfg = GraphicsTest|Any CPU
-		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameTest|Any CPU.Build.0 = GraphicsTest|Any CPU
+		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameTest|Any CPU.ActiveCfg = GameTest|Any CPU
+		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.GameTest|Any CPU.Build.0 = GameTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Graphics Test|Any CPU.ActiveCfg = GraphicsTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Graphics Test|Any CPU.Build.0 = GraphicsTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Network Test|Any CPU.ActiveCfg = NetworkTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Network Test|Any CPU.Build.0 = NetworkTest|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8229E016-814D-4317-A2DC-BF2BA2C0A272}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.GameTest|Any CPU.ActiveCfg = GameTest|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.GameTest|Any CPU.Build.0 = GameTest|Any CPU
 		{A4F5D1BB-0CBC-4FDE-8CBF-2AD542DEE53B}.Graphics Test|Any CPU.ActiveCfg = Release|Any CPU

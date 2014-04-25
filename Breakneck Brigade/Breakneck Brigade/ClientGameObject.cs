@@ -13,8 +13,9 @@ namespace Breakneck_Brigade
     {
         protected ClientGame Game { get; set; }
         public int Id { get; set; }
-        public Matrix4 Transform { get; set; }
+        public Vector4 Transform { get; set; }
         public Model Model { get; protected set; }
+        public abstract string ModelName { get; }
 
         /// <summary>
         /// Base constructor. For every ClientGameObject, the parameters should be recieved from
@@ -26,16 +27,16 @@ namespace Breakneck_Brigade
         /// <param name="game">The game where the object is created</param>
         public ClientGameObject(int id, Vector4 transform, ClientGame game) 
         {
-            construct(id, new Matrix4(transform), game);
+            construct(id, new Vector4(transform), game);
         }
 
         public ClientGameObject(int id, BinaryReader reader, ClientGame game)
         {
-            Matrix4 transform = getPositionMatrix(reader);
+            Vector4 transform = getPositionMatrix(reader);
             construct(id, transform, game);
         }
 
-        private void construct(int id, Matrix4 transform, ClientGame game) {
+        private void construct(int id, Vector4 transform, ClientGame game) {
             //set properties that never change here
             this.Id = id;
             this.Game = game;
@@ -59,7 +60,7 @@ namespace Breakneck_Brigade
         /// <param name="reader"></param>
         public virtual void StreamUpdate(BinaryReader reader)
         {
-            Matrix4 NewPosition = getPositionMatrix(reader);
+            Vector4 NewPosition = getPositionMatrix(reader);
             Update(NewPosition);
         }
 
@@ -77,20 +78,20 @@ namespace Breakneck_Brigade
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        private Matrix4 getPositionMatrix(BinaryReader reader)
+        private Vector4 getPositionMatrix(BinaryReader reader)
         {
             double x, y, z;
             x = reader.ReadDouble();
             y = reader.ReadDouble();
             z = reader.ReadDouble();
-            return new Matrix4(new Vector4(x, y, z));
+            return new Vector4(x, y, z);
         }
 
         /// <summary>
         /// Updates the position of the current objects transfrom.
         /// </summary>
         /// <param name="transform"></param>
-        public void Update(Matrix4 transform)
+        public void Update(Vector4 transform)
         {
             this.Transform = transform; 
         }

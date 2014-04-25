@@ -5,16 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using Tao.OpenGl;
 using Tao.Glfw;
+using System.Xml;
+using System.IO;
 using SousChef;
 
 namespace Breakneck_Brigade.Graphics
 {
+    enum DebugMode
+    {
+        SNOWMAN,
+        ORANGE,
+        BOTH,
+        OFF
+    };
     class Renderer : IDisposable
     {
+        private ModelParser parser;
+        private const DebugMode DEBUG_MODE = DebugMode.OFF;
+        private const string RESOURCES_XML_PATH = "res\\resources.xml";
+
         /// <summary>
         /// A mapping of filename to Model
         /// </summary>
-        public static Dictionary<string, Model>     Model       = new Dictionary<string, Model>();
+        public static Dictionary<string, Model>     Models      = new Dictionary<string, Model>();
         /// <summary>
         /// A mapping of filename to Texture
         /// </summary>
@@ -25,9 +38,11 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
-        public Matrix4                     WorldTransform;
-        public List<ClientGameObject>      GameObjects;
-        public Camera                      Camera;
+        private Matrix4                         WorldTransform;
+        private ClientGame                      Game;
+        private IEnumerable<ClientGameObject>   GameObjects { get { return Game.gameObjects.Values; }}
+        private Camera                          Camera;
+        private InputManager                    IM;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -38,21 +53,75 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Glu.GLUtesselator gluTesselator = Glu.gluNewTess();
 
-        public Renderer()
+        public Renderer(ClientGame game)
         {
-            WorldTransform      = new Matrix4();
-            GameObjects         = new List<ClientGameObject>();
+            parser          = new ModelParser();
+            WorldTransform  = new Matrix4();
+            Game            = game;
 
             InitGLFW();
             InitGL();
             InitGlu();
 
-            DefaultTexture = new Texture("default.tga");
+            LoadResources();          
 
-            /* TESTING MODES */
-            //makeAnnaHappy(); //Do you want to build a snowman?
-            testParser("orange"); //Load a object file from the current dir
-            //testParser("orange.obj");
+            if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
+            { 
+                var orange = new TestClientGameObject(Models["twoballplate"]) { Id = 50000000 };
+                orange.Model.Position = new Vector4(-5, 0, 20);
+
+                Game.gameObjects.Add(orange.Id, orange);
+            }
+            if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
+            {
+                makeAnnaHappy();
+            }
+
+        }
+
+        public void LoadResources()
+        {
+            DefaultTexture = new Texture("default.tga");
+            LoadModels();
+        }
+
+        public void LoadModels()
+        {
+            using (FileStream resFile = new FileStream(RESOURCES_XML_PATH, FileMode.Open))
+            {
+                using (XmlReader reader = XmlReader.Create(resFile))
+                {
+                    reader.ReadToFollowing("models");
+                    int numberOfModels = int.Parse(reader.GetAttribute("numberOfModels"));
+                    reader.ReadToDescendant("model");
+                    for(int ii = 0; ii < numberOfModels; ii++)
+                    {
+                        XmlReader modelSubtree = reader.ReadSubtree();
+
+                        modelSubtree.ReadToDescendant("filename");
+                        string filename = modelSubtree.ReadElementContentAsString();
+
+                        modelSubtree.ReadToNextSibling("scaleX");
+                        float scaleX = modelSubtree.ReadElementContentAsFloat();
+
+                        modelSubtree.ReadToNextSibling("scaleY");
+                        float scaleY = modelSubtree.ReadElementContentAsFloat();
+
+                        modelSubtree.ReadToNextSibling("scaleZ");
+                        float scaleZ = modelSubtree.ReadElementContentAsFloat();
+                        
+                        Model model = parser.ParseFile(filename);
+                        model.Scale.X = scaleX;
+                        model.Scale.Y = scaleY;
+                        model.Scale.Z = scaleZ;
+                        Models.Add(filename, model);
+
+                        if(ii != numberOfModels - 1)
+                            reader.ReadEndElement();
+                            reader.ReadToNextSibling("model");
+                    }
+                }
+            }
         }
 
         public void Render(ClientPlayer cp)
@@ -76,7 +145,16 @@ namespace Breakneck_Brigade.Graphics
 
             Glfw.glfwSwapBuffers();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
-            // Glfw.glfwPollEvents();
+            //Glfw.glfwPollEvents();
+        }
+
+        /// <summary>
+        /// Checks if the program should exit.
+        /// </summary>
+        /// <returns>Whether or not the program should exit</returns>
+        public bool ShouldExit()
+        {
+            return Glfw.glfwGetWindowParam(Glfw.GLFW_OPENED) != Gl.GL_TRUE;
         }
 
         /// <summary>
@@ -146,6 +224,7 @@ namespace Breakneck_Brigade.Graphics
                 Environment.Exit(1);
             }
             Glfw.glfwOpenWindow(1280, 1024, 0, 0, 0, 8, 32, 32, Glfw.GLFW_WINDOW);
+
         }
 
         /// <summary>
@@ -212,15 +291,13 @@ namespace Breakneck_Brigade.Graphics
             snowman.Meshes.Add(snowmanBase);
 
             TestClientGameObject snowmanGO = new TestClientGameObject(snowman);
-            GameObjects.Add(snowmanGO);
+            Game.gameObjects.Add(snowmanGO.Id, snowmanGO);
         }
 
-        void testParser(string filename)
+        TestClientGameObject testParser(string filename)
         {
-            ObjParser parser = new ObjParser();
             Model model = parser.ParseFile(filename);
-            TestClientGameObject go = new TestClientGameObject(model);
-            GameObjects.Add(go);
+            return new TestClientGameObject(model);
         }
     }   
 }

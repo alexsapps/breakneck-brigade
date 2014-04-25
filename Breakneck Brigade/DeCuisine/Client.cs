@@ -109,10 +109,9 @@ namespace DeCuisine
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
-                //TODO: log error message ex
                 lock (Lock) { Disconnect(); }
-                throw;
             }
         }
 
@@ -126,22 +125,29 @@ namespace DeCuisine
                 {
                     while (true)
                     {
-                        List<ServerMessage> svrMsgs;
+                        List<ServerMessage> svrMsgs = null;
 
-                        lock (Lock)
+                        while (true)
                         {
-                            if (!IsConnected)
-                                break;
+                            lock (Lock)
+                            {
+                                if (!IsConnected)
+                                    return;
+                            }
 
                             lock (ServerMessages)
                             {
-                                while (ServerMessages.Count == 0)
-                                    Monitor.Wait(ServerMessages);
-                                svrMsgs = new List<ServerMessage>(ServerMessages);
-                                ServerMessages.Clear();
+                                if (ServerMessages.Count > 0)
+                                {
+                                    svrMsgs = new List<ServerMessage>(ServerMessages);
+                                    ServerMessages.Clear();
+                                    break;
+                                }
+                                
+                                Monitor.Wait(ServerMessages);
                             }
                         }
-
+                        
                         foreach (var message in svrMsgs)
                         {
                             writer.Write((byte)message.Type);
@@ -172,8 +178,8 @@ namespace DeCuisine
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
-                //TODO: log error message ex
                 lock (Lock) { Disconnect(); }
                 throw;
             }

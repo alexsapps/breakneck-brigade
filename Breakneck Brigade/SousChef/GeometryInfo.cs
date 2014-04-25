@@ -14,7 +14,7 @@ namespace SousChef
         /// <summary>
         /// Gets or sets the mass of the object
         /// </summary>
-        public double Mass { get; set; }
+        public float Mass { get; set; }
 
         /// <summary>
         /// Gets or sets the shpae of the object
@@ -24,11 +24,11 @@ namespace SousChef
         /// <summary>
         /// Gets the list of sides of the object
         /// </summary>
-        public List<double> Sides { get; protected set; }
+        public float[] Sides { get; set; }
 
         public GeometryInfo()
         {
-            this.Sides = new List<double>();
+            
         }
     }
 }

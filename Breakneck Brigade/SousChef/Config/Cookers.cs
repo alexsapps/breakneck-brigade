@@ -39,10 +39,9 @@ namespace SousChef
             string name = attributes["name"];
             string model;
 
-            if (!attributes.TryGetValue("model", out model))
-                model = name;
+            var geomInfo = getGeomInfo(attributes);
 
-            return new CookerType(name, recipes, model);
+            return new CookerType(name, geomInfo, recipes);
         }
 
         protected override void reset()

@@ -33,9 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GameTest|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\GameTest\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,11 +51,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tao.Ode">
-      <HintPath>..\Breakneck Brigade\lib\Tao.Ode.dll</HintPath>
+    <Reference Include="Tao.Ode, Version=0.9.0.0, Culture=neutral, PublicKeyToken=e499629dc69cd531, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\deps\Tao.Ode.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.Ode.Tests">
-      <HintPath>..\Breakneck Brigade\lib\Tao.Ode.Tests.dll</HintPath>
+    <Reference Include="Tao.Ode.Tests, Version=3.0.0.0, Culture=neutral, PublicKeyToken=51faf5a435e4ac35, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\deps\Tao.Ode.Tests.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

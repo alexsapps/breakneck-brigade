@@ -9,12 +9,10 @@ namespace SousChef
     public class IngredientType : GameObjectType
     {
         public int DefaultPoints { get; set; }
-        public string Model { get; set; } //TODO: 
 
-        public IngredientType(string name, int defaultPoints, string model) 
-            : base(name)
+        public IngredientType(string name, GeometryInfo geomInfo, int defaultPoints) 
+            : base(name, geomInfo)
         {
-            this.Model = model;
             this.DefaultPoints = defaultPoints;
         }
     }

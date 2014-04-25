@@ -9,6 +9,7 @@ namespace SousChef
     /// <summary>
     /// Top level gameobject interface. Specifies data that all objects need, client and server.
     /// </summary>
+    /// 
     public interface IGameObject
     {
         int Id { get; set; }
