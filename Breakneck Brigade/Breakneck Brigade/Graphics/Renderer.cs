@@ -57,11 +57,10 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Glu.GLUtesselator gluTesselator = Glu.gluNewTess();
 
-        public Renderer(ClientGame game)
+        public Renderer()
         {
             parser          = new ModelParser();
             WorldTransform  = new Matrix4();
-            Game            = game;
 
             InitGLFW();
             InitGL();
@@ -73,8 +72,9 @@ namespace Breakneck_Brigade.Graphics
             { 
                 var orange = new TestClientGameObject(Models["twoballplate"]) { Id = 50000000 };
                 orange.Model.Position = new Vector4(-5, 0, 20);
-
-                Game.gameObjects.Add(orange.Id, orange);
+                List<ClientGameObject> debugGOsList = new List<ClientGameObject>();
+                GameObjects = debugGOsList;
+                debugGOsList.Add(orange);
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
             {

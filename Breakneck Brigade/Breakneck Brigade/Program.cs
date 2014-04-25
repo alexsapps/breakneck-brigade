@@ -25,14 +25,17 @@ namespace Breakneck_Brigade
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
 
+        static public ClientPlayer cPlayer;
+
         static void Main(string[] args)
         {
+            cPlayer = new ClientPlayer();
 
 #if PROJECT_GRAPHICS_TEST
             Renderer renderer = new Renderer();
             while (!renderer.ShouldExit())
             {
-                renderer.Render();
+                renderer.Render(cPlayer);
             }
             Environment.Exit(0);
 #endif
@@ -201,7 +204,8 @@ namespace Breakneck_Brigade
                                 client.GameModeChanged += client_GameModeChanged;
                                 client.Connect(prompter.Host, prompter.Port);
 
-                                renderer = new Renderer(client.Game);
+                                renderer = new Renderer();
+                                renderer.GameObjects = client.Game.gameObjects.Values;
 
                                 prompter.connectedCallback();
                                 return client;
@@ -288,14 +292,12 @@ namespace Breakneck_Brigade
         static void play()
         {
             ClientGame game;
-            ClientPlayer cPlayer;
-            InputManager IM;
+            InputManager IM = new InputManager(); ;
 
             lock (client.Lock)
             {
                 game = client.Game;
-                cPlayer = new ClientPlayer();
-                IM = new InputManager();
+
             }
 
             Debug.Assert(client.Game != null);
@@ -322,7 +324,7 @@ namespace Breakneck_Brigade
                             break;
 
                         lock (client.Game.Lock)
-                        {
+                        {                            
                             cPlayer.Update(IM);
                             renderer.Render(cPlayer);
                         }
