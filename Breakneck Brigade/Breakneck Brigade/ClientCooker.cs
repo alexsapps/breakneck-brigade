@@ -9,10 +9,16 @@ using System.IO;
 
 namespace Breakneck_Brigade
 {
-    class ClientCooker : ClientGameObject
+    class ClientCooker //: ClientGameObject
     {
         public CookerType Type { get; set; }
         public List<ClientIngredient> Contents { get; set; }
+       public ClientCooker()
+        {
+
+        }
+
+        /*
         public ClientCooker(int id, CookerType type, Vector4 transform, ClientGame game)
             : base(id, new Vector4(), game)
         {
@@ -76,7 +82,8 @@ namespace Breakneck_Brigade
         public override void Render()
         {
             base.Render();
-        }
+        }*/
     }
+
 
 }

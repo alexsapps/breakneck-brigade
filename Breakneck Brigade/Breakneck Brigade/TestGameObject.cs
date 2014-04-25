@@ -14,7 +14,7 @@ namespace Breakneck_Brigade
     class TestClientGameObject : ClientGameObject
     {
         static int testId = -133709999;
-        public TestClientGameObject(Model model) : base(testId++, new Vector4(0,0,0), null)
+        public TestClientGameObject(Model model) : base(testId++, null)
         {
             Model = model;
         }

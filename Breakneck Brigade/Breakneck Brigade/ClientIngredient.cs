@@ -34,20 +34,33 @@ namespace Breakneck_Brigade
             construct(type, cleanliness);
         }
 
-        //called by ClientGameObject.Deserialize. Used by objects that were created on the server
+        /// <summary>
+        /// called by ClientGameObject.Deserialize. Used by objects that were created on the server
+        /// The packet for reader will look as follows. Everything above ==== is read by the 
+        /// constructor so the constructor only reads the stuff below it.
+        /// double X
+        /// double Y
+        /// double Z
+        /// ===========
+        /// string name
+        /// int32 cleanliness
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="reader"></param>
+        /// <param name="game"></param>
         public ClientIngredient(int id, BinaryReader reader, ClientGame game)
-            : base(id, game)
+            : base(id, game, reader)
         {
+
             string ingrname = reader.ReadString();
             IngredientType type = game.Config.Ingredients[ingrname];
             var cleanliness = reader.ReadInt32();
             construct(type, cleanliness);
         }
 
-        override void construct(IngredientType type, int cleanliness)
+        void construct(IngredientType type, int cleanliness)
         {
             this.Type = type;
-            update(cleanliness);
             if (Renderer.Models.ContainsKey(ModelName))
                 Model = Renderer.Models[ModelName];
             else
@@ -69,7 +82,6 @@ namespace Breakneck_Brigade
         {
             base.StreamUpdate(reader); //updates the position of the object as well
             int cleanliness = reader.ReadInt32(); 
-            update(cleanliness);
         }
 
         /// <summary>
