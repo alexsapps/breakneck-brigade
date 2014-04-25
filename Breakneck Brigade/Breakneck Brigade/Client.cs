@@ -192,7 +192,7 @@ namespace Breakneck_Brigade
 
         public void Disconnect()
         {
-            Debug.Assert(!IsConnected);
+            Debug.Assert(IsConnected);
 
             Lock.AssertHeld();
             GameMode = SousChef.GameMode.Stopping;
