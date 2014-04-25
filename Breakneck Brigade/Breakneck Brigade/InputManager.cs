@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tao.Glfw;
+using Tao.OpenGl;
 using SousChef;
 
 namespace Breakneck_Brigade
@@ -161,7 +162,7 @@ namespace Breakneck_Brigade
         /// <summary>
         /// fpsMode means locking mouse to center of screen and hiding the cursor
         /// </summary>
-        bool fpsMode = false;        
+        public bool fpsMode = false;        
 
         /// <summary>
         /// Variables for storing the "center" mouse position
@@ -323,11 +324,13 @@ namespace Breakneck_Brigade
         public void EnableFPSMode()
         {
             MousePosInit();
+            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
             fpsMode = true;
             
         }
         public void DisableFPSMode()
         {
+            Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
             fpsMode = false;
         }
 

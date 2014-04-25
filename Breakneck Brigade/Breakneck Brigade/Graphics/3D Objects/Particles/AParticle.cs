@@ -67,13 +67,13 @@ namespace Breakneck_Brigade.Graphics
         {
             if(Age == 0.0f)
             {
-                OnCreate();
+                //OnCreate();
             }
             Age += timestep;
             if(Age > Lifetime)
             {
                 ShouldDie = true;
-                OnDestroy();
+                //OnDestroy();
                 return; // Don't need to continue to updating
             }
             Velocity += Acceleration*timestep;

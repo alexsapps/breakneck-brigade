@@ -82,8 +82,8 @@ namespace Breakneck_Brigade
                             case "exit":
                                 lock (ProgramLock)
                                 {
-            if (client != null)
-            {
+                                    if (client != null)
+                                    {
                                         lock (client.Lock)
                                         {
                                             client.Disconnect();
@@ -146,8 +146,6 @@ namespace Breakneck_Brigade
                         else if (client.GameMode == GameMode.Started)
                         {
                             Console.WriteLine("Game started.");
-                            //Thread playThread = new Thread(new ThreadStart(play));
-                            //playThread.Start();
                             play();
                             break; //game ended
                         }
@@ -208,7 +206,8 @@ namespace Breakneck_Brigade
                                 client.Connect(prompter.Host, prompter.Port);
 
                                 renderer = new Renderer();
-                                renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
+                                IM = new InputManager();
+                                IM.EnableFPSMode();
 
                                 prompter.connectedCallback();
                                 return client;
@@ -308,9 +307,9 @@ namespace Breakneck_Brigade
 
             using (renderer)
             {
-                renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
                 while (true)
                 {
+                    renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
                     if (renderer.ShouldExit())
                     {
                         onClosed();
@@ -327,7 +326,7 @@ namespace Breakneck_Brigade
 
                         lock (client.Game.Lock)
                         {                            
-                            //cPlayer.Update(IM);
+                            cPlayer.Update(IM);
                             renderer.Render(cPlayer);
                         }
                     }
@@ -364,7 +363,7 @@ namespace Breakneck_Brigade
                 lock (client.Lock)
                 {
                     if (client.IsConnected) //check if connected because we don't know if we will start a disconnection by closing, or if we're closing because we got disconnected.
-                        {
+                    {
                         client.Disconnect();
                     }
                 }

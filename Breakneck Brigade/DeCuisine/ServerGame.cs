@@ -141,14 +141,14 @@ namespace DeCuisine
             World = Ode.dWorldCreate(); // Create dynamic world
             Space = Ode.dHashSpaceCreate(IntPtr.Zero); // Create dynamic space
             ContactGroup = Ode.dJointGroupCreate(0);
-            Ode.dWorldSetGravity(World, 0f, 0f, -0.5f); //TODO: read gravity from config file
+            Ode.dWorldSetGravity(World, 0f, -0.5f, 0); //TODO: read gravity from config file
             Ode.dCreatePlane(Space, 0, 0, 1, 0); // Create a ground //TODO:  remove this line of test code (read from config file instead)
 
             /* test */
             lock (Lock)
             {
-                new ServerIngredient(Config.Ingredients["banana"], this, new Vector4(0, 0, 0));
-                new ServerIngredient(Config.Ingredients["ice cream"], this, new Vector4(50, 50, 0));
+                new ServerIngredient(Config.Ingredients["banana"], this, new Coordinate(0, 0, 0));
+                new ServerIngredient(Config.Ingredients["ice cream"], this, new Coordinate(50, 50, 0));
             }
             /* test */
 

@@ -48,9 +48,9 @@ namespace Breakneck_Brigade
         /// <summary>
         /// Instatiates client objects from data in the reader.
         /// The packet will look as follows. Class specific data will be written after this. 
-        /// double x
-        /// double y
-        /// double z
+        /// float x
+        /// float y
+        /// float z
         /// </summary>
         /// <param name="id"></param>
         /// <param name="game"></param>
@@ -70,9 +70,9 @@ namespace Breakneck_Brigade
         /// <summary>
         /// Read the serialized data from the packet. 
         /// int16  objectclass
-        /// double X
-        /// double Y
-        /// double Z
+        /// float X
+        /// float Y
+        /// float Z
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -88,9 +88,9 @@ namespace Breakneck_Brigade
         /// handled by the base class. 
         /// The packet looks as follows. Client specific data will be read after 
         /// this data.
-        /// double x
-        /// double y
-        /// double z
+        /// float x
+        /// float y
+        /// float z
         /// </summary>
         /// <param name="reader"></param>
         public virtual void StreamUpdate(BinaryReader reader)
@@ -113,18 +113,18 @@ namespace Breakneck_Brigade
         /// <summary>
         /// the next three values to be read from the reader should be the x, y 
         /// and z coordinates. THe packet should look like:
-        /// double x
-        /// double y
-        /// double z
+        /// float x
+        /// float y
+        /// float z
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
         private Vector4 getPositionVector(BinaryReader reader)
         {
             double x, y, z;
-            x = reader.ReadDouble();
-            y = reader.ReadDouble();
-            z = reader.ReadDouble();
+            x = reader.ReadSingle();
+            y = reader.ReadSingle();
+            z = reader.ReadSingle();
             return new Vector4(x, y, z);
         }
 

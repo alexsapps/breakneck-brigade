@@ -52,7 +52,8 @@ namespace Breakneck_Brigade
                     connection.ReceiveTimeout = 10000;
                     if (!reader.ReadString().Equals(BB.ServerProtocolHandshakeStr))
                     {
-                        Disconnect();
+                        lock (Lock)
+                            Disconnect();
                         return;
                     }
                     connection.ReceiveTimeout = 0;
@@ -191,7 +192,7 @@ namespace Breakneck_Brigade
 
         public void Disconnect()
         {
-            Debug.Assert(!IsConnected);
+            Debug.Assert(IsConnected);
 
             Lock.AssertHeld();
             GameMode = SousChef.GameMode.Stopping;
