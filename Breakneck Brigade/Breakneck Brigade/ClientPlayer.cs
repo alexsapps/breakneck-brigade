@@ -61,6 +61,14 @@ namespace Breakneck_Brigade
             {
                 _fpsToggle = true;
             }
+
+            if(Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_MOUSE_BUTTON_LEFT]))
+            {
+                if (!IM.fpsMode)
+                {
+                    IM.EnableFPSMode();
+                }
+            }
         }
     }
 }
