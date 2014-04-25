@@ -16,7 +16,7 @@ namespace Breakneck_Brigade
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public Vector4 Velocity;
-        public float MoveSpeed = 0.1f;
+        public float MoveSpeed = 0.35f;
 
         private bool _fpsToggle = true;
 
