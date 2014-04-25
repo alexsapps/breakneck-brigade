@@ -36,8 +36,8 @@ namespace Breakneck_Brigade
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
             // Velocity update
-            Velocity[0] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_A]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_D]) ? 1 * MoveSpeed : 0.0f;
-            Velocity[2] = Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_S]) ? -1 * MoveSpeed : Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_W]) ? MoveSpeed : 0.0f;
+            Velocity[0] = (Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_A]) || Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_LEFT])) ? -1 * MoveSpeed : (Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_D]) || Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_RIGHT])) ? 1 * MoveSpeed : 0.0f;
+            Velocity[2] = (Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_S]) || Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_DOWN])) ? -1 * MoveSpeed : (Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_W]) || Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_UP])) ? MoveSpeed : 0.0f;
 
             Position[0] += Velocity[2] * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             Position[2] += Velocity[2] * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Sin((Orientation / 180.0f * Math.PI));

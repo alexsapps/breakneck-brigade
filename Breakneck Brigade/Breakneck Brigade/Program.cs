@@ -82,8 +82,8 @@ namespace Breakneck_Brigade
                             case "exit":
                                 lock (ProgramLock)
                                 {
-                                    if (client != null)
-                                    {
+            if (client != null)
+            {
                                         lock (client.Lock)
                                         {
                                             client.Disconnect();
@@ -363,7 +363,7 @@ namespace Breakneck_Brigade
                 lock (client.Lock)
                 {
                     if (client.IsConnected) //check if connected because we don't know if we will start a disconnection by closing, or if we're closing because we got disconnected.
-                    {
+                        {
                         client.Disconnect();
                     }
                 }
