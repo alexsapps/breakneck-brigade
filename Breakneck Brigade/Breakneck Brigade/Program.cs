@@ -146,7 +146,6 @@ namespace Breakneck_Brigade
                         else if (client.GameMode == GameMode.Started)
                         {
                             Console.WriteLine("Game started.");
-                            renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
                             play();
                             break; //game ended
                         }
@@ -306,9 +305,9 @@ namespace Breakneck_Brigade
 
             using (renderer)
             {
-                renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
                 while (true)
                 {
+                    renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
                     if (renderer.ShouldExit())
                     {
                         onClosed();
