@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SousChef;
 using System.Xml;
+using System.Diagnostics;
 
 namespace DeCuisine
 {
@@ -97,7 +98,7 @@ namespace DeCuisine
         ServerGame serverGame;
         public SpaceParser(GameObjectConfig config, ServerGame serverGame) : base (config)
         {
-            this.serverGame = serverGame;
+            
         }
 
         protected override void handleSubtree(System.Xml.XmlReader reader)
@@ -125,23 +126,38 @@ namespace DeCuisine
         }
     }
 
-    class IngredientParser : BBXItemParser<ServerIngredient>
+    class IngredientParser : GameObjectParser<ServerIngredient>
     {
-        ServerGame serverGame;
-        public IngredientParser(GameObjectConfig config, ServerGame serverGame)
-            : base(config)
+        public IngredientParser(GameObjectConfig config, ServerGame serverGame) : base(config, serverGame) { }
+
+        protected override void reset() { }
+
+        protected override ServerIngredient returnItem()
+        {   
+            return new ServerIngredient(serverGame.Config.Ingredients[attributes["type"]], serverGame, getCoordinateAttrib());
+        }
+    }
+
+    abstract class GameObjectParser<T> : BBXItemParser<T> where T : ServerGameObject
+    {
+        protected ServerGame serverGame;
+        public GameObjectParser(GameObjectConfig config, ServerGame serverGame) : base(config)
         {
             this.serverGame = serverGame;
         }
-
-        protected override void reset()
+        protected Coordinate getCoordinateAttrib()
         {
-            throw new NotImplementedException();
+            return getCoordinateAttrib("coordinate");
         }
-
-        protected override ServerIngredient returnItem()
+        protected Coordinate getCoordinateAttrib(string attrib)
         {
-            throw new NotImplementedException();
+            return getCoordinate(attributes[attrib]);
+        }
+        protected Coordinate getCoordinate(string str)
+        {
+            var floats = getFloats(str);
+            Debug.Assert(floats.Length == 2);
+            return new Coordinate(floats[0], floats[1], floats[2]);
         }
     }
 

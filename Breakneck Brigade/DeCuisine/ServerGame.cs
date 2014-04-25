@@ -147,8 +147,8 @@ namespace DeCuisine
             /* test */
             lock (Lock)
             {
-                new ServerIngredient(Config.Ingredients["banana"], this, new Vector4(0, 0, 0));
-                new ServerIngredient(Config.Ingredients["ice cream"], this, new Vector4(50, 50, 0));
+                new ServerIngredient(Config.Ingredients["banana"], this, new Coordinate(0, 0, 0));
+                new ServerIngredient(Config.Ingredients["ice cream"], this, new Coordinate(50, 50, 0));
             }
             /* test */
 

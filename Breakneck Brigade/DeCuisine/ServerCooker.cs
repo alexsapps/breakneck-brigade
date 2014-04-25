@@ -83,7 +83,7 @@ namespace DeCuisine
                     ingredeint.MarkDeleted();
                 }
                 this.Contents = new List<ServerIngredient>(); // clear contents
-                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game);
+                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, new Coordinate(0,0,0));
                 this.Contents.Add(ToAdd);
                 return ToAdd;
             }

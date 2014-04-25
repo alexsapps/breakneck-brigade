@@ -15,22 +15,15 @@ namespace DeCuisine
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
-        public ServerIngredient(IngredientType type, ServerGame game)
-            : base(game)
-        {
-            this.Type = type;
-        }
-
         /// <summary>
         /// Create the object and add it to the game world at vector4. Also added it to the 
         /// serial stream passed in.
         /// </summary>
-        public ServerIngredient(IngredientType type, ServerGame game, Vector4 transform) 
+        public ServerIngredient(IngredientType type, ServerGame game, Coordinate transform) 
             : base(game)
         {
             this.Type = type;
-            base.AddToWorld(transform[0], transform[1], transform[2]);
-
+            base.AddToWorld(transform);
         }
         /// <summary>
         /// write the packet. Everything above the ==== is handled in the base class. Below is handled 

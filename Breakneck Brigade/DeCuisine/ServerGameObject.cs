@@ -85,7 +85,7 @@ namespace DeCuisine
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public void AddToWorld(float x, float y, float z)
+        public void AddToWorld(Coordinate coordinate)
         {
             Debug.Assert(!InWorld);
 
@@ -101,7 +101,7 @@ namespace DeCuisine
                     throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
             }
 
-            Ode.dGeomSetPosition(this.Geom, x, y, z);
+            Ode.dGeomSetPosition(this.Geom, coordinate.x, coordinate.y, coordinate.z);
             if (this.HasBody)
             {
                 Ode.dMass mass = new Ode.dMass();
