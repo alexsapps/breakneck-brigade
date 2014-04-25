@@ -279,7 +279,7 @@ namespace DeCuisine
             int numc;
             unsafe
             {
-                numc = 0; // Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, 0);
+                numc =  Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, sizeof(Ode.dContactGeom));
             }
             if (numc > 0)
             {
