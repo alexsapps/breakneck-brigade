@@ -29,7 +29,8 @@ namespace DeCuisine
             : base(game)
         {
             this.Type = type;
-            this.AddToWorld(transform[0], transform[1], transform[2]);
+            base.AddToWorld(transform[0], transform[1], transform[2]);
+
         }
         /// <summary>
         /// write the packet. Everything above the ==== is handled in the base class. Below is handled 
@@ -40,7 +41,7 @@ namespace DeCuisine
         /// double Y
         /// double Z
         /// ===========
-        /// string name
+        /// string name of the type of ingredient. 
         /// int32  cleanliness
         /// </summary>
         /// <param name="stream"></param>
@@ -52,13 +53,21 @@ namespace DeCuisine
         }
 
         /// <summary>
-        /// Update the stream with the needed info. Positions are handled by the base class
+        /// Update the stream with the needed info. The id and position are handled by the
+        /// base class. The packet will look as follows. Everything under ==== is handled
+        /// by the base class
+        /// int32  id
+        /// double x
+        /// double y
+        /// double z
+        /// ==========
+        /// int16  cleanliness
         /// </summary>
         /// <param name="stream"></param>
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
-            stream.Write(this.Cleanliness);
+            stream.Write((Int16)this.Cleanliness);
         }
 
         public override void Update()

@@ -29,7 +29,7 @@ namespace Breakneck_Brigade
         static public InputManager IM;
 
         static void Main(string[] args)
-        {        
+        {
 
 #if PROJECT_GRAPHICS_TEST
             Renderer renderer = new Renderer();
@@ -146,6 +146,7 @@ namespace Breakneck_Brigade
                         else if (client.GameMode == GameMode.Started)
                         {
                             Console.WriteLine("Game started.");
+                            renderer.GameObjects = client.Game.gameObjects.Values;
                             //Thread playThread = new Thread(new ThreadStart(play));
                             //playThread.Start();
                             play();
