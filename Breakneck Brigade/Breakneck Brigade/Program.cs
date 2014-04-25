@@ -146,7 +146,6 @@ namespace Breakneck_Brigade
                         else if (client.GameMode == GameMode.Started)
                         {
                             Console.WriteLine("Game started.");
-                            renderer.GameObjects = client.Game.gameObjects.Values;
                             //Thread playThread = new Thread(new ThreadStart(play));
                             //playThread.Start();
                             play();

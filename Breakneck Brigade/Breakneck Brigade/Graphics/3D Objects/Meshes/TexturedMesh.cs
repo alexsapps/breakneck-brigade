@@ -88,7 +88,7 @@ namespace Breakneck_Brigade.Graphics
         public override void Render()
         {
             Gl.glPushMatrix();
-            Gl.glMultMatrixf(Transformation.glArray);
+            Gl.glMultMatrixf(_transform.glArray);
             
             Texture.Bind();
 

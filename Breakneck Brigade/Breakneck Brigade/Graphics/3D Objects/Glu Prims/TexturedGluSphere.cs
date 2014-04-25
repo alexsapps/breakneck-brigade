@@ -96,7 +96,7 @@ namespace Breakneck_Brigade.Graphics
         public override void Render()
         {
             Gl.glPushMatrix();
-            Gl.glMultMatrixf(Transformation.glArray);
+            Gl.glMultMatrixf(_transform.glArray);
                 //Store previous color
                 float[] prevColor = new float[4]; 
                 Gl.glGetFloatv(Gl.GL_CURRENT_COLOR, prevColor);
