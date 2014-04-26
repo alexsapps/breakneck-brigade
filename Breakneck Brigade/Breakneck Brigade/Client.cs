@@ -121,11 +121,7 @@ namespace Breakneck_Brigade
             {
                 //if connected, server ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
 
-                lock (Lock)
-                {
-                    if (IsConnected) 
-                        Disconnect();
-                }
+                lock (Lock) { Disconnect(); }
                 return;
             }
             catch (Exception ex)
@@ -171,11 +167,7 @@ namespace Breakneck_Brigade
             {
                 //if connected, server ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
 
-                lock (Lock)
-                {
-                    if (IsConnected)
-                        Disconnect();
-                }
+                lock (Lock) { Disconnect(); }
                 return;
             }
             catch (Exception ex)
@@ -189,12 +181,11 @@ namespace Breakneck_Brigade
 
         public void Disconnect()
         {
-            Debug.Assert(IsConnected);
-
             Lock.AssertHeld();
-
-            GameMode = SousChef.GameMode.Stopping;
+            if (!IsConnected)
+                return;
             IsConnected = false;
+            GameMode = SousChef.GameMode.Stopping;
 
             lock (ClientEvents)
             {
@@ -213,23 +204,12 @@ namespace Breakneck_Brigade
                 if (senderThread != null)
                     if (senderThread != Thread.CurrentThread)
                         senderThread.Join();
-                
             }
-            Monitor.Enter(Lock);
+            Monitor.Enter(Lock); //let's hope we didn't re-connect in the meantime.  not sure how to fix this.  actually...since it makes a new Client on every connection, it's fine for now.  ideally, receiver thread makes a signal to disconnect instead of actually disconnecting, and another thread actually does the disconnect.
 
-            //NOTE: game thread constantly checks IsConnected to know when to terminate
+            //note: game thread constantly checks IsConnected to know when to terminate
 
-            //if (Game != null) //e.g. if quitting before game started (init phase)
-            //{
-            //    lock (Game.gameObjects)
-            //    {
-            //        //Game.HasUpdates = true; //the update is that the game has ended
-            //        //Monitor.PulseAll(Game.gameObjects); //close renderer thread --we do this below now
-            //    }
-            //}
-
-
-            Game = null;
+            Game = null; //may already be null e.g. if quitting before game started (init phase)
         }
     }
 }

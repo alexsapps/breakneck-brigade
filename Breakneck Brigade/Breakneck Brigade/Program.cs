@@ -128,52 +128,82 @@ namespace Breakneck_Brigade
 
         static void doGameCycle()
         {
-            renderer = new Renderer();
-
-            while (true)
+            using (renderer = new Renderer())
             {
-                Console.WriteLine("Prompting to connect...");
-                client = promptConnect();
-                if (client == null)
-                    break;
-
-                GameMode oldMode = GameMode.None;
-
                 while (true)
                 {
-                    lock (ProgramLock)
+                    Console.WriteLine("Prompting to connect...");
+                    client = promptConnect();
+                    if (client == null)
+                        break;
+
+                    bool playAgain = doGame();
+                    
+                    if (!playAgain)
+                        return; //user closed window.   quit.
+                    //else, game ended or disconnected.  prompt to connect again.
+                }
+            }
+        }
+        static bool doGame()
+        {
+            GameMode oldMode = GameMode.None;
+            while (true)
+            {
+                lock (ProgramLock)
+                {
+                    if (client.GameMode != oldMode)
                     {
-                        if (client.GameMode != oldMode)
+                        switch (client.GameMode)
                         {
-                            if (client.GameMode == GameMode.Init)
-                            {
+                            case GameMode.Init:
                                 Console.WriteLine("Waiting for other players to join.");
-                            }
-                            else if (client.GameMode == GameMode.Started)
-                            {
+                                break;
+                            case GameMode.Started:
                                 Console.WriteLine("Game started.");
                                 bool playAgain;
 
                                 Monitor.Exit(ProgramLock);
                                 playAgain = play();
                                 Monitor.Enter(ProgramLock);
-
-                                if (playAgain)
-                                    break; //game ended or disconnected.  prompt to connect again.
-                                else
-                                    return; //user closed window.   quit.
-                            }
-                            else if (client.GameMode == GameMode.Stopping)
-                            {
+                                renderer.GameObjects = null;
+                                return playAgain;
+                            case GameMode.Stopping:
                                 Console.WriteLine("Game ended.");
                                 on_disconnected();
-                                break; //reconnect
-                            }
-                            oldMode = client.GameMode;
+                                return true; //reconnect
                         }
+                        oldMode = client.GameMode;
+                    }
+                }
+                render();
+            }
+        }
+        static bool play()
+        {
+            //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
+            while (true)
+            {
+                lock (ProgramLock)
+                {
+                    if (renderer.ShouldExit())
+                    {
+                        onClosed();
+                        return false; //quit
                     }
 
-                    render();
+                    lock (client.Lock)
+                    {
+                        if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
+                            return true; //play again
+
+                        lock (client.Game.Lock)
+                        {
+                            renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
+
+                            render();
+                        }
+                    }
                 }
             }
         }
@@ -286,40 +316,7 @@ namespace Breakneck_Brigade
             }
         }
 
-        static BBLock renderLock = new BBLock();
-
-        static bool play()
-        {
-            //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
-
-            using (renderer)
-            {
-                while (true)
-                {
-                    lock (ProgramLock)
-                    {
-                        if (renderer.ShouldExit())
-                        {
-                            onClosed();
-                            return false; //quit
-                        }
-
-                        lock (client.Lock)
-                        {
-                            if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
-                                return true; //play again
-
-                            lock (client.Game.Lock)
-                            {
-                                renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
-
-                                render();
-                            }
-                        }
-                    }
-                }   
-            }
-        }
+        
 
         static void render()
         {

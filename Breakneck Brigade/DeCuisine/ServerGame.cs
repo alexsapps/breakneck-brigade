@@ -118,7 +118,9 @@ namespace DeCuisine
 
             if (prevMode == GameMode.Started || prevMode == GameMode.Paused)
             {
+                Monitor.Exit(Lock);
                 runThread.Join();
+                Monitor.Enter(Lock); //let's hope nothing else changed in the meantime.  not sure how to fix this.
                 runThread = null;
             }
         }
@@ -161,11 +163,14 @@ namespace DeCuisine
 
             try
             {
-                while (Mode == GameMode.Started)
+                while (true)
                 {
                     next += rate;
                     lock (Lock)
                     {
+                        if (Mode != GameMode.Started)
+                            return;
+
                         /*
                          * handle client input, e.g. move
                          */
