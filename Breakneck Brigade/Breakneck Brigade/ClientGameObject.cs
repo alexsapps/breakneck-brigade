@@ -73,7 +73,13 @@ namespace Breakneck_Brigade
 
         protected virtual void readGeom(BinaryReader reader)
         {
-            this.Position = getPositionVector(reader);
+            Position = getPositionVector(reader);
+        }
+
+        protected void finilizeConstruction()
+        {
+            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bottle"];
+            Scale = Model.InitialScale;
         }
 
         /// <summary>

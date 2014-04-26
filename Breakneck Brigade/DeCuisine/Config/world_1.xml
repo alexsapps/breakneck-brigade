@@ -2,5 +2,6 @@
 	<space>
 		<ingredient type="banana" coordinate="0,200,0" />
 		<ingredient type="ice cream" coordinate="0,100,0" />
+    <plane height="1" texture="twoballplate" />
 	</space>
 </world>

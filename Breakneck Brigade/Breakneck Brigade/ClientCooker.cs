@@ -13,7 +13,8 @@ namespace Breakneck_Brigade
     {
         public CookerType Type { get; set; }
         public List<ClientIngredient> Contents { get; set; }
-       public ClientCooker()
+        
+        public ClientCooker()
         {
 
         }
@@ -34,15 +35,14 @@ namespace Breakneck_Brigade
         public ClientCooker(int id, BinaryReader reader, ClientGame game) 
             : base(id, reader, game)
         {
-            //CookerType type = reader.ReadString();
-            CookerType type = game.Config.Cookers[reader.ReadString()];
-            construct(type);
+            Type = game.Config.Cookers[reader.ReadString()];
+            base.finilizeConstruction();
         }
 
         private void construct(CookerType type)
         {
-            this.Type = type;
-            Model = Renderer.Models[ModelName];
+            Type = type;
+            base.finilizeConstruction();
         }
 
         private void update()

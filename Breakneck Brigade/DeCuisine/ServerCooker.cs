@@ -17,6 +17,7 @@ namespace DeCuisine
         public List<ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
         public List<ServerIngredient> ToAdd { get; set; }
+        protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
 
         private string HashCache { get; set; }
         private int ParticleEffect { get; set; }
@@ -116,10 +117,6 @@ namespace DeCuisine
             {
                 this.AddIngredient((ServerIngredient)obj);
             }
-        }
-        public override GeometryInfo GeomInfo
-        {
-            get { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
         }
     }
 }

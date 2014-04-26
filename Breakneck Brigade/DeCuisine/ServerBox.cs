@@ -14,7 +14,7 @@ namespace DeCuisine
         public Coordinate c2 { get; set; }
         public string Texture { get; set; }
         public override bool HasBody { get { return false; } }
-        public override GeometryInfo GeomInfo { get { throw new NotSupportedException(); } }
+        protected override GeometryInfo getGeomInfo() { throw new NotSupportedException(); }
         public override Coordinate Position { get { throw new NotSupportedException("use c1 and c2 instead"); } set { throw new NotSupportedException("use c1 and c2 instead"); } }
 
         public ServerBox(ServerGame game, string texture, Coordinate c1, Coordinate c2) : base(game)

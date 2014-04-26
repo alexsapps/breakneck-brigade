@@ -20,12 +20,14 @@ namespace Breakneck_Brigade
         {
             this.Height = height;
             this.Texture = texture;
+            base.finilizeConstruction();
         }
 
         public ClientPlane(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
             this.Height = reader.ReadSingle();
             this.Texture = reader.ReadString();
+            base.finilizeConstruction();
         }
 
         protected override void readGeom(BinaryReader reader)

@@ -31,7 +31,9 @@ namespace Breakneck_Brigade
         public ClientIngredient(int id, IngredientType type, Vector4 transform, int cleanliness, ClientGame game)
             : base(id, game)
         {
-            construct(type, cleanliness);
+            Type = type;
+            Cleanliness = cleanliness;
+            base.finilizeConstruction();
         }
 
         /// <summary>
@@ -53,20 +55,10 @@ namespace Breakneck_Brigade
         {
 
             string ingrname = reader.ReadString();
-            IngredientType type = game.Config.Ingredients[ingrname];
-            var cleanliness = reader.ReadInt32();
-            construct(type, cleanliness);
+            Type = game.Config.Ingredients[ingrname];
+            Cleanliness = reader.ReadInt32();
+            base.finilizeConstruction();
         }
-
-        void construct(IngredientType type, int cleanliness)
-        {
-            this.Type = type;
-            if (Renderer.Models.ContainsKey(ModelName))
-                Model = Renderer.Models[ModelName];
-            else
-                Model = Renderer.Models["bottle"];
-            this.Scale = Model.InitialScale;
-        } 
 
 
         /// <summary>

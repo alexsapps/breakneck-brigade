@@ -14,6 +14,7 @@ namespace DeCuisine
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Ingredient; } }
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
+        protected override GeometryInfo getGeomInfo() { return this.Game.Config.Ingredients[Type.Name].GeomInfo; }
 
         /// <summary>
         /// Create the object and add it to the game world at vector4. Also added it to the 
@@ -68,9 +69,6 @@ namespace DeCuisine
 
         }
 
-        public override GeometryInfo GeomInfo
-        {
-            get { return this.Game.Config.Ingredients[Type.Name].GeomInfo; }
-        }
+        
     }
 }

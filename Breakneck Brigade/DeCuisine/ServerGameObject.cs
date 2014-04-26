@@ -20,7 +20,9 @@ namespace DeCuisine
         public abstract GameObjectClass ObjectClass { get; }
 
         public virtual bool HasBody { get { return true; } } //false for walls
-        public abstract GeometryInfo GeomInfo { get; }
+        private GeometryInfo _geominfo;
+        public GeometryInfo GeomInfo { get { return _geominfo ?? (_geominfo = getGeomInfo()); } } //cache
+        protected abstract GeometryInfo getGeomInfo();
         public virtual Coordinate Position { get; set; }
 
         public bool InWorld { get; protected set; }

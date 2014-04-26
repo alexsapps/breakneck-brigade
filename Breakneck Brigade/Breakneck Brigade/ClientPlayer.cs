@@ -10,7 +10,7 @@ namespace Breakneck_Brigade
     /// <summary>
     /// Client-side player object.
     /// </summary>
-    public class ClientPlayer
+    public class ClientPlayer //TODO: subclass ClientGameObject or use Composition, then Position variable
     {
         public Vector4 Position;
         public float Orientation { get; set; }
