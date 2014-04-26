@@ -36,14 +36,9 @@ namespace Breakneck_Brigade
         /// <param name="game">The game where the object is created</param>
         public ClientGameObject(int id, ClientGame game) 
         {
-            this.Id = id;
-            this.Game = game;
-            Transformation  = new Matrix4();
-            _position       = new Vector4();
-            _scale          = new Vector4(1.0f, 1.0f, 1.0f);
-            _rotation       = new Vector4();
+            constructEssential(id, game);
+            initGeom();
         }
-
 
         /// <summary>
         /// Instatiates client objects from data in the reader.
@@ -57,15 +52,29 @@ namespace Breakneck_Brigade
         /// <param name="reader"></param>
         public ClientGameObject(int id, ClientGame game, BinaryReader reader)
         {
+            constructEssential(id, game);
+            initGeom();
+            readGeom(reader);
+        }
+
+        protected void constructEssential(int id, ClientGame game)
+        {
             this.Id = id;
             this.Game = game;
+        }
+
+        protected virtual void initGeom()
+        {
+            Transformation = new Matrix4();
             _position = new Vector4();
             _scale = new Vector4(1.0f, 1.0f, 1.0f);
             _rotation = new Vector4();
-            Transformation = new Matrix4();
-            this.Position = getPositionVector(reader);
         }
 
+        protected virtual void readGeom(BinaryReader reader)
+        {
+            this.Position = getPositionVector(reader);
+        }
 
         /// <summary>
         /// Read the serialized data from the packet. 

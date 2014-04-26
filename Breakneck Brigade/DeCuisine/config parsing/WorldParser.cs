@@ -191,7 +191,6 @@ namespace DeCuisine
     {
         IntPtr space;
 
-        IntPtr plane;
         ServerPlane serverPlane;
 
         public PlaneParser(GameObjectConfig config, ServerGame serverGame, IntPtr space) : base (config, serverGame) 
@@ -201,12 +200,10 @@ namespace DeCuisine
         protected override void HandleAttributes()
         {
             float height = float.Parse(attributes["height"]);
-            plane = Ode.dCreatePlane(space, 0, 0, height, 0);
             serverPlane = new ServerPlane(serverGame, attributes["texture"], height);
         }
         protected override void reset()
         {
-            plane = default(IntPtr);
             serverPlane = null;
         }
         protected override ServerPlane returnItem()
@@ -219,7 +216,6 @@ namespace DeCuisine
     {
         IntPtr space;
 
-        IntPtr box;
         ServerBox serverBox;
 
         public BoxParser(GameObjectConfig config, ServerGame serverGame, IntPtr space)
@@ -231,14 +227,10 @@ namespace DeCuisine
         {
             var coord1 = getCoordinateAttrib("coordinate1");
             var coord2 = getCoordinateAttrib("coordinate2");
-            box = Ode.dCreateBox(space, coord1.x, coord1.y, coord1.z);
-            if (DateTime.Now > new DateTime(2014,04,26))
-                throw new Exception("hey calvin--dCreateBox only takes 3 floats?  we have 6 to process.");
             serverBox = new ServerBox(serverGame, attributes["texture"], coord1, coord2);
         }
         protected override void reset()
         {
-            box = default(IntPtr);
             serverBox = null;
         }
         protected override ServerBox returnItem()

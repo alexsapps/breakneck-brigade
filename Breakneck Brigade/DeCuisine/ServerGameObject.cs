@@ -15,20 +15,17 @@ namespace DeCuisine
     /// </summary>
     abstract class ServerGameObject : IGameObject
     {
+        public ServerGame Game;
         public int Id { get; set; }
         public abstract GameObjectClass ObjectClass { get; }
 
-        public bool InWorld { get; protected set; }
-        public bool DirtyBit { get; set; }
-
-        public IntPtr Geom { get; set; }
         public virtual bool HasBody { get { return true; } } //false for walls
-        public IntPtr Body { get; set; } //null for walls
-        public GeomShape GeomShape { get; set;} 
         public abstract GeometryInfo GeomInfo { get; }
-        public ServerGame Game;
+        public virtual Coordinate Position { get; set; }
 
-        public Coordinate Position { get; set; }
+        public bool InWorld { get; protected set; }
+        public IntPtr Geom { get; set; }
+        public IntPtr Body { get; set; } //null for walls
 
         private static int nextId;
         /// <summary>
@@ -56,13 +53,18 @@ namespace DeCuisine
         /// <param name="stream"></param>
         public virtual void Serialize(BinaryWriter stream)
         {
-            stream.Write((Int32)Id);
-            stream.Write((Int16)ObjectClass);
+            serializeEssential(stream);
 
             Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
             stream.Write((float)m3.X);
             stream.Write((float)m3.Y);
             stream.Write((float)m3.Z);
+        }
+
+        protected virtual void serializeEssential(BinaryWriter stream)
+        {
+            stream.Write((Int32)Id);
+            stream.Write((Int16)ObjectClass);
         }
 
         /// <summary>
@@ -79,56 +81,77 @@ namespace DeCuisine
             this.Game.ObjectRemoved(this);
         }
 
+        protected delegate IntPtr GeomMaker();
+
         /// <summary>
         /// Add the object into the physical world.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public void AddToWorld(Coordinate coordinate)
+        protected void AddToWorld(Coordinate coordinate)
         {
             this.Position = coordinate;
+            AddToWorld(() => { 
+                
+                var geom = makeGeom(GeomInfo, coordinate);
+
+                if (this.HasBody)
+                {
+                    Body = makeBody(GeomInfo, Geom);
+                    Ode.dGeomSetBody(geom, Body);
+                }
+
+                Ode.dGeomSetPosition(geom, coordinate.x, coordinate.y, coordinate.z); //this must happen after body is set
+
+                return geom;
+
+            });
+            
+        }
+
+        protected void AddToWorld(GeomMaker geomMaker)
+        {
             Debug.Assert(!InWorld);
 
-            switch (GeomInfo.Shape)
+            Geom = geomMaker();
+            Ode.dGeomSetData(Geom, new IntPtr(Id));
+
+            InWorld = true;
+        }
+
+        private IntPtr makeGeom(GeometryInfo info, Coordinate coordinate)
+        {
+            IntPtr geom;
+            switch (info.Shape)
+            {
+                case GeomShape.Box: geom = Ode.dCreateBox(Game.Space, info.Sides[0], info.Sides[1], info.Sides[2]); break;
+                case GeomShape.Sphere: geom = Ode.dCreateSphere(Game.Space, info.Sides[0]); break;
+                default: throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
+            }
+            return geom;
+        }
+
+        private IntPtr makeBody(GeometryInfo info, IntPtr geom)
+        {
+            Ode.dMass mass = new Ode.dMass();
+            IntPtr body = Ode.dBodyCreate(this.Game.World);
+            switch (info.Shape)
             {
                 case GeomShape.Box:
-                    this.Geom = Ode.dCreateBox(this.Game.Space, GeomInfo.Sides[0], GeomInfo.Sides[1], GeomInfo.Sides[2]);
+                    Ode.dMassSetBox(ref mass, info.Mass, info.Sides[0], info.Sides[1], info.Sides[2]);
+                    Ode.dBodySetMass(body, ref mass);
                     break;
                 case GeomShape.Sphere:
-                    Geom = Ode.dCreateSphere(this.Game.Space, GeomInfo.Sides[0]);
+                    Ode.dMassSetZero(ref mass);
+                    Ode.dMassSetSphereTotal(ref mass, GeomInfo.Mass, GeomInfo.Sides[0]);
+                    Ode.dBodySetMass(body, ref mass);
+                    this.Geom = Ode.dCreateSphere(this.Game.Space, GeomInfo.Sides[0]);
                     break;
                 default:
                     throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
             }
-            Ode.dGeomSetPosition(this.Geom, coordinate.x, coordinate.y, coordinate.z);
-            if (this.HasBody)
-            {
-                Ode.dMass mass = new Ode.dMass();
-                this.Body = Ode.dBodyCreate(this.Game.World);
-                switch (GeomInfo.Shape)
-                {
-                    case GeomShape.Box:
-                        Ode.dMassSetBox(ref mass, GeomInfo.Mass, GeomInfo.Sides[0], GeomInfo.Sides[1], GeomInfo.Sides[2]);
-                        Ode.dBodySetMass(this.Body, ref mass);
-                        break;
-                    case GeomShape.Sphere:
-                        Ode.dMassSetZero(ref mass);
-                        Ode.dMassSetSphereTotal(ref mass, GeomInfo.Mass, GeomInfo.Sides[0]);
-                        Ode.dBodySetMass(this.Body, ref mass);
-                        this.Geom = Ode.dCreateSphere(this.Game.Space, GeomInfo.Sides[0]);
-                        break;
-                    default:
-                        throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
-                }
-
-                Ode.dGeomSetBody(this.Geom, this.Body);
-            }
-
-            Ode.dGeomSetData(this.Geom, new IntPtr(Id));
-            Ode.dGeomSetPosition(this.Geom, coordinate.x, coordinate.y, coordinate.z);
-            var m3 = Ode.dGeomGetPosition(this.Geom);
-            InWorld = true;
+            return body;
         }
 
         public void RemoveFromWorld()

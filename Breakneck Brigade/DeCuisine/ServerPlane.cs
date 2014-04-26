@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tao.Ode;
 
 namespace DeCuisine
 {
@@ -13,10 +14,15 @@ namespace DeCuisine
         public string Texture { get; set; }
         public override bool HasBody { get  { return false; } }
         public override GeometryInfo GeomInfo { get { throw new NotSupportedException(); } }
+        public override Coordinate Position { get { throw new NotSupportedException(); } set { throw new NotSupportedException(); } }
         public ServerPlane(ServerGame game, string texture, float height) : base(game)
         {
             this.Texture = texture;
             this.Height = height;
+            AddToWorld(() =>
+            {
+                return Ode.dCreatePlane(game.Space, 0, 0, height, 0);
+            });
         }
         public override void Update()
         {
@@ -24,9 +30,10 @@ namespace DeCuisine
         }
         public override void Serialize(System.IO.BinaryWriter stream)
         {
-            base.Serialize(stream);
-
+            //do not call base serialize
+            serializeEssential(stream);
             stream.Write(Height);
+            stream.Write(Texture);
         }
         public override void UpdateStream(System.IO.BinaryWriter stream)
         {

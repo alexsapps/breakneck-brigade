@@ -1,5 +1,5 @@
 using System;
-namespace SousChef
+namespace Breakneck_Brigade
 {
     /// <summary>
     /// An implementation of a 4D vector for use in homogenous matrix operations

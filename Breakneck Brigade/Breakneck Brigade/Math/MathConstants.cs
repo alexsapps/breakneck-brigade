@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SousChef
+namespace Breakneck_Brigade
 {
     public class MathConstants
     {

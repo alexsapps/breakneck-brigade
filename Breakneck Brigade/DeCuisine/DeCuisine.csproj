@@ -69,7 +69,6 @@
     <Compile Include="ServerPlane.cs" />
     <Compile Include="config parsing\WorldParser.cs" />
     <Compile Include="DCClientEvent.cs" />
-    <Compile Include="math\Coordinate.cs" />
     <Compile Include="ServerCooker.cs" />
     <Compile Include="ServerGame.cs" />
     <Compile Include="Program.cs" />
@@ -96,6 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config\world_example.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="math\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
