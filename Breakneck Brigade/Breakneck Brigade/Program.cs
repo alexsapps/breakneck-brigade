@@ -321,6 +321,14 @@ namespace Breakneck_Brigade
         static void render()
         {
             cPlayer.Update(IM);
+            if(cPlayer.NetworkEvents.Count > 0)
+            {
+                foreach(ClientEvent ce in cPlayer.NetworkEvents)
+                {
+                    sendEvent(ce);
+                }
+                cPlayer.NetworkEvents.Clear();
+            }
             renderer.Render(cPlayer);
         }
 

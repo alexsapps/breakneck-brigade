@@ -17,6 +17,7 @@ namespace Breakneck_Brigade
         public float Incline { get; set; }
         public Vector4 Velocity;
         public float MoveSpeed = 0.35f;
+        public List<ClientEvent> NetworkEvents;
 
         private bool _fpsToggle = true;
 
@@ -24,6 +25,7 @@ namespace Breakneck_Brigade
         {
             Position = new Vector4(0.0f,0.0f,-50.0f);
             Velocity = new Vector4();
+            NetworkEvents = new List<ClientEvent>();
         }
 
         public void Update(InputManager IM)
@@ -68,6 +70,14 @@ namespace Breakneck_Brigade
                 {
                     IM.EnableFPSMode();
                 }
+            }
+
+            if(Convert.ToBoolean(IM.GetKeys()[InputManager.GLFW_KEY_SPACE]))
+            {
+                //Test code
+                ClientEvent spawnEvent = new ClientEvent();
+                spawnEvent.Type = ClientEventType.Test;
+                NetworkEvents.Add(spawnEvent);
             }
         }
     }

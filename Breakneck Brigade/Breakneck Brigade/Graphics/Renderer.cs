@@ -69,6 +69,7 @@ namespace Breakneck_Brigade.Graphics
 
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
+#pragma warning disable 0162 //Disables the "unreachable code" warning only
                 var orange1 = new TestClientGameObject(Models["orange"]) { Id = 50000000 };
                 orange1.Position = new Vector4(0, 100, 0);
                 GameObjects = new List<ClientGameObject>();
@@ -89,10 +90,13 @@ namespace Breakneck_Brigade.Graphics
                 var orange5 = new TestClientGameObject(Models["orange"]) { Id = 50000004 };
                 orange4.Position = new Vector4(-50, -50, 0);
                 GameObjects.Add(orange5);
+#pragma warning restore 0162
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
             {
+#pragma warning disable 0162 //Disables the "unreachable code" warning only
                 makeAnnaHappy();
+#pragma warning restore 0162
             }
 
         }

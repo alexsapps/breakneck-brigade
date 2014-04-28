@@ -184,8 +184,11 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.Leave:
                                         break;
+                                    case ClientEventType.Test:
+                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
+                                        break;
                                     default:
-                                        Debugger.Break();
+                                        //Debugger.Break();
                                         break;
                                 }
                             }
@@ -197,7 +200,7 @@ namespace DeCuisine
                          */
                         {
                             Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldStep(World, 0.001f * (float)frameRate);
+                            Ode.dWorldQuickStep(World, 0.001f * (float)frameRate);
                             Ode.dJointGroupEmpty(ContactGroup);
                         }
 

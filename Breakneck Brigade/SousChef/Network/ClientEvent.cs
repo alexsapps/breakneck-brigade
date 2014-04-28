@@ -10,5 +10,9 @@ namespace SousChef
     {
         public ClientEventType Type { get; set; }
         public Dictionary<string, string> Args { get; set; }
+        public ClientEvent()
+        {
+            Args = new Dictionary<string, string>();
+        }
     }
 }
