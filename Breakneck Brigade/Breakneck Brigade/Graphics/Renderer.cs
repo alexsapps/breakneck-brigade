@@ -21,7 +21,7 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         private ModelParser parser;
-        private const DebugMode DEBUG_MODE = DebugMode.ORANGE;
+        private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         /// <summary>
@@ -69,10 +69,26 @@ namespace Breakneck_Brigade.Graphics
 
             if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
             { 
-                var orange = new TestClientGameObject(Models["orange"]) { Id = 50000000 };
-                orange.Position = new Vector4(0, -25, 0);
+                var orange1 = new TestClientGameObject(Models["orange"]) { Id = 50000000 };
+                orange1.Position = new Vector4(0, 100, 0);
                 GameObjects = new List<ClientGameObject>();
-                GameObjects.Add(orange);
+                GameObjects.Add(orange1);
+
+                var orange2 = new TestClientGameObject(Models["orange"]) { Id = 50000001 };
+                orange2.Position = new Vector4(0, 50, 0);
+                GameObjects.Add(orange2);
+
+                var orange3 = new TestClientGameObject(Models["orange"]) { Id = 50000002 };
+                orange3.Position = new Vector4(50, 50, 0);
+                GameObjects.Add(orange3);
+
+                var orange4 = new TestClientGameObject(Models["orange"]) { Id = 50000003 };
+                orange4.Position = new Vector4(-50, 50, 0);
+                GameObjects.Add(orange4);
+
+                var orange5 = new TestClientGameObject(Models["orange"]) { Id = 50000004 };
+                orange4.Position = new Vector4(-50, -50, 0);
+                GameObjects.Add(orange5);
             }
             if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
             {
@@ -113,9 +129,14 @@ namespace Breakneck_Brigade.Graphics
                         float scaleZ = modelSubtree.ReadElementContentAsFloat();
                         
                         Model model = parser.ParseFile(filename);
+                        /*
                         model.InitialScale.X = scaleX;
                         model.InitialScale.Y = scaleY;
                         model.InitialScale.Z = scaleZ;
+                         * */
+                        model.InitialScale.X = 1.0f;
+                        model.InitialScale.Y = 1.0f;
+                        model.InitialScale.Z = 1.0f;
                         Models.Add(filename, model);
 
                         if(ii != numberOfModels - 1)
@@ -162,7 +183,10 @@ namespace Breakneck_Brigade.Graphics
 
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
+                { 
+                    cgo.Position += new Vector4(0.0, -0.10, 0.0);
                     cgo.Render();
+                }
 
             Glfw.glfwSwapBuffers();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
