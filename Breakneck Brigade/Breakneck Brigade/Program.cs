@@ -17,7 +17,7 @@ namespace Breakneck_Brigade
 {
     class Program
     {
-        static BBLock ProgramLock = new BBLock();
+        public static BBLock ProgramLock = new BBLock();
 
         static Client client;
         static Renderer renderer;
@@ -150,6 +150,12 @@ namespace Breakneck_Brigade
             GameMode oldMode = GameMode.None;
             while (true)
             {
+                if (renderer.ShouldExit())
+                {
+                    onClosed();
+                    return false; //quit
+                }
+
                 lock (ProgramLock)
                 {
                     if (client.GameMode != oldMode)

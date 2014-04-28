@@ -31,7 +31,22 @@ namespace DeCuisine
 
         private Random random = new Random();
 
-        int frameRate; // Tick time in milliseconds
+        long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
+        private int _frameRate;
+        public int FrameRate // Tick time in milliseconds
+        {
+            get { return _frameRate; }
+            set 
+            { 
+                _frameRate = value;
+                _frameRateTicks = FrameRate * millisecond_ticks; //rate to wait in ticks
+            }
+
+        }
+        private long _frameRateTicks;
+        long FrameRateTicks { get { return _frameRateTicks; } }
+
+
         int MAX_CONTACTS = 8;
 
         public IntPtr World { get; set; }
@@ -61,8 +76,7 @@ namespace DeCuisine
             Lock.AssertHeld();
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
-            frameRate = int.Parse(config.GetSetting("frame-rate", 1000));
-
+            FrameRate = int.Parse(config.GetSetting("frame-rate", 1000));
             Config = new GameObjectConfig().GetConfigSalad();
         }
 
@@ -143,14 +157,9 @@ namespace DeCuisine
             }
         }
 
+        
         public void Run()
         {
-            long start = DateTime.UtcNow.Ticks;
-            long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
-            int milliseconds = frameRate;
-            long rate = milliseconds * millisecond_ticks; //rate to wait in ticks
-            long next = start;
-
             /* initialize physics */
             lock (Lock)
             {
@@ -163,9 +172,10 @@ namespace DeCuisine
 
             try
             {
+                long next = DateTime.UtcNow.Ticks;
                 while (true)
                 {
-                    next += rate;
+                    next += FrameRateTicks;
                     lock (Lock)
                     {
                         if (Mode != GameMode.Started)
@@ -197,7 +207,7 @@ namespace DeCuisine
                          */
                         {
                             Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldStep(World, 0.001f * (float)frameRate);
+                            Ode.dWorldQuickStep(World, 0.001f * (float)FrameRate);
                             Ode.dJointGroupEmpty(ContactGroup);
                         }
 
@@ -260,7 +270,8 @@ namespace DeCuisine
                     long waitTime = next - DateTime.UtcNow.Ticks;
                     if (waitTime > 0)
                         Thread.Sleep(new TimeSpan(waitTime));
-                    //TODO:  if not more than zero, log item -- rate too fast!
+                    else
+                        Console.WriteLine("error:  tick rate too fast. " + (waitTime / millisecond_ticks) + "ms late.");
                 }
             }
             finally
@@ -368,6 +379,13 @@ namespace DeCuisine
         {
             Lock.AssertHeld();
             return GameObjects[Ode.dGeomGetData(geom).ToInt32()];
+        }
+
+        internal void PrintStatus()
+        {
+            Lock.AssertHeld();
+            Console.WriteLine("Game mode: " + Mode.ToString());
+            Console.WriteLine(GameObjects.Count + " game objects");
         }
     }
 }

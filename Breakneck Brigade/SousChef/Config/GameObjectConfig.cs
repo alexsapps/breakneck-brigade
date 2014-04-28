@@ -39,16 +39,25 @@ namespace SousChef
             };
             this.CurrentSalad = salad;
 
+            const int nfiles = 3;
+            string[] filenames = new string[nfiles];
+
             /*
              * must be loaded in order.
              * e.g. recipes parser requires this.CurrentSalad to have ingredients already loaded
              */
-            foreach (var ingredient in new BBXIngredientsFileParser(this).LoadFile())
+            foreach (var ingredient in new BBXIngredientsFileParser(this).LoadFile(out filenames[0]))
                 salad.Ingredients.Add(ingredient.Name, ingredient);
-            foreach (var recipe in new BBXRecipesFileParser(this).LoadFile())
+            foreach (var recipe in new BBXRecipesFileParser(this).LoadFile(out filenames[1]))
                 salad.Recipies.Add(recipe.Name, recipe);
-            foreach (var cooker in new BBXCookersFileParser(this).LoadFile())
+            foreach (var cooker in new BBXCookersFileParser(this).LoadFile(out filenames[2]))
                 salad.Cookers.Add(cooker.Name, cooker);
+
+            byte[][] hashes = new byte[nfiles][];
+            for(int i = 0; i < nfiles; i++){
+                hashes[i] = SHA512.GetChecksum(filenames[i]);
+            }
+            salad.Hash = SHA512.GetCombinedHash(hashes);
 
             this.CurrentSalad = null;
             return salad;

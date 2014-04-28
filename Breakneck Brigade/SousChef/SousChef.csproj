@@ -63,6 +63,7 @@
     <Compile Include="BB.cs" />
     <Compile Include="Config\Recipes.cs" />
     <Compile Include="Config\RecipieParser.cs" />
+    <Compile Include="Config\SHA512.cs" />
     <Compile Include="GameObjectClass.cs" />
     <Compile Include="GameObjectType.cs" />
     <Compile Include="GeometryInfo.cs" />
