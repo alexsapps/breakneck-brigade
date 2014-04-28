@@ -35,15 +35,28 @@ namespace DeCuisine
             : base(game)
         {
             this.Type = type;
-            this.Contents = new List<ServerIngredient>();
-            this.ToAdd = new List<ServerIngredient>();
+            this.Contents = new List<ServerIngredient>(); 
             AddToWorld(transform);
         }
 
+
+        /// <summary>
+        /// Write the intial creation packet for this object. Everything above the ===== is handled by the
+        /// base class. Below that is object specific data and is handled in this function.
+        /// 
+        /// int32  id
+        /// int16  objectclass
+        /// float  X
+        /// float  Y
+        /// float  Z
+        /// ===========
+        /// string type - the type of cooker i.e. pot, blender, the object is 
+        /// </summary>
+        /// <param name="stream"></param>
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            UpdateStream(stream); // puts position in the stream to send. Note, only need the base class updatestream for construction
+            stream.Write(this.Type.Name);
         }
 
 
@@ -93,18 +106,25 @@ namespace DeCuisine
             return null;
         }
 
+        /// <summary>
+        /// Update the stream with the needed info. Everything above ==== is handled by the base class.
+        /// Currently writes the entire conents of the cooker to the stream.  
+        /// 
+        /// int32  id
+        /// float  X
+        /// float  Y
+        /// float  Z
+        /// ===========
+        /// int16  count - the number o ingredients in the cooker. 
+        /// *int32  id - the id of each ingredient in the cooker. There will be exactly count number of ids.  
+        /// </summary>
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
-            // Calvin TODO: check collision between this cooker and ingredients that are touching it. 
-            // if their is a collision, populate the list ToAdd with the ingredients. 
-            stream.Write(Type.Name); // tell which type of cooker to make on the client
             stream.Write(Contents.Count);
             foreach (var ingredient in Contents)
                 stream.Write((Int32)ingredient.Id);
         }
-
-        
 
         public override void Update()
         {
@@ -119,5 +139,6 @@ namespace DeCuisine
                 this.AddIngredient((ServerIngredient)obj);
             }
         }
+
     }
 }

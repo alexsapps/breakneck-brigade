@@ -28,13 +28,14 @@ namespace DeCuisine
         }
 
         /// <summary>
-        /// write the packet. Everything above the ==== is handled in the base class. Below is handled 
-        /// by this class.
+        /// Write the intial creation packet for this object. Everything above the ==== 
+        /// is handled in the base class. Below is handled by this class.
+        /// 
         /// int32  id
         /// int16  objectclass
-        /// float X
-        /// float Y
-        /// float Z
+        /// float  X
+        /// float  Y
+        /// float  Z
         /// ===========
         /// string name of the type of ingredient. 
         /// int32  cleanliness
@@ -43,7 +44,7 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         { 
             base.Serialize(stream);
-            stream.Write(Type.Name);
+            stream.Write(this.Type.Name);
             stream.Write((Int32)this.Cleanliness);
         }
 
@@ -51,6 +52,7 @@ namespace DeCuisine
         /// Update the stream with the needed info. The id and position are handled by the
         /// base class. The packet will look as follows. Everything under ==== is handled
         /// by the base class
+        /// 
         /// int32  id
         /// double x
         /// double y
