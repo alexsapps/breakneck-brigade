@@ -73,7 +73,7 @@ namespace Breakneck_Brigade
 
         protected virtual void readGeom(BinaryReader reader)
         {
-            Position = getPositionVector(reader);
+            this.Position = getPositionVector(reader);
         }
 
         protected void finilizeConstruction()

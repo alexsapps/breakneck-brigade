@@ -23,14 +23,5 @@ namespace SousChef
         }
     }
 
-    public static partial class BB
-    {
-        public static void Write(this BinaryWriter stream, Coordinate value)
-        {
-            stream.Write((float)value.x);
-            stream.Write((float)value.y);
-            stream.Write((float)value.z);
-        }
-        //ReadCoordinate is in client program
-    }
+
 }

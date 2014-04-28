@@ -23,7 +23,7 @@ namespace DeCuisine
         private GeometryInfo _geominfo;
         public GeometryInfo GeomInfo { get { return _geominfo ?? (_geominfo = getGeomInfo()); } } //cache
         protected abstract GeometryInfo getGeomInfo();
-        public virtual Coordinate Position { get; set; }
+        public virtual Ode.dVector3 Position { get { return getPosition(); } set { setPosition(value); } }
 
         public bool InWorld { get; protected set; }
         public IntPtr Geom { get; set; }
@@ -56,11 +56,7 @@ namespace DeCuisine
         public virtual void Serialize(BinaryWriter stream)
         {
             serializeEssential(stream);
-
-            Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            stream.Write((float)m3.X);
-            stream.Write((float)m3.Y);
-            stream.Write((float)m3.Z);
+            stream.Write(this.Position);
         }
 
         protected virtual void serializeEssential(BinaryWriter stream)
@@ -91,9 +87,8 @@ namespace DeCuisine
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        protected void AddToWorld(Coordinate coordinate)
+        protected void AddToWorld(Ode.dVector3 coordinate)
         {
-            this.Position = coordinate;
             AddToWorld(() => { 
                 
                 var geom = makeGeom(GeomInfo, coordinate);
@@ -104,7 +99,7 @@ namespace DeCuisine
                     Ode.dGeomSetBody(geom, Body);
                 }
 
-                Ode.dGeomSetPosition(geom, coordinate.x, coordinate.y, coordinate.z); //this must happen after body is set
+                Ode.dGeomSetPosition(geom, coordinate.X, coordinate.Y, coordinate.Z); //this must happen after body is set
 
                 return geom;
 
@@ -122,7 +117,7 @@ namespace DeCuisine
             InWorld = true;
         }
 
-        private IntPtr makeGeom(GeometryInfo info, Coordinate coordinate)
+        private IntPtr makeGeom(GeometryInfo info, Ode.dVector3 coordinate)
         {
             IntPtr geom;
             switch (info.Shape)
@@ -187,15 +182,7 @@ namespace DeCuisine
         public virtual void UpdateStream(BinaryWriter stream)
         {
             stream.Write((Int32)Id);
-
-            Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            stream.Write((float)m3.X);
-            stream.Write((float)m3.Y);
-            stream.Write((float)m3.Z);
-
-            Position.x = (float) m3.X;
-            Position.y = (float) m3.Y;
-            Position.z = (float) m3.Z;
+            stream.Write(this.Position);
         }
 
         public virtual void OnCollide(ServerGameObject obj)
@@ -212,5 +199,17 @@ namespace DeCuisine
         {
             this.Game.ObjectRemoved(this);
         }
+
+        private Ode.dVector3 getPosition()
+        {
+            Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+            return m3;
+        }
+
+        private void setPosition(Ode.dVector3 value)
+        {
+            Ode.dGeomSetPosition(this.Geom, value.X, value.Y, value.Z); 
+        }
+
     }
 }

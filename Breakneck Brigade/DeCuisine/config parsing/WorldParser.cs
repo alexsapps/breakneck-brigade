@@ -246,19 +246,19 @@ namespace DeCuisine
         {
             this.serverGame = serverGame;
         }
-        protected Coordinate getCoordinateAttrib()
+        protected Ode.dVector3 getCoordinateAttrib()
         {
             return getCoordinateAttrib("coordinate");
         }
-        protected Coordinate getCoordinateAttrib(string attrib)
+        protected Ode.dVector3 getCoordinateAttrib(string attrib)
         {
             return getCoordinate(attributes[attrib]);
         }
-        protected Coordinate getCoordinate(string str)
+        protected Ode.dVector3 getCoordinate(string str)
         {
             var floats = getFloats(str);
             Debug.Assert(floats.Length == 3);
-            return new Coordinate(floats[0], floats[1], floats[2]);
+            return new Ode.dVector3(floats[0], floats[1], floats[2]);
         }
     }
 

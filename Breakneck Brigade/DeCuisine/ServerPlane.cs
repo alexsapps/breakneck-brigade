@@ -14,7 +14,7 @@ namespace DeCuisine
         public string Texture { get; set; }
         public override bool HasBody { get  { return false; } }
         protected override GeometryInfo getGeomInfo() { throw new NotSupportedException(); }
-        public override Coordinate Position { get { throw new NotSupportedException(); } set { throw new NotSupportedException(); } }
+        public override Ode.dVector3 Position { get { throw new NotSupportedException(); } set { throw new NotSupportedException(); } }
         public ServerPlane(ServerGame game, string texture, float height) : base(game)
         {
             this.Texture = texture;

@@ -138,7 +138,7 @@ namespace DeCuisine
                 Console.WriteLine("MONITOR:");
                 foreach (ServerGameObject sgo in GameObjects.Values)
                 {
-                    Console.WriteLine("Position: " + sgo.Position.x + ", " + sgo.Position.y + ", " + sgo.Position.z);
+                    Console.WriteLine("Position: " + sgo.Position.X + ", " + sgo.Position.Y + ", " + sgo.Position.Z);
                 }
             }
         }

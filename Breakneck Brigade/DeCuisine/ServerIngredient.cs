@@ -20,12 +20,13 @@ namespace DeCuisine
         /// Create the object and add it to the game world at vector4. Also added it to the 
         /// serial stream passed in.
         /// </summary>
-        public ServerIngredient(IngredientType type, ServerGame game, Coordinate transform) 
+        public ServerIngredient(IngredientType type, ServerGame game, Ode.dVector3 transform) 
             : base(game)
         {
             this.Type = type;
             base.AddToWorld(transform);
         }
+
         /// <summary>
         /// write the packet. Everything above the ==== is handled in the base class. Below is handled 
         /// by this class.
