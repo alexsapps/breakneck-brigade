@@ -18,12 +18,17 @@ namespace SousChef
         protected abstract string getListItemNodeName();
         public List<T> LoadFile()
         {
-            return LoadFile(GetFileName());
+            string filename;
+            return LoadFile(out filename);
         }
-        public List<T> LoadFile(string filename)
+        public List<T> LoadFile(out string filename)
         {
-            string file = BBXml.CombinePath(config.ConfigDir, filename);
-            using (XmlReader reader = XmlReader.Create(file, BBXml.getSettings()))
+            return LoadFile(GetFileName(), out filename);
+        }
+        public List<T> LoadFile(string filename, out string fullname)
+        {
+            fullname = BBXml.CombinePath(config.ConfigDir, filename);
+            using (XmlReader reader = XmlReader.Create(fullname, BBXml.getSettings()))
             {
                 return parseFile(reader);
             }

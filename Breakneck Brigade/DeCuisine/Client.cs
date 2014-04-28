@@ -50,7 +50,16 @@ namespace DeCuisine
 
             try
             {
-                new BinaryWriter(connection.GetStream()).Write(BB.ServerProtocolHandshakeStr);
+                var w = new BinaryWriter(connection.GetStream());
+                w.Write(BB.ServerProtocolHandshakeStr);
+                string confighash;
+                lock (Server.Lock) {
+                    lock(Server.Game.Lock){
+                        confighash = Server.Game.Config.Hash;
+                    }
+                }
+                w.Write(confighash);
+                w = null;
 
                 using (BinaryReader reader = new BinaryReader(c.GetStream()))
                 {

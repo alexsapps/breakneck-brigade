@@ -227,5 +227,18 @@ namespace DeCuisine
                 ClientLeave(this, new ClientEventArgs((Client)sender));
             }
         }
+
+        public void PrintStatus()
+        {
+            Lock.AssertHeld();
+            Console.WriteLine(Started ? "Started." : "Offline.");
+            if (Started)
+            {
+                Console.WriteLine(clients.Count.ToString() + " clients connected.");
+                lock(Game.Lock) {
+                    Game.PrintStatus();
+                }
+            }
+        }
     }
 }

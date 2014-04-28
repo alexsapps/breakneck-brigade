@@ -11,5 +11,7 @@ namespace SousChef
         public Dictionary<string, IngredientType> Ingredients { get; set; }
         public Dictionary<string, Recipe> Recipies { get; set; }
         public Dictionary<string, CookerType> Cookers { get; set; }
+
+        public string Hash { get; set; }
     }
 }

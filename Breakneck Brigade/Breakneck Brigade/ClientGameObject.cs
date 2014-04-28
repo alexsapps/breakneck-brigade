@@ -78,7 +78,7 @@ namespace Breakneck_Brigade
 
         protected void finilizeConstruction()
         {
-            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bottle"];
+            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "orange"];
             Scale = Model.InitialScale;
         }
 

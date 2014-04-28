@@ -14,10 +14,7 @@ namespace Breakneck_Brigade
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
-        public override string ModelName
-        {
-            get { return Type.Name; }
-        }
+        public override string ModelName { get { return Type.Name; } }
 
         /// <summary>
         /// Creates an Ingredient of the type passed in at the center of the game world. Used for 
@@ -31,15 +28,15 @@ namespace Breakneck_Brigade
         public ClientIngredient(int id, IngredientType type, Vector4 transform, int cleanliness, ClientGame game)
             : base(id, game)
         {
-            Type = type;
-            Cleanliness = cleanliness;
+            this.Type = type;
+            this.Cleanliness = cleanliness;
             base.finilizeConstruction();
         }
 
         /// <summary>
         /// called by ClientGameObject.Deserialize. Used by objects that were created on the server
         /// The packet for reader will look as follows. Everything above ==== is read by the 
-        /// constructor so the constructor only reads the stuff below it.
+        /// base constructor. The class specific constructor just needs to read everything after.
         /// float X
         /// float Y
         /// float Z
@@ -47,17 +44,14 @@ namespace Breakneck_Brigade
         /// string name
         /// int32 cleanliness
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="reader"></param>
-        /// <param name="game"></param>
         public ClientIngredient(int id, BinaryReader reader, ClientGame game)
             : base(id, game, reader)
         {
 
             string ingrname = reader.ReadString();
-            Type = game.Config.Ingredients[ingrname];
-            Cleanliness = reader.ReadInt32();
-            base.finilizeConstruction();
+            this.Type = game.Config.Ingredients[ingrname];
+            this.Cleanliness = reader.ReadInt32();
+            base.finilizeConstruction(); //set the model based on the type of object
         }
 
 
@@ -71,6 +65,16 @@ namespace Breakneck_Brigade
             this.Cleanliness = cleanliness;
         }
 
+        /// <summary>
+        /// Read the stream and update values. The packet will look as follows. 
+        /// Everything under ==== is handled by the base class.
+        /// 
+        /// double x
+        /// double y
+        /// double z
+        /// ==========
+        /// int16  cleanliness
+        /// </summary>
         public override void StreamUpdate(BinaryReader reader)
         {
             base.StreamUpdate(reader); //updates the position of the object as well

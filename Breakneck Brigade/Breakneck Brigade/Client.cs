@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Breakneck_Brigade
 {
@@ -54,6 +55,18 @@ namespace Breakneck_Brigade
                             Disconnect();
                         return;
                     }
+
+                    string hash = reader.ReadString();
+                    string ourhash = new GameObjectConfig().GetConfigSalad().Hash; //load config file just to compute hash.  (load again when playing the game, in case it changes later, which is okay.)
+                    if(!ourhash.Equals(hash))
+                    {
+                        lock (Program.ProgramLock) //lock UI so user gets confused and looks for the message
+                        {
+                            Console.WriteLine("Warning!!!  ConfigSalad hash mismatch between client and server.");
+                            MessageBox.Show("ConfigSalad hash mismatch between client and server.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                    }
+
                     connection.ReceiveTimeout = 0;
 
                     senderThread = new Thread(() => send());
