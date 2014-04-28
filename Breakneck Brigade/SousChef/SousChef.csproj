@@ -69,6 +69,7 @@
     <Compile Include="IGameObject.cs" />
     <Compile Include="IIngredient.cs" />
     <Compile Include="IngredientType.cs" />
+    <Compile Include="Math\Coordinate.cs" />
     <Compile Include="Math\GeomShape.cs" />
     <Compile Include="Utils\BBLock.cs" />
     <Compile Include="Network\ClientEvent.cs" />
@@ -76,13 +77,10 @@
     <Compile Include="Network\ClientMessageType.cs" />
     <Compile Include="CookerType.cs" />
     <Compile Include="GameMode.cs" />
-    <Compile Include="Math\MathConstants.cs" />
-    <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Config\GameObjectConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recipe.cs" />
     <Compile Include="Network\ServerMessageType.cs" />
-    <Compile Include="Math\Vector4.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\example.txt" />

@@ -37,8 +37,7 @@ namespace SousChef
         protected override CookerType returnItem()
         {
             string name = attributes["name"];
-            string model;
-
+            
             var geomInfo = getGeomInfo(attributes);
 
             return new CookerType(name, geomInfo, recipes);

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using SousChef;
+using Tao.Ode;
 
 namespace DeCuisine
 {
@@ -17,6 +18,7 @@ namespace DeCuisine
         public List<ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
         public List<ServerIngredient> ToAdd { get; set; }
+        protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
 
         private string HashCache { get; set; }
         private int ParticleEffect { get; set; }
@@ -29,12 +31,13 @@ namespace DeCuisine
         /// <param name="transform">Initial location</param>
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
-        public ServerCooker(CookerType type, ServerGame game)
+        public ServerCooker(CookerType type, ServerGame game, Ode.dVector3 transform)
             : base(game)
         {
             this.Type = type;
             this.Contents = new List<ServerIngredient>();
             this.ToAdd = new List<ServerIngredient>();
+            AddToWorld(transform);
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -83,7 +86,7 @@ namespace DeCuisine
                     ingredeint.MarkDeleted();
                 }
                 this.Contents = new List<ServerIngredient>(); // clear contents
-                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, new Coordinate(0,0,0));
+                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, new Ode.dVector3(0,0,0));
                 this.Contents.Add(ToAdd);
                 return ToAdd;
             }
@@ -115,10 +118,6 @@ namespace DeCuisine
             {
                 this.AddIngredient((ServerIngredient)obj);
             }
-        }
-        public override GeometryInfo GeomInfo
-        {
-            get { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
         }
     }
 }

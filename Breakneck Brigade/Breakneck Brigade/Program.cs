@@ -82,8 +82,8 @@ namespace Breakneck_Brigade
                             case "exit":
                                 lock (ProgramLock)
                                 {
-            if (client != null)
-            {
+                                    if (client != null)
+                                    {
                                         lock (client.Lock)
                                         {
                                             client.Disconnect();
@@ -128,34 +128,80 @@ namespace Breakneck_Brigade
 
         static void doGameCycle()
         {
-            renderer = new Renderer();
-
-            while (true)
+            using (renderer = new Renderer())
             {
-                Console.WriteLine("Prompting to connect...");
-                client = promptConnect();
-                if (client == null)
-                    break;
-
                 while (true)
                 {
-                    lock (ProgramLock)
+                    Console.WriteLine("Prompting to connect...");
+                    client = promptConnect();
+                    if (client == null)
+                        break;
+
+                    bool playAgain = doGame();
+                    
+                    if (!playAgain)
+                        return; //user closed window.   quit.
+                    //else, game ended or disconnected.  prompt to connect again.
+                }
+            }
+        }
+        static bool doGame()
+        {
+            GameMode oldMode = GameMode.None;
+            while (true)
+            {
+                lock (ProgramLock)
+                {
+                    if (client.GameMode != oldMode)
                     {
-                        if (client.GameMode == GameMode.Init)
+                        switch (client.GameMode)
                         {
-                            Console.WriteLine("Waiting for other players to join.");
+                            case GameMode.Init:
+                                Console.WriteLine("Waiting for other players to join.");
+                                break;
+                            case GameMode.Started:
+                                Console.WriteLine("Game started.");
+                                bool playAgain;
+
+                                Monitor.Exit(ProgramLock);
+                                playAgain = play();
+                                Monitor.Enter(ProgramLock);
+                                renderer.GameObjects = null;
+                                return playAgain;
+                            case GameMode.Stopping:
+                                Console.WriteLine("Game ended.");
+                                on_disconnected();
+                                return true; //reconnect
                         }
-                        else if (client.GameMode == GameMode.Started)
+                        oldMode = client.GameMode;
+                    }
+                }
+                render();
+            }
+        }
+        static bool play()
+        {
+            //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
+            while (true)
+            {
+                lock (ProgramLock)
+                {
+                    if (renderer.ShouldExit())
+                    {
+                        onClosed();
+                        return false; //quit
+                    }
+
+                    lock (client.Lock)
+                    {
+                        if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
+                            return true; //play again
+
+                        lock (client.Game.Lock)
                         {
-                            Console.WriteLine("Game started.");
-                            play();
-                            break; //game ended
-                        }
-                        else if (client.GameMode == GameMode.Stopping)
-                        {
-                            Console.WriteLine("Game ended.");
-                            on_disconnected();
-                            break; //reconnect
+                            renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
+
+                            render();
                         }
                     }
                 }
@@ -270,41 +316,12 @@ namespace Breakneck_Brigade
             }
         }
 
-        static BBLock renderLock = new BBLock();
+        
 
-        static void play()
+        static void render()
         {
-            //game will eventually become null, but this will be after GameMode set to stopping while lock held on gameObjects
-
-            using (renderer)
-            {
-                while (true)
-                {
-                    lock (ProgramLock)
-                    {
-                        if (renderer.ShouldExit())
-                        {
-                            onClosed();
-                            break;
-                        }
-
-                        lock (client.Lock)
-                        {
-                            renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
-
-                            if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
-                                break;
-
-                            lock (client.Game.Lock)
-                            {
-                                cPlayer.Update(IM);
-                                renderer.Render(cPlayer);
-                            }
-                        }
-                    }
-                }   
-            }
-            
+            cPlayer.Update(IM);
+            renderer.Render(cPlayer);
         }
 
         static void sendEvent(ClientEvent @event)
@@ -333,7 +350,7 @@ namespace Breakneck_Brigade
                 lock (client.Lock)
                 {
                     if (client.IsConnected) //check if connected because we don't know if we will start a disconnection by closing, or if we're closing because we got disconnected.
-                        {
+                    {
                         client.Disconnect();
                     }
                 }

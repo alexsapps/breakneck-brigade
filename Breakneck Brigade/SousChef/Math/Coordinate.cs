@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeCuisine
+namespace SousChef
 {
-    class Coordinate
+    /// <summary>
+    /// simple, lightweight generic Coordinate class mainly for use by server
+    /// </summary>
+    public class Coordinate
     {
         public float x { get; set; }
         public float y { get; set; }
@@ -18,4 +22,6 @@ namespace DeCuisine
             this.z = z;
         }
     }
+
+
 }

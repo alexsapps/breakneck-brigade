@@ -17,6 +17,8 @@ namespace SousChef
     {
         Player,
         Ingredient,
-        Cooker
+        Cooker,
+        Plane,
+        Box
     }
 }

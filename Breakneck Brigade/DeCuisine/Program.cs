@@ -14,7 +14,6 @@ namespace DeCuisine
         static Server server;
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
-        static bool monitoring = false;
 
         static void Main(string[] args)
         {
@@ -89,9 +88,6 @@ namespace DeCuisine
                         {
                             server.ReloadConfig();
                         }
-                        break;
-                    case "monitor":
-                        monitoring = true;
                         break;
                     case "exit":
                         lock (server.Lock)

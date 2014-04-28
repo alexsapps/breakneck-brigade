@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using SousChef;
 using System.Xml;
 using System.Diagnostics;
+using Tao.Ode;
 
 namespace DeCuisine
 {
     class BBSpace
     {
+        public IntPtr Space { get; set; }
         public List<ServerGameObject> initGameObjects { get; set; }
     }
     class BBWorld
     {
         public IntPtr World { get; set; } //TODO use this
         public List<BBSpace> Spaces { get; set; }
-        public float[] Gravity { get; set; }
     }
 
     class WorldFileParser
@@ -25,7 +26,7 @@ namespace DeCuisine
         protected GameObjectConfig config;
         protected ServerGame serverGame;
         
-        public string GetFileName() { return getRootNodeName() + ".xml"; }
+        public string GetFileName() { return "world_{0}.xml"; }
         protected string getRootNodeName() { return "world"; }
         public WorldParser getItemParser() { return new WorldParser(config, serverGame); }
 
@@ -35,9 +36,9 @@ namespace DeCuisine
             this.serverGame = serverGame; 
         }
 
-        public void LoadFile()
+        public void LoadFile(int level)
         {
-            LoadFile(GetFileName());
+            LoadFile(string.Format(GetFileName(), level.ToString()));
         }
         public void LoadFile(string filename)
         {
@@ -64,9 +65,23 @@ namespace DeCuisine
     class WorldParser : BBXItemParser<BBWorld>
     {
         ServerGame serverGame;
+        IntPtr World;
+        List<BBSpace> spaces = new List<BBSpace>();
+
         public WorldParser(GameObjectConfig config, ServerGame serverGame) : base(config)
         {
             this.serverGame = serverGame;
+        }
+
+        protected override void HandleAttributes()
+        {
+            World = Ode.dWorldCreate();
+            var gravity = getFloats(attributes["gravity"]);
+            Debug.Assert(gravity.Length == 3);
+            Ode.dWorldSetGravity(World, gravity[0], gravity[1], gravity[2]);
+
+            Debug.Assert(serverGame.World == IntPtr.Zero);
+            serverGame.World = World;
         }
 
         protected override void handleSubtree(System.Xml.XmlReader reader)
@@ -76,7 +91,7 @@ namespace DeCuisine
             switch(reader.Name)
             {
                 case "space":
-                    new SpaceParser(config, serverGame).Parse(reader.ReadSubtree());
+                    spaces.Add(new SpaceParser(config, serverGame).Parse(reader.ReadSubtree()));
                     break;
                 default:
                     throw new Exception(reader.Name + " tag not expected in <game>");
@@ -85,44 +100,66 @@ namespace DeCuisine
 
         protected override void reset()
         {
-            throw new NotImplementedException();
+            World = default(IntPtr);
+            spaces = new List<BBSpace>();
         }
 
         protected override BBWorld returnItem()
         {
-            throw new NotImplementedException();
+            return new BBWorld() { World = World, Spaces = spaces };
         }
     }
     class SpaceParser : BBXItemParser<BBSpace>
     {
+        IntPtr space;
+        List<ServerGameObject> gameObjects = new List<ServerGameObject>();
         ServerGame serverGame;
-        public SpaceParser(GameObjectConfig config, ServerGame serverGame) : base (config)
+
+        public SpaceParser(GameObjectConfig config, ServerGame serverGame) : base(config) { this.serverGame = serverGame; }
+
+        protected override void HandleAttributes()
         {
-            
+            space = Ode.dHashSpaceCreate(IntPtr.Zero);
+            Debug.Assert(attributes.Count == 0);
+
+            Debug.Assert(serverGame.Space == IntPtr.Zero); //only one space currently supported
+            serverGame.Space = space;
         }
 
         protected override void handleSubtree(System.Xml.XmlReader reader)
         {
             reader.MoveToContent();
-
-            switch (reader.Name)
-            {
-                case "space":
-                    new SpaceParser(config, serverGame).Parse(reader.ReadSubtree());
-                    break;
-                default:
-                    throw new Exception(reader.Name + " tag not expected in <game>");
-            }
+            ServerGameObject obj = parseGameObject(reader);
+            gameObjects.Add(obj);
         }
 
         protected override void reset()
         {
-            throw new NotImplementedException();
+            gameObjects = new List<ServerGameObject>();
         }
 
         protected override BBSpace returnItem()
         {
-            throw new NotImplementedException();
+            return new BBSpace() { Space = space, initGameObjects = gameObjects };
+        }
+
+        private ServerGameObject parseGameObject(XmlReader reader)
+        {
+            ServerGameObject obj;
+            switch (reader.Name)
+            {
+                case "plane":
+                    obj = parseSubItem<ServerPlane>(reader, new PlaneParser(config, serverGame, space)); break;
+                case "box":
+                    obj = parseSubItem<ServerBox>(reader, new BoxParser(config, serverGame, space)); break;
+                case "ingredient":
+                    obj = parseSubItem<ServerIngredient>(reader, new IngredientParser(config, serverGame)); break;
+                case "cooker":
+                    obj = parseSubItem<ServerCooker>(reader, new CookerParser(config, serverGame)); break;
+                default:
+                    throw new Exception(reader.Name + " tag not expected in <game>");
+            }
+            return obj;
         }
     }
 
@@ -138,6 +175,70 @@ namespace DeCuisine
         }
     }
 
+    class CookerParser : GameObjectParser<ServerCooker>
+    {
+        public CookerParser(GameObjectConfig config, ServerGame serverGame) : base(config, serverGame) { }
+
+        protected override void reset() { }
+
+        protected override ServerCooker returnItem()
+        {
+            return new ServerCooker(serverGame.Config.Cookers[attributes["type"]], serverGame, getCoordinateAttrib());
+        }
+    }
+
+    class PlaneParser : GameObjectParser<ServerPlane>
+    {
+        IntPtr space;
+
+        ServerPlane serverPlane;
+
+        public PlaneParser(GameObjectConfig config, ServerGame serverGame, IntPtr space) : base (config, serverGame) 
+        {
+            this.space = space;
+        }
+        protected override void HandleAttributes()
+        {
+            float height = float.Parse(attributes["height"]);
+            serverPlane = new ServerPlane(serverGame, attributes["texture"], height);
+        }
+        protected override void reset()
+        {
+            serverPlane = null;
+        }
+        protected override ServerPlane returnItem()
+        {
+            return serverPlane;
+        }
+    }
+
+    class BoxParser : GameObjectParser<ServerBox>
+    {
+        IntPtr space;
+
+        ServerBox serverBox;
+
+        public BoxParser(GameObjectConfig config, ServerGame serverGame, IntPtr space)
+            : base(config, serverGame)
+        {
+            this.space = space;
+        }
+        protected override void HandleAttributes()
+        {
+            var coord1 = getCoordinateAttrib("coordinate1");
+            var coord2 = getCoordinateAttrib("coordinate2");
+            serverBox = new ServerBox(serverGame, attributes["texture"], coord1, coord2);
+        }
+        protected override void reset()
+        {
+            serverBox = null;
+        }
+        protected override ServerBox returnItem()
+        {
+            return serverBox;
+        }
+    }
+
     abstract class GameObjectParser<T> : BBXItemParser<T> where T : ServerGameObject
     {
         protected ServerGame serverGame;
@@ -145,19 +246,19 @@ namespace DeCuisine
         {
             this.serverGame = serverGame;
         }
-        protected Coordinate getCoordinateAttrib()
+        protected Ode.dVector3 getCoordinateAttrib()
         {
             return getCoordinateAttrib("coordinate");
         }
-        protected Coordinate getCoordinateAttrib(string attrib)
+        protected Ode.dVector3 getCoordinateAttrib(string attrib)
         {
             return getCoordinate(attributes[attrib]);
         }
-        protected Coordinate getCoordinate(string str)
+        protected Ode.dVector3 getCoordinate(string str)
         {
             var floats = getFloats(str);
-            Debug.Assert(floats.Length == 2);
-            return new Coordinate(floats[0], floats[1], floats[2]);
+            Debug.Assert(floats.Length == 3);
+            return new Ode.dVector3(floats[0], floats[1], floats[2]);
         }
     }
 
