@@ -84,7 +84,7 @@ namespace DeCuisine
                         {
                             case ClientMessageType.ClientEvent:
                                 ClientEventType eventType = (ClientEventType)reader.ReadByte();
-                                int length = reader.ReadByte();
+                                int length = reader.ReadInt32();
                                 var args = new Dictionary<string, string>();
                                 for (int i = 0; i < length; i++)
                                 {

@@ -184,8 +184,7 @@ namespace Breakneck_Brigade.Graphics
 
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
-                { 
-                    cgo.Position += new Vector4(0.0, -0.10, 0.0);
+                {
                     cgo.Render();
                 }
 

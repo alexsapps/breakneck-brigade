@@ -8,7 +8,8 @@ namespace SousChef
 {
     public enum ClientEventType
     {
-        None,
+        None, /* null or error */
+
         ChangeOrientation,
         BeginMove,
         EndMove,

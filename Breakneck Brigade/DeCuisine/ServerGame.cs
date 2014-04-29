@@ -17,7 +17,7 @@ namespace DeCuisine
 
         public GameMode Mode { get; private set; }
 
-        private Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>(); //TODO: this should be string (id) to GameObject
+        private Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>();
 
         private Thread runThread;
 
@@ -198,8 +198,8 @@ namespace DeCuisine
                                         ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
                                         break;
                                     default:
-                                        //Debugger.Break();
-                                        break;
+                                        Debugger.Break();
+                                        throw new Exception("server does not understand client event " + input.Event.Type.ToString());
                                 }
                             }
                             ClientInput.Clear();

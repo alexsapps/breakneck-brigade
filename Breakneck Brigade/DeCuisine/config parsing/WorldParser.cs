@@ -12,12 +12,10 @@ namespace DeCuisine
 {
     class BBSpace
     {
-        public IntPtr Space { get; set; }
         public List<ServerGameObject> initGameObjects { get; set; }
     }
     class BBWorld
     {
-        public IntPtr World { get; set; } //TODO use this
         public List<BBSpace> Spaces { get; set; }
     }
 
@@ -106,7 +104,7 @@ namespace DeCuisine
 
         protected override BBWorld returnItem()
         {
-            return new BBWorld() { World = World, Spaces = spaces };
+            return new BBWorld() { Spaces = spaces };
         }
     }
     class SpaceParser : BBXItemParser<BBSpace>
@@ -140,7 +138,7 @@ namespace DeCuisine
 
         protected override BBSpace returnItem()
         {
-            return new BBSpace() { Space = space, initGameObjects = gameObjects };
+            return new BBSpace() { initGameObjects = gameObjects };
         }
 
         private ServerGameObject parseGameObject(XmlReader reader)

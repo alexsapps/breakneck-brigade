@@ -113,7 +113,7 @@ namespace DeCuisine
             if (Started)
             {
                 cancel_listen = true;
-                listener.Stop(); //do this first, actually.
+                listener.Stop(); //do this first so reader doesn't try to do things while we're stopping
                 listener_thread.Abort();
 
                 while(cancel_listen)
@@ -121,7 +121,6 @@ namespace DeCuisine
                     Monitor.Wait(Lock, 50); //give up lock so listener can stop
                 }
 
-                //listener.Stop();
                 listener = null;
 
                 lock (Lock)
@@ -130,7 +129,7 @@ namespace DeCuisine
                     {
                         lock (client.Lock)
                         {
-                            client.Disconnect(); //TODO: synchronize.  what if we are reading data from client?
+                            client.Disconnect();
                         }
                     }
                     while (clients.Count > 0)
@@ -196,9 +195,8 @@ namespace DeCuisine
                         return; //server is shutting down
                     else
                     {
-                        //TODO: log ex
                         Console.WriteLine(ex.ToString());
-                        System.Diagnostics.Debugger.Break(); //TODO:  break whenever logging error
+                        System.Diagnostics.Debugger.Break();
                         goto keepGoing;
                     }
                 }
