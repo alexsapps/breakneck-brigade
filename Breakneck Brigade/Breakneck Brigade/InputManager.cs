@@ -83,7 +83,6 @@ namespace Breakneck_Brigade
             //keys[GLFW_KEY_UP]               = false;
             //keys[GLFW_KEY_DOWN]             = false;
 
-
             //keys[GLFW_MOUSE_BUTTON_LEFT]    = false;
             //keys[GLFW_MOUSE_BUTTON_RIGHT]   = false;
 

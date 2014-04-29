@@ -147,6 +147,11 @@ namespace Breakneck_Brigade.Graphics
                     }
                 }
             }
+            //Insert prims
+            Model plane = new Model();
+            plane.InitialScale = new Vector4(1.0f, 1.0f, 1.0f);
+            plane.Meshes.Add(new PrimativePlane(0.0f));
+            Models.Add("#plane", plane);
         }
 
         public void Render(ClientPlayer cp)

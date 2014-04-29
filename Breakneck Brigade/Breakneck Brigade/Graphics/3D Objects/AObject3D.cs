@@ -27,7 +27,7 @@ namespace Breakneck_Brigade.Graphics
         public AObject3D()
         { 
             _transform  = new Matrix4();
-            Children        = new List<AObject3D>();
+            Children    = new List<AObject3D>();
         }
         public AObject3D(Matrix4 trans)
         {

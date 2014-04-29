@@ -78,7 +78,7 @@ namespace Breakneck_Brigade
 
         protected void finilizeConstruction()
         {
-            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bottle"];
+            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "teapotPillar"];
             Scale = Model.InitialScale;
         }
 
@@ -153,7 +153,7 @@ namespace Breakneck_Brigade
 
         }
 
-        private void updateMatrix()
+        protected virtual void updateMatrix()
         {
             //Translate to location
             Transformation.TranslationMat(Position.X, Position.Y, Position.Z);

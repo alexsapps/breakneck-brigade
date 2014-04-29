@@ -9,13 +9,19 @@ namespace SousChef
     public enum ClientEventType
     {
         /// <summary>
-        /// Null or Error 
+        /// Type to used when a message is empty. Indicates null.
+        /// Args: none.
         /// </summary>
         None, /* */
         /// <summary>
-        /// 
+        /// Player changed orientation
+        /// Args: "Orientation" -> a float representing the player's current orientation. Some degree angle from 0.
         /// </summary>
-        ChangeOrientation,  
+        ChangeOrientation,
+        /// <summary>
+        /// Player started moving
+        /// Args: "Direction" -> a float[3] representing direction
+        /// </summary>
         BeginMove,
         EndMove,
         GrabItem,
