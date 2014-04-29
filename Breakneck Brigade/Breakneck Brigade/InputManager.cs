@@ -148,11 +148,13 @@ namespace Breakneck_Brigade
 
         GlobalsConfigFile globalConfig;
 
+        public EventHandler<KeyHappenedEventArgs> KeyHappened;
+
         // Game-related stuff
         /// <summary>
         /// States of keys being tracked
         /// </summary>
-        public Hashtable keys = new Hashtable();
+        public HashSet<int> keys = new HashSet<int>();
 
         /// <summary>
         /// Current rotation amount for current update cycle
@@ -201,20 +203,20 @@ namespace Breakneck_Brigade
 
             globalConfig = new GlobalsConfigFolder(BBXml.GetLocalConfigFolder()).Open("keys.xml");
 
-            keys[GLFW_KEY_W]                = false;
-            keys[GLFW_KEY_A]                = false;
-            keys[GLFW_KEY_S]                = false;
-            keys[GLFW_KEY_D]                = false;
-            keys[GLFW_KEY_SPACE]            = false;
-            keys[GLFW_KEY_ESCAPE]           = false;
-            keys[GLFW_KEY_LEFT]             = false;
-            keys[GLFW_KEY_RIGHT]            = false;
-            keys[GLFW_KEY_UP]               = false;
-            keys[GLFW_KEY_DOWN]             = false;
+            //keys[GLFW_KEY_W]                = false;
+            //keys[GLFW_KEY_A]                = false;
+            //keys[GLFW_KEY_S]                = false;
+            //keys[GLFW_KEY_D]                = false;
+            //keys[GLFW_KEY_SPACE]            = false;
+            //keys[GLFW_KEY_ESCAPE]           = false;
+            //keys[GLFW_KEY_LEFT]             = false;
+            //keys[GLFW_KEY_RIGHT]            = false;
+            //keys[GLFW_KEY_UP]               = false;
+            //keys[GLFW_KEY_DOWN]             = false;
 
 
-            keys[GLFW_MOUSE_BUTTON_LEFT]    = false;
-            keys[GLFW_MOUSE_BUTTON_RIGHT]   = false;
+            //keys[GLFW_MOUSE_BUTTON_LEFT]    = false;
+            //keys[GLFW_MOUSE_BUTTON_RIGHT]   = false;
 
             Console.WriteLine("This happened.");
         }
@@ -226,9 +228,15 @@ namespace Breakneck_Brigade
         /// <param name="action">GLFW_PRESS or GLFW_RELEASE</param>
         void KeyboardInput(int key, int action)
         {
-            bool pressed = action == Glfw.GLFW_PRESS ? true : false;
+            bool pressed = (action == Glfw.GLFW_PRESS);
             int temp = remap(key);
-            keys[temp] = pressed;
+            if (pressed)
+                keys.Add(temp); // = pressed;
+            else
+                keys.Remove(temp);
+
+            if (KeyHappened != null)
+                KeyHappened(this, new KeyHappenedEventArgs() { Key = temp, Down = pressed, Up = !pressed });
 
             Console.WriteLine("key " + temp + (pressed ? " pressed." : " released."));
         }
@@ -301,8 +309,11 @@ namespace Breakneck_Brigade
         /// <param name="action">GLFW_PRESS or GLFW_RELEASE</param>
         void MouseButton(int button, int action)
         {
-            bool pressed = action == Glfw.GLFW_PRESS ? true : false;
-            keys[button] = pressed;
+            bool pressed = (action == Glfw.GLFW_PRESS);
+            if (pressed)
+                keys.Add(button);
+            else
+                keys.Remove(button);
         }
 
         public void Clear()
@@ -364,9 +375,24 @@ namespace Breakneck_Brigade
             Clear();
         }
 
-        public Hashtable GetKeys()
+        public HashSet<int> GetKeys()
         {
             return keys;
         }
+
+        public bool this [int key]
+        {
+            get
+            {
+                return keys.Contains(key);
+            }
+        }
+    }
+
+    public class KeyHappenedEventArgs : EventArgs
+    {
+        public int Key { get; set; }
+        public bool Up { get; set; }
+        public bool Down { get; set; }
     }
 }

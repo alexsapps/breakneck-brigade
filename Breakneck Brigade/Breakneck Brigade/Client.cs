@@ -160,6 +160,7 @@ namespace Breakneck_Brigade
                         {
                             foreach (var clientEvent in ClientEvents)
                             {
+                                Console.WriteLine("TEST: write event " + clientEvent.Type.ToString());
                                 writer.Write((byte)ClientMessageType.ClientEvent);
                                 writer.Write((byte)clientEvent.Type);
                                 writer.Write(clientEvent.Args.Count);

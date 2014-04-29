@@ -331,6 +331,7 @@ namespace Breakneck_Brigade
             {
                 foreach(ClientEvent ce in cPlayer.NetworkEvents)
                 {
+                    Console.WriteLine("TEST: send event " + ce.Type.ToString());
                     sendEvent(ce);
                 }
                 cPlayer.NetworkEvents.Clear();
