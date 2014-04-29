@@ -67,8 +67,9 @@ namespace Breakneck_Brigade
 
         /// <summary>
         /// Read the stream and update values. The packet will look as follows. 
-        /// Everything under ==== is handled by the base class.
+        /// Everything above ==== is handled by the base class.
         /// 
+        /// bool   ToRender
         /// double x
         /// double y
         /// double z

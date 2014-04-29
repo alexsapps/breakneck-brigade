@@ -18,6 +18,7 @@ namespace Breakneck_Brigade
         public Vector4 Scale { get { return this._scale; } set { this._scale = value; updateMatrix(); } }
         private Vector4 _rotation;
         public Vector4 Rotation { get { return this._rotation; } set { this._rotation = value; updateMatrix(); } }
+        public bool ToRender { get; set; }
 
         public Matrix4 Transformation { get; set; }
 
@@ -42,7 +43,9 @@ namespace Breakneck_Brigade
 
         /// <summary>
         /// Instatiates client objects from data in the reader.
-        /// The packet will look as follows. Class specific data will be written after this. 
+        /// The packet will look as follows. Class specific data will be written after this.
+        /// 
+        /// bool  toRender
         /// float x
         /// float y
         /// float z
@@ -54,6 +57,7 @@ namespace Breakneck_Brigade
         {
             constructEssential(id, game);
             initGeom();
+            this.ToRender = reader.ReadBoolean();
             readGeom(reader);
         }
 
@@ -84,7 +88,8 @@ namespace Breakneck_Brigade
 
         /// <summary>
         /// Read the serialized data from the packet. 
-        /// int16  objectclass
+        /// bool  toRender
+        /// int16 objectclass
         /// float X
         /// float Y
         /// float Z
@@ -103,6 +108,8 @@ namespace Breakneck_Brigade
         /// handled by the base class. 
         /// The packet looks as follows. Client specific data will be read after 
         /// this data.
+        /// 
+        /// bool  ToRender
         /// float x
         /// float y
         /// float z
@@ -110,7 +117,9 @@ namespace Breakneck_Brigade
         /// <param name="reader"></param>
         public virtual void StreamUpdate(BinaryReader reader)
         {
+            this.ToRender = reader.ReadBoolean();
             this.Position = getPositionVector(reader);
+
             updateMatrix();
         }
 
@@ -119,10 +128,14 @@ namespace Breakneck_Brigade
         /// </summary>
         public virtual void Render()
         {
-            Gl.glPushMatrix();
-            Gl.glMultMatrixf(Transformation.glArray);
-                Model.Render();
-            Gl.glPopMatrix();
+            if (this.ToRender)
+            {
+                Gl.glPushMatrix();
+                Gl.glMultMatrixf(Transformation.glArray);
+                    Model.Render();
+                Gl.glPopMatrix();
+            }
+
         }
 
         /// <summary>
