@@ -17,7 +17,7 @@ namespace DeCuisine
 
         public GameMode Mode { get; private set; }
 
-        private Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>(); //TODO: this should be string (id) to GameObject
+        private Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>();
 
         private Thread runThread;
 
