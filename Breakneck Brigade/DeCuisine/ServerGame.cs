@@ -235,15 +235,18 @@ namespace DeCuisine
                                 {
                                     writer.Write(HasAdded.Count);
                                     foreach (var obj in HasAdded)
+                                    {
                                         obj.Serialize(writer);
-                                    HasAdded.Clear();
+                                        HasChanged.Remove(obj);
+                                    }
                                     writer.Write(HasChanged.Count);
                                     foreach (var obj in HasChanged)
                                         obj.UpdateStream(writer);
-                                    HasChanged.Clear();
                                     writer.Write(HasRemoved.Count);
                                     foreach (var obj in HasRemoved)
                                         writer.Write(obj);
+                                    HasAdded.Clear();
+                                    HasChanged.Clear();
                                     HasRemoved.Clear();
                                 }
                                 bin = membin.ToArray();
@@ -389,6 +392,24 @@ namespace DeCuisine
             Lock.AssertHeld();
             Console.WriteLine("Game mode: " + Mode.ToString());
             Console.WriteLine(GameObjects.Count + " game objects");
+        }
+
+
+        public void TestCookerAdd()
+        {
+            // hacky way to find an ingredient object, TEST CODE RULES
+            int x = 0;
+            while (x < this.GameObjects.Count)
+            {
+                // find an ingredient to add to the cooker and call the collision 
+                // funciton
+                if (this.GameObjects[x].ObjectClass == GameObjectClass.Ingredient)
+                {
+                    Console.WriteLine("found it");
+                }
+                x++;
+            }
+            //this.GameObjects[0].ToRender = false;
         }
     }
 }

@@ -141,6 +141,12 @@ namespace DeCuisine
                                 }
                             }
                             return;
+                        case "add":
+                            lock (server.Lock)
+                            {
+                                server.Game.TestCookerAdd();
+                            }
+                            break;
                         default:
                             Console.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
                             break;

@@ -4,7 +4,7 @@
     <ingredient>ice</ingredient>
   </recipe>
   <recipe product="milkshake">
-    <ingredient>milk</ingredient>
+    <ingredient>banana</ingredient>
     <ingredient>ice cream</ingredient>
   </recipe>
   <recipe product="fruit smoothie">

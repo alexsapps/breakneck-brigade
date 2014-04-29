@@ -28,8 +28,10 @@ namespace DeCuisine
         public bool InWorld { get; protected set; }
         public IntPtr Geom { get; set; }
         public IntPtr Body { get; set; } //null for walls
+        public bool ToRender { get; set; }
 
         private static int nextId;
+        private Ode.dVector3 lastPosition { get; set; }
         /// <summary>
         /// Base constructor. For every servergameobject create their should be a 
         /// coresponding ClientGameObject on each client with the same ID.
@@ -38,6 +40,7 @@ namespace DeCuisine
         {
             this.Id = nextId++;
             this.Game = game;
+            this.ToRender = true; // class specific implementation can override
             
             game.Lock.AssertHeld();
             Game.ObjectAdded(this);
@@ -48,6 +51,7 @@ namespace DeCuisine
         /// written AFTER this data is writen. The packet will look as follows:
         /// int32  id
         /// int16  objectclass
+        /// bool   ToRender
         /// double X
         /// double Y
         /// double Z
@@ -61,14 +65,24 @@ namespace DeCuisine
 
         protected virtual void serializeEssential(BinaryWriter stream)
         {
-            stream.Write((Int32)Id);
-            stream.Write((Int16)ObjectClass);
+            stream.Write((Int32)this.Id);
+            stream.Write((Int16)this.ObjectClass);
+            stream.Write(this.ToRender);
         }
 
         /// <summary>
-        /// Specific to each subclass. 
+        /// Keeps track of the last position and marks dirty if the object 
+        /// has moved
         /// </summary>
-        public abstract void Update();
+        public virtual void Update()
+        {
+            if(this.lastPosition.X != this.Position.X ||
+               this.lastPosition.Y != this.Position.Y ||
+               this.lastPosition.Z != this.Position.Z){
+                   this.MarkDirty(); // it's position moved from the last one
+                   this.lastPosition = this.Position;
+               }
+        }
 
         /// <summary>
         /// Removes the object from the game
@@ -84,9 +98,6 @@ namespace DeCuisine
         /// <summary>
         /// Add the object into the physical world.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
         protected void AddToWorld(Ode.dVector3 coordinate)
         {
             AddToWorld(() => { 
@@ -174,6 +185,7 @@ namespace DeCuisine
         /// Updates the stream with the position. Reads all of the positions from the packet
         /// The packet will should look as follows
         /// int32  id
+        /// bool   ToRender
         /// double x
         /// double y
         /// double z
@@ -182,6 +194,7 @@ namespace DeCuisine
         public virtual void UpdateStream(BinaryWriter stream)
         {
             stream.Write((Int32)Id);
+            stream.Write((bool)ToRender); // no need to cast but being explicit gets my jollys off
             stream.Write(this.Position);
         }
 
@@ -208,6 +221,8 @@ namespace DeCuisine
 
         private void setPosition(Ode.dVector3 value)
         {
+            this.MarkDirty(); // moved it, make sure you mark it to move
+            this.lastPosition = value;
             Ode.dGeomSetPosition(this.Geom, value.X, value.Y, value.Z); 
         }
 
