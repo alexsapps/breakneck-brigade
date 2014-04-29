@@ -34,14 +34,35 @@ namespace Breakneck_Brigade
             base.finilizeConstruction(); //set the model based on the type of object
         }
 
+        /// <summary>
+        /// Read from the stream. Everything above ==== is handled by the base class.
+        /// should read every ingredient that was added to the cooker. 
+        /// 
+        /// int32  id
+        /// float  X
+        /// float  Y
+        /// float  Z
+        /// ===========
+        /// int16  count - the number o ingredients in the cooker. 
+        /// *int32  id - the id of each ingredient in the cooker. There will be exactly count number of ids.  
+        /// </summary>
         public override void StreamUpdate(BinaryReader reader)
         {
             base.StreamUpdate(reader);
+            this.processIngredientsAdded(reader);
         }
 
+        /// <summary>
+        /// helps process ingredients added
+        /// </summary>
         private void processIngredientsAdded(BinaryReader reader)
         {
-
+            int count = reader.ReadInt16();
+            List<int> ingIds = new List<int>();
+            for (int x = 0; x < count; x++)
+            {
+                ingIds.Add(reader.ReadInt32());
+            }
         }
 
         public override void Render()

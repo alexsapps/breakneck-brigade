@@ -46,6 +46,7 @@ namespace DeCuisine
         /// 
         /// int32  id
         /// int16  objectclass
+        /// bool   ToRender
         /// float  X
         /// float  Y
         /// float  Z
@@ -111,6 +112,7 @@ namespace DeCuisine
         /// Currently writes the entire conents of the cooker to the stream.  
         /// 
         /// int32  id
+        /// bool   ToRender
         /// float  X
         /// float  Y
         /// float  Z
@@ -121,14 +123,14 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
-            stream.Write(Contents.Count);
+            stream.Write((Int16)Contents.Count);
             foreach (var ingredient in Contents)
                 stream.Write((Int32)ingredient.Id);
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.Update();
         }
 
 
