@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Tao.OpenGl;
 using Tao.Glfw;
 using System.Xml;
@@ -185,6 +186,10 @@ namespace Breakneck_Brigade.Graphics
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
                 {
+                    if(cgo.Transformation[0,0] > .5 || cgo.Transformation[1,1] > .5 || cgo.Transformation[2,2] > .5)
+                    {
+                        Debugger.Break();
+                    }
                     cgo.Render();
                 }
 

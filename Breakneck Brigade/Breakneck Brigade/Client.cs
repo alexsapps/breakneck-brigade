@@ -99,7 +99,7 @@ namespace Breakneck_Brigade
 
                                 break;
                             case ServerMessageType.GameStateUpdate:
-                                lock (Game.gameObjects)
+                                lock (Game.Lock)
                                 {
                                     int len;
                                     len = reader.ReadInt32();

@@ -19,7 +19,7 @@ namespace Breakneck_Brigade
         private Vector4 _rotation;
         public Vector4 Rotation { get { return this._rotation; } set { this._rotation = value; updateMatrix(); } }
 
-        private Matrix4 Transformation { get; set; }
+        public Matrix4 Transformation { get; set; }
 
         protected ClientGame Game { get; set; }
         public int Id { get; set; }
@@ -141,8 +141,6 @@ namespace Breakneck_Brigade
             y = reader.ReadSingle();
             z = reader.ReadSingle();
 
-            //TEST
-            x = y = z = 0.0;
             return new Vector4(x, y, z);
         }
 
