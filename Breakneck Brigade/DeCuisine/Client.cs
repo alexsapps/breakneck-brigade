@@ -96,7 +96,6 @@ namespace DeCuisine
                                 {
                                     Game.ClientInput.Add(clientEvent);
                                 }
-                                Console.WriteLine("TEST: read event " + clientEvent.Event.Type.ToString());
 
                                 break;
                             default:

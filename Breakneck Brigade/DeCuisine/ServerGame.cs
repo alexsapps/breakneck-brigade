@@ -196,7 +196,6 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.Test:
                                         ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
-                                        Console.WriteLine("TEST: handle event " + input.Event.Type.ToString());
                                         break;
                                     default:
                                         Debugger.Break();

@@ -12,7 +12,7 @@ namespace Breakneck_Brigade
     /// <summary>
     /// Client-side player object.
     /// </summary>
-    public class ClientPlayer //TODO: subclass ClientGameObject or use Composition, then Position variable
+    class ClientPlayer //TODO: subclass ClientGameObject or use Composition, then Position variable
     {
         public Vector4 Position;
         public float Orientation { get; set; }
@@ -29,10 +29,10 @@ namespace Breakneck_Brigade
             Velocity = new Vector4();
             NetworkEvents = new List<ClientEvent>();
 
-            monitorKey(InputManager.GLFW_KEY_SPACE);
+            monitorKey(GlfwKeys.GLFW_KEY_SPACE);
         }
 
-        protected HashSet<int> keys;
+        protected HashSet<GlfwKeys> keys;
         public void Update(InputManager IM)
         {
             keys = IM.GetKeys();
@@ -47,13 +47,13 @@ namespace Breakneck_Brigade
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
             // Velocity update
-            Velocity[0] = (IM[InputManager.GLFW_KEY_A] || IM[InputManager.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[InputManager.GLFW_KEY_D] || IM[InputManager.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
-            Velocity[2] = (IM[InputManager.GLFW_KEY_S] || IM[InputManager.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[InputManager.GLFW_KEY_W] || IM[InputManager.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
+            Velocity[0] = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
+            Velocity[2] = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
 
             Position[0] += Velocity[2] * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             Position[2] += Velocity[2] * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Sin((Orientation / 180.0f * Math.PI));
 
-            if(IM[InputManager.GLFW_KEY_ESCAPE])
+            if (IM[GlfwKeys.GLFW_KEY_ESCAPE])
             {
                 if (_fpsToggle)
                 {
@@ -73,7 +73,7 @@ namespace Breakneck_Brigade
                 _fpsToggle = true;
             }
 
-            if(IM[InputManager.GLFW_MOUSE_BUTTON_LEFT])
+            if (IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])
             {
                 if (!IM.fpsMode)
                 {
@@ -81,26 +81,25 @@ namespace Breakneck_Brigade
                 }
             }
 
-            if(keyDown(InputManager.GLFW_KEY_SPACE))
+            if (keyDown(GlfwKeys.GLFW_KEY_SPACE))
             {
                 //Test code
                 ClientEvent spawnEvent = new ClientEvent();
                 spawnEvent.Type = ClientEventType.Test;
                 NetworkEvents.Add(spawnEvent);
-                Console.WriteLine("TEST: spawn event " + spawnEvent.Type.ToString());
             }
         }
 
-        HashSet<int> downKeys = new HashSet<int>();
-        HashSet<int> upKeys = new HashSet<int>();
+        HashSet<GlfwKeys> downKeys = new HashSet<GlfwKeys>();
+        HashSet<GlfwKeys> upKeys = new HashSet<GlfwKeys>();
 
         bool[] setKeys = new bool[512];
-        List<int> monitorKeys = new List<int>();
-        protected void monitorKey(int key)
+        List<GlfwKeys> monitorKeys = new List<GlfwKeys>();
+        protected void monitorKey(GlfwKeys key)
         {
             monitorKeys.Add(key);
         }
-        protected void unmonitorKey(int key)
+        protected void unmonitorKey(GlfwKeys key)
         {
             monitorKeys.Remove(key);
         }
@@ -108,21 +107,21 @@ namespace Breakneck_Brigade
         {
            downKeys.Clear();
            upKeys.Clear();
-           foreach(int i in monitorKeys)
+           foreach (GlfwKeys i in monitorKeys)
            {
                if(IM[i])
                {
-                   if (!setKeys[i])
+                   if (!setKeys[(int)i])
                    {
-                       setKeys[i] = true;
+                       setKeys[(int)i] = true;
                        downKeys.Add(i);
                    }
                }
                else
                {
-                   if (setKeys[i])
+                   if (setKeys[(int)i])
                    {
-                       setKeys[i] = false;
+                       setKeys[(int)i] = false;
                        upKeys.Add(i);
                    }
                }
@@ -134,7 +133,7 @@ namespace Breakneck_Brigade
         /// </summary>
         /// <param name="key">the key</param>
         /// <returns>true iff key was just now pressed down.</returns>
-        protected bool keyDown(int key)
+        protected bool keyDown(GlfwKeys key)
         {
             return downKeys.Contains(key);
         }
@@ -144,7 +143,7 @@ namespace Breakneck_Brigade
         /// </summary>
         /// <param name="key">the key</param>
         /// <returns>true iff the key was just now lifted up.</returns>
-        protected bool keyUp(int key)
+        protected bool keyUp(GlfwKeys key)
         {
             return upKeys.Contains(key);
         }
