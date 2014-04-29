@@ -186,10 +186,6 @@ namespace Breakneck_Brigade.Graphics
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
                 {
-                    if(cgo.Transformation[0,0] > .5 || cgo.Transformation[1,1] > .5 || cgo.Transformation[2,2] > .5)
-                    {
-                        Debugger.Break();
-                    }
                     cgo.Render();
                 }
 
