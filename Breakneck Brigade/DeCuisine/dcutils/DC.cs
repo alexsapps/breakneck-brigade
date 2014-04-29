@@ -12,9 +12,11 @@ namespace DeCuisine
     {
         public static void Write(this BinaryWriter stream, Ode.dVector3 value)
         {
+            // We need to flip the z and the y coordinate to make it fit with 
+            // opengl coordinate system.
             stream.Write((float)value.X);
-            stream.Write((float)value.Y);
             stream.Write((float)value.Z);
+            stream.Write((float)value.Y);
         }
         //ReadCoordinate is in client program
     }
