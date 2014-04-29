@@ -132,8 +132,6 @@ namespace Breakneck_Brigade
             }
             catch(IOException)
             {
-                //if connected, server ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
-
                 lock (Lock) { Disconnect(); }
                 return;
             }
@@ -178,8 +176,6 @@ namespace Breakneck_Brigade
             }
             catch (IOException)
             {
-                //if connected, server ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
-
                 lock (Lock) { Disconnect(); }
                 return;
             }
@@ -195,7 +191,7 @@ namespace Breakneck_Brigade
         public void Disconnect()
         {
             Lock.AssertHeld();
-            if (!IsConnected)
+            if (!IsConnected)  //if connected, we are initiating disconnect.  if not connected, something else caused disconnect so no need to disconnect again.
                 return;
             IsConnected = false;
             GameMode = SousChef.GameMode.Stopping;
