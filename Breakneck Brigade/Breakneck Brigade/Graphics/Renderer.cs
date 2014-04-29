@@ -133,14 +133,11 @@ namespace Breakneck_Brigade.Graphics
                         float scaleZ = modelSubtree.ReadElementContentAsFloat();
                         
                         Model model = parser.ParseFile(filename);
-                        /*
+                        
                         model.InitialScale.X = scaleX;
                         model.InitialScale.Y = scaleY;
                         model.InitialScale.Z = scaleZ;
-                         * */
-                        model.InitialScale.X = 1.0f;
-                        model.InitialScale.Y = 1.0f;
-                        model.InitialScale.Z = 1.0f;
+                        
                         Models.Add(filename, model);
 
                         if(ii != numberOfModels - 1)

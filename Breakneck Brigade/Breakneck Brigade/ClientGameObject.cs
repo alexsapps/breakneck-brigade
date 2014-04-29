@@ -78,7 +78,7 @@ namespace Breakneck_Brigade
 
         protected void finilizeConstruction()
         {
-            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "orange"];
+            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bottle"];
             Scale = Model.InitialScale;
         }
 
@@ -140,6 +140,9 @@ namespace Breakneck_Brigade
             x = reader.ReadSingle();
             y = reader.ReadSingle();
             z = reader.ReadSingle();
+
+            //TEST
+            x = y = z = 0.0;
             return new Vector4(x, y, z);
         }
 
