@@ -69,7 +69,7 @@ namespace DeCuisine
 
         public override void Update()
         {
-
+            base.Update();
         }
 
         

@@ -235,15 +235,18 @@ namespace DeCuisine
                                 {
                                     writer.Write(HasAdded.Count);
                                     foreach (var obj in HasAdded)
+                                    {
                                         obj.Serialize(writer);
-                                    HasAdded.Clear();
+                                        HasChanged.Remove(obj);
+                                    }
                                     writer.Write(HasChanged.Count);
                                     foreach (var obj in HasChanged)
                                         obj.UpdateStream(writer);
-                                    HasChanged.Clear();
                                     writer.Write(HasRemoved.Count);
                                     foreach (var obj in HasRemoved)
                                         writer.Write(obj);
+                                    HasAdded.Clear();
+                                    HasChanged.Clear();
                                     HasRemoved.Clear();
                                 }
                                 bin = membin.ToArray();
@@ -389,6 +392,12 @@ namespace DeCuisine
             Lock.AssertHeld();
             Console.WriteLine("Game mode: " + Mode.ToString());
             Console.WriteLine(GameObjects.Count + " game objects");
+        }
+
+
+        public void TestCookerAdd()
+        {
+            this.GameObjects[0].ToRender = false;
         }
     }
 }
