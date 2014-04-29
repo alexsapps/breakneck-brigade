@@ -397,7 +397,19 @@ namespace DeCuisine
 
         public void TestCookerAdd()
         {
-            this.GameObjects[0].ToRender = false;
+            // hacky way to find an ingredient object, TEST CODE RULES
+            int x = 0;
+            while (x < this.GameObjects.Count)
+            {
+                // find an ingredient to add to the cooker and call the collision 
+                // funciton
+                if (this.GameObjects[x].ObjectClass == GameObjectClass.Ingredient)
+                {
+                    Console.WriteLine("found it");
+                }
+                x++;
+            }
+            //this.GameObjects[0].ToRender = false;
         }
     }
 }
