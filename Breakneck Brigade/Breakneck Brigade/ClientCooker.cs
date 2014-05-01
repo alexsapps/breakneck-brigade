@@ -31,6 +31,7 @@ namespace Breakneck_Brigade
         {
             string cookerType = reader.ReadString();
             this.Type = game.Config.Cookers[cookerType];
+            processIngredients(reader);
             base.finilizeConstruction(); //set the model based on the type of object
         }
 
@@ -49,20 +50,18 @@ namespace Breakneck_Brigade
         public override void StreamUpdate(BinaryReader reader)
         {
             base.StreamUpdate(reader);
-            this.processIngredientsAdded(reader);
+            this.processIngredients(reader);
         }
 
         /// <summary>
         /// helps process ingredients added
         /// </summary>
-        private void processIngredientsAdded(BinaryReader reader)
+        private void processIngredients(BinaryReader reader)
         {
             int count = reader.ReadInt16();
-            List<int> ingIds = new List<int>();
-            for (int x = 0; x < count; x++)
-            {
-                ingIds.Add(reader.ReadInt32());
-            }
+            Contents.Clear();
+            for (int i = 0; i < count; i++)
+                Contents.Add((ClientIngredient)Game.gameObjects[reader.ReadInt32()]);
         }
 
         public override void Render()

@@ -58,6 +58,7 @@ namespace DeCuisine
         {
             base.Serialize(stream);
             stream.Write(this.Type.Name);
+            writeIngredients(stream);
         }
 
 
@@ -123,9 +124,7 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
-            stream.Write((Int16)Contents.Count);
-            foreach (var ingredient in Contents)
-                stream.Write((Int32)ingredient.Id);
+            writeIngredients(stream);
         }
 
         public override void Update()
@@ -133,6 +132,12 @@ namespace DeCuisine
             base.Update();
         }
 
+        protected void writeIngredients(BinaryWriter stream)
+        {
+            stream.Write((Int16)Contents.Count);
+            foreach (var ingredient in Contents)
+                stream.Write((Int32)ingredient.Id);
+        }
 
         public override void OnCollide(ServerGameObject obj)
         {
