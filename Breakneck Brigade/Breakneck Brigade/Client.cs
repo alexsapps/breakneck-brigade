@@ -130,11 +130,8 @@ namespace Breakneck_Brigade
                     }
                 }
             }
-            catch(IOException)
-            {
-                lock (Lock) { Disconnect(); }
-                return;
-            }
+            catch (IOException) { lock (Lock) { Disconnect(); } return; }
+            catch (ObjectDisposedException) { lock (Lock) { Disconnect(); } return; }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());

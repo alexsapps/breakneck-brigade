@@ -77,7 +77,7 @@ namespace Breakneck_Brigade
 
         protected virtual void readGeom(BinaryReader reader)
         {
-            this.Position = getPositionVector(reader);
+            this.Position = reader.ReadCoordinate();
         }
 
         protected void finilizeConstruction()
@@ -118,7 +118,7 @@ namespace Breakneck_Brigade
         public virtual void StreamUpdate(BinaryReader reader)
         {
             this.ToRender = reader.ReadBoolean();
-            this.Position = getPositionVector(reader);
+            this.Position = reader.ReadCoordinate();
 
             updateMatrix();
         }
@@ -136,25 +136,6 @@ namespace Breakneck_Brigade
                 Gl.glPopMatrix();
             }
 
-        }
-
-        /// <summary>
-        /// the next three values to be read from the reader should be the x, y 
-        /// and z coordinates. THe packet should look like:
-        /// float x
-        /// float y
-        /// float z
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
-        private Vector4 getPositionVector(BinaryReader reader)
-        {
-            double x, y, z;
-            x = reader.ReadSingle();
-            y = reader.ReadSingle();
-            z = reader.ReadSingle();
-
-            return new Vector4(x, y, z);
         }
 
         /// <summary>
