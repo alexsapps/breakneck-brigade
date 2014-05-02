@@ -31,6 +31,7 @@ namespace Breakneck_Brigade
         {
             string cookerType = reader.ReadString();
             this.Type = game.Config.Cookers[cookerType];
+            this.Contents = new List<ClientIngredient>();
             processIngredients(reader);
             base.finilizeConstruction(); //set the model based on the type of object
         }
