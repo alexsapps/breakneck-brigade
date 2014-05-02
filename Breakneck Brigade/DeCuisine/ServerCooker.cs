@@ -72,6 +72,7 @@ namespace DeCuisine
             if (Type.ValidIngredients.Contains(ingredient.Type.Name))
             {
                 Contents.Add(ingredient);
+                ingredient.ToRender = false; // hide the object
                 this.Game.ObjectChanged(ingredient);
                 this.Cook(); // check if you can cook. 
                 return true;
@@ -101,7 +102,8 @@ namespace DeCuisine
                     ingredeint.MarkDeleted();
                 }
                 this.Contents = new List<ServerIngredient>(); // clear contents
-                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, new Ode.dVector3(0,0,0));
+                Ode.dVector3 ingSpawn = new Ode.dVector3(this.Position.X + 30, this.Position.Y + 30, this.Position.Z + 30); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
                 this.Contents.Add(ToAdd);
                 return ToAdd;
             }

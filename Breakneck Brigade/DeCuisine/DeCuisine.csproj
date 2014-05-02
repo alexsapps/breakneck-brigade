@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="ClientEventArgs.cs" />
+    <Compile Include="CommandLinePlayer.cs" />
     <Compile Include="dcutils\DC.cs" />
     <Compile Include="ServerBox.cs" />
     <Compile Include="ServerPlane.cs" />

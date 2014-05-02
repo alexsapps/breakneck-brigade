@@ -395,21 +395,26 @@ namespace DeCuisine
         }
 
 
-        public void TestCookerAdd()
+
+
+        // TODO: Dev code for cooker adding
+        public void TestCookerAdd(int cookerId, int ingredientId)
         {
-            // hacky way to find an ingredient object, TEST CODE RULES
-            int x = 0;
-            while (x < this.GameObjects.Count)
-            {
-                // find an ingredient to add to the cooker and call the collision 
-                // funciton
-                if (this.GameObjects[x].ObjectClass == GameObjectClass.Ingredient)
-                {
-                    Console.WriteLine("found it");
-                }
-                x++;
-            }
-            //this.GameObjects[0].ToRender = false;
+            CommandLinePlayer.TestCookerAdd(this.GameObjects, cookerId, ingredientId);
+        }
+
+        // TODO: Dev Code to list current game objects
+        public void ListGameObjects()
+        {
+            CommandLinePlayer.ListGameObjects(this.GameObjects);
+        }
+        public void ListIngredients()
+        {
+            CommandLinePlayer.ListIngredients(this.GameObjects);
+        }
+        public void ListCookerContents(int cookerId)
+        {
+            CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
         }
     }
 }
