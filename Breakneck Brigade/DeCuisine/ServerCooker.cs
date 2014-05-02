@@ -68,9 +68,9 @@ namespace DeCuisine
          */
         public bool AddIngredient(ServerIngredient ingredient)
         {
-            HashCache = null;
             if (Type.ValidIngredients.Contains(ingredient.Type.Name))
             {
+                HashCache = null;
                 Contents.Add(ingredient);
                 ingredient.ToRender = false; // hide the object
                 this.Game.ObjectChanged(ingredient);

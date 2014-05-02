@@ -169,7 +169,7 @@ namespace DeCuisine
                             // takes one argument, the cooker you want to list it's contents
                             if (parts.Length < 2)
                             {
-                                Console.WriteLine("list expects at least one argument.");
+                                Console.WriteLine("list cooker expects at least one argument.");
                                 break;
                             }
                             lock (server.Lock)
@@ -184,6 +184,13 @@ namespace DeCuisine
                                 server.Game.ListIngredients();
                             }
                             break;
+                        case "spawn":
+                            // spawn stuff, see function definition for right argument format
+                             lock (server.Lock)
+                                {
+                                    CommandLinePlayer.Spawn(server.Game, parts);
+                                }
+                                break;
                         default:
                             Console.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
                             break;
