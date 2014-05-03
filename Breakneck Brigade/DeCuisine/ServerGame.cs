@@ -25,7 +25,7 @@ namespace DeCuisine
 
         public ConfigSalad Config { get; private set; }
 
-        public List<ServerGameObject> HasAdded = new List<ServerGameObject>();
+        public List<ServerGameObject> HasAdded = new List<ServerGameObject>();  // TODO: Change this to a HashSet safetly
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
@@ -378,7 +378,9 @@ namespace DeCuisine
         {
             Lock.AssertHeld();
             this.HasRemoved.Add(obj.Id);
+            this.HasChanged.Remove(obj);
             GameObjects.Remove(obj.Id);
+            
         }
 
         public ServerGameObject GeomToObj(IntPtr geom)

@@ -32,7 +32,7 @@ namespace DeCuisine
             {
                 try
                 {
-                    String[] parts = line.Split();
+                    String[] parts = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     switch (parts[0])
                     {
                         case "stop":
@@ -143,56 +143,9 @@ namespace DeCuisine
                             return;
 
 
-                        // Everything under here is dev code. 
-                        case "add":
-                            // "takes" two arguments, the first is the cooker id of where you want to 
-                            // put the ingredient, the second is the ingredient id of what you want to add
-                            if (parts.Length < 3)
-                            {
-                                Console.WriteLine("add expects at least two arguments.");
-                                break;
-                            }
-                            lock (server.Lock)
-                            {
-                                server.Game.TestCookerAdd(Convert.ToInt32(parts[1]), Convert.ToInt32(parts[2]));
-                            }
-                            break;
-                        case "listworld":
-                            // list all objects ids in the game as well as there class 
-                            lock (server.Lock)
-                            {
-                                server.Game.ListGameObjects();
-                            }
-                            break;
-
-                        case "listcooker":
-                            // takes one argument, the cooker you want to list it's contents
-                            if (parts.Length < 2)
-                            {
-                                Console.WriteLine("list cooker expects at least one argument.");
-                                break;
-                            }
-                            lock (server.Lock)
-                            {
-                                server.Game.ListCookerContents(Convert.ToInt32(parts[1]));
-                            }
-                            break;
-                        case "listing":
-                            // lists all the ingredients by name in the game world
-                            lock (server.Lock)
-                            {
-                                server.Game.ListIngredients();
-                            }
-                            break;
-                        case "spawn":
-                            // spawn stuff, see function definition for right argument format
-                             lock (server.Lock)
-                                {
-                                    CommandLinePlayer.Spawn(server.Game, parts);
-                                }
-                                break;
                         default:
-                            Console.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
+                            if (!CommandLinePlayer.ReadArgs(parts, server)) 
+                                Console.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
                             break;
                     }
                 }

@@ -89,8 +89,8 @@ namespace DeCuisine
         /// </summary>
         public virtual void Remove()
         {
-            this.RemoveFromWorld();
-            this.Game.ObjectRemoved(this);
+            this.RemoveFromWorld();        // tell simulation to remove from ode
+            this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
         }
 
         protected delegate IntPtr GeomMaker();
@@ -164,14 +164,15 @@ namespace DeCuisine
 
         public void RemoveFromWorld()
         {
+            Game.Lock.AssertHeld();
             Debug.Assert(InWorld);
 
-            if(this.Geom != null)
+            if(this.Geom != IntPtr.Zero)
             {
                 Ode.dGeomDestroy(this.Geom);
             }
 
-            if(this.Body != null)
+            if(this.Body != IntPtr.Zero)
             {
                 Ode.dBodyDestroy(this.Body);
             }
@@ -210,13 +211,17 @@ namespace DeCuisine
 
         public void MarkDeleted()
         {
-            this.Game.ObjectRemoved(this);
+            this.Remove();
         }
 
         private Ode.dVector3 getPosition()
         {
-            Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            return m3;
+            if (this.Geom != IntPtr.Zero)
+            {
+                Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+                return m3;
+            }
+            return new Ode.dVector3(100,100,100);
         }
 
         private void setPosition(Ode.dVector3 value)

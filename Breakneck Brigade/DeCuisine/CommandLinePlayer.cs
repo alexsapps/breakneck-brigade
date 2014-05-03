@@ -12,6 +12,74 @@ namespace DeCuisine
     /// </summary>
     static class CommandLinePlayer
     {
+
+        /// <summary>
+        /// read the arguments from the command line.
+        /// </summary>
+        /// <param name="args"></param>
+        public static bool ReadArgs(string[] args, Server server)
+        {
+            bool success = true;
+            switch (args[0])
+            {
+                // Everything under here is dev code. 
+                case "add":
+                    // "takes" two arguments, the first is the cooker id of where you want to 
+                    // put the ingredient, the second is the ingredient id of what you want to add
+                    if (args.Length < 3)
+                    {
+                        Console.WriteLine("add expects at least two arguments.");
+                        break;
+                    }
+                    lock (server.Lock)
+                    {
+                        lock (server.Game)
+                        {
+                            server.Game.TestCookerAdd(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
+                        }
+                    }
+                    break;
+                case "listworld":
+                    // list all objects ids in the game as well as there class 
+                    lock (server.Lock)
+                    {
+                        server.Game.ListGameObjects();
+                    }
+                    break;
+
+                case "listcooker":
+                    // takes one argument, the cooker you want to list it's contents
+                    if (args.Length < 2)
+                    {
+                        Console.WriteLine("list cooker expects at least one argument.");
+                        break;
+                    }
+                    lock (server.Lock)
+                    {
+                        server.Game.ListCookerContents(Convert.ToInt32(args[1]));
+                    }
+                    break;
+                case "listing":
+                    // lists all the ingredients by name in the game world
+                    lock (server.Lock)
+                    {
+                        server.Game.ListIngredients();
+                    }
+                    break;
+                case "spawn":
+                    // spawn stuff, see function definition for right argument format
+                    lock (server.Lock)
+                    {
+                        CommandLinePlayer.Spawn(server.Game, args);
+                    }
+                    break;
+                default:
+                    success = false;
+                    break;
+            }
+            return success;
+        }
+
         /// <summary>
         /// Technically, calls the collision function between the cooker and 
         /// ingredient. The collision function adds the ingredient to the cooker 
