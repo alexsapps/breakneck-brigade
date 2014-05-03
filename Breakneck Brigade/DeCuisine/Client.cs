@@ -105,17 +105,8 @@ namespace DeCuisine
                     }
                 }
             }
-            catch (IOException)
-            {
-                //if connected, client ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
-
-                lock (Lock)
-                {
-                    if (IsConnected)
-                        Disconnect();
-                }
-                return;
-            }
+            catch (ObjectDisposedException) { lock (Lock) { Disconnect(); } }
+            catch (IOException) { lock (Lock) { Disconnect(); } }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
@@ -174,17 +165,8 @@ namespace DeCuisine
                     }
                 }
             }
-            catch (IOException)
-            {
-                //if connected, client ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
-
-                lock (Lock)
-                {
-                    if (IsConnected)
-                        Disconnect();
-                }
-                return;
-            }
+            catch (ObjectDisposedException) { lock (Lock) { Disconnect(); } }
+            catch (IOException) { lock (Lock) { Disconnect(); } }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
@@ -198,7 +180,9 @@ namespace DeCuisine
         {
             Lock.AssertHeld();
 
-            Debug.Assert(IsConnected); //do not disconnect twice
+            if (!IsConnected) //if connected, client ended session so call disconnect().  otherwise, we initiated disconnect--don't need to call again.
+                return;
+
             IsConnected = false;
 
             lock (ServerMessages)
