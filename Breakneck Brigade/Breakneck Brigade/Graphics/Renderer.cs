@@ -242,7 +242,7 @@ namespace Breakneck_Brigade.Graphics
             //Generates normals for objects which do not specify normals
             Gl.glEnable(Gl.GL_AUTO_NORMAL);
             //For basic polygons, draws both a front and back face. (May disable for performance reasons later)
-            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
+            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL);
             //What shading model to use for rendering Gl prims
             Gl.glShadeModel(Gl.GL_SMOOTH);
             //Turn on texturing

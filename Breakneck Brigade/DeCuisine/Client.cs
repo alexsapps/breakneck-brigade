@@ -126,7 +126,6 @@ namespace DeCuisine
                     while (true)
                     {
                         List<ServerMessage> svrMsgs = null;
-
                         while (true)
                         {
                             lock (Lock)
@@ -147,7 +146,7 @@ namespace DeCuisine
                                 Monitor.Wait(ServerMessages);
                             }
                         }
-                        
+                        Console.WriteLine(svrMsgs.Count);
                         foreach (var message in svrMsgs)
                         {
                             writer.Write((byte)message.Type);
@@ -157,9 +156,15 @@ namespace DeCuisine
                                     writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
                                     break;
                                 case ServerMessageType.GameStateUpdate:
+                                    Console.WriteLine("      " + ((ServerGameStateUpdateMessage)message).Length);
+
                                     var msg = (ServerGameStateUpdateMessage)message;
+                                    DateTime start = DateTime.Now;
                                     writer.Write(msg.Binary, 0, msg.Length);
+                                    Console.WriteLine(DateTime.Now.Subtract(start).TotalMilliseconds);
                                     break;
+                                default:
+                                    throw new Exception();
                             }
                         }
                     }
