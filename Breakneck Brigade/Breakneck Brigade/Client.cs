@@ -20,6 +20,8 @@ namespace Breakneck_Brigade
         public bool IsConnected { get; private set; }
         public ClientGame Game { get; private set; }
         public GameMode GameMode { get; private set; }
+        
+        public class PlayerIdUpdatedEventArgs : EventArgs { public int GameObjId { get; set; } }
 
         public Client()
         {
@@ -124,8 +126,15 @@ namespace Breakneck_Brigade
                                 }
                                 
                                 break;
-                            default:
+                            case ServerMessageType.PlayerIdUpdate:
+                                int playerObjId = reader.ReadInt32();
+                                lock (Game.Lock)
+                                {
+                                    Game.PlayerObjId = playerObjId;
+                                }
                                 break;
+                            default:
+                                throw new Exception("client does not understand message " + type.ToString());
                         }
                     }
                 }

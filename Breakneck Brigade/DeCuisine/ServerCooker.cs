@@ -73,7 +73,6 @@ namespace DeCuisine
                 HashCache = null;
                 Contents.Add(ingredient);
                 ingredient.ToRender = false; // hide the object
-                this.Game.ObjectChanged(ingredient);
                 this.Cook(); // check if you can cook. 
                 return true;
             }

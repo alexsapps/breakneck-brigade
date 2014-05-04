@@ -35,7 +35,8 @@ namespace DeCuisine
         public bool InWorld { get; protected set; }
         public IntPtr Geom { get; set; }
         public IntPtr Body { get; set; } //null for walls
-        public bool ToRender { get; set; }
+        private bool _toRender;
+        public bool ToRender { get{return _toRender;} set{_toRender = value; this.MarkDirty();} }
         public bool OnFloor { get; set; }
 
         private static int nextId;
@@ -86,16 +87,12 @@ namespace DeCuisine
         /// </summary>
         public virtual void Update()
         {
-            if(this.lastPosition.X != this.Position.X ||
-               this.lastPosition.Y != this.Position.Y ||
-               this.lastPosition.Z != this.Position.Z){
+            if(Math.Abs(this.lastPosition.X - this.Position.X)  > .01 ||
+               Math.Abs(this.lastPosition.Y - this.Position.Y) > .01 ||
+               Math.Abs(this.lastPosition.Z - this.Position.Z) > .01){
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
                }
-            if (this.OnFloor)
-            {
-                //this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
-            }
         }
 
         /// <summary>
@@ -214,12 +211,7 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
-            if (GameObjectClass.Plane == obj.ObjectClass)
-            {
-                // hit a plane, the z value is forever zero now
-                OnFloor = true;
-            }
-            this.MarkDirty();
+
         }
 
         public void MarkDirty()

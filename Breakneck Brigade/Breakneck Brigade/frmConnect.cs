@@ -39,8 +39,6 @@ namespace Breakneck_Brigade
 
         private void doConnect()
         {
-            Client client = new Client();
-
             Regex regex = new Regex("^(.*):([0-9]+)$");
 
             try

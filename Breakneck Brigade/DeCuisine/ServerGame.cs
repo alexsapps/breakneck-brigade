@@ -172,7 +172,13 @@ namespace DeCuisine
             // loop over clients and make play objects for them
             foreach (var client in clients)
             {
-                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(100), DC.random.Next(100), 10));
+                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 10));
+                lock(client.ServerMessages)
+                {
+                    client.ServerMessages.Add(new LambdaServerMessage(
+                        (w) => { w.Write((Int32)client.Player.Id); }
+                        ) { Type = ServerMessageType.PlayerIdUpdate });
+                }
             }
             try
             {
@@ -263,17 +269,18 @@ namespace DeCuisine
                                 bin = membin.ToArray();
                                 binlen = bin.Length;
                             }
+                            var msg = new ServerGameStateUpdateMessage()
+                            {
+                                Type = ServerMessageType.GameStateUpdate,
+                                Binary = bin,
+                                Length = binlen
+                            };
 
                             foreach (Client client in clients)
                             {
                                 lock (client.ServerMessages)
                                 {
-                                    client.ServerMessages.Add(new ServerGameStateUpdateMessage()
-                                    {
-                                        Type = ServerMessageType.GameStateUpdate,
-                                        Binary = bin,
-                                        Length = binlen
-                                    });
+                                    client.ServerMessages.Add(msg);
                                     Monitor.PulseAll(client.ServerMessages);
                                 }
                             }
@@ -320,7 +327,6 @@ namespace DeCuisine
                 contactGeoms[i] = new Ode.dContactGeom();
                 contact[i] = new Ode.dContact();
             }
-
             int numc;
             unsafe
             {
@@ -339,7 +345,10 @@ namespace DeCuisine
                     contact[i].surface.soft_cfm = 0.01;
                     contact[i].geom = contactGeoms[i];
 
+<<<<<<< HEAD
                     //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
+=======
+>>>>>>> b511459296967169eec106d2019559938b42c28a
                     IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
                     Ode.dJointAttach(c, b1, b2);
                     Ode.dJointSetFixed(c);
