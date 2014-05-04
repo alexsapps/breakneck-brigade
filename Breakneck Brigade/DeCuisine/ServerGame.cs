@@ -39,12 +39,14 @@ namespace DeCuisine
             { 
                 _frameRate = value;
                 _frameRateTicks = FrameRate * millisecond_ticks; //rate to wait in ticks
+                _frameRateSeconds = FrameRate * 0.001f;
             }
 
         }
         private long _frameRateTicks;
         long FrameRateTicks { get { return _frameRateTicks; } }
-
+        private float _frameRateSeconds;
+        float FrameRateSeconds { get { return _frameRateSeconds; } }
 
         int MAX_CONTACTS = 8;
 
@@ -212,7 +214,7 @@ namespace DeCuisine
                          */
                         {
                             Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldQuickStep(World, .001f * (float)FrameRate);
+                            Ode.dWorldQuickStep(World, FrameRateSeconds);
                             Ode.dJointGroupEmpty(ContactGroup);
                         }
 
