@@ -29,6 +29,7 @@ namespace DeCuisine
         public IntPtr Geom { get; set; }
         public IntPtr Body { get; set; } //null for walls
         public bool ToRender { get; set; }
+        public bool OnFloor { get; set; }
 
         private static int nextId;
         private Ode.dVector3 lastPosition { get; set; }
@@ -82,6 +83,10 @@ namespace DeCuisine
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
                }
+            if (this.OnFloor)
+            {
+                this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
+            }
         }
 
         /// <summary>
@@ -154,7 +159,6 @@ namespace DeCuisine
                     Ode.dMassSetZero(ref mass);
                     Ode.dMassSetSphereTotal(ref mass, GeomInfo.Mass, GeomInfo.Sides[0]);
                     Ode.dBodySetMass(body, ref mass);
-                    this.Geom = Ode.dCreateSphere(this.Game.Space, GeomInfo.Sides[0]);
                     break;
                 default:
                     throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
@@ -201,6 +205,11 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
+            if (GameObjectClass.Plane == obj.ObjectClass)
+            {
+                // hit a plane, the z value is forever zero now
+                OnFloor = true;
+            }
             this.MarkDirty();
         }
 
