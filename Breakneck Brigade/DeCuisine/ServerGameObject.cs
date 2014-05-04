@@ -30,6 +30,8 @@ namespace DeCuisine
         public IntPtr Body { get; set; } //null for walls
         public bool ToRender { get; set; }
         public bool OnFloor { get; set; }
+        public Physics.VelocityStruct Velocity;
+
 
         private static int nextId;
         private Ode.dVector3 lastPosition { get; set; }
@@ -43,6 +45,7 @@ namespace DeCuisine
             this.Id = nextId++;
             this.Game = game;
             this.ToRender = true; // class specific implementation can override
+            this.Velocity = new Physics.VelocityStruct(0, 0, 0);
             
             game.Lock.AssertHeld();
             Game.ObjectAdded(this);
@@ -85,10 +88,12 @@ namespace DeCuisine
                    this.lastPosition = this.Position;
                }
 
+            double newX, newY, newZ;
+            this.Position = Physics.ApplyForce(this.Velocity, this.Position);
             if (this.Position.Z > 1)
             {
-                double newZ = (this.Position.Z - ServerGame.Gravity > 1) ? this.Position.Z - ServerGame.Gravity : 1;
-                this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, newZ);
+                //double newZ = (this.Position.Z - ServerGame.Gravity > 1) ? this.Position.Z - ServerGame.Gravity : 1;
+                //this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, newZ);
             }
         }
 

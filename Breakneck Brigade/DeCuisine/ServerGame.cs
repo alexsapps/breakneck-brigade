@@ -29,7 +29,6 @@ namespace DeCuisine
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
-        public static double Gravity;
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
         public int FrameRate // Tick time in milliseconds
@@ -174,8 +173,8 @@ namespace DeCuisine
             }
 
             // set gravity to a fraction of the frame ticks
-            ServerGame.Gravity = 9.8 / this.FrameRate;
-            Console.WriteLine(ServerGame.Gravity);
+            Physics.SetGravity(9.8 / this.FrameRate);
+            Console.WriteLine(Physics.Gravity);
 
             try
             {
