@@ -22,6 +22,8 @@ namespace Breakneck_Brigade
                     return typeof(ClientPlane);
                 case GameObjectClass.Box:
                     return typeof(ClientBox);
+                case GameObjectClass.Player:
+                    return typeof(ClientPlayer);
                 default:
                     throw new Exception("GetGameObjectType not defined for " + objClass.ToString());
             }
