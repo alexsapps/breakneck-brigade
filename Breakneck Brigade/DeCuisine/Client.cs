@@ -148,7 +148,6 @@ namespace DeCuisine
                                 Monitor.Wait(ServerMessages);
                             }
                         }
-                        Console.WriteLine(svrMsgs.Count);
                         foreach (var message in svrMsgs)
                         {
                             writer.Write((byte)message.Type);
