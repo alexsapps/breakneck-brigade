@@ -73,6 +73,13 @@ namespace DeCuisine
                         CommandLinePlayer.Spawn(server.Game, args);
                     }
                     break;
+                case "stresstest":
+                    // spawn stuff, see function definition for right argument format
+                    lock (server.Lock)
+                    {
+                        CommandLinePlayer.StressTest(server.Game);
+                    }
+                    break;
                 default:
                     success = false;
                     break;
@@ -134,6 +141,19 @@ namespace DeCuisine
             {
                 Console.WriteLine(x.Id + "\t\t" + x.Type.Name);
             }
+        }
+
+        /// <summary>
+        /// Stress test our system, AKA Spawn a metric shitload of things at once
+        /// </summary>
+        public static void StressTest(ServerGame game)
+        {
+            int numOfCookers = 0;
+            int numOfIngredients = 50;
+            for (int x = 0; x < numOfIngredients; x++ )
+                SpawnIngredient(game, "orange");
+            for (int x = 0; x < numOfCookers; x++)
+                SpawnCooker(game);
         }
 
         /// <summary>
@@ -279,6 +299,8 @@ namespace DeCuisine
             return true;
         }
 
+        
+
         /// <summary>
         /// helper to check if the config file has the requested ingredient type to make
         /// </summary>
@@ -293,9 +315,8 @@ namespace DeCuisine
         /// </summary>
         /// <returns></returns>
         private static Tao.Ode.Ode.dVector3 randomSpawn()
-        {
-            Random rand = new Random();
-            return new Tao.Ode.Ode.dVector3(rand.Next(100), rand.Next(100), rand.Next(10, 100));
+        {            
+            return new Tao.Ode.Ode.dVector3( DC.random.Next(100), DC.random.Next(100), DC.random.Next(10, 100));
         }
 
         /// <summary>
