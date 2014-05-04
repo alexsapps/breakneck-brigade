@@ -12,7 +12,7 @@ namespace DeCuisine
 {
     /// <summary>
     /// Top level server game object. All server game objects should inherit. 
-    /// </summary>
+    /// </summary> 
     abstract class ServerGameObject : IGameObject
     {
         public ServerGame Game;
@@ -103,11 +103,11 @@ namespace DeCuisine
         /// <summary>
         /// Add the object into the physical world.
         /// </summary>
-        protected void AddToWorld(Ode.dVector3 position)
+        protected void AddToWorld(Ode.dVector3 coordinate)
         {
             AddToWorld(() => { 
                 
-                var geom = makeGeom(GeomInfo, position);
+                var geom = makeGeom(GeomInfo, coordinate);
 
                 if (this.HasBody)
                 {
@@ -115,7 +115,7 @@ namespace DeCuisine
                     Ode.dGeomSetBody(geom, Body);
                 }
 
-                Ode.dGeomSetPosition(geom, position.X, position.Y, position.Z); //this must happen after body is set
+                Ode.dGeomSetPosition(geom, coordinate.X, coordinate.Y, coordinate.Z); //this must happen after body is set
 
                 return geom;
 
@@ -230,7 +230,10 @@ namespace DeCuisine
                 Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
                 return m3;
             }
-            return new Ode.dVector3(100,100,100);
+            else
+            {
+                throw new Exception("Geom is null");
+            }
         }
 
         private void setPosition(Ode.dVector3 value)

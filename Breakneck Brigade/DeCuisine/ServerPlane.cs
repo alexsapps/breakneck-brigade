@@ -10,7 +10,6 @@ namespace DeCuisine
     class ServerPlane : ServerGameObject
     {
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Plane; } }
-        float Height { get; set; }
         public string Texture { get; set; }
         public override bool HasBody { get  { return false; } }
         protected override GeometryInfo getGeomInfo() { throw new NotSupportedException(); }
@@ -18,10 +17,18 @@ namespace DeCuisine
         public ServerPlane(ServerGame game, string texture, float height) 
             : base(game)
         {
+            Texture = texture;
+            Position = new Ode.dVector3(0, 0, height);
             AddToWorld(() =>
             {
                 return Ode.dCreatePlane(game.Space, 0, 0, height, 0);
             });
+        }
+
+        public override void Serialize(System.IO.BinaryWriter stream)
+        {
+            base.Serialize(stream);
+            stream.Write(Texture);
         }
 
         public override void Update()

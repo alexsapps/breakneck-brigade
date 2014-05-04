@@ -39,12 +39,14 @@ namespace DeCuisine
             { 
                 _frameRate = value;
                 _frameRateTicks = FrameRate * millisecond_ticks; //rate to wait in ticks
+                _frameRateSeconds = FrameRate * 0.001f;
             }
 
         }
         private long _frameRateTicks;
         long FrameRateTicks { get { return _frameRateTicks; } }
-
+        private float _frameRateSeconds;
+        float FrameRateSeconds { get { return _frameRateSeconds; } }
 
         int MAX_CONTACTS = 8;
 
@@ -84,7 +86,6 @@ namespace DeCuisine
             lock (Lock)
             {
                 clients.Add(e.Client);
-
                 lock (ClientInput)
                 {
                     ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Enter } }); //we can change this.
@@ -168,7 +169,11 @@ namespace DeCuisine
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
             }
-
+            // loop over clients and make play objects for them
+            foreach (var client in clients)
+            {
+                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(100), DC.random.Next(100), 10));
+            }
             try
             {
                 long next = DateTime.UtcNow.Ticks;
@@ -209,7 +214,7 @@ namespace DeCuisine
                          */
                         {
                             Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldQuickStep(World, .001f * (float)FrameRate);
+                            Ode.dWorldQuickStep(World, FrameRateSeconds);
                             Ode.dJointGroupEmpty(ContactGroup);
                         }
 
@@ -308,8 +313,9 @@ namespace DeCuisine
             for (int i = 0; i < MAX_CONTACTS; i++)
             {
                 contactGeoms[i] = new Ode.dContactGeom();
-                //contact[i] = new Ode.dContact();
+                contact[i] = new Ode.dContact();
             }
+
             int numc;
             unsafe
             {
@@ -328,8 +334,10 @@ namespace DeCuisine
                     contact[i].surface.soft_cfm = 0.01;
                     contact[i].geom = contactGeoms[i];
 
-                    IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
+                    //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
+                    IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
                     Ode.dJointAttach(c, b1, b2);
+                    Ode.dJointSetFixed(c);
                 }
             }
 

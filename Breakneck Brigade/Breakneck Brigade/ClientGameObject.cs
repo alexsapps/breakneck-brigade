@@ -45,7 +45,6 @@ namespace Breakneck_Brigade
             : this (id, game)
         {
             _position = position;
-            initGeom();
         }
 
         /// <summary>
@@ -63,6 +62,7 @@ namespace Breakneck_Brigade
         public ClientGameObject(int id, ClientGame game, BinaryReader reader)
         {
             constructEssential(id, game);
+            
             this.ToRender = reader.ReadBoolean();
             readGeom(reader);
         }
@@ -73,6 +73,7 @@ namespace Breakneck_Brigade
             this.Game = game;
         }
 
+        //this function expects you to call updateMatrix later on, directly or through initGeom
         protected virtual void readGeom(BinaryReader reader)
         {
             _position = reader.ReadCoordinate();
@@ -150,7 +151,7 @@ namespace Breakneck_Brigade
         /// Updates the position of the current objects transfrom.
         /// </summary>
         /// <param name="transform"></param>
-        public void BaseUpdate(Vector4 position)
+        protected void BaseUpdate(Vector4 position)
         {
             this.Position = position;
         }

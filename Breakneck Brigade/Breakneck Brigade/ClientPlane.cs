@@ -10,15 +10,17 @@ namespace Breakneck_Brigade
 {
     class ClientPlane : ClientGameObject
     {
-        public override string ModelName { get { return "#plane"; } }
+        public string Texture { get; set; }
+        public override string ModelName { get { return "#plane:" + Texture; } }
 
-        public ClientPlane(int id, ClientGame game) : base (id, game)
+        public ClientPlane(int id, ClientGame game, Vector4 position) : base (id, game, position)
         {
             finilizeConstruction();
         }
 
         public ClientPlane(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
+            Texture = reader.ReadString();
             finilizeConstruction();
         }
         

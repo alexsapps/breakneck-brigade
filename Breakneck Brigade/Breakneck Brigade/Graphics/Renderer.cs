@@ -151,7 +151,7 @@ namespace Breakneck_Brigade.Graphics
             Model plane = new Model();
             plane.InitialScale = new Vector4(1.0f, 1.0f, 1.0f);
             plane.Meshes.Add(new PrimativePlane(0.0f));
-            Models.Add("#plane", plane);
+            Models.Add("#plane:blank", plane);
         }
 
         public void Render(LocalPlayer cp)
