@@ -311,7 +311,7 @@ namespace DeCuisine
             // exit without doing anything if the two bodies are connected by a joint
             IntPtr b1 = Ode.dGeomGetBody(o1);
             IntPtr b2 = Ode.dGeomGetBody(o2);
-            if (b1 != null && b2 != null && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
+            if (b1 != IntPtr.Zero && b2 != IntPtr.Zero && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
 
             Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
             Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];

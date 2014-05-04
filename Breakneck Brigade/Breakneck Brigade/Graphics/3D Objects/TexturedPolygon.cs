@@ -22,8 +22,20 @@ namespace Breakneck_Brigade.Graphics
 
         public override void Render()
         {
-            Gl.glPushMatrix();
-            Gl.glBegin(GlDrawMode);
+            //If if is THE first polygon we've rendered
+            if(Renderer.CurrentDrawMode == -1)
+            {
+                Gl.glBegin(GlDrawMode);
+                Renderer.CurrentDrawMode = GlDrawMode;
+            }
+            //If the last polygon we rendered is the same draw mode as this polygon
+            if(Renderer.CurrentDrawMode != GlDrawMode)
+            {
+                Gl.glEnd();
+                Gl.glBegin(GlDrawMode);
+                Renderer.CurrentDrawMode = GlDrawMode;
+            }
+            Gl.glBegin(Renderer.CurrentDrawMode);
                 foreach(Vertex v in Vertexes)
                 {
                     Gl.glColor3f(1.0f, 1.0f,1.0f);
@@ -33,9 +45,8 @@ namespace Breakneck_Brigade.Graphics
                     if (v.Normal != null)
                         Gl.glNormal3f(v.Normal[0], v.Normal[1], v.Normal[2]);
                     Gl.glVertex3f(v.Position[0],v.Position[1],v.Position[2]);
-                }
+                } 
             Gl.glEnd();
-            Gl.glPopMatrix();
         }
     }
 }

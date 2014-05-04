@@ -97,6 +97,7 @@ namespace Breakneck_Brigade.Graphics
             {
                 p.Render();
             }
+            Gl.glEnd();
 
             //Render children, preserving the parent transformations
             foreach(AObject3D c in Children)

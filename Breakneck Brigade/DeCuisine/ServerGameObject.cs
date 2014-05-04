@@ -49,6 +49,7 @@ namespace DeCuisine
             this.Id = nextId++;
             this.Game = game;
             this._rotation = new Matrix4();
+            this._position = new Vector4();
             this.ToRender = true; // class specific implementation can override
             
             game.Lock.AssertHeld();
