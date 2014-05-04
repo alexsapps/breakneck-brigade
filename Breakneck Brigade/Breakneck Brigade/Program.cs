@@ -207,6 +207,16 @@ namespace Breakneck_Brigade
                         {
                             renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
 
+                            cPlayer.Update(IM);
+                            if (cPlayer.NetworkEvents.Count > 0)
+                            {
+                                foreach (ClientEvent ce in cPlayer.NetworkEvents)
+                                {
+                                    sendEvent(ce);
+                                }
+                                cPlayer.NetworkEvents.Clear();
+                            }
+
                             render();
                         }
                     }
@@ -326,15 +336,6 @@ namespace Breakneck_Brigade
 
         static void render()
         {
-            cPlayer.Update(IM);
-            if(cPlayer.NetworkEvents.Count > 0)
-            {
-                foreach(ClientEvent ce in cPlayer.NetworkEvents)
-                {
-                    sendEvent(ce);
-                }
-                cPlayer.NetworkEvents.Clear();
-            }
             renderer.Render(cPlayer);
         }
 

@@ -10,24 +10,41 @@ namespace SousChef
     {
         /// <summary>
         /// Type to used when a message is empty. Indicates null.
-        /// Args: none.
+        /// Params: none.
         /// </summary>
         None, /* */
         /// <summary>
         /// Player changed orientation
-        /// Args: "Orientation" -> a float representing the player's current orientation. Some degree angle from 0.
+        /// Params: "Orientation" -> a float representing the player's current orientation. Some degree angle from 0.
         /// </summary>
         ChangeOrientation,
         /// <summary>
-        /// Player started moving
-        /// Args: "Direction" -> a float[3] representing direction
+        /// Player started moving\
         /// </summary>
         BeginMove,
+        /// <summary>
+        /// Player stopped moving
+        /// </summary>
         EndMove,
         GrabItem,
-        ThrowItem, /* for drop item, make throw item event with 0 force */
+        /// <summary>
+        /// Throw a physics object
+        /// Params:
+        /// "Id" -> object ID
+        /// "Force" -> a float[3] representing a force (direction + magnitude)
+        /// To drop an object, throw it with a force of 0.
+        /// </summary>
+        ThrowItem,
+        /// <summary>
+        /// Player jumped
+        /// Params:
+        /// "Force" -> a float[3] representing a force (direction + magnitude)
+        /// </summary>
         Jump,
-        Test, //For testing purposes. Forces the server to spawn an item.
+        /// <summary>
+        /// A test event. Forces the server to generate an object at a predefined space
+        /// </summary>
+        Test,
 
         /* below values are used by the server internally and should not be sent by the client */
         Enter,
