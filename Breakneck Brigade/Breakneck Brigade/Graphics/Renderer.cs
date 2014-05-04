@@ -154,7 +154,7 @@ namespace Breakneck_Brigade.Graphics
             Models.Add("#plane", plane);
         }
 
-        public void Render(ClientPlayer cp)
+        public void Render(LocalPlayer cp)
         {
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);

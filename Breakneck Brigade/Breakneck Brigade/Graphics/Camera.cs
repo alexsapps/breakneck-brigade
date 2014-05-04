@@ -61,7 +61,7 @@ namespace Breakneck_Brigade.Graphics
             zPos = 0.0f;
 		}
 
-		public void Update(ClientPlayer cp) 
+		public void Update(LocalPlayer cp) 
         {
             Azimuth = cp.Orientation;
             Incline = cp.Incline;

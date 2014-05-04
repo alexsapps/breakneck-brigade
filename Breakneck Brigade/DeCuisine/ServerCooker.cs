@@ -143,6 +143,7 @@ namespace DeCuisine
 
         public override void OnCollide(ServerGameObject obj)
         {
+            base.OnCollide(obj); // Fake floor for now
             if (obj.ObjectClass == GameObjectClass.Ingredient)
             {
                 this.AddIngredient((ServerIngredient)obj);

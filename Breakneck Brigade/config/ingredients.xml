@@ -16,4 +16,5 @@
   <ingredient name="fruit smoothie" points="80"  shape="box" sides="2,2,2" mass="2" />
   <ingredient name="grilled cheese" points="50"  shape="box" sides="2,2,2" mass="2" />
   <ingredient name="garden burger" points="110"  shape="box" sides="2,2,2" mass="2" />
+  <ingredient name="orange" points="110"  shape="sphere" sides="2" mass="2" />
 </ingredients>

@@ -29,6 +29,7 @@ namespace DeCuisine
         public IntPtr Geom { get; set; }
         public IntPtr Body { get; set; } //null for walls
         public bool ToRender { get; set; }
+        public bool OnFloor { get; set; }
 
         private static int nextId;
         private Ode.dVector3 lastPosition { get; set; }
@@ -82,6 +83,10 @@ namespace DeCuisine
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
                }
+            if (this.OnFloor)
+            {
+                this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
+            }
         }
 
         /// <summary>
@@ -89,8 +94,8 @@ namespace DeCuisine
         /// </summary>
         public virtual void Remove()
         {
-            this.RemoveFromWorld();
-            this.Game.ObjectRemoved(this);
+            this.RemoveFromWorld();        // tell simulation to remove from ode
+            this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
         }
 
         protected delegate IntPtr GeomMaker();
@@ -98,11 +103,11 @@ namespace DeCuisine
         /// <summary>
         /// Add the object into the physical world.
         /// </summary>
-        protected void AddToWorld(Ode.dVector3 coordinate)
+        protected void AddToWorld(Ode.dVector3 position)
         {
             AddToWorld(() => { 
                 
-                var geom = makeGeom(GeomInfo, coordinate);
+                var geom = makeGeom(GeomInfo, position);
 
                 if (this.HasBody)
                 {
@@ -110,7 +115,7 @@ namespace DeCuisine
                     Ode.dGeomSetBody(geom, Body);
                 }
 
-                Ode.dGeomSetPosition(geom, coordinate.X, coordinate.Y, coordinate.Z); //this must happen after body is set
+                Ode.dGeomSetPosition(geom, position.X, position.Y, position.Z); //this must happen after body is set
 
                 return geom;
 
@@ -154,7 +159,6 @@ namespace DeCuisine
                     Ode.dMassSetZero(ref mass);
                     Ode.dMassSetSphereTotal(ref mass, GeomInfo.Mass, GeomInfo.Sides[0]);
                     Ode.dBodySetMass(body, ref mass);
-                    this.Geom = Ode.dCreateSphere(this.Game.Space, GeomInfo.Sides[0]);
                     break;
                 default:
                     throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
@@ -164,14 +168,15 @@ namespace DeCuisine
 
         public void RemoveFromWorld()
         {
+            Game.Lock.AssertHeld();
             Debug.Assert(InWorld);
 
-            if(this.Geom != null)
+            if(this.Geom != IntPtr.Zero)
             {
                 Ode.dGeomDestroy(this.Geom);
             }
 
-            if(this.Body != null)
+            if(this.Body != IntPtr.Zero)
             {
                 Ode.dBodyDestroy(this.Body);
             }
@@ -200,6 +205,11 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
+            if (GameObjectClass.Plane == obj.ObjectClass)
+            {
+                // hit a plane, the z value is forever zero now
+                OnFloor = true;
+            }
             this.MarkDirty();
         }
 
@@ -210,13 +220,17 @@ namespace DeCuisine
 
         public void MarkDeleted()
         {
-            this.Game.ObjectRemoved(this);
+            this.Remove();
         }
 
         private Ode.dVector3 getPosition()
         {
-            Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
-            return m3;
+            if (this.Geom != IntPtr.Zero)
+            {
+                Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+                return m3;
+            }
+            return new Ode.dVector3(100,100,100);
         }
 
         private void setPosition(Ode.dVector3 value)

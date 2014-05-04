@@ -118,6 +118,7 @@
     <Compile Include="ClientIngredient.cs" />
     <Compile Include="ClientGame.cs" />
     <Compile Include="ClientPlane.cs" />
+    <Compile Include="ClientPlayer.cs" />
     <Compile Include="frmConnect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,7 +187,7 @@
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Vertex.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="ClientPlayer.cs" />
+    <Compile Include="LocalPlayer.cs" />
     <Compile Include="Math\MathConstants.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Program.cs" />

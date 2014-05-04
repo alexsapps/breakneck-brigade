@@ -19,5 +19,7 @@ namespace DeCuisine
             stream.Write((float)value.Y);
         }
         //ReadCoordinate is in client program
+        public static Random random = new Random();
+
     }
 }

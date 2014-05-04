@@ -25,11 +25,10 @@ namespace DeCuisine
 
         public ConfigSalad Config { get; private set; }
 
-        public List<ServerGameObject> HasAdded = new List<ServerGameObject>();
+        public List<ServerGameObject> HasAdded = new List<ServerGameObject>();  // TODO: Change this to a HashSet safetly
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
-        private Random random = new Random();
 
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
@@ -210,15 +209,17 @@ namespace DeCuisine
                          */
                         {
                             Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldQuickStep(World, 0.001f * (float)FrameRate);
+                            Ode.dWorldQuickStep(World, .001f * (float)FrameRate);
                             Ode.dJointGroupEmpty(ContactGroup);
                         }
 
                         /*
                          * handle an instant in time, e.g. gravity, collisions
                          */
+
                         foreach (var obj in GameObjects)
                         {
+
                             obj.Value.Update();
                         }
 
@@ -378,7 +379,9 @@ namespace DeCuisine
         {
             Lock.AssertHeld();
             this.HasRemoved.Add(obj.Id);
+            this.HasChanged.Remove(obj);
             GameObjects.Remove(obj.Id);
+            
         }
 
         public ServerGameObject GeomToObj(IntPtr geom)

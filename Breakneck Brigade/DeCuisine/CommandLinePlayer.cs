@@ -12,6 +12,81 @@ namespace DeCuisine
     /// </summary>
     static class CommandLinePlayer
     {
+
+        /// <summary>
+        /// read the arguments from the command line.
+        /// </summary>
+        /// <param name="args"></param>
+        public static bool ReadArgs(string[] args, Server server)
+        {
+            bool success = true;
+            switch (args[0])
+            {
+                // Everything under here is dev code. 
+                case "add":
+                    // "takes" two arguments, the first is the cooker id of where you want to 
+                    // put the ingredient, the second is the ingredient id of what you want to add
+                    if (args.Length < 3)
+                    {
+                        Console.WriteLine("add expects at least two arguments.");
+                        break;
+                    }
+                    lock (server.Lock)
+                    {
+                        lock (server.Game)
+                        {
+                            server.Game.TestCookerAdd(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
+                        }
+                    }
+                    break;
+                case "listworld":
+                    // list all objects ids in the game as well as there class 
+                    lock (server.Lock)
+                    {
+                        server.Game.ListGameObjects();
+                    }
+                    break;
+
+                case "listcooker":
+                    // takes one argument, the cooker you want to list it's contents
+                    if (args.Length < 2)
+                    {
+                        Console.WriteLine("list cooker expects at least one argument.");
+                        break;
+                    }
+                    lock (server.Lock)
+                    {
+                        server.Game.ListCookerContents(Convert.ToInt32(args[1]));
+                    }
+                    break;
+                case "listing":
+                    // lists all the ingredients by name in the game world
+                    lock (server.Lock)
+                    {
+                        server.Game.ListIngredients();
+                    }
+                    break;
+                case "spawn":
+                    // spawn stuff, see function definition for right argument format
+                    lock (server.Lock)
+                    {
+                        CommandLinePlayer.Spawn(server.Game, args);
+                    }
+                    break;
+                case "stresstest":
+                    // spawn stuff, see function definition for right argument format
+                    lock (server.Lock)
+                    {
+                        CommandLinePlayer.StressTest(server.Game);
+                    }
+                    break;
+                default:
+                    success = false;
+                    break;
+            }
+            return success;
+        }
+
         /// <summary>
         /// Technically, calls the collision function between the cooker and 
         /// ingredient. The collision function adds the ingredient to the cooker 
@@ -66,6 +141,19 @@ namespace DeCuisine
             {
                 Console.WriteLine(x.Id + "\t\t" + x.Type.Name);
             }
+        }
+
+        /// <summary>
+        /// Stress test our system, AKA Spawn a metric shitload of things at once
+        /// </summary>
+        public static void StressTest(ServerGame game)
+        {
+            int numOfCookers = 0;
+            int numOfIngredients = 50;
+            for (int x = 0; x < numOfIngredients; x++ )
+                SpawnIngredient(game, "orange");
+            for (int x = 0; x < numOfCookers; x++)
+                SpawnCooker(game);
         }
 
         /// <summary>
@@ -211,6 +299,8 @@ namespace DeCuisine
             return true;
         }
 
+        
+
         /// <summary>
         /// helper to check if the config file has the requested ingredient type to make
         /// </summary>
@@ -225,9 +315,8 @@ namespace DeCuisine
         /// </summary>
         /// <returns></returns>
         private static Tao.Ode.Ode.dVector3 randomSpawn()
-        {
-            Random rand = new Random();
-            return new Tao.Ode.Ode.dVector3(rand.Next(100), rand.Next(100), rand.Next(10, 100));
+        {            
+            return new Tao.Ode.Ode.dVector3( DC.random.Next(100), DC.random.Next(100), DC.random.Next(10, 100));
         }
 
         /// <summary>
