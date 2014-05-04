@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SousChef;
 using System.Collections;
 using System.Diagnostics;
+using Tao.Glfw;
+using Tao.OpenGl;
 
 namespace Breakneck_Brigade
 {
@@ -54,7 +56,7 @@ namespace Breakneck_Brigade
             Position[0] += Velocity[2] * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             Position[2] += Velocity[2] * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Sin((Orientation / 180.0f * Math.PI));
 
-            if (IM[GlfwKeys.GLFW_KEY_ESCAPE])
+            if (IM[GlfwKeys.GLFW_KEY_ESCAPE] || Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_FALSE)
             {
                 if (_fpsToggle)
                 {
