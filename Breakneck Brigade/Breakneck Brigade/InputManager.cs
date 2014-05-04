@@ -106,7 +106,7 @@ namespace Breakneck_Brigade
             if (KeyHappened != null)
                 KeyHappened(this, new KeyHappenedEventArgs() { Key = key, Down = pressed, Up = !pressed });
 
-            Console.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
+            //Console.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
         }
 
         /// <summary>

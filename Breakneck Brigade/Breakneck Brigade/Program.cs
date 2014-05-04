@@ -207,7 +207,7 @@ namespace Breakneck_Brigade
                         {
                             renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
 
-                            cPlayer.Update(IM);
+                            cPlayer.Update(IM, client.Game.gameObjects, renderer.getCamera());
                             if (cPlayer.NetworkEvents.Count > 0)
                             {
                                 sendEvents(cPlayer.NetworkEvents);
@@ -259,7 +259,10 @@ namespace Breakneck_Brigade
                         catch(Exception ex)
                         {
                             client = null;
-                            prompter.errorCallback(ex.ToString());
+                            if (ex.Message.StartsWith("No connection could be made because"))
+                                prompter.errorCallback(ex.Message);
+                            else
+                                prompter.errorCallback(ex.ToString());
                         }
                     }
                     Monitor.Wait(prompter.Lock);

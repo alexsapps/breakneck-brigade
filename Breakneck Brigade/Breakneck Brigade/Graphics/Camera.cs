@@ -51,7 +51,9 @@ namespace Breakneck_Brigade.Graphics
         public float yPos;
         public float zPos;
 
-        public Vector4 lookingAt;
+        public Vector4 LookingAt;
+        public Vector4 Position;
+        public Vector4 Up;
 
 		public Camera() 
 		{
@@ -62,24 +64,28 @@ namespace Breakneck_Brigade.Graphics
             yPos = 0.0f;
             zPos = 0.0f;
 
-            lookingAt = new Vector4();
+            LookingAt = new Vector4();
+            Up = new Vector4();
 		}
 
 		public void Update(LocalPlayer cp) 
         {
             Azimuth = cp.Orientation;
             Incline = cp.Incline;
+            Up[1] = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
             xPos = cp.Position[0];
             yPos = cp.Position[1];
             zPos = cp.Position[2];
+
+            Position = new Vector4(xPos, yPos, zPos);
 
             anglesToAxis();
         }
 
         public void Reset() 
         {
-			FOV=60.0f;
+			FOV=75.0f;
 			Aspect=1.33f;
 			NearClip=0.1f;
 			FarClip=1000.0f;
@@ -151,7 +157,7 @@ namespace Breakneck_Brigade.Graphics
             forward[1] = sy * sz - cy * sx * cz;
             forward[2] = cy * cx;
 
-            lookingAt.Set(xPos + forward[0], yPos + forward[1], zPos + forward[2], 0.0f);
+            LookingAt.Set(xPos + forward[0], yPos + forward[1], zPos + forward[2], LookingAt.W);
         }
     }
 }

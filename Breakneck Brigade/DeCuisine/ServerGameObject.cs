@@ -85,7 +85,7 @@ namespace DeCuisine
                }
             if (this.OnFloor)
             {
-                this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
+                //this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
             }
         }
 
@@ -230,7 +230,10 @@ namespace DeCuisine
                 Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
                 return m3;
             }
-            return new Ode.dVector3(100,100,100);
+            else
+            {
+                throw new Exception("Geom is null");
+            }
         }
 
         private void setPosition(Ode.dVector3 value)

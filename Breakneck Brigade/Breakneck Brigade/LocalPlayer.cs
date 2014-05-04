@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SousChef;
 using System.Collections;
 using System.Diagnostics;
+using Tao.Glfw;
+using Tao.OpenGl;
 
 namespace Breakneck_Brigade
 {
@@ -35,7 +37,7 @@ namespace Breakneck_Brigade
         }
 
         protected HashSet<GlfwKeys> keys;
-        public void Update(InputManager IM)
+        public void Update(InputManager IM, Dictionary<int, ClientGameObject> GOs, Graphics.Camera cam)
         {
             keys = IM.GetKeys();
 
@@ -55,7 +57,7 @@ namespace Breakneck_Brigade
             Position[0] += Velocity[2] * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             Position[2] += Velocity[2] * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Sin((Orientation / 180.0f * Math.PI));
 
-            if (IM[GlfwKeys.GLFW_KEY_ESCAPE])
+            if (IM[GlfwKeys.GLFW_KEY_ESCAPE] || Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_FALSE)
             {
                 if (_fpsToggle)
                 {
@@ -97,6 +99,18 @@ namespace Breakneck_Brigade
                 moveEvent.Type = ClientEventType.BeginMove;
                 NetworkEvents.Add(moveEvent);
             }
+            // 3D picking stuff
+            int x, y;
+            Glfw.glfwGetWindowSize(out x, out y);
+
+            Vector4 view = cam.LookingAt - cam.Position;
+            view.Normalize();
+
+            Vector4 h = view.CrossProduct(cam.Up);
+            h.Normalize();
+
+            Vector4 v = h.CrossProduct(view);
+            v.Normalize();
 
         }
 
