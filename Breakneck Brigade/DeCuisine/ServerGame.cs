@@ -210,7 +210,11 @@ namespace DeCuisine
                                     case ClientEventType.ChangeOrientation:
                                         break;
                                     case ClientEventType.BeginMove:
-                                                                                
+                                        Vector4 direction = (input.Client.Player.Rotation * new Vector4(0.0, 1.0, 0.0));
+                                        //TEST
+                                        direction.Scale(3.0f);
+                                        Ode.dVector3 lastPos = input.Client.Player.Position;
+                                        input.Client.Player.Position = new Ode.dVector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
                                         break;
                                     case ClientEventType.EndMove:
                                         break;
@@ -345,10 +349,8 @@ namespace DeCuisine
                     contact[i].surface.soft_cfm = 0.01;
                     contact[i].geom = contactGeoms[i];
 
-<<<<<<< HEAD
                     //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
-=======
->>>>>>> b511459296967169eec106d2019559938b42c28a
+
                     IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
                     Ode.dJointAttach(c, b1, b2);
                     Ode.dJointSetFixed(c);
