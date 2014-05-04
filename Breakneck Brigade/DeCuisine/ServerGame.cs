@@ -263,17 +263,18 @@ namespace DeCuisine
                                 bin = membin.ToArray();
                                 binlen = bin.Length;
                             }
+                            var msg = new ServerGameStateUpdateMessage()
+                            {
+                                Type = ServerMessageType.GameStateUpdate,
+                                Binary = bin,
+                                Length = binlen
+                            };
 
                             foreach (Client client in clients)
                             {
                                 lock (client.ServerMessages)
                                 {
-                                    client.ServerMessages.Add(new ServerGameStateUpdateMessage()
-                                    {
-                                        Type = ServerMessageType.GameStateUpdate,
-                                        Binary = bin,
-                                        Length = binlen
-                                    });
+                                    client.ServerMessages.Add(msg);
                                     Monitor.PulseAll(client.ServerMessages);
                                 }
                             }

@@ -153,16 +153,7 @@ namespace DeCuisine
                         foreach (var message in svrMsgs)
                         {
                             writer.Write((byte)message.Type);
-                            switch (message.Type)
-                            {
-                                case ServerMessageType.GameModeUpdate:
-                                    writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
-                                    break;
-                                case ServerMessageType.GameStateUpdate:
-                                    var msg = (ServerGameStateUpdateMessage)message;
-                                    writer.Write(msg.Binary, 0, msg.Length);
-                                    break;
-                            }
+                            message.Write(writer);
                         }
                     }
                 }
