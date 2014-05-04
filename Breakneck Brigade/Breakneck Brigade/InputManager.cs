@@ -38,8 +38,8 @@ namespace Breakneck_Brigade
         /// <summary>
         /// Variables for storing the "center" mouse position
         /// </summary>
-        int originX = 0;
-        int originY = 0;
+        public int originX = 0;
+        public int originY = 0;
 
         /// <summary>
         /// Mouse sensitivity modifier

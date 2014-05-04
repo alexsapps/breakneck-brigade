@@ -93,8 +93,8 @@ namespace Breakneck_Brigade
             }
 
             // 3D picking stuff
-            int x, y;
-            Glfw.glfwGetWindowSize(out x, out y);
+            /*int width, height;
+            Glfw.glfwGetWindowSize(out width, out height);
 
             Vector4 view = cam.LookingAt - cam.Position;
             view.Normalize();
@@ -104,6 +104,27 @@ namespace Breakneck_Brigade
 
             Vector4 v = h.CrossProduct(view);
             v.Normalize();
+
+            // convert fov to radians
+            float rad = (float)(cam.FOV * Math.PI / 180.0);
+            int vLength = (int)((float)Math.Tan((double)rad / 2) * cam.NearClip);
+            int hLength = vLength * (int)((float)width / (float)height);
+            v *= vLength;
+            h *= hLength;
+
+            int x = IM.originX - (width / 2);
+            int y = IM.originY - (height / 2);
+
+            y /= (height / 2);
+            x /= (width / 2);*/
+
+            Vector4 c = new Vector4();
+            Vector4 v = cam.Position;
+            Vector4 d = v - cam.LookingAt;
+
+            foreach(KeyValuePair<int,ClientGameObject> go in GOs){
+
+            }
         }
 
         HashSet<GlfwKeys> downKeys = new HashSet<GlfwKeys>();
