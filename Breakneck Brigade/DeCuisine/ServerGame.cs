@@ -84,7 +84,6 @@ namespace DeCuisine
             lock (Lock)
             {
                 clients.Add(e.Client);
-
                 lock (ClientInput)
                 {
                     ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Enter } }); //we can change this.
@@ -168,7 +167,11 @@ namespace DeCuisine
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
             }
-
+            // loop over clients and make play objects for them
+            foreach (var client in clients)
+            {
+                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(100), DC.random.Next(100), 10));
+            }
             try
             {
                 long next = DateTime.UtcNow.Ticks;
