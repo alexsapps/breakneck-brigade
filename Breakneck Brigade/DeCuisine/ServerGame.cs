@@ -163,8 +163,8 @@ namespace DeCuisine
             /* initialize physics */
             lock (Lock)
             {
-                Ode.dInitODE();
-                ContactGroup = Ode.dJointGroupCreate(0);
+            Ode.dInitODE();
+            ContactGroup = Ode.dJointGroupCreate(0);
 
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
@@ -227,7 +227,6 @@ namespace DeCuisine
                         /*
                          * handle an instant in time, e.g. gravity, collisions
                          */
-
                         foreach (var obj in GameObjects)
                         {
                             obj.Value.Update();
@@ -321,7 +320,6 @@ namespace DeCuisine
                 contactGeoms[i] = new Ode.dContactGeom();
                 contact[i] = new Ode.dContact();
             }
-
             int numc;
             unsafe
             {
@@ -340,7 +338,6 @@ namespace DeCuisine
                     contact[i].surface.soft_cfm = 0.01;
                     contact[i].geom = contactGeoms[i];
 
-                    //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
                     IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
                     Ode.dJointAttach(c, b1, b2);
                     Ode.dJointSetFixed(c);

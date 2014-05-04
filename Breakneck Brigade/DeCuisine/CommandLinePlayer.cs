@@ -77,7 +77,10 @@ namespace DeCuisine
                     // spawn stuff, see function definition for right argument format
                     lock (server.Lock)
                     {
-                        CommandLinePlayer.StressTest(server.Game);
+                        lock (server.Game.Lock)
+                        {
+                            CommandLinePlayer.StressTest(server.Game);
+                        }
                     }
                     break;
                 default:
@@ -316,7 +319,7 @@ namespace DeCuisine
         /// <returns></returns>
         private static Tao.Ode.Ode.dVector3 randomSpawn()
         {            
-            return new Tao.Ode.Ode.dVector3( DC.random.Next(100), DC.random.Next(100), DC.random.Next(10, 100));
+            return new Tao.Ode.Ode.dVector3( DC.random.Next(100), DC.random.Next(100), DC.random.Next(50, 200));
         }
 
         /// <summary>

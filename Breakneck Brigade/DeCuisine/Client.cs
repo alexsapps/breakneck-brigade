@@ -128,7 +128,6 @@ namespace DeCuisine
                     while (true)
                     {
                         List<ServerMessage> svrMsgs = null;
-
                         while (true)
                         {
                             lock (Lock)
@@ -149,7 +148,7 @@ namespace DeCuisine
                                 Monitor.Wait(ServerMessages);
                             }
                         }
-                        
+                        Console.WriteLine(svrMsgs.Count);
                         foreach (var message in svrMsgs)
                         {
                             writer.Write((byte)message.Type);
