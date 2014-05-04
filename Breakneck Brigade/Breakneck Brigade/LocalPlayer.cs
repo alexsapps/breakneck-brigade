@@ -36,6 +36,7 @@ namespace Breakneck_Brigade
             NetworkEvents = new List<ClientEvent>();
 
             monitorKey(GlfwKeys.GLFW_KEY_SPACE);
+            monitorKey(GlfwKeys.GLFW_KEY_W);
         }
 
         protected HashSet<GlfwKeys> keys;
@@ -53,6 +54,12 @@ namespace Breakneck_Brigade
             Orientation = Orientation + roty > 360.0f ? Orientation + roty - 360.0f : Orientation + roty;
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
+            //If there was a change in player facing orientation, send an orientation update to the server
+            if(roty != 0.0f)
+            {
+                NetworkEvents.Add(new ClientChangeOrientationEvent() { Roty = roty });
+            }
+
             // Velocity update
             Velocity.X = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
             Velocity.Z = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
@@ -62,7 +69,7 @@ namespace Breakneck_Brigade
             Coordinate diff = new Coordinate(xDiff, 0, zDiff);
             if (diff.x != 0 || diff.z != 0)
             {
-                NetworkEvents.Add(new ClientMoveEvent() { Delta = diff });
+                NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
                 Console.WriteLine("kb: " + diff.x + ", " + diff.z);
                 Console.WriteLine("sv: " + (Position.X - lastx) + ", " + (Position.Z - lastz));
                 lastx = Position.X;
@@ -100,11 +107,14 @@ namespace Breakneck_Brigade
             if (keyDown(GlfwKeys.GLFW_KEY_SPACE))
             {
                 //Test code
-                EasyClientEvent spawnEvent = new EasyClientEvent();
-                spawnEvent.Type = ClientEventType.Test;
+                var spawnEvent = new ClientTestEvent();
                 NetworkEvents.Add(spawnEvent);
             }
 
+            if (keyDown(GlfwKeys.GLFW_KEY_W))
+            {
+                NetworkEvents.Add(new ClientBeginMoveEvent());
+            }
             // 3D picking stuff
             /*int width, height;
             Glfw.glfwGetWindowSize(out width, out height);

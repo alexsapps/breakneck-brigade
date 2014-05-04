@@ -1,6 +1,6 @@
 using System;
 
-namespace Breakneck_Brigade
+namespace SousChef
 {
     /// <summary>
     /// A 4x4 homogenous matrix for storing 3D transformations.
@@ -280,6 +280,28 @@ namespace Breakneck_Brigade
         /// <param name="rhs"></param>
         /// <returns>A reference to this matrix</returns>
         public static Matrix4 operator * (Matrix4 lhs, Matrix4 rhs)
+        {
+            return lhs.Multiply(rhs);
+        }
+
+        /// <summary>
+        /// Matrix4 * Matrix4 operator override
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns>A reference to this matrix</returns>
+        public static Vector4 operator *(Vector4 lhs, Matrix4 rhs)
+        {
+            return rhs.Multiply(lhs);
+        }
+
+        /// <summary>
+        /// Matrix4 * Matrix4 operator override
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns>A reference to this matrix</returns>
+        public static Vector4 operator *(Matrix4 lhs, Vector4 rhs)
         {
             return lhs.Multiply(rhs);
         }

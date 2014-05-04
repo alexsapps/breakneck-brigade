@@ -88,7 +88,7 @@ namespace DeCuisine
                 clients.Add(e.Client);
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new EasyClientEvent() { Type = ClientEventType.Enter } }); //we can change this.
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEnterEvent() }); //we can change this.
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace DeCuisine
 
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new EasyClientEvent() { Type = ClientEventType.Leave } });
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientLeaveEvent() });
                 }
             }
         }
@@ -207,14 +207,22 @@ namespace DeCuisine
                                     case ClientEventType.Test:
                                         ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
                                         break;
+                                    case ClientEventType.ChangeOrientation:
+                                        break;
                                     case ClientEventType.BeginMove:
-                                        ClientMoveEvent evt = (ClientMoveEvent)input.Event;
-                                        var pos = input.Client.Player.Position;
+                                        ClientBeginMoveEvent e = (ClientBeginMoveEvent)input.Event;
+                                        Vector4 direction = (input.Client.Player.Rotation * new Vector4(0.0, 1.0, 0.0));
+                                        var lastPos = input.Client.Player.Position;
                                         var newpos = new Ode.dVector3();
-                                        newpos.X = pos.X + evt.Delta.x;
-                                        newpos.Y = pos.Y + evt.Delta.y;
-                                        newpos.Z = pos.Z + evt.Delta.z;
+                                        newpos.X = lastPos.X + e.Delta.x;
+                                        newpos.Y = lastPos.Y + e.Delta.y;
+                                        newpos.Z = lastPos.Z + e.Delta.z;
                                         input.Client.Player.Position = newpos;
+                                        //TEST
+                                        //direction.Scale(3.0f);
+                                        //input.Client.Player.Position = new Ode.dVector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
+                                        break;
+                                    case ClientEventType.EndMove:
                                         break;
                                     default:
                                         Debugger.Break();
@@ -320,7 +328,7 @@ namespace DeCuisine
             // exit without doing anything if the two bodies are connected by a joint
             IntPtr b1 = Ode.dGeomGetBody(o1);
             IntPtr b2 = Ode.dGeomGetBody(o2);
-            if (b1 != null && b2 != null && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
+            if (b1 != IntPtr.Zero && b2 != IntPtr.Zero && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
 
             Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
             Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
@@ -346,6 +354,8 @@ namespace DeCuisine
                     contact[i].surface.bounce_vel = 0.1;
                     contact[i].surface.soft_cfm = 0.01;
                     contact[i].geom = contactGeoms[i];
+
+                    //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
 
                     IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
                     Ode.dJointAttach(c, b1, b2);

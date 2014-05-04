@@ -44,7 +44,6 @@ namespace Breakneck_Brigade.Graphics
 
         public void Bind()
         {
-            Gl.glEnable(Gl.GL_TEXTURE_2D);
             Gl.glBindTexture(Gl.GL_TEXTURE_2D, TextureID);
         }
     }

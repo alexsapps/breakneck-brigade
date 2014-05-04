@@ -166,25 +166,7 @@ namespace Breakneck_Brigade
                             {
                                 writer.Write((byte)ClientMessageType.ClientEvent);
                                 writer.Write((byte)clientEvent.Type);
-                                if(clientEvent is EasyClientEvent)
-                                {
-                                    var evt = (EasyClientEvent)clientEvent;
-                                    writer.Write(evt.Args.Count);
-                                    foreach (var pair in evt.Args)
-                                    {
-                                        writer.Write(pair.Key);
-                                        writer.Write(pair.Value);
-                                    }
-                                }
-                                else if(clientEvent is ClientMoveEvent)
-                                {
-                                    var evt = (ClientMoveEvent)clientEvent;
-                                    writer.Write(new Vector4(evt.Delta));
-                                }
-                                else
-                                {
-                                    throw new Exception("client event type not recognized.");
-                                }
+                                clientEvent.Write(writer);
                             }
                             ClientEvents.Clear();
 

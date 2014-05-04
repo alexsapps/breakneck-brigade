@@ -32,5 +32,14 @@ namespace DeCuisine
             base.UpdateStream(stream);
             //stream.Write(c,d);
         }
+
+        /// <summary>
+        /// Moves a player relative to his or her current position
+        /// </summary>
+        public void Move(float x, float y, float z)
+        {
+            Ode.dVector3 newPos = new Ode.dVector3(Position.X + x, Position.Y + y, Position.Z + z);
+            this.Position = newPos;
+        }
     }
 }

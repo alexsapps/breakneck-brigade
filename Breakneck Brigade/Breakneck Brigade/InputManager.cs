@@ -17,8 +17,6 @@ namespace Breakneck_Brigade
     {
         GlobalsConfigFile globalConfig;
 
-        public EventHandler<KeyHappenedEventArgs> KeyHappened;
-
         // Game-related stuff
         /// <summary>
         /// States of keys being tracked
@@ -102,9 +100,6 @@ namespace Breakneck_Brigade
                 keys.Add(key); // = pressed;
             else
                 keys.Remove(key);
-
-            if (KeyHappened != null)
-                KeyHappened(this, new KeyHappenedEventArgs() { Key = key, Down = pressed, Up = !pressed });
 
             //Console.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
         }

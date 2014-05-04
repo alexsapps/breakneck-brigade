@@ -36,5 +36,9 @@ namespace DeCuisine
         {
            
         }
+        public override void OnCollide(ServerGameObject obj)
+        {
+            // Do NOTHING
+        }
     }
 }

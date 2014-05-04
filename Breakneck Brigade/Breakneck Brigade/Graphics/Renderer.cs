@@ -25,6 +25,8 @@ namespace Breakneck_Brigade.Graphics
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
+
+        public static int                           CurrentDrawMode = -1;
         /// <summary>
         /// A mapping of filename to Model
         /// </summary>
@@ -193,6 +195,7 @@ namespace Breakneck_Brigade.Graphics
                 {
                     cgo.Render();
                 }
+            CurrentDrawMode = -1;
 
             Glfw.glfwSwapBuffers();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
@@ -241,12 +244,18 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnable(Gl.GL_COLOR_MATERIAL);
             //Generates normals for objects which do not specify normals
             Gl.glEnable(Gl.GL_AUTO_NORMAL);
-            //For basic polygons, draws both a front and back face. (May disable for performance reasons later)
+            //Turns on backface culling (culls surfaces you cannot see)
+            Gl.glEnable(Gl.GL_CULL_FACE);
+            //For basic polygons. Only draws front faces
             Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL);
             //What shading model to use for rendering Gl prims
-            Gl.glShadeModel(Gl.GL_SMOOTH);
+            //Gl.glShadeModel(Gl.GL_SMOOTH);
             //Turn on texturing
             Gl.glEnable(Gl.GL_TEXTURE_2D);
+
+            //Optimizations
+            Gl.glDisable(Gl.GL_DITHER);
+
 
             /* CAMERA */
             Camera = new Camera();

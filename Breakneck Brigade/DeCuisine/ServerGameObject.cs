@@ -23,7 +23,14 @@ namespace DeCuisine
         private GeometryInfo _geominfo;
         public GeometryInfo GeomInfo { get { return _geominfo ?? (_geominfo = getGeomInfo()); } } //cache
         protected abstract GeometryInfo getGeomInfo();
+
+        protected Vector4 _position;
         public virtual Ode.dVector3 Position { get { return getPosition(); } set { setPosition(value); } }
+        protected Matrix4 _rotation;
+        /// <summary>
+        /// ODE Matrix (X = left right, Y = in out, Z = up down)
+        /// </summary>
+        public Matrix4 Rotation { get { return getRotation(); } set { setRotation(value); } }
 
         public bool InWorld { get; protected set; }
         public IntPtr Geom { get; set; }
@@ -42,6 +49,8 @@ namespace DeCuisine
         {
             this.Id = nextId++;
             this.Game = game;
+            this._rotation = new Matrix4();
+            this._position = new Vector4();
             this.ToRender = true; // class specific implementation can override
             
             game.Lock.AssertHeld();
@@ -220,6 +229,7 @@ namespace DeCuisine
             if (this.Geom != IntPtr.Zero)
             {
                 Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+                _position.Set(m3.X, m3.Y, m3.Z);
                 return m3;
             }
             else
@@ -235,5 +245,35 @@ namespace DeCuisine
             Ode.dGeomSetPosition(this.Geom, value.X, value.Y, value.Z); 
         }
 
+        private Matrix4 getRotation()
+        {
+            if(this.Geom != IntPtr.Zero)
+            {
+                Ode.dMatrix3 r = Ode.dGeomGetRotation(this.Geom);
+                _rotation.SetAll(r.M00,  r.M10,  r.M20,  0,
+                                 r.M01,  r.M11,  r.M21,  0,
+                                 r.M02,  r.M12,  r.M22,  0,
+                                 0,      0,      0,      1);
+                return _rotation;
+            }
+            else
+            {
+                throw new Exception("Geom is null");
+            }
+        }
+        private void setRotation(Matrix4 rotation)
+        {
+            if (this.Geom != IntPtr.Zero)
+            {
+                double[] arr = {_rotation[0,0], _rotation[1,0], _rotation[2,0],
+                                _rotation[0,1], _rotation[1,1], _rotation[2,1],
+                                _rotation[0,2], _rotation[1,2], _rotation[2,2]};
+                Ode.dMatrix3 r = new Ode.dMatrix3(arr);
+            }
+            else
+            {
+                throw new Exception("Geom is null");
+            }
+        }
     }
 }

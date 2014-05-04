@@ -9,6 +9,8 @@ namespace SousChef
 {
     public abstract class ClientEvent
     {
-        public virtual ClientEventType Type { get; set; }
+        public abstract ClientEventType Type { get; }
+
+        public abstract void Write(BinaryWriter writer);
     }
 }

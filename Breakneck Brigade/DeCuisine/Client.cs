@@ -85,27 +85,9 @@ namespace DeCuisine
                         switch (type)
                         {
                             case ClientMessageType.ClientEvent:
-                                ClientEvent evt;
-                                ClientEventType eventType = (ClientEventType)reader.ReadByte();
-
-                                switch(eventType)
-                                {
-                                    case ClientEventType.BeginMove:
-                                        ClientMoveEvent e = new ClientMoveEvent();
-                                        evt = e;
-                                        e.Delta = reader.ReadCoordinate();
-                                        break;
-                                    default:
-                                        int length = reader.ReadInt32();
-                                        var args = new Dictionary<string, string>();
-                                        for (int i = 0; i < length; i++)
-                                        {
-                                            args.Add(reader.ReadString(), reader.ReadString());
-                                        }
-                                        evt = new EasyClientEvent() { Type = eventType, Args = args };
-                                        break;
-                                }
                                 
+                                ClientEventType eventType = (ClientEventType)reader.ReadByte();
+                                ClientEvent evt = (ClientEvent)Activator.CreateInstance(getClientEventType(eventType), reader);
                                 DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = evt };
 
                                 lock (Game.ClientInput)
@@ -128,6 +110,19 @@ namespace DeCuisine
                 Console.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
                 lock (Lock) { Disconnect(); }
+            }
+        }
+
+        private Type getClientEventType(ClientEventType t)
+        {
+            switch(t)
+            {
+                case ClientEventType.BeginMove: return typeof(ClientBeginMoveEvent);
+                case ClientEventType.ChangeOrientation: return typeof(ClientChangeOrientationEvent);
+                case ClientEventType.Enter: return typeof(ClientEnterEvent);
+                case ClientEventType.Leave: return typeof(ClientLeaveEvent);
+                case ClientEventType.Test: return typeof(ClientTestEvent);
+                default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
         }
 
