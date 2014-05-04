@@ -34,6 +34,11 @@ namespace Breakneck_Brigade
 
         private void cmdConnect_Click(object sender, EventArgs e)
         {
+            doConnect();
+        }
+
+        private void doConnect()
+        {
             Client client = new Client();
 
             Regex regex = new Regex("^(.*):([0-9]+)$");
@@ -65,6 +70,7 @@ namespace Breakneck_Brigade
         {
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.BackgroundImage = global::Breakneck_Brigade.Properties.Resources.background;
+            doConnect();
         }
     }
 }

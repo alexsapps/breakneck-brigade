@@ -230,7 +230,10 @@ namespace DeCuisine
                 Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
                 return m3;
             }
-            return new Ode.dVector3(100,100,100);
+            else
+            {
+                throw new Exception("Geom is null");
+            }
         }
 
         private void setPosition(Ode.dVector3 value)
