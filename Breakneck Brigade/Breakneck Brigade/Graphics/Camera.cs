@@ -51,6 +51,8 @@ namespace Breakneck_Brigade.Graphics
         public float yPos;
         public float zPos;
 
+        public Vector4 lookingAt;
+
 		public Camera() 
 		{
             Transform = new Matrix4();
@@ -59,6 +61,8 @@ namespace Breakneck_Brigade.Graphics
             xPos = 0.0f;
             yPos = 0.0f;
             zPos = 0.0f;
+
+            lookingAt = new Vector4();
 		}
 
 		public void Update(LocalPlayer cp) 
@@ -69,6 +73,8 @@ namespace Breakneck_Brigade.Graphics
             xPos = cp.Position[0];
             yPos = cp.Position[1];
             zPos = cp.Position[2];
+
+            anglesToAxis();
         }
 
         public void Reset() 
@@ -104,5 +110,48 @@ namespace Breakneck_Brigade.Graphics
 			Gl.glMatrixMode(Gl.GL_MODELVIEW);
 		}
 
+        public void anglesToAxis()
+        {
+            const float DEG2RAD = (float)Math.PI / 180.0f;
+            float sx, sy, sz, cx, cy, cz, theta;
+
+            //Vector4 side = new Vector4();
+            //Vector4 up = new Vector4();
+            Vector4 forward = new Vector4();
+
+            // X-axis rotation
+            theta = Incline * DEG2RAD;
+            sx = (float)Math.Sin(theta);
+            cx = (float)Math.Cos(theta);
+
+            // Y-axis rotation
+            theta = Azimuth * DEG2RAD;
+            sy = (float)Math.Sin(theta);
+            cy = (float)Math.Cos(theta);
+
+            // Z-axis rotation
+            theta = 0.0f * DEG2RAD;
+            sz = (float)Math.Sin(theta);
+            cz = (float)Math.Cos(theta);
+
+            /* Unused
+            // determine side vector
+            side[0] = cy * cz - sy * sx * sz;
+            side[1] = cy * sz + sy * sx * cz;
+            side[2] = -sy * cx;
+
+            // determine up vector
+            up[0] = -cx * sz;
+            up[1] = cx * cz;
+            up[2] = sx;
+             */
+
+            // determine forward vector
+            forward[0] = sy * cz + cy * sx * sz;
+            forward[1] = sy * sz - cy * sx * cz;
+            forward[2] = cy * cx;
+
+            lookingAt.Set(xPos + forward[0], yPos + forward[1], zPos + forward[2], 0.0f);
+        }
     }
 }
