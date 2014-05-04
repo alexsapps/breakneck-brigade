@@ -65,11 +65,11 @@
             // pnlConnect
             // 
             this.pnlConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pnlConnect.BackColor = System.Drawing.Color.Transparent;
+            this.pnlConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.pnlConnect.Controls.Add(this.label1);
             this.pnlConnect.Controls.Add(this.txtConnect);
             this.pnlConnect.Controls.Add(this.cmdConnect);
-            this.pnlConnect.Location = new System.Drawing.Point(12, 333);
+            this.pnlConnect.Location = new System.Drawing.Point(12, 310);
             this.pnlConnect.Name = "pnlConnect";
             this.pnlConnect.Size = new System.Drawing.Size(284, 82);
             this.pnlConnect.TabIndex = 3;
@@ -79,13 +79,12 @@
             this.AcceptButton = this.cmdConnect;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(843, 498);
+            this.ClientSize = new System.Drawing.Size(794, 404);
             this.Controls.Add(this.pnlConnect);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.Name = "frmConnect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Text = "Breakneck Brigade";
             this.Load += new System.EventHandler(this.frmConnect_Load);
             this.Shown += new System.EventHandler(this.frmConnect_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyDown);

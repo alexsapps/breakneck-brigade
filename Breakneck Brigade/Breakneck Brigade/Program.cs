@@ -25,7 +25,7 @@ namespace Breakneck_Brigade
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
 
-        static public ClientPlayer cPlayer = new ClientPlayer();
+        static public LocalPlayer cPlayer = new LocalPlayer();
         static public InputManager IM;
 
         static void Main(string[] args)
@@ -322,23 +322,18 @@ namespace Breakneck_Brigade
             }
         }
 
-        
-
         static void render()
         {
             cPlayer.Update(IM);
             if(cPlayer.NetworkEvents.Count > 0)
             {
-                foreach(ClientEvent ce in cPlayer.NetworkEvents)
-                {
-                    sendEvent(ce);
-                }
+                sendEvents(cPlayer.NetworkEvents);
                 cPlayer.NetworkEvents.Clear();
             }
             renderer.Render(cPlayer);
         }
 
-        static void sendEvent(ClientEvent @event)
+        static void sendEvents(List<ClientEvent> @events)
         {
             lock (client.Lock)
             {
@@ -346,7 +341,7 @@ namespace Breakneck_Brigade
                 {
                     lock (client.ClientEvents)
                     {
-                        client.ClientEvents.Add(@event);
+                        client.ClientEvents.AddRange(@events);
                         Monitor.PulseAll(client.ClientEvents);
                     }
                 }

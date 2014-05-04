@@ -81,6 +81,7 @@
     <Compile Include="ServerGameStateUpdateMessage.cs" />
     <Compile Include="ServerIngredient.cs" />
     <Compile Include="ServerMessage.cs" />
+    <Compile Include="ServerPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

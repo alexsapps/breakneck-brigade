@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Breakneck_Brigade
 {
-    class ClientIngredient : ClientGameObject, IGameObject
+    class ClientIngredient : ClientGameObject
     {
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
@@ -25,8 +25,8 @@ namespace Breakneck_Brigade
         /// <param name="transform">The initial location you want to place the ingredient</param>
         /// <param name="client">The client making this object</param>
         /// <param name="model">The ingame model of the ingredient</param>
-        public ClientIngredient(int id, IngredientType type, Vector4 transform, int cleanliness, ClientGame game)
-            : base(id, game)
+        public ClientIngredient(int id, IngredientType type, Vector4 position, int cleanliness, ClientGame game)
+            : base(id, game, position)
         {
             this.Type = type;
             this.Cleanliness = cleanliness;
@@ -47,7 +47,6 @@ namespace Breakneck_Brigade
         public ClientIngredient(int id, BinaryReader reader, ClientGame game)
             : base(id, game, reader)
         {
-
             string ingrname = reader.ReadString();
             this.Type = game.Config.Ingredients[ingrname];
             this.Cleanliness = reader.ReadInt32();
@@ -59,9 +58,9 @@ namespace Breakneck_Brigade
         /// Update everything pertaining to the ingriedient. The position 
         /// is handled by the super class.
         /// </summary>
-        private void update(Vector4 transform, int cleanliness)
+        public void Update(Vector4 transform, int cleanliness)
         {
-            base.Update(transform);
+            base.BaseUpdate(transform);
             this.Cleanliness = cleanliness;
         }
 

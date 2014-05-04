@@ -98,11 +98,11 @@ namespace DeCuisine
         /// <summary>
         /// Add the object into the physical world.
         /// </summary>
-        protected void AddToWorld(Ode.dVector3 coordinate)
+        protected void AddToWorld(Ode.dVector3 position)
         {
             AddToWorld(() => { 
                 
-                var geom = makeGeom(GeomInfo, coordinate);
+                var geom = makeGeom(GeomInfo, position);
 
                 if (this.HasBody)
                 {
@@ -110,7 +110,7 @@ namespace DeCuisine
                     Ode.dGeomSetBody(geom, Body);
                 }
 
-                Ode.dGeomSetPosition(geom, coordinate.X, coordinate.Y, coordinate.Z); //this must happen after body is set
+                Ode.dGeomSetPosition(geom, position.X, position.Y, position.Z); //this must happen after body is set
 
                 return geom;
 

@@ -38,6 +38,13 @@ namespace Breakneck_Brigade
         public ClientGameObject(int id, ClientGame game) 
         {
             constructEssential(id, game);
+            this.ToRender = true;
+        }
+
+        public ClientGameObject(int id, ClientGame game, Vector4 position)
+            : this (id, game)
+        {
+            _position = position;
             initGeom();
         }
 
@@ -56,7 +63,6 @@ namespace Breakneck_Brigade
         public ClientGameObject(int id, ClientGame game, BinaryReader reader)
         {
             constructEssential(id, game);
-            initGeom();
             this.ToRender = reader.ReadBoolean();
             readGeom(reader);
         }
@@ -67,23 +73,25 @@ namespace Breakneck_Brigade
             this.Game = game;
         }
 
-        protected virtual void initGeom()
-        {
-            Transformation = new Matrix4();
-            _position = new Vector4();
-            _scale = new Vector4(1.0f, 1.0f, 1.0f);
-            _rotation = new Vector4();
-        }
-
         protected virtual void readGeom(BinaryReader reader)
         {
-            this.Position = reader.ReadCoordinate();
+            _position = reader.ReadCoordinate();
         }
 
         protected void finilizeConstruction()
         {
+            initGeom();
             Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "teapotPillar"];
             Scale = Model.InitialScale;
+        }
+
+        protected virtual void initGeom()
+        {
+            Transformation = new Matrix4();
+            _position = _position ?? new Vector4();
+            _scale = _scale ?? new Vector4(1.0f, 1.0f, 1.0f);
+            _rotation = _rotation ?? new Vector4();
+            updateMatrix();
         }
 
         /// <summary>
@@ -118,8 +126,8 @@ namespace Breakneck_Brigade
         public virtual void StreamUpdate(BinaryReader reader)
         {
             this.ToRender = reader.ReadBoolean();
-            this.Position = reader.ReadCoordinate();
-
+            
+            readGeom(reader);
             updateMatrix();
         }
 
@@ -142,9 +150,9 @@ namespace Breakneck_Brigade
         /// Updates the position of the current objects transfrom.
         /// </summary>
         /// <param name="transform"></param>
-        public void Update(Vector4 transform)
+        public void BaseUpdate(Vector4 position)
         {
-
+            this.Position = position;
         }
 
         protected virtual void updateMatrix()
