@@ -228,10 +228,8 @@ namespace DeCuisine
                         /*
                          * handle an instant in time, e.g. gravity, collisions
                          */
-
                         foreach (var obj in GameObjects)
                         {
-
                             obj.Value.Update();
                         }
 
