@@ -33,6 +33,7 @@ namespace DeCuisine
 
         private static int nextId;
         private Ode.dVector3 lastPosition { get; set; }
+
         /// <summary>
         /// Base constructor. For every servergameobject create their should be a 
         /// coresponding ClientGameObject on each client with the same ID.
@@ -83,9 +84,11 @@ namespace DeCuisine
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
                }
-            if (this.OnFloor)
+
+            if (this.Position.Z > 1)
             {
-                this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
+                double newZ = (this.Position.Z - ServerGame.Gravity > 1) ? this.Position.Z - ServerGame.Gravity : 1;
+                this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, newZ);
             }
         }
 

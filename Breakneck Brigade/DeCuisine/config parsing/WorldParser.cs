@@ -76,7 +76,7 @@ namespace DeCuisine
             World = Ode.dWorldCreate();
             var gravity = getFloats(attributes["gravity"]);
             Debug.Assert(gravity.Length == 3);
-            Ode.dWorldSetGravity(World, gravity[0], gravity[1], gravity[2]);
+            //Ode.dWorldSetGravity(World, gravity[0], gravity[1], gravity[2]);
 
             Debug.Assert(serverGame.World == IntPtr.Zero);
             serverGame.World = World;
