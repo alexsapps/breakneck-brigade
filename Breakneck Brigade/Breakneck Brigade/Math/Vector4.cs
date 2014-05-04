@@ -99,6 +99,8 @@ namespace Breakneck_Brigade
             v[3] = 1;
         }
 
+        public Vector4(SousChef.Coordinate coordinate) : this(coordinate.x, coordinate.y, coordinate.z) { }
+
         /// <summary>
         /// Gets the specified dimension of the vector.
         /// x = 0

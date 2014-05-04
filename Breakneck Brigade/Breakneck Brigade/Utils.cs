@@ -33,5 +33,12 @@ namespace Breakneck_Brigade
         {
             return new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
         }
+
+        public static void Write(this BinaryWriter writer, Vector4 vector)
+        {
+            writer.Write(vector.X);
+            writer.Write(vector.Z); //need to switch Z and Y for opengl-->ode
+            writer.Write(vector.Y);
+        }
     }
 }

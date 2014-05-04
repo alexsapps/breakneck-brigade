@@ -72,6 +72,8 @@
     <Compile Include="IngredientType.cs" />
     <Compile Include="Math\Coordinate.cs" />
     <Compile Include="Math\GeomShape.cs" />
+    <Compile Include="Network\ClientMoveEvent.cs" />
+    <Compile Include="Network\EasyClientEvent.cs" />
     <Compile Include="Utils\BBLock.cs" />
     <Compile Include="Network\ClientEvent.cs" />
     <Compile Include="Network\ClientEventType.cs" />

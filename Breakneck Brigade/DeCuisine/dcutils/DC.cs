@@ -5,11 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Tao.Ode;
 using System.IO;
+using SousChef;
 
 namespace DeCuisine
 {
     public static partial class DC
     {
+        //ReadCoordinate is in client program
+        public static Random random = new Random();
+
         public static void Write(this BinaryWriter stream, Ode.dVector3 value)
         {
             // We need to flip the z and the y coordinate to make it fit with 
@@ -18,8 +22,10 @@ namespace DeCuisine
             stream.Write((float)value.Z);
             stream.Write((float)value.Y);
         }
-        //ReadCoordinate is in client program
-        public static Random random = new Random();
 
+        public static Coordinate ReadCoordinate(this BinaryReader stream)
+        {
+            return new Coordinate(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+        }
     }
 }

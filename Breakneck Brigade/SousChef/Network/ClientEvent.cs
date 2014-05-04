@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SousChef;
+using System.IO;
 
 namespace SousChef
 {
-    public class ClientEvent
+    public abstract class ClientEvent
     {
-        public ClientEventType Type { get; set; }
-        public Dictionary<string, string> Args { get; set; }
-        public ClientEvent()
-        {
-            Args = new Dictionary<string, string>();
-        }
+        public virtual ClientEventType Type { get; set; }
     }
 }

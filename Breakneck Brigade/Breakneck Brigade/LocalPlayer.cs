@@ -21,7 +21,7 @@ namespace Breakneck_Brigade
 
         public ClientGame Game { get; set; }
 
-        public Vector4 Position;
+        public Vector4 Position { get { return _getPosition(); } }
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public Vector4 Velocity;
@@ -32,7 +32,6 @@ namespace Breakneck_Brigade
         
         public LocalPlayer()
         {
-            Position = new Vector4(0.0f,-10.0f,0.0f);
             Velocity = new Vector4();
             NetworkEvents = new List<ClientEvent>();
 
@@ -40,6 +39,7 @@ namespace Breakneck_Brigade
         }
 
         protected HashSet<GlfwKeys> keys;
+        static float lastx, lastz;
         public void Update(InputManager IM, Dictionary<int, ClientGameObject> GOs, Graphics.Camera cam)
         {
             keys = IM.GetKeys();
@@ -54,12 +54,21 @@ namespace Breakneck_Brigade
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
             // Velocity update
-            Velocity[0] = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
-            Velocity[2] = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
+            Velocity.X = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
+            Velocity.Z = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
 
-            Position[0] += Velocity[2] * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Cos((Orientation / 180.0f * Math.PI));
-            Position[2] += Velocity[2] * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Sin((Orientation / 180.0f * Math.PI));
-
+            var xDiff = Velocity.X * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
+            var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.Z * (float)Math.Sin((Orientation / 180.0f * Math.PI));
+            Coordinate diff = new Coordinate(xDiff, 0, zDiff);
+            if (diff.x != 0 || diff.z != 0)
+            {
+                NetworkEvents.Add(new ClientMoveEvent() { Delta = diff });
+                Console.WriteLine("kb: " + diff.x + ", " + diff.z);
+                Console.WriteLine("sv: " + (Position.X - lastx) + ", " + (Position.Z - lastz));
+                lastx = Position.X;
+                lastz = Position.Z;
+            }
+            
             if (IM[GlfwKeys.GLFW_KEY_ESCAPE] || Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_FALSE)
             {
                 if (_fpsToggle)
@@ -91,7 +100,7 @@ namespace Breakneck_Brigade
             if (keyDown(GlfwKeys.GLFW_KEY_SPACE))
             {
                 //Test code
-                ClientEvent spawnEvent = new ClientEvent();
+                EasyClientEvent spawnEvent = new EasyClientEvent();
                 spawnEvent.Type = ClientEventType.Test;
                 NetworkEvents.Add(spawnEvent);
             }
@@ -206,5 +215,23 @@ namespace Breakneck_Brigade
             return _player;
         }
 
+        private Vector4 _getPosition()
+        {
+            if (Game != null)
+            {
+                lock (Game.Lock) //game could have become null by now.  ideally we would lock the client first
+                {
+                    if (Player != null)
+                    {
+                        var result = new Vector4(Player.Position);
+                        result.X = result.X;
+                        result.Y -= 10;
+                        result.Z = result.Z;
+                        return result;
+                    }
+                }
+            }
+            return new Vector4();
+        }
     }
 }

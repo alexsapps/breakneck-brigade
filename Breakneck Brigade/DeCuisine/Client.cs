@@ -85,14 +85,28 @@ namespace DeCuisine
                         switch (type)
                         {
                             case ClientMessageType.ClientEvent:
+                                ClientEvent evt;
                                 ClientEventType eventType = (ClientEventType)reader.ReadByte();
-                                int length = reader.ReadInt32();
-                                var args = new Dictionary<string, string>();
-                                for (int i = 0; i < length; i++)
+
+                                switch(eventType)
                                 {
-                                    args.Add(reader.ReadString(), reader.ReadString());
+                                    case ClientEventType.BeginMove:
+                                        ClientMoveEvent e = new ClientMoveEvent();
+                                        evt = e;
+                                        e.Delta = reader.ReadCoordinate();
+                                        break;
+                                    default:
+                                        int length = reader.ReadInt32();
+                                        var args = new Dictionary<string, string>();
+                                        for (int i = 0; i < length; i++)
+                                        {
+                                            args.Add(reader.ReadString(), reader.ReadString());
+                                        }
+                                        evt = new EasyClientEvent() { Type = eventType, Args = args };
+                                        break;
                                 }
-                                DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = new ClientEvent() { Type = eventType, Args = args } };
+                                
+                                DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = evt };
 
                                 lock (Game.ClientInput)
                                 {

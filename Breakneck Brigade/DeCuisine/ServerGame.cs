@@ -88,7 +88,7 @@ namespace DeCuisine
                 clients.Add(e.Client);
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Enter } }); //we can change this.
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new EasyClientEvent() { Type = ClientEventType.Enter } }); //we can change this.
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace DeCuisine
 
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Leave } });
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new EasyClientEvent() { Type = ClientEventType.Leave } });
                 }
             }
         }
@@ -206,6 +206,15 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.Test:
                                         ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
+                                        break;
+                                    case ClientEventType.BeginMove:
+                                        ClientMoveEvent evt = (ClientMoveEvent)input.Event;
+                                        var pos = input.Client.Player.Position;
+                                        var newpos = new Ode.dVector3();
+                                        newpos.X = pos.X + evt.Delta.x;
+                                        newpos.Y = pos.Y + evt.Delta.y;
+                                        newpos.Z = pos.Z + evt.Delta.z;
+                                        input.Client.Player.Position = newpos;
                                         break;
                                     default:
                                         Debugger.Break();
