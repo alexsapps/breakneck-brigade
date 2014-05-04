@@ -306,7 +306,10 @@ namespace DeCuisine
             Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
             Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
             for (int i = 0; i < MAX_CONTACTS; i++)
+            {
                 contactGeoms[i] = new Ode.dContactGeom();
+                //contact[i] = new Ode.dContact();
+            }
             int numc;
             unsafe
             {

@@ -350,5 +350,10 @@ namespace Breakneck_Brigade.Graphics
             Model model = parser.ParseFile(filename);
             return new TestClientGameObject(model);
         }
+
+        public Camera getCamera()
+        {
+            return Camera;
+        }
     }   
 }

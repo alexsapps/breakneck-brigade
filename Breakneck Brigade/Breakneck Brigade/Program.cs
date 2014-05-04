@@ -207,7 +207,7 @@ namespace Breakneck_Brigade
                         {
                             renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
 
-                            cPlayer.Update(IM);
+                            cPlayer.Update(IM, client.Game.gameObjects, renderer.getCamera());
                             if (cPlayer.NetworkEvents.Count > 0)
                             {
                                 sendEvents(cPlayer.NetworkEvents);

@@ -36,7 +36,7 @@ namespace Breakneck_Brigade
         }
 
         protected HashSet<GlfwKeys> keys;
-        public void Update(InputManager IM)
+        public void Update(InputManager IM, Dictionary<int, ClientGameObject> GOs, Graphics.Camera cam)
         {
             keys = IM.GetKeys();
 
@@ -91,6 +91,19 @@ namespace Breakneck_Brigade
                 spawnEvent.Type = ClientEventType.Test;
                 NetworkEvents.Add(spawnEvent);
             }
+
+            // 3D picking stuff
+            int x, y;
+            Glfw.glfwGetWindowSize(out x, out y);
+
+            Vector4 view = cam.LookingAt - cam.Position;
+            view.Normalize();
+
+            Vector4 h = view.CrossProduct(cam.Up);
+            h.Normalize();
+
+            Vector4 v = h.CrossProduct(view);
+            v.Normalize();
         }
 
         HashSet<GlfwKeys> downKeys = new HashSet<GlfwKeys>();

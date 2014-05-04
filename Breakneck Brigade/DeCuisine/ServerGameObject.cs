@@ -85,7 +85,7 @@ namespace DeCuisine
                }
             if (this.OnFloor)
             {
-                this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
+                //this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, 0);
             }
         }
 
