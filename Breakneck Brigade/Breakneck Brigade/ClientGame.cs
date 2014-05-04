@@ -11,7 +11,9 @@ namespace Breakneck_Brigade
     {
         public BBLock Lock = new BBLock();
 
-        //gameObjects and HasUpdates both require locking on gameObjects before accessing
+        public int PlayerObjId { get; set; }
+
+        //locking directly on gameObjects before accessing
         public Dictionary<int, ClientGameObject> gameObjects { get; private set; }
         public ConfigSalad Config { get; private set; }
 
@@ -20,8 +22,6 @@ namespace Breakneck_Brigade
             gameObjects = new Dictionary<int, ClientGameObject>();
             Config = new GameObjectConfig().GetConfigSalad();
         }
-
-
-        
+   
     }
 }

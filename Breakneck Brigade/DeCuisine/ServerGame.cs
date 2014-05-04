@@ -163,8 +163,8 @@ namespace DeCuisine
             /* initialize physics */
             lock (Lock)
             {
-            Ode.dInitODE();
-            ContactGroup = Ode.dJointGroupCreate(0);
+                Ode.dInitODE();
+                ContactGroup = Ode.dJointGroupCreate(0);
 
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
@@ -172,7 +172,13 @@ namespace DeCuisine
             // loop over clients and make play objects for them
             foreach (var client in clients)
             {
-                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(100), DC.random.Next(100), 10));
+                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 10));
+                lock(client.ServerMessages)
+                {
+                    client.ServerMessages.Add(new LambdaServerMessage(
+                        (w) => { w.Write((Int32)client.Player.Id); }
+                        ) { Type = ServerMessageType.PlayerIdUpdate });
+                }
             }
             try
             {
@@ -224,7 +230,6 @@ namespace DeCuisine
 
                         foreach (var obj in GameObjects)
                         {
-
                             obj.Value.Update();
                         }
 

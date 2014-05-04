@@ -16,7 +16,11 @@ namespace Breakneck_Brigade
     /// </summary>
     class LocalPlayer
     {
-        public ClientPlayer Player { get; set; }
+        ClientPlayer _player;
+        public ClientPlayer Player { get { return _getPlayer(); } }
+
+        public ClientGame Game { get; set; }
+
         public Vector4 Position;
         public float Orientation { get; set; }
         public float Incline { get; set; }
@@ -163,5 +167,23 @@ namespace Breakneck_Brigade
         {
             return upKeys.Contains(key);
         }
+
+        private ClientPlayer _getPlayer()
+        {
+            if (_player == null)
+            {
+                lock (Game)
+                {
+                    lock (Game.gameObjects)
+                    {
+                        ClientGameObject x;
+                        Game.gameObjects.TryGetValue(Game.PlayerObjId, out x);
+                        _player = (ClientPlayer)x;
+                    }
+                }
+            }
+            return _player;
+        }
+
     }
 }

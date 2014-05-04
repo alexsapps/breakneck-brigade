@@ -10,5 +10,9 @@ namespace DeCuisine
     public class ServerGameModeUpdateMessage : ServerMessage
     {
         public GameMode Mode { get; set; }
+        public override void Write(System.IO.BinaryWriter writer)
+        {
+            writer.Write((byte)(Mode));
+        }
     }
 }

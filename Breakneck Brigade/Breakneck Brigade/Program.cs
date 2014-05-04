@@ -169,12 +169,18 @@ namespace Breakneck_Brigade
                                 Console.WriteLine("Game started.");
                                 bool playAgain;
 
+                                lock (client.Lock)
+                                {
+                                    cPlayer.Game = client.Game;
+                                }
+
                                 Monitor.Exit(ProgramLock);
                                 playAgain = play();
                                 Monitor.Enter(ProgramLock);
                                 renderer.GameObjects = null;
                                 return playAgain;
                             case GameMode.Stopping:
+                                cPlayer.Game = null;
                                 Console.WriteLine("Game ended.");
                                 on_disconnected();
                                 return true; //reconnect
@@ -248,7 +254,6 @@ namespace Breakneck_Brigade
                             lock (client.Lock)
                             {
                                 client.Connect(prompter.Host, prompter.Port);
-
                                 IM = new InputManager();
                                 IM.EnableFPSMode();
 
