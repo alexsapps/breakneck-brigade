@@ -1,8 +1,10 @@
 <world gravity="0,0,-9.8">
 	<space>
+		<!-- 
 		<ingredient type="banana" coordinate="0,1,120" />
 		<ingredient type="ice cream" coordinate="0,0,100" />
     <cooker type="blender" coordinate="50,100,100" />
+		-->
     <plane height="1" texture="twoballplate" />
 	</space>
 </world>

@@ -31,6 +31,7 @@ namespace Breakneck_Brigade
             NetworkEvents = new List<ClientEvent>();
 
             monitorKey(GlfwKeys.GLFW_KEY_SPACE);
+            monitorKey(GlfwKeys.GLFW_KEY_W);
         }
 
         protected HashSet<GlfwKeys> keys;
@@ -89,6 +90,14 @@ namespace Breakneck_Brigade
                 spawnEvent.Type = ClientEventType.Test;
                 NetworkEvents.Add(spawnEvent);
             }
+
+            if (keyDown(GlfwKeys.GLFW_KEY_W))
+            {
+                ClientEvent moveEvent = new ClientEvent();
+                moveEvent.Type = ClientEventType.BeginMove;
+                NetworkEvents.Add(moveEvent);
+            }
+
         }
 
         HashSet<GlfwKeys> downKeys = new HashSet<GlfwKeys>();
