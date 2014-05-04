@@ -72,6 +72,9 @@
     <Compile Include="IngredientType.cs" />
     <Compile Include="Math\Coordinate.cs" />
     <Compile Include="Math\GeomShape.cs" />
+    <Compile Include="Math\MathConstants.cs" />
+    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Vector4.cs" />
     <Compile Include="Utils\BBLock.cs" />
     <Compile Include="Network\ClientEvent.cs" />
     <Compile Include="Network\ClientEventType.cs" />

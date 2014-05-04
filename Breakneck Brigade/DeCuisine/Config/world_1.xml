@@ -3,13 +3,10 @@
 		<!-- 
 		<ingredient type="banana" coordinate="0,1,120" />
 		<ingredient type="ice cream" coordinate="0,0,100" />
-<<<<<<< HEAD
     <cooker type="blender" coordinate="50,100,100" />
 		-->
     <plane height="1" texture="twoballplate" />
-=======
 		<cooker type="blender" coordinate="50,100,100" />
 		<plane height="1" texture="blank" />
->>>>>>> d1a73a1039040e29be9138ad8d556f7d2167261a
 	</space>
 </world>

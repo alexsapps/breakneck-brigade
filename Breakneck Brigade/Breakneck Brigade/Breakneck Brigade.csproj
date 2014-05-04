@@ -188,8 +188,6 @@
     <Compile Include="Graphics\Vertex.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="LocalPlayer.cs" />
-    <Compile Include="Math\MathConstants.cs" />
-    <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -199,7 +197,6 @@
     </Compile>
     <Compile Include="TestGameObject.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Math\Vector4.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

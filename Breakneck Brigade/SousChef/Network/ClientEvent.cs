@@ -14,5 +14,27 @@ namespace SousChef
         {
             Args = new Dictionary<string, string>();
         }
+
+        public static ClientEvent buildEndMoveEvent()
+        {
+            ClientEvent ce = new ClientEvent();
+            ce.Type = ClientEventType.EndMove;
+            return ce;
+        }
+        
+        public static ClientEvent buildBeginMoveEvent()
+        {
+            ClientEvent ce = new ClientEvent();
+            ce.Type = ClientEventType.BeginMove;
+            return ce;
+        }
+
+        public static ClientEvent buildChangeOrientationEvent(float orientation)
+        {
+            ClientEvent ce = new ClientEvent();
+            ce.Type = ClientEventType.ChangeOrientation;
+            ce.Args.Add("Orientation", orientation.ToString());
+            return ce;
+        }
     }
 }

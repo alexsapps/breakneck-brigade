@@ -201,9 +201,10 @@ namespace DeCuisine
                                     case ClientEventType.Test:
                                         ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
                                         break;
+                                    case ClientEventType.ChangeOrientation:
+                                        break;
                                     case ClientEventType.BeginMove:
-                                        //TEST
-                                        input.Client.Player.Move(5.0f, 0.0f, 0.0f);
+                                                                                
                                         break;
                                     case ClientEventType.EndMove:
                                         break;

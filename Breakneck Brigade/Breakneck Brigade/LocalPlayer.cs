@@ -50,6 +50,12 @@ namespace Breakneck_Brigade
             Orientation = Orientation + roty > 360.0f ? Orientation + roty - 360.0f : Orientation + roty;
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
+            //If there was a change in player facing orientation, send an orientation update to the server
+            if(roty != 0.0f)
+            {
+                NetworkEvents.Add(ClientEvent.buildChangeOrientationEvent(roty));
+            }
+
             // Velocity update
             Velocity[0] = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
             Velocity[2] = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
@@ -95,9 +101,7 @@ namespace Breakneck_Brigade
 
             if (keyDown(GlfwKeys.GLFW_KEY_W))
             {
-                ClientEvent moveEvent = new ClientEvent();
-                moveEvent.Type = ClientEventType.BeginMove;
-                NetworkEvents.Add(moveEvent);
+                NetworkEvents.Add(ClientEvent.buildBeginMoveEvent());
             }
             // 3D picking stuff
             int x, y;
