@@ -75,13 +75,16 @@ namespace DeCuisine
                     break;
                 case "stresstest":
                     // spawn stuff, see function definition for right argument format
+                    int n;
+                    if (!int.TryParse(args[1], out n))
+                        n = 50;
                     lock (server.Lock)
                     {
                         lock (server.Game.Lock)
                         {
-                            CommandLinePlayer.StressTest(server.Game);
+                            CommandLinePlayer.StressTest(server.Game, n);
                         }
-                    }
+                    }                    
                     break;
                 default:
                     success = false;
@@ -149,10 +152,10 @@ namespace DeCuisine
         /// <summary>
         /// Stress test our system, AKA Spawn a metric shitload of things at once
         /// </summary>
-        public static void StressTest(ServerGame game)
+        public static void StressTest(ServerGame game, int n)
         {
             int numOfCookers = 0;
-            int numOfIngredients = 50;
+            int numOfIngredients = n;
             for (int x = 0; x < numOfIngredients; x++ )
                 SpawnIngredient(game, "orange");
             for (int x = 0; x < numOfCookers; x++)
