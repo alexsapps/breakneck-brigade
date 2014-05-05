@@ -112,7 +112,6 @@ namespace Breakneck_Brigade
                                         Game.gameObjects.Add(obj.Id, obj);
                                     }
                                     len = reader.ReadInt32();
-                                    Console.WriteLine(len);
                                     for (int i = 0; i < len; i++)
                                     {
                                         int id = reader.ReadInt32();

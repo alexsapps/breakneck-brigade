@@ -281,7 +281,8 @@ namespace DeCuisine
                             {
                                 Type = ServerMessageType.GameStateUpdate,
                                 Binary = bin,
-                                Length = binlen
+                                Length = binlen,
+                                Created = DateTime.Now
                             };
 
                             foreach (Client client in clients)
