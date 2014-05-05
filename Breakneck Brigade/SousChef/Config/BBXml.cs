@@ -29,8 +29,15 @@ exit 0
 
         public static string GetLocalConfigFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(
+            var path = Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData), @"BreakneckBrigade\Config");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
+        public static string GetLocalConfigFile(string filename)
+        {
+            return Path.Combine(GetLocalConfigFolder(), filename);
         }
         public static string GetAppConfigFolder()
         {

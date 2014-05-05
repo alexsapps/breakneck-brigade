@@ -76,7 +76,7 @@ namespace DeCuisine
                 case "stresstest":
                     // spawn stuff, see function definition for right argument format
                     int n;
-                    if (!int.TryParse(args[1], out n))
+                    if (args.Length < 2 || !int.TryParse(args[1], out n))
                         n = 50;
                     lock (server.Lock)
                     {

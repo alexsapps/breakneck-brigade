@@ -70,8 +70,6 @@ namespace Breakneck_Brigade
             if (diff.x != 0 || diff.z != 0)
             {
                 NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
-                Console.WriteLine("kb: " + diff.x + ", " + diff.z);
-                Console.WriteLine("sv: " + (Position.X - lastx) + ", " + (Position.Z - lastz));
                 lastx = Position.X;
                 lastz = Position.Z;
             }

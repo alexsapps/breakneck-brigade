@@ -130,6 +130,7 @@ namespace DeCuisine
         public List<ServerMessage> ServerMessages { get; private set; }
         private void send()
         {
+            BBStopwatch w1 = new BBStopwatch(), w2 = new BBStopwatch();
             try
             {
                 using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
@@ -137,6 +138,7 @@ namespace DeCuisine
                     while (true)
                     {
                         List<ServerMessage> svrMsgs = null;
+                        w1.Start();
                         while (true)
                         {
                             lock (Lock)
@@ -157,11 +159,17 @@ namespace DeCuisine
                                 Monitor.Wait(ServerMessages);
                             }
                         }
+                        w1.Stop(Game.FrameRateMilliseconds, "Client: slow waiting for game state from run thread. {0}");
+
+                        w2.Start();
                         foreach (var message in svrMsgs)
                         {
+                            w1.Start();
                             writer.Write((byte)message.Type);
                             message.Write(writer);
+                            w1.Stop(10, "Client: slow game state write. {0}");
                         }
+                        w2.Stop(10, "Client: slow write loop. {0}");
                     }
                 }
             }

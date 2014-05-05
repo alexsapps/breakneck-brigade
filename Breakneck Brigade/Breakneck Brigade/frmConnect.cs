@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -30,6 +31,10 @@ namespace Breakneck_Brigade
             foreach(Control ctl in pnlConnect.Controls)
                 ctl.KeyDown += keyDown;
             txtConnect.Text = Host + ":" + Port.ToString();
+
+            string[] hosts = File.ReadAllLines(Program.GetHostsFile());
+            foreach(string host in hosts)
+                lstHosts.Items.Add(host);
         }
 
         private void cmdConnect_Click(object sender, EventArgs e)
@@ -69,6 +74,11 @@ namespace Breakneck_Brigade
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.BackgroundImage = global::Breakneck_Brigade.Properties.Resources.background;
             doConnect();
+        }
+
+        private void lstHosts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtConnect.Text = lstHosts.SelectedItem as string;
         }
     }
 }

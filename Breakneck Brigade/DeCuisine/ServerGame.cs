@@ -32,14 +32,14 @@ namespace DeCuisine
 
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
-        public int FrameRate // Tick time in milliseconds
+        public int FrameRateMilliseconds // Tick time in milliseconds
         {
             get { return _frameRate; }
             set 
             { 
                 _frameRate = value;
-                _frameRateTicks = FrameRate * millisecond_ticks; //rate to wait in ticks
-                _frameRateSeconds = FrameRate * 0.001f;
+                _frameRateTicks = FrameRateMilliseconds * millisecond_ticks; //rate to wait in ticks
+                _frameRateSeconds = FrameRateMilliseconds * 0.001f;
             }
 
         }
@@ -77,7 +77,7 @@ namespace DeCuisine
             Lock.AssertHeld();
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
-            FrameRate = int.Parse(config.GetSetting("frame-rate", 1000));
+            FrameRateMilliseconds = int.Parse(config.GetSetting("frame-rate", 1000));
             Config = new GameObjectConfig().GetConfigSalad();
         }
 

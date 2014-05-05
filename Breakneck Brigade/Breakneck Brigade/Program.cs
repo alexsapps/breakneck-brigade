@@ -234,13 +234,15 @@ namespace Breakneck_Brigade
             Console.WriteLine("Disconnected.");
         }
 
+        static string lastHost;
+        static int? lastPort;
         static Client promptConnect()
         {
             ConnectPrompter prompter = new ConnectPrompter();
             lock (prompter.Lock)
             {
-                prompter.Host = globalConfig.GetSetting("server-host", BB.DefaultServerHost);
-                prompter.Port = int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
+                prompter.Host = lastHost ?? globalConfig.GetSetting("server-host", BB.DefaultServerHost);
+                prompter.Port = lastPort ?? int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
                 prompter.BeginPrompt();
 
@@ -254,6 +256,10 @@ namespace Breakneck_Brigade
                             lock (client.Lock)
                             {
                                 client.Connect(prompter.Host, prompter.Port);
+                                lastHost = prompter.Host; //remember, if succeeded
+                                lastPort = prompter.Port;
+                                addHost(prompter.Host, prompter.Port);
+
                                 IM = new InputManager();
                                 IM.EnableFPSMode();
 
@@ -274,6 +280,25 @@ namespace Breakneck_Brigade
                 }
 
                 return null;
+            }
+        }
+
+        public static string GetHostsFile() { return Path.Combine(BBXml.GetLocalConfigFile("hosts")); }
+        private static void addHost(string p1, int p2)
+        {
+            string file = GetHostsFile();
+            string host = p1 + ":" + p2;
+            string[] f;
+            if (File.Exists(file))
+                f = File.ReadAllLines(file);
+            else 
+                f = new string[] {};
+
+            if (!f.Contains(host))
+            {
+                List<string> hosts = new List<string>(f);
+                hosts.Add(host);
+                File.WriteAllLines(file, hosts.ToArray());
             }
         }
 

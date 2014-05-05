@@ -53,7 +53,6 @@ namespace DeCuisine
             this._position = new Vector4();
             this.ToRender = true; // class specific implementation can override
             
-            game.Lock.AssertHeld();
             Game.ObjectAdded(this);
         }
 
@@ -70,6 +69,7 @@ namespace DeCuisine
         /// <param name="stream"></param>
         public virtual void Serialize(BinaryWriter stream)
         {
+            Game.Lock.AssertHeld();
             serializeEssential(stream);
             stream.Write(this.Position);
         }
@@ -93,15 +93,6 @@ namespace DeCuisine
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
                }
-        }
-
-        /// <summary>
-        /// Removes the object from the game
-        /// </summary>
-        public virtual void Remove()
-        {
-            this.RemoveFromWorld();        // tell simulation to remove from ode
-            this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
         }
 
         protected delegate IntPtr GeomMaker();
@@ -131,6 +122,7 @@ namespace DeCuisine
 
         protected void AddToWorld(GeomMaker geomMaker)
         {
+            Game.Lock.AssertHeld();
             Debug.Assert(!InWorld);
 
             Geom = geomMaker();
@@ -172,7 +164,16 @@ namespace DeCuisine
             return body;
         }
 
-        public void RemoveFromWorld()
+
+        /// <summary>
+        /// Removes the object from the game
+        /// </summary>
+        public virtual void Remove()
+        {
+            this.removeFromWorld();        // tell simulation to remove from ode
+            this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
+        }
+        private void removeFromWorld()
         {
             Game.Lock.AssertHeld();
             Debug.Assert(InWorld);
@@ -226,6 +227,7 @@ namespace DeCuisine
 
         private Ode.dVector3 getPosition()
         {
+            Game.Lock.AssertHeld();
             if (this.Geom != IntPtr.Zero)
             {
                 Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
@@ -240,6 +242,7 @@ namespace DeCuisine
 
         private void setPosition(Ode.dVector3 value)
         {
+            Game.Lock.AssertHeld();
             this.MarkDirty(); // moved it, make sure you mark it to move
             this.lastPosition = value;
             Ode.dGeomSetPosition(this.Geom, value.X, value.Y, value.Z); 

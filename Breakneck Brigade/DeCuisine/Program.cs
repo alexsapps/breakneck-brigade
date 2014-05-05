@@ -108,7 +108,7 @@ namespace DeCuisine
                                             case "tick":
                                                 int val = int.Parse(parts[2]);
                                                 if (val > 0)
-                                                    server.Game.FrameRate = val;
+                                                    server.Game.FrameRateMilliseconds = val;
                                                 else
                                                     Console.WriteLine("ticks must be more than 0.");
                                                 break;
