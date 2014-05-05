@@ -64,9 +64,9 @@ namespace Breakneck_Brigade
             Velocity.X = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
             Velocity.Z = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
 
-            var xDiff = Velocity.X * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
-            var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.Z * (float)Math.Sin((Orientation / 180.0f * Math.PI));
-            Coordinate diff = new Coordinate(xDiff, 0, zDiff);
+            var xDiff = Velocity.Z * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
+            var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Sin((Orientation / 180.0f * Math.PI));
+            Coordinate diff = new Coordinate(-xDiff, 0, -zDiff);
             if (diff.x != 0 || diff.z != 0)
             {
                 NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
@@ -113,7 +113,7 @@ namespace Breakneck_Brigade
 
             if (keyDown(GlfwKeys.GLFW_KEY_W))
             {
-                NetworkEvents.Add(new ClientBeginMoveEvent());
+                //NetworkEvents.Add(new ClientBeginMoveEvent()); //this is being done above at the moment.
             }
             // 3D picking stuff
             /*int width, height;
@@ -234,9 +234,9 @@ namespace Breakneck_Brigade
                     if (Player != null)
                     {
                         var result = new Vector4(Player.Position);
-                        result.X = result.X;
+                        result.X = -result.X;
                         result.Y -= 10;
-                        result.Z = result.Z;
+                        result.Z = -result.Z;
                         return result;
                     }
                 }
