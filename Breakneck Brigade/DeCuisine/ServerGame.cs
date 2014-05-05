@@ -235,11 +235,9 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        {
-                            Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldQuickStep(World, FrameRateSeconds);
-                            Ode.dJointGroupEmpty(ContactGroup);
-                        }
+                        Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
+                        Ode.dWorldQuickStep(World, FrameRateSeconds);
+                        Ode.dJointGroupEmpty(ContactGroup);
 
                         /*
                          * handle an instant in time, e.g. gravity, collisions
