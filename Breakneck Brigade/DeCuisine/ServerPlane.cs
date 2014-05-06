@@ -21,7 +21,8 @@ namespace DeCuisine
             Position = new Ode.dVector3(0, 0, height);
             AddToWorld(() =>
             {
-                return Ode.dCreatePlane(game.Space, 0, 0, height, 0);
+                //dCreatePlane uses plane equation ax+by+cz+d=0.
+                return Ode.dCreatePlane(game.Space, 0, 0, 1.0, 0);
             });
         }
 
@@ -34,6 +35,10 @@ namespace DeCuisine
         public override void Update()
         {
            
+        }
+        public override void OnCollide(ServerGameObject obj)
+        {
+            // Do NOTHING
         }
     }
 }

@@ -29,21 +29,25 @@ namespace DeCuisine
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
+        public Physics Engine;
+
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
-        public int FrameRate // Tick time in milliseconds
+        public int FrameRateMilliseconds // Tick time in milliseconds
         {
             get { return _frameRate; }
             set 
             { 
                 _frameRate = value;
-                _frameRateTicks = FrameRate * millisecond_ticks; //rate to wait in ticks
+                _frameRateTicks = FrameRateMilliseconds * millisecond_ticks; //rate to wait in ticks
+                _frameRateSeconds = FrameRateMilliseconds * 0.001f;
             }
 
         }
         private long _frameRateTicks;
         long FrameRateTicks { get { return _frameRateTicks; } }
-
+        private float _frameRateSeconds;
+        float FrameRateSeconds { get { return _frameRateSeconds; } }
 
         int MAX_CONTACTS = 8;
 
@@ -74,7 +78,7 @@ namespace DeCuisine
             Lock.AssertHeld();
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
-            FrameRate = int.Parse(config.GetSetting("frame-rate", 1000));
+            FrameRateMilliseconds = int.Parse(config.GetSetting("frame-rate", 1000));
             Config = new GameObjectConfig().GetConfigSalad();
         }
 
@@ -85,7 +89,7 @@ namespace DeCuisine
                 clients.Add(e.Client);
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Enter } }); //we can change this.
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEnterEvent() }); //we can change this.
                 }
             }
         }
@@ -98,7 +102,7 @@ namespace DeCuisine
 
                 lock (ClientInput)
                 {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEvent() { Type = ClientEventType.Leave } });
+                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientLeaveEvent() });
                 }
             }
         }
@@ -166,15 +170,20 @@ namespace DeCuisine
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
             }
+
+            // Initialize other physics
+            Engine = new Physics(1, this._frameRate); // 9.8 is to much
             // loop over clients and make play objects for them
             foreach (var client in clients)
             {
-                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(100), DC.random.Next(100), 10));
+                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 100)); // Negative position to spawn above plane
+                lock(client.ServerMessages)
+                {
+                    client.ServerMessages.Add(new LambdaServerMessage(
+                        (w) => { w.Write((Int32)client.Player.Id); }
+                        ) { Type = ServerMessageType.PlayerIdUpdate });
+                }
             }
-
-            // set gravity to a fraction of the frame ticks
-            Physics.SetGravity(9.8 / this.FrameRate);
-            Console.WriteLine(Physics.Gravity);
 
             try
             {
@@ -203,6 +212,23 @@ namespace DeCuisine
                                     case ClientEventType.Test:
                                         ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
                                         break;
+                                    case ClientEventType.ChangeOrientation:
+                                        break;
+                                    case ClientEventType.BeginMove:
+                                        ClientBeginMoveEvent e = (ClientBeginMoveEvent)input.Event;
+                                        Vector4 direction = (input.Client.Player.Rotation * new Vector4(0.0, 1.0, 0.0));
+                                        var lastPos = input.Client.Player.Position;
+                                        var newpos = new Ode.dVector3();
+                                        newpos.X = lastPos.X + e.Delta.x;
+                                        newpos.Y = lastPos.Y + e.Delta.y;
+                                        newpos.Z = lastPos.Z + e.Delta.z;
+                                        input.Client.Player.Position = newpos;
+                                        //TEST
+                                        //direction.Scale(3.0f);
+                                        //input.Client.Player.Position = new Ode.dVector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
+                                        break;
+                                    case ClientEventType.EndMove:
+                                        break;
                                     default:
                                         Debugger.Break();
                                         throw new Exception("server does not understand client event " + input.Event.Type.ToString());
@@ -214,19 +240,15 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        {
-                            Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                            Ode.dWorldQuickStep(World, .001f * (float)FrameRate);
-                            Ode.dJointGroupEmpty(ContactGroup);
-                        }
+                        Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
+                        //Ode.dWorldQuickStep(World, FrameRateSeconds);
+                        //Ode.dJointGroupEmpty(ContactGroup);
 
                         /*
                          * handle an instant in time, e.g. gravity, collisions
                          */
-
                         foreach (var obj in GameObjects)
                         {
-
                             obj.Value.Update();
                         }
 
@@ -260,17 +282,19 @@ namespace DeCuisine
                                 bin = membin.ToArray();
                                 binlen = bin.Length;
                             }
+                            var msg = new ServerGameStateUpdateMessage()
+                            {
+                                Type = ServerMessageType.GameStateUpdate,
+                                Binary = bin,
+                                Length = binlen,
+                                Created = DateTime.Now
+                            };
 
                             foreach (Client client in clients)
                             {
                                 lock (client.ServerMessages)
                                 {
-                                    client.ServerMessages.Add(new ServerGameStateUpdateMessage()
-                                    {
-                                        Type = ServerMessageType.GameStateUpdate,
-                                        Binary = bin,
-                                        Length = binlen
-                                    });
+                                    client.ServerMessages.Add(msg);
                                     Monitor.PulseAll(client.ServerMessages);
                                 }
                             }
@@ -308,12 +332,15 @@ namespace DeCuisine
             // exit without doing anything if the two bodies are connected by a joint
             IntPtr b1 = Ode.dGeomGetBody(o1);
             IntPtr b2 = Ode.dGeomGetBody(o2);
-            if (b1 != null && b2 != null && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
+            if (b1 != IntPtr.Zero && b2 != IntPtr.Zero && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
 
             Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
             Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
             for (int i = 0; i < MAX_CONTACTS; i++)
+            {
                 contactGeoms[i] = new Ode.dContactGeom();
+                contact[i] = new Ode.dContact();
+            }
             int numc;
             unsafe
             {
@@ -332,8 +359,11 @@ namespace DeCuisine
                     contact[i].surface.soft_cfm = 0.01;
                     contact[i].geom = contactGeoms[i];
 
-                    IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
+                    //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
+
+                    IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
                     Ode.dJointAttach(c, b1, b2);
+                    Ode.dJointSetFixed(c);
                 }
             }
 

@@ -14,5 +14,10 @@ namespace DeCuisine
 
         public byte[] Binary;
         public int Length;
+
+        public override void Write(System.IO.BinaryWriter writer)
+        {
+            writer.Write(Binary, 0, Length);                        
+        }
     }
 }

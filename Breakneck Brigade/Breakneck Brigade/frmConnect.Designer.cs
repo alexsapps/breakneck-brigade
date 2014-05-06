@@ -28,25 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtConnect = new System.Windows.Forms.TextBox();
             this.cmdConnect = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlConnect = new System.Windows.Forms.Panel();
+            this.txtConnect = new System.Windows.Forms.TextBox();
+            this.lstHosts = new System.Windows.Forms.ListBox();
             this.pnlConnect.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // txtConnect
-            // 
-            this.txtConnect.Location = new System.Drawing.Point(12, 42);
-            this.txtConnect.Name = "txtConnect";
-            this.txtConnect.Size = new System.Drawing.Size(179, 20);
-            this.txtConnect.TabIndex = 0;
             // 
             // cmdConnect
             // 
             this.cmdConnect.Location = new System.Drawing.Point(197, 9);
             this.cmdConnect.Name = "cmdConnect";
-            this.cmdConnect.Size = new System.Drawing.Size(75, 54);
+            this.cmdConnect.Size = new System.Drawing.Size(75, 128);
             this.cmdConnect.TabIndex = 1;
             this.cmdConnect.Text = "connect";
             this.cmdConnect.UseVisualStyleBackColor = true;
@@ -66,13 +60,30 @@
             // 
             this.pnlConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pnlConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.pnlConnect.Controls.Add(this.lstHosts);
             this.pnlConnect.Controls.Add(this.label1);
             this.pnlConnect.Controls.Add(this.txtConnect);
             this.pnlConnect.Controls.Add(this.cmdConnect);
-            this.pnlConnect.Location = new System.Drawing.Point(12, 310);
+            this.pnlConnect.Location = new System.Drawing.Point(12, 237);
             this.pnlConnect.Name = "pnlConnect";
-            this.pnlConnect.Size = new System.Drawing.Size(284, 82);
+            this.pnlConnect.Size = new System.Drawing.Size(284, 155);
             this.pnlConnect.TabIndex = 3;
+            // 
+            // txtConnect
+            // 
+            this.txtConnect.Location = new System.Drawing.Point(12, 42);
+            this.txtConnect.Name = "txtConnect";
+            this.txtConnect.Size = new System.Drawing.Size(179, 20);
+            this.txtConnect.TabIndex = 0;
+            // 
+            // lstHosts
+            // 
+            this.lstHosts.FormattingEnabled = true;
+            this.lstHosts.Location = new System.Drawing.Point(12, 68);
+            this.lstHosts.Name = "lstHosts";
+            this.lstHosts.Size = new System.Drawing.Size(179, 69);
+            this.lstHosts.TabIndex = 3;
+            this.lstHosts.SelectedIndexChanged += new System.EventHandler(this.lstHosts_SelectedIndexChanged);
             // 
             // frmConnect
             // 
@@ -96,9 +107,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtConnect;
         private System.Windows.Forms.Button cmdConnect;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pnlConnect;
+        private System.Windows.Forms.ListBox lstHosts;
+        private System.Windows.Forms.TextBox txtConnect;
     }
 }

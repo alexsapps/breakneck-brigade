@@ -15,11 +15,11 @@ namespace SousChef
         None, /* */
         /// <summary>
         /// Player changed orientation
-        /// Params: "Orientation" -> a float representing the player's current orientation. Some degree angle from 0.
+        /// Params: "Orientation" -> a float representing the player's current Y rotation.
         /// </summary>
         ChangeOrientation,
         /// <summary>
-        /// Player started moving\
+        /// Player started moving in the last direction the reported as facing
         /// </summary>
         BeginMove,
         /// <summary>

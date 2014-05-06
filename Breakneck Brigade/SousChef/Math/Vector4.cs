@@ -1,5 +1,5 @@
 using System;
-namespace Breakneck_Brigade
+namespace SousChef
 {
     /// <summary>
     /// An implementation of a 4D vector for use in homogenous matrix operations
@@ -98,6 +98,8 @@ namespace Breakneck_Brigade
             v[2] = (float) z;
             v[3] = 1;
         }
+
+        public Vector4(SousChef.Coordinate coordinate) : this(coordinate.x, coordinate.y, coordinate.z) { }
 
         /// <summary>
         /// Gets the specified dimension of the vector.
@@ -208,6 +210,28 @@ namespace Breakneck_Brigade
 	        v[1] = (float) y;
 	        v[2] = (float) z;
 	        v[3] = (float) w;
+        }
+
+        /// <summary>
+        /// Sets all dimensions of the vector, preserving the value of the homogenous coordinate
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Set(double x, double y, double z)
+        {
+            this.Set(x, y, z, this[3]);
+        }
+
+        /// <summary>
+        /// Sets all dimensions of the vector, preserving the value of the homogenous coordinate
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Set(float x, float y, float z)
+        {
+            this.Set(x, y, z, this[3]);
         }
 
         /// <summary>

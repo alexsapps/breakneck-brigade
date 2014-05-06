@@ -17,8 +17,6 @@ namespace Breakneck_Brigade
     {
         GlobalsConfigFile globalConfig;
 
-        public EventHandler<KeyHappenedEventArgs> KeyHappened;
-
         // Game-related stuff
         /// <summary>
         /// States of keys being tracked
@@ -38,8 +36,8 @@ namespace Breakneck_Brigade
         /// <summary>
         /// Variables for storing the "center" mouse position
         /// </summary>
-        int originX = 0;
-        int originY = 0;
+        public int originX = 0;
+        public int originY = 0;
 
         /// <summary>
         /// Mouse sensitivity modifier
@@ -103,10 +101,7 @@ namespace Breakneck_Brigade
             else
                 keys.Remove(key);
 
-            if (KeyHappened != null)
-                KeyHappened(this, new KeyHappenedEventArgs() { Key = key, Down = pressed, Up = !pressed });
-
-            Console.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
+            //Console.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
         }
 
         /// <summary>

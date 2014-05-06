@@ -69,7 +69,11 @@ namespace DeCuisine
 
         public override void Update()
         {
-            base.Update();
+            Console.WriteLine("Before simluation " + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
+            base.Update(); 
+            Console.WriteLine("After simluation " + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
+            
+            
         }
 
         

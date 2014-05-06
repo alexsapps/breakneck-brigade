@@ -85,14 +85,10 @@ namespace DeCuisine
                         switch (type)
                         {
                             case ClientMessageType.ClientEvent:
+                                
                                 ClientEventType eventType = (ClientEventType)reader.ReadByte();
-                                int length = reader.ReadInt32();
-                                var args = new Dictionary<string, string>();
-                                for (int i = 0; i < length; i++)
-                                {
-                                    args.Add(reader.ReadString(), reader.ReadString());
-                                }
-                                DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = new ClientEvent() { Type = eventType, Args = args } };
+                                ClientEvent evt = (ClientEvent)Activator.CreateInstance(getClientEventType(eventType), reader);
+                                DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = evt };
 
                                 lock (Game.ClientInput)
                                 {
@@ -117,18 +113,33 @@ namespace DeCuisine
             }
         }
 
+        private Type getClientEventType(ClientEventType t)
+        {
+            switch(t)
+            {
+                case ClientEventType.BeginMove: return typeof(ClientBeginMoveEvent);
+                case ClientEventType.ChangeOrientation: return typeof(ClientChangeOrientationEvent);
+                case ClientEventType.Enter: return typeof(ClientEnterEvent);
+                case ClientEventType.Leave: return typeof(ClientLeaveEvent);
+                case ClientEventType.Test: return typeof(ClientTestEvent);
+                default: throw new Exception("getClientEventType not defiend for " + t.ToString());
+            }
+        }
+
         private Thread senderThread;
         public List<ServerMessage> ServerMessages { get; private set; }
         private void send()
         {
+            BBStopwatch w1 = new BBStopwatch(), w2 = new BBStopwatch(), w3 = new BBStopwatch();
             try
             {
                 using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
                 {
                     while (true)
                     {
+                        w3.Start();
                         List<ServerMessage> svrMsgs = null;
-
+                        
                         while (true)
                         {
                             lock (Lock)
@@ -150,20 +161,21 @@ namespace DeCuisine
                             }
                         }
                         
+                        w2.Start();
                         foreach (var message in svrMsgs)
                         {
+                            w1.Start();
                             writer.Write((byte)message.Type);
-                            switch (message.Type)
-                            {
-                                case ServerMessageType.GameModeUpdate:
-                                    writer.Write((byte)((ServerGameModeUpdateMessage)message).Mode);
-                                    break;
-                                case ServerMessageType.GameStateUpdate:
-                                    var msg = (ServerGameStateUpdateMessage)message;
-                                    writer.Write(msg.Binary, 0, msg.Length);
-                                    break;
-                            }
+                            message.Write(writer);
+                            w1.Stop(10, "Client: slow game state write. {0}");
+
+                            if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 10)
+                                Console.WriteLine("slow messagee");
+
                         }
+                        w2.Stop(10, "Client: slow write loop. {0}");
+
+                        w3.Stop(Game.FrameRateMilliseconds, "Client: slow waiting for game state from run thread. {0}");
                     }
                 }
             }

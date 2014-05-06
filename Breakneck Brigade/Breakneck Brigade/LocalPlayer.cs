@@ -16,8 +16,12 @@ namespace Breakneck_Brigade
     /// </summary>
     class LocalPlayer
     {
-        public ClientPlayer Player { get; set; }
-        public Vector4 Position;
+        ClientPlayer _player;
+        public ClientPlayer Player { get { return _getPlayer(); } }
+
+        public ClientGame Game { get; set; }
+
+        public Vector4 Position { get { return _getPosition(); } }
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public Vector4 Velocity;
@@ -28,15 +32,16 @@ namespace Breakneck_Brigade
         
         public LocalPlayer()
         {
-            Position = new Vector4(0.0f,-10.0f,0.0f);
             Velocity = new Vector4();
             NetworkEvents = new List<ClientEvent>();
 
             monitorKey(GlfwKeys.GLFW_KEY_SPACE);
+            monitorKey(GlfwKeys.GLFW_KEY_W);
         }
 
         protected HashSet<GlfwKeys> keys;
-        public void Update(InputManager IM)
+        static float lastx, lastz;
+        public void Update(InputManager IM, Dictionary<int, ClientGameObject> GOs, Graphics.Camera cam)
         {
             keys = IM.GetKeys();
 
@@ -49,13 +54,26 @@ namespace Breakneck_Brigade
             Orientation = Orientation + roty > 360.0f ? Orientation + roty - 360.0f : Orientation + roty;
             Incline = Incline + rotx > 90.0f ? 90.0f : Incline + rotx < -90.0f ? -90.0f : Incline + rotx;
 
+            //If there was a change in player facing orientation, send an orientation update to the server
+            if(roty != 0.0f)
+            {
+                NetworkEvents.Add(new ClientChangeOrientationEvent() { Roty = roty });
+            }
+
             // Velocity update
-            Velocity[0] = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
-            Velocity[2] = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
+            Velocity.X = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
+            Velocity.Z = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
 
-            Position[0] += Velocity[2] * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Cos((Orientation / 180.0f * Math.PI));
-            Position[2] += Velocity[2] * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity[0] * (float)Math.Sin((Orientation / 180.0f * Math.PI));
-
+            var xDiff = Velocity.Z * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
+            var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Sin((Orientation / 180.0f * Math.PI));
+            Coordinate diff = new Coordinate(-xDiff, 0, -zDiff);
+            if (diff.x != 0 || diff.z != 0)
+            {
+                NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
+                lastx = Position.X;
+                lastz = Position.Z;
+            }
+            
             if (IM[GlfwKeys.GLFW_KEY_ESCAPE] || Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_FALSE)
             {
                 if (_fpsToggle)
@@ -87,9 +105,46 @@ namespace Breakneck_Brigade
             if (keyDown(GlfwKeys.GLFW_KEY_SPACE))
             {
                 //Test code
-                ClientEvent spawnEvent = new ClientEvent();
-                spawnEvent.Type = ClientEventType.Test;
+                var spawnEvent = new ClientTestEvent();
                 NetworkEvents.Add(spawnEvent);
+            }
+
+            if (keyDown(GlfwKeys.GLFW_KEY_W))
+            {
+                //NetworkEvents.Add(new ClientBeginMoveEvent()); //this is being done above at the moment.
+            }
+            // 3D picking stuff
+            /*int width, height;
+            Glfw.glfwGetWindowSize(out width, out height);
+
+            Vector4 view = cam.LookingAt - cam.Position;
+            view.Normalize();
+
+            Vector4 h = view.CrossProduct(cam.Up);
+            h.Normalize();
+
+            Vector4 v = h.CrossProduct(view);
+            v.Normalize();
+
+            // convert fov to radians
+            float rad = (float)(cam.FOV * Math.PI / 180.0);
+            int vLength = (int)((float)Math.Tan((double)rad / 2) * cam.NearClip);
+            int hLength = vLength * (int)((float)width / (float)height);
+            v *= vLength;
+            h *= hLength;
+
+            int x = IM.originX - (width / 2);
+            int y = IM.originY - (height / 2);
+
+            y /= (height / 2);
+            x /= (width / 2);*/
+
+            Vector4 c = new Vector4();
+            Vector4 v = cam.Position;
+            Vector4 d = v - cam.LookingAt;
+
+            foreach(KeyValuePair<int,ClientGameObject> go in GOs){
+
             }
         }
 
@@ -149,6 +204,42 @@ namespace Breakneck_Brigade
         protected bool keyUp(GlfwKeys key)
         {
             return upKeys.Contains(key);
+        }
+
+        private ClientPlayer _getPlayer()
+        {
+            if (_player == null)
+            {
+                lock (Game)
+                {
+                    lock (Game.gameObjects)
+                    {
+                        ClientGameObject x;
+                        Game.gameObjects.TryGetValue(Game.PlayerObjId, out x);
+                        _player = (ClientPlayer)x;
+                    }
+                }
+            }
+            return _player;
+        }
+
+        private Vector4 _getPosition()
+        {
+            if (Game != null)
+            {
+                lock (Game.Lock) //game could have become null by now.  ideally we would lock the client first
+                {
+                    if (Player != null)
+                    {
+                        var result = new Vector4(Player.Position);
+                        result.X = -result.X;
+                        result.Y -= 10;
+                        result.Z = -result.Z;
+                        return result;
+                    }
+                }
+            }
+            return new Vector4();
         }
     }
 }

@@ -23,12 +23,20 @@ namespace DeCuisine
         private GeometryInfo _geominfo;
         public GeometryInfo GeomInfo { get { return _geominfo ?? (_geominfo = getGeomInfo()); } } //cache
         protected abstract GeometryInfo getGeomInfo();
+
+        protected Vector4 _position;
         public virtual Ode.dVector3 Position { get { return getPosition(); } set { setPosition(value); } }
+        protected Matrix4 _rotation;
+        /// <summary>
+        /// ODE Matrix (X = left right, Y = in out, Z = up down)
+        /// </summary>
+        public Matrix4 Rotation { get { return getRotation(); } set { setRotation(value); } }
 
         public bool InWorld { get; protected set; }
         public IntPtr Geom { get; set; }
         public IntPtr Body { get; set; } //null for walls
-        public bool ToRender { get; set; }
+        private bool _toRender;
+        public bool ToRender { get{return _toRender;} set{_toRender = value; this.MarkDirty();} }
         public bool OnFloor { get; set; }
         public Physics.VelocityStruct Velocity;
 
@@ -44,10 +52,11 @@ namespace DeCuisine
         {
             this.Id = nextId++;
             this.Game = game;
+            this._rotation = new Matrix4();
+            this._position = new Vector4();
             this.ToRender = true; // class specific implementation can override
             this.Velocity = new Physics.VelocityStruct(0, 0, 0);
             
-            game.Lock.AssertHeld();
             Game.ObjectAdded(this);
         }
 
@@ -64,6 +73,7 @@ namespace DeCuisine
         /// <param name="stream"></param>
         public virtual void Serialize(BinaryWriter stream)
         {
+            Game.Lock.AssertHeld();
             serializeEssential(stream);
             stream.Write(this.Position);
         }
@@ -81,29 +91,18 @@ namespace DeCuisine
         /// </summary>
         public virtual void Update()
         {
-            if(this.lastPosition.X != this.Position.X ||
-               this.lastPosition.Y != this.Position.Y ||
-               this.lastPosition.Z != this.Position.Z){
-                   this.MarkDirty(); // it's position moved from the last one
-                   this.lastPosition = this.Position;
-               }
+            Console.WriteLine("Before update" + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
+            this.Position = this.Game.Engine.Simulate(this);
+            Console.WriteLine("After update" + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
 
-            double newX, newY, newZ;
-            this.Position = Physics.ApplyForce(this.Velocity, this.Position);
-            if (this.Position.Z > 1)
+            if (Math.Abs(this.lastPosition.X - this.Position.X) > .01 ||
+               Math.Abs(this.lastPosition.Y - this.Position.Y) > .01 ||
+               Math.Abs(this.lastPosition.Z - this.Position.Z) > .01)
             {
-                //double newZ = (this.Position.Z - ServerGame.Gravity > 1) ? this.Position.Z - ServerGame.Gravity : 1;
-                //this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, newZ);
+                this.MarkDirty(); // it's position moved from the last one
+                this.lastPosition = this.Position;
             }
-        }
 
-        /// <summary>
-        /// Removes the object from the game
-        /// </summary>
-        public virtual void Remove()
-        {
-            this.RemoveFromWorld();        // tell simulation to remove from ode
-            this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
         }
 
         protected delegate IntPtr GeomMaker();
@@ -133,6 +132,7 @@ namespace DeCuisine
 
         protected void AddToWorld(GeomMaker geomMaker)
         {
+            Game.Lock.AssertHeld();
             Debug.Assert(!InWorld);
 
             Geom = geomMaker();
@@ -174,7 +174,16 @@ namespace DeCuisine
             return body;
         }
 
-        public void RemoveFromWorld()
+
+        /// <summary>
+        /// Removes the object from the game
+        /// </summary>
+        public virtual void Remove()
+        {
+            this.removeFromWorld();        // tell simulation to remove from ode
+            this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
+        }
+        private void removeFromWorld()
         {
             Game.Lock.AssertHeld();
             Debug.Assert(InWorld);
@@ -213,12 +222,7 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
-            if (GameObjectClass.Plane == obj.ObjectClass)
-            {
-                // hit a plane, the z value is forever zero now
-                OnFloor = true;
-            }
-            this.MarkDirty();
+
         }
 
         public void MarkDirty()
@@ -233,9 +237,11 @@ namespace DeCuisine
 
         private Ode.dVector3 getPosition()
         {
+            Game.Lock.AssertHeld();
             if (this.Geom != IntPtr.Zero)
             {
                 Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+                _position.Set(m3.X, m3.Y, m3.Z);
                 return m3;
             }
             else
@@ -246,10 +252,41 @@ namespace DeCuisine
 
         private void setPosition(Ode.dVector3 value)
         {
+            Game.Lock.AssertHeld();
             this.MarkDirty(); // moved it, make sure you mark it to move
             this.lastPosition = value;
             Ode.dGeomSetPosition(this.Geom, value.X, value.Y, value.Z); 
         }
 
+        private Matrix4 getRotation()
+        {
+            if(this.Geom != IntPtr.Zero)
+            {
+                Ode.dMatrix3 r = Ode.dGeomGetRotation(this.Geom);
+                _rotation.SetAll(r.M00,  r.M10,  r.M20,  0,
+                                 r.M01,  r.M11,  r.M21,  0,
+                                 r.M02,  r.M12,  r.M22,  0,
+                                 0,      0,      0,      1);
+                return _rotation;
+            }
+            else
+            {
+                throw new Exception("Geom is null");
+            }
+        }
+        private void setRotation(Matrix4 rotation)
+        {
+            if (this.Geom != IntPtr.Zero)
+            {
+                double[] arr = {_rotation[0,0], _rotation[1,0], _rotation[2,0],
+                                _rotation[0,1], _rotation[1,1], _rotation[2,1],
+                                _rotation[0,2], _rotation[1,2], _rotation[2,2]};
+                Ode.dMatrix3 r = new Ode.dMatrix3(arr);
+            }
+            else
+            {
+                throw new Exception("Geom is null");
+            }
+        }
     }
 }
