@@ -12,13 +12,12 @@ namespace SousChef
     {
         public GameMode Mode { get; set; }
         public override ServerMessageType Type { get { return ServerMessageType.GameModeUpdate; } }
+        public ServerGameModeUpdateMessage() { }
         public override void Write(BinaryWriter writer)
         {
             writer.Write((byte)(Mode));
         }
-
-        public ServerGameModeUpdateMessage() { }
-        public ServerGameModeUpdateMessage(BinaryReader reader)
+        public override void Read(BinaryReader reader)
         {
             Mode = (GameMode)reader.ReadByte();
         }

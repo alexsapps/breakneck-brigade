@@ -11,13 +11,12 @@ namespace SousChef
     {
         public int PlayerId { get; set; }
         public override ServerMessageType Type { get { return ServerMessageType.PlayerIdUpdate; } }
+        public ServerPlayerIdUpdateMessage() { }
         public override void Write(BinaryWriter writer)
         {
             writer.Write((Int32)PlayerId);
         }
-
-        public ServerPlayerIdUpdateMessage() { }
-        public ServerPlayerIdUpdateMessage(BinaryReader reader)
+        public override void Read(BinaryReader reader)
         {
             PlayerId = reader.ReadInt32();
         }

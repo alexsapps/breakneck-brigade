@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Tao.Glfw;
 using Tao.OpenGl;
 using SousChef;
+using System.Threading;
 
 namespace Breakneck_Brigade
 {
@@ -15,6 +16,8 @@ namespace Breakneck_Brigade
     /// </summary>
     class InputManager
     {
+        public BBLock Lock = new BBLock();
+
         GlobalsConfigFile globalConfig;
 
         // Game-related stuff
@@ -102,6 +105,9 @@ namespace Breakneck_Brigade
                 keys.Remove(key);
 
             //Console.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
+            
+            lock (Lock)
+                Monitor.PulseAll(Lock);
         }
 
         /// <summary>
@@ -139,6 +145,8 @@ namespace Breakneck_Brigade
             {
                 Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
             }
+            lock (Lock)
+                Monitor.PulseAll(Lock);
         }
 
         /// <summary>
@@ -178,6 +186,9 @@ namespace Breakneck_Brigade
                 keys.Add(button);
             else
                 keys.Remove(button);
+
+            lock (Lock)
+                Monitor.PulseAll(Lock);
         }
 
         public void Clear()

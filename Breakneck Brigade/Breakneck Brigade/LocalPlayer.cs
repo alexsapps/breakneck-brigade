@@ -21,7 +21,6 @@ namespace Breakneck_Brigade
 
         public ClientGame Game { get; set; }
 
-        public Vector4 Position { get { return _getPosition(); } }
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public Vector4 Velocity;
@@ -42,8 +41,11 @@ namespace Breakneck_Brigade
         protected HashSet<GlfwKeys> keys;
         static float lastx, lastz;
         long lasttime = 0;
-        public void Update(InputManager IM, Dictionary<int, ClientGameObject> GOs, Graphics.Camera cam)
+        public void Update(InputManager IM, ClientGame game, Graphics.Camera cam)
         {
+            game.Lock.AssertHeld();
+            cam.Lock.AssertHeld();
+
             long timediff = (DateTime.Now.Ticks - lasttime) / TimeSpan.TicksPerMillisecond;
             if (timediff > 200)
                 timediff = 0;
@@ -76,8 +78,9 @@ namespace Breakneck_Brigade
             if (diff.x != 0 || diff.z != 0)
             {
                 NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
-                lastx = Position.X;
-                lastz = Position.Z;
+                var pos = GetPosition();
+                lastx = pos.X;
+                lastz = pos.Z;
             }
             
             if (IM[GlfwKeys.GLFW_KEY_ESCAPE] || Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_FALSE)
@@ -149,7 +152,8 @@ namespace Breakneck_Brigade
             Vector4 v = cam.Position;
             Vector4 d = v - cam.LookingAt;
 
-            foreach(KeyValuePair<int,ClientGameObject> go in GOs){
+            foreach (var go in game.gameObjects.Values)
+            {
 
             }
         }
@@ -216,20 +220,17 @@ namespace Breakneck_Brigade
         {
             if (_player == null)
             {
-                lock (Game)
+                lock (Game.Lock)
                 {
-                    lock (Game.gameObjects)
-                    {
-                        ClientGameObject x;
-                        Game.gameObjects.TryGetValue(Game.PlayerObjId, out x);
-                        _player = (ClientPlayer)x;
-                    }
+                    ClientGameObject x;
+                    Game.gameObjects.TryGetValue(Game.PlayerObjId, out x);
+                    _player = (ClientPlayer)x;
                 }
             }
             return _player;
         }
 
-        private Vector4 _getPosition()
+        public Vector4 GetPosition()
         {
             if (Game != null)
             {

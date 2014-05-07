@@ -178,7 +178,7 @@ namespace DeCuisine
                                 clients.Add(client);
                                 client.Connected += client_Connected;
                                 client.Disconnected += client_Disconnected;
-                                Thread client_thread = new Thread(() => client.Receive(connection));
+                                Thread client_thread = new Thread(() => { client.Receive(connection); });
                                 client.receiveThread = client_thread;
                                 client_thread.Start();
                             }

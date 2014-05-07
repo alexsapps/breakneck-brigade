@@ -44,7 +44,6 @@ namespace Breakneck_Brigade.Graphics
         public IList<ClientGameObject>    GameObjects { get; set; }
 
         private     Matrix4         WorldTransform;
-        private     Camera          Camera;
         private     int             _aspectX;
         private     int             _aspectY;
         private     float           _ratio;
@@ -156,7 +155,7 @@ namespace Breakneck_Brigade.Graphics
             Models.Add("#plane:blank", plane);
         }
 
-        public void Render(LocalPlayer cp)
+        public void Render(Camera camera)
         {
             int width, height;
             Glfw.glfwGetWindowSize(out width, out height);
@@ -187,14 +186,15 @@ namespace Breakneck_Brigade.Graphics
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 
-            Camera.Update(cp);
-            Camera.Render();
+            lock (camera.Lock)
+            {
+                camera.Render();
+            }
 
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
-                {
                     cgo.Render();
-                }
+            
             CurrentDrawMode = -1;
 
             Glfw.glfwSwapBuffers();
@@ -255,13 +255,6 @@ namespace Breakneck_Brigade.Graphics
 
             //Optimizations
             Gl.glDisable(Gl.GL_DITHER);
-
-
-            /* CAMERA */
-            Camera = new Camera();
-            Camera.Distance = 50.0f;
-            Camera.Incline  = 0.0f;
-            //MainCamera.Transform.TranslationMat(0, -25, 0);
         }
 
         /// <summary>
@@ -358,11 +351,6 @@ namespace Breakneck_Brigade.Graphics
         {
             Model model = parser.ParseFile(filename);
             return new TestClientGameObject(model);
-        }
-
-        public Camera getCamera()
-        {
-            return Camera;
         }
     }   
 }
