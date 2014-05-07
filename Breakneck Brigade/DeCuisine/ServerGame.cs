@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Tao.Ode;
+
+using BulletSharp;
+using DemoFramework;
 
 namespace DeCuisine
 {
-    class ServerGame : IDisposable
+    class ServerGame : System.IDisposable
     {
         public BBLock Lock = new BBLock();
 
@@ -50,9 +52,19 @@ namespace DeCuisine
 
         int MAX_CONTACTS = 8;
 
-        public IntPtr World { get; set; }
-        public IntPtr Space { get; set; }
-        public IntPtr ContactGroup { get; protected set; }
+        // Physics
+        DynamicsWorld _world;
+        public DynamicsWorld World
+        {
+            get { return _world; }
+            protected set { _world = value; }
+        }
+
+        protected CollisionConfiguration CollisionConf;
+        protected CollisionDispatcher Dispatcher;
+        protected BroadphaseInterface Broadphase;
+        protected ConstraintSolver Solver;
+        public AlignedCollisionShapeArray CollisionShapes { get; private set; }
 
         public ServerGame(Server server)
         {
@@ -157,22 +169,58 @@ namespace DeCuisine
             }
         }
 
+        public virtual RigidBody LocalCreateRigidBody(float mass, Matrix startTransform, CollisionShape shape)
+        {
+            //rigidbody is dynamic if and only if mass is non zero, otherwise static
+            bool isDynamic = (mass != 0.0f);
+
+            Vector3 localInertia = Vector3.Zero;
+            if (isDynamic)
+                shape.CalculateLocalInertia(mass, out localInertia);
+
+            //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+            DefaultMotionState myMotionState = new DefaultMotionState(startTransform);
+
+            RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
+            RigidBody body = new RigidBody(rbInfo);
+            rbInfo.Dispose();
+
+            _world.AddRigidBody(body);
+
+            return body;
+        }
         
         public void Run()
         {
             /* initialize physics */
             lock (Lock)
             {
-            Ode.dInitODE();
-            ContactGroup = Ode.dJointGroupCreate(0);
+                this.CollisionShapes = new AlignedCollisionShapeArray();
 
-                WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
-                p.LoadFile(1);
+                // collision configuration contains default setup for memory, collision setup
+                this.CollisionConf = new DefaultCollisionConfiguration();
+                this.Dispatcher = new CollisionDispatcher(CollisionConf);
+                this.Broadphase = new DbvtBroadphase();
+                this.World = new DiscreteDynamicsWorld(Dispatcher, Broadphase, null, CollisionConf);
+                this.World.Gravity = new Vector3(0, -10, 0);
+
+                // create the ground
+                BoxShape groundShape = new BoxShape(50, 1, 50);
+                //groundShape.InitializePolyhedralFeatures();
+                //CollisionShape groundShape = new StaticPlaneShape(new Vector3(0,1,0), 50);
+
+                this.CollisionShapes.Add(groundShape);
+                CollisionObject ground = LocalCreateRigidBody(0, Matrix.Identity, groundShape);
+                ground.UserObject = "Ground";
+
+                // Space.Collision += new CollisionEventHandler(CollideObjects);
+                // WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
+                // p.LoadFile(1);
             }
             // loop over clients and make play objects for them
             foreach (var client in clients)
             {
-                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 10));
+                client.Player = new ServerPlayer(server.Game, new Vector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 10));
                 lock(client.ServerMessages)
                 {
                     client.ServerMessages.Add(new LambdaServerMessage(
@@ -205,15 +253,15 @@ namespace DeCuisine
                                     case ClientEventType.Leave:
                                         break;
                                     case ClientEventType.Test:
-                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
+                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Vector3(0.0f, 1.0f, 0.0f));
                                         break;
                                     case ClientEventType.ChangeOrientation:
                                         break;
                                     case ClientEventType.BeginMove:
                                         ClientBeginMoveEvent e = (ClientBeginMoveEvent)input.Event;
-                                        Vector4 direction = (input.Client.Player.Rotation * new Vector4(0.0, 1.0, 0.0));
+                                        SousChef.Vector4 direction = (input.Client.Player.Rotation * new SousChef.Vector4(0.0, 1.0, 0.0));
                                         var lastPos = input.Client.Player.Position;
-                                        var newpos = new Ode.dVector3();
+                                        var newpos = new Vector3();
                                         newpos.X = lastPos.X + e.Delta.x;
                                         newpos.Y = lastPos.Y + e.Delta.y;
                                         newpos.Z = lastPos.Z + e.Delta.z;
@@ -235,9 +283,7 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        Ode.dSpaceCollide(Space, IntPtr.Zero, dNearCallback);
-                        Ode.dWorldQuickStep(World, FrameRateSeconds);
-                        Ode.dJointGroupEmpty(ContactGroup);
+                        _world.StepSimulation(0.01f);
 
                         /*
                          * handle an instant in time, e.g. gravity, collisions
@@ -309,19 +355,57 @@ namespace DeCuisine
             }
             finally
             {
-                Ode.dJointGroupDestroy(ContactGroup);
-                Ode.dSpaceDestroy(Space);
-                Ode.dWorldDestroy(World);
-                Ode.dCloseODE();
+                if (_world != null)
+                {
+                    //remove/dispose constraints
+                    int i;
+                    for (i = _world.NumConstraints - 1; i >= 0; i--)
+                    {
+                        TypedConstraint constraint = _world.GetConstraint(i);
+                        _world.RemoveConstraint(constraint);
+                        constraint.Dispose(); ;
+                    }
 
-                World = IntPtr.Zero;
-                Space = IntPtr.Zero;
-                ContactGroup = IntPtr.Zero;
+                    //remove the rigidbodies from the dynamics world and delete them
+                    for (i = _world.NumCollisionObjects - 1; i >= 0; i--)
+                    {
+                        CollisionObject obj = _world.CollisionObjectArray[i];
+                        RigidBody body = obj as RigidBody;
+                        if (body != null && body.MotionState != null)
+                        {
+                            body.MotionState.Dispose();
+                        }
+                        _world.RemoveCollisionObject(obj);
+                        obj.Dispose();
+                    }
+
+                    //delete collision shapes
+                    foreach (CollisionShape shape in CollisionShapes)
+                        shape.Dispose();
+                    CollisionShapes.Clear();
+
+                    _world.Dispose();
+                    Broadphase.Dispose();
+                    Dispatcher.Dispose();
+                    CollisionConf.Dispose();
+                }
+
+                if (Broadphase != null)
+                {
+                    Broadphase.Dispose();
+                }
+                if (Dispatcher != null)
+                {
+                    Dispatcher.Dispose();
+                }
+                if (CollisionConf != null)
+                {
+                    CollisionConf.Dispose();
+                }
             }
         }
 
-
-
+        /*
         private void dNearCallback(IntPtr data, IntPtr o1, IntPtr o2)
         {
             // exit without doing anything if the two bodies are connected by a joint
@@ -368,7 +452,8 @@ namespace DeCuisine
             ServerGameObject gameObject1 = GameObjects[gameObjectId1.ToInt32()];
             ServerGameObject gameObject2 = GameObjects[gameObjectId2.ToInt32()];
             gameObject1.OnCollide(gameObject2);
-        }
+        }*/
+
 
         private void SendModeChangeUpdate()
         {
@@ -416,10 +501,10 @@ namespace DeCuisine
             
         }
 
-        public ServerGameObject GeomToObj(IntPtr geom)
+        public ServerGameObject GeomToObj(Geom geom)
         {
             Lock.AssertHeld();
-            return GameObjects[Ode.dGeomGetData(geom).ToInt32()];
+            return GameObjects[geom.Data.ToInt32()];
         }
 
         internal void PrintStatus()

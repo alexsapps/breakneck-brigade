@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using SousChef;
-using Tao.Ode;
+
+using OdeDotNet;
+using OdeDotNet.Geometry;
+using OdeDotNet.Joints;
 
 namespace DeCuisine
 {
@@ -31,7 +34,7 @@ namespace DeCuisine
         /// <param name="transform">Initial location</param>
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
-        public ServerCooker(CookerType type, ServerGame game, Ode.dVector3 transform)
+        public ServerCooker(CookerType type, ServerGame game, OdeDotNet.Vector3 transform)
             : base(game)
         {
             this.Type = type;
@@ -101,7 +104,7 @@ namespace DeCuisine
                     ingredeint.MarkDeleted();
                 }
                 this.Contents = new List<ServerIngredient>(); // clear contents
-                Ode.dVector3 ingSpawn = new Ode.dVector3(this.Position.X + 30, this.Position.Y + 30, this.Position.Z + 30); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                OdeDotNet.Vector3 ingSpawn = new OdeDotNet.Vector3(this.Position.X + 30, this.Position.Y + 30, this.Position.Z + 30); // spawn above cooker for now TODO: Logically spawn depeding on cooker
                 ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
                 this.Contents.Add(ToAdd);
                 return ToAdd;
