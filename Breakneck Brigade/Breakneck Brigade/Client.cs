@@ -18,15 +18,12 @@ namespace Breakneck_Brigade
         public BBLock Lock = new BBLock();
         TcpClient connection;
         public bool IsConnected { get; private set; }
-        public ClientGame Game { get; private set; }
-        public GameMode GameMode { get; private set; }
         
         public class PlayerIdUpdatedEventArgs : EventArgs { public int GameObjId { get; set; } }
 
         public Client()
         {
             ClientEvents = new List<ClientEvent>();
-            GameMode = GameMode.Init;
         }
 
         public void Connect(string host, int port)
@@ -40,6 +37,8 @@ namespace Breakneck_Brigade
 
             IsConnected = true;
         }
+
+        public List<ServerMessage> serverMessages = new List<ServerMessage>();
 
         private Thread receiverThread;
         private void receive()
@@ -77,65 +76,9 @@ namespace Breakneck_Brigade
                     while (true)
                     {
                         ServerMessageType type = (ServerMessageType)reader.ReadByte();
-                        switch (type)
-                        {
-                            case ServerMessageType.GameModeUpdate:
-                                var mode = (GameMode)reader.ReadByte();
-                                lock (Lock)
-                                {
-                                    GameMode = mode;
-                                    switch (GameMode)
-                                    {
-                                        case GameMode.Init:
-                                            break;
-                                        case GameMode.Started:
-                                            Game = new ClientGame();
-                                            break;
-                                        case GameMode.Stopping:
-                                            break;
-                                        default:
-                                            Disconnect();
-                                            return;
-                                    }
-                                }
-
-                                break;
-                            case ServerMessageType.GameStateUpdate:
-                                lock (Game.Lock)
-                                {
-                                    int len;
-                                    len = reader.ReadInt32();
-                                    for (int i = 0; i < len; i++)
-                                    {
-                                        int id = reader.ReadInt32();
-                                        ClientGameObject obj = ClientGameObject.Deserialize(id, reader, Game);
-                                        Game.gameObjects.Add(obj.Id, obj);
-                                    }
-                                    len = reader.ReadInt32();
-                                    for (int i = 0; i < len; i++)
-                                    {
-                                        int id = reader.ReadInt32();
-                                        Game.gameObjects[id].StreamUpdate(reader);
-                                    }
-                                    len = reader.ReadInt32();
-                                    for (int i = 0; i < len; i++)
-                                    {
-                                        int id = reader.ReadInt32();
-                                        Game.gameObjects.Remove(id);
-                                    }
-                                }
-                                
-                                break;
-                            case ServerMessageType.PlayerIdUpdate:
-                                int playerObjId = reader.ReadInt32();
-                                lock (Game.Lock)
-                                {
-                                    Game.PlayerObjId = playerObjId;
-                                }
-                                break;
-                            default:
-                                throw new Exception("client does not understand message " + type.ToString());
-                        }
+                        ServerMessage msg = (ServerMessage)Activator.CreateInstance(getServerMessageType(type), reader);
+                        lock(serverMessages)
+                            serverMessages.Add(msg);
                     }
                 }
             }
@@ -147,6 +90,21 @@ namespace Breakneck_Brigade
                 System.Diagnostics.Debugger.Break();
                 lock (Lock) { Disconnect(); }
                 throw;
+            }
+        }
+
+        private Type getServerMessageType(ServerMessageType type)
+        {
+            switch(type)
+            {
+                case ServerMessageType.GameStateUpdate:
+                    return typeof(ServerGameStateUpdateMessage);
+                case ServerMessageType.GameModeUpdate:
+                    return typeof(ServerGameModeUpdateMessage);
+                case ServerMessageType.PlayerIdUpdate:
+                    return typeof(ServerPlayerIdUpdateMessage);
+                default:
+                    throw new Exception("getServerMessageType not defined for " + type.ToString());
             }
         }
 
@@ -167,6 +125,7 @@ namespace Breakneck_Brigade
                                 writer.Write((byte)ClientMessageType.ClientEvent);
                                 writer.Write((byte)clientEvent.Type);
                                 clientEvent.Write(writer);
+                                writer.Flush();
                             }
                             ClientEvents.Clear();
 
@@ -195,7 +154,6 @@ namespace Breakneck_Brigade
             if (!IsConnected)  //if connected, we are initiating disconnect.  if not connected, something else caused disconnect so no need to disconnect again.
                 return;
             IsConnected = false;
-            GameMode = SousChef.GameMode.Stopping;
 
             lock (ClientEvents)
             {
@@ -218,8 +176,6 @@ namespace Breakneck_Brigade
             Monitor.Enter(Lock); //let's hope we didn't re-connect in the meantime.  not sure how to fix this.  actually...since it makes a new Client on every connection, it's fine for now.  ideally, receiver thread makes a signal to disconnect instead of actually disconnecting, and another thread actually does the disconnect.
 
             //note: game thread constantly checks IsConnected to know when to terminate
-
-            Game = null; //may already be null e.g. if quitting before game started (init phase)
         }
     }
 }

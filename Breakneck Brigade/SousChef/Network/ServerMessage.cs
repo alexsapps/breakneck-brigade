@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using SousChef;
 
-namespace DeCuisine
+namespace SousChef
 {
     public abstract class ServerMessage
     {
         public DateTime Created;
-        public ServerMessageType Type { get; set; }
+        public abstract ServerMessageType Type { get; }
 
         public abstract void Write(System.IO.BinaryWriter writer);
     }

@@ -20,12 +20,36 @@ namespace Breakneck_Brigade
         public static BBLock ProgramLock = new BBLock();
 
         static Client client;
+        static ClientGame _game;
+        static ClientGame game
+        {
+            get
+            {
+                ProgramLock.AssertHeld();
+                return _game;
+            }
+            set
+            {
+                ProgramLock.AssertHeld();
+                _game = value;
+                if (_game != null)
+                {
+                    cPlayer = new LocalPlayer();
+                    cPlayer.Game = _game;
+                }
+                else
+                {
+                    cPlayer = null;
+                }
+            }
+        }
+        static GameMode gameMode;
         static Renderer renderer;
 
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
 
-        static public LocalPlayer cPlayer = new LocalPlayer();
+        static public LocalPlayer cPlayer;
         static public InputManager IM;
 
         static void Main(string[] args)
@@ -100,15 +124,12 @@ namespace Breakneck_Brigade
                                         Console.WriteLine("Not connected.");
                                     }
                                     else
-                                    {
-                                        lock (client.Lock)
+                                    {   
+                                        Console.WriteLine("Connected.");
+                                        Console.WriteLine("GameMode: " + gameMode.ToString());
+                                        if (gameMode == GameMode.Started || gameMode == GameMode.Paused)
                                         {
-                                            Console.WriteLine("Connected.");
-                                            Console.WriteLine("GameMode: " + client.GameMode.ToString());
-                                            if (client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused)
-                                            {
-                                                Console.WriteLine(client.Game.gameObjects.Count + " game objects.");
-                                            }
+                                            Console.WriteLine(game.gameObjects.Count + " game objects.");
                                         }
                                     }
                                 }
@@ -130,12 +151,20 @@ namespace Breakneck_Brigade
         {
             using (renderer = new Renderer())
             {
+                IM = new InputManager();
+                IM.EnableFPSMode();
+                
                 while (true)
                 {
                     Console.WriteLine("Prompting to connect...");
                     client = promptConnect();
                     if (client == null)
                         break;
+                    
+                    lock (ProgramLock)
+                    {
+                        gameMode = GameMode.Init;
+                    }
 
                     bool playAgain = doGame();
                     
@@ -155,12 +184,17 @@ namespace Breakneck_Brigade
                     onClosed();
                     return false; //quit
                 }
+                lock (client.Lock)
+                {
+                    if (!client.IsConnected)
+                        return true; //play again    
+                }
 
                 lock (ProgramLock)
                 {
-                    if (client.GameMode != oldMode)
+                    if (gameMode != oldMode)
                     {
-                        switch (client.GameMode)
+                        switch (gameMode)
                         {
                             case GameMode.Init:
                                 Console.WriteLine("Waiting for other players to join.");
@@ -168,27 +202,23 @@ namespace Breakneck_Brigade
                             case GameMode.Started:
                                 Console.WriteLine("Game started.");
                                 bool playAgain;
-
-                                lock (client.Lock)
-                                {
-                                    cPlayer.Game = client.Game;
-                                }
-
                                 Monitor.Exit(ProgramLock);
                                 playAgain = play();
                                 Monitor.Enter(ProgramLock);
                                 renderer.GameObjects = null;
                                 return playAgain;
                             case GameMode.Stopping:
-                                cPlayer.Game = null;
+                                gameMode = GameMode.None;
+                                game = null;
                                 Console.WriteLine("Game ended.");
                                 on_disconnected();
                                 return true; //reconnect
                         }
-                        oldMode = client.GameMode;
+                        oldMode = gameMode;
                     }
+                    handleServerMessages();
+                    render();
                 }
-                render();
             }
         }
         static bool play()
@@ -203,26 +233,29 @@ namespace Breakneck_Brigade
                         onClosed();
                         return false; //quit
                     }
-
                     lock (client.Lock)
                     {
-                        if (!(client.GameMode == GameMode.Started || client.GameMode == GameMode.Paused))
+                        if (!client.IsConnected)
                             return true; //play again
+                    }
 
-                        lock (client.Game.Lock)
+                    if (!(gameMode == GameMode.Started || gameMode == GameMode.Paused))
+                        return true; //play again
+
+                    lock (game.Lock)
+                    {
+                        renderer.GameObjects = game.gameObjects.Values.ToList<ClientGameObject>();
+
+                        cPlayer.Update(IM, game.gameObjects, renderer.getCamera());
+                        if (cPlayer.NetworkEvents.Count > 0)
                         {
-                            renderer.GameObjects = client.Game.gameObjects.Values.ToList<ClientGameObject>();
-
-                            cPlayer.Update(IM, client.Game.gameObjects, renderer.getCamera());
-                            if (cPlayer.NetworkEvents.Count > 0)
-                            {
-                                sendEvents(cPlayer.NetworkEvents);
-                                cPlayer.NetworkEvents.Clear();
-                            }
-
-                            render();
+                            sendEvents(cPlayer.NetworkEvents);
+                            cPlayer.NetworkEvents.Clear();
                         }
                     }
+
+                    handleServerMessages();
+                    render();
                 }
             }
         }
@@ -256,12 +289,10 @@ namespace Breakneck_Brigade
                             lock (client.Lock)
                             {
                                 client.Connect(prompter.Host, prompter.Port);
+                                
                                 lastHost = prompter.Host; //remember, if succeeded
                                 lastPort = prompter.Port;
                                 addHost(prompter.Host, prompter.Port);
-
-                                IM = new InputManager();
-                                IM.EnableFPSMode();
 
                                 prompter.connectedCallback();
                                 return client;
@@ -367,22 +398,99 @@ namespace Breakneck_Brigade
             renderer.Render(cPlayer);
         }
 
-        static void sendEvents(List<ClientEvent> @events)
+        static void handleServerMessages()
         {
-            lock (client.Lock)
+            ProgramLock.AssertHeld();
+
+            List<ServerMessage> serverMessages;
+            lock (client.serverMessages)
             {
-                if (client.GameMode == GameMode.Started)
+                serverMessages = new List<ServerMessage>(client.serverMessages);
+                client.serverMessages.Clear();
+            }
+            foreach(var m in serverMessages)
+            {
+                if(m is ServerGameModeUpdateMessage)
                 {
-                    lock (client.ClientEvents)
+                    var msg = (ServerGameModeUpdateMessage)m;
+                    
+                    gameMode = msg.Mode;
+                    switch (gameMode)
                     {
-                        client.ClientEvents.AddRange(@events);
-                        Monitor.PulseAll(client.ClientEvents);
+                        case GameMode.Init:
+                            break;
+                        case GameMode.Started:
+                            game = new ClientGame();
+                            break;
+                        case GameMode.Stopping:
+                            break;
+                        default:
+                            client.Disconnect();
+                            return;
+                    }
+                }
+                else if (m is ServerGameStateUpdateMessage)
+                {
+                    var msg = (ServerGameStateUpdateMessage)m;
+
+                    lock (game.Lock)
+                    {
+                        using (MemoryStream mem = new MemoryStream(msg.Binary))
+                        {
+                            using (BinaryReader reader = new BinaryReader(mem))
+                            {
+                                int len = reader.ReadInt32();
+                                for (int i = 0; i < len; i++)
+                                {
+                                    int id = reader.ReadInt32();
+                                    ClientGameObject obj = ClientGameObject.Deserialize(id, reader, game);
+                                    game.gameObjects.Add(obj.Id, obj);
+                                }
+                                len = reader.ReadInt32();
+                                for (int i = 0; i < len; i++)
+                                {
+                                    int id = reader.ReadInt32();
+                                    game.gameObjects[id].StreamUpdate(reader);
+                                }
+                                len = reader.ReadInt32();
+                                for (int i = 0; i < len; i++)
+                                {
+                                    int id = reader.ReadInt32();
+                                    game.gameObjects.Remove(id);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(m is ServerPlayerIdUpdateMessage)
+                {
+                    var msg = (ServerPlayerIdUpdateMessage)m;    
+                    lock (game.Lock)
+                    {
+                        game.PlayerObjId = msg.PlayerId;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("game hasn't started yet.  first, issue 'play' command to server.");
+                    throw new Exception("client does not understand message type " + m.GetType().ToString());
                 }
+            }
+        }
+
+        static void sendEvents(List<ClientEvent> @events)
+        {
+            client.Lock.AssertHeld();
+            if (gameMode == GameMode.Started)
+            {
+                lock (client.ClientEvents)
+                {
+                    client.ClientEvents.AddRange(@events);
+                    Monitor.PulseAll(client.ClientEvents);
+                }
+            }
+            else
+            {
+                MessageBox.Show("game hasn't started yet.  first, issue 'play' command to server.");
             }
         }
 

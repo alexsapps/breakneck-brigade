@@ -157,25 +157,29 @@ namespace DeCuisine
                                     break;
                                 }
                                 
-                                Monitor.Wait(ServerMessages);
+                                //Monitor.Wait(ServerMessages);
                             }
                         }
                         
                         w2.Start();
                         foreach (var message in svrMsgs)
                         {
-                            w1.Start();
                             writer.Write((byte)message.Type);
                             message.Write(writer);
-                            w1.Stop(10, "Client: slow game state write. {0}");
 
-                            if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 10)
+                            BBStopwatch wn = new BBStopwatch();
+                            wn.Start();
+
+                            //writer.Flush();
+                            wn.Stop(2, "Client: slow flush. {0}");
+                            
+                            if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 2)
                                 Console.WriteLine("slow messagee");
 
                         }
-                        w2.Stop(10, "Client: slow write loop. {0}");
+                        w2.Stop(2, "Client: slow write loop. {0}");
 
-                        w3.Stop(Game.FrameRateMilliseconds, "Client: slow waiting for game state from run thread. {0}");
+                        w3.Stop(Game.FrameRateMilliseconds + 5, "Client: slow waiting for game state from run thread. {0}");
                     }
                 }
             }

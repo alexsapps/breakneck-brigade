@@ -70,17 +70,20 @@ namespace Breakneck_Brigade.Graphics
 
 		public void Update(LocalPlayer cp) 
         {
-            Azimuth = cp.Orientation;
-            Incline = cp.Incline;
-            Up[1] = (float)Math.Cos(Incline * Math.PI / 180.0f);
+            if (cp != null) //if not connected, or no current game, then no local palyer
+            {
+                Azimuth = cp.Orientation;
+                Incline = cp.Incline;
+                Up[1] = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
-            xPos = cp.Position[0];
-            yPos = cp.Position[1];
-            zPos = cp.Position[2];
+                xPos = cp.Position[0];
+                yPos = cp.Position[1];
+                zPos = cp.Position[2];
 
-            Position = new Vector4(xPos, yPos, zPos);
+                Position = new Vector4(xPos, yPos, zPos);
 
-            anglesToAxis();
+                anglesToAxis();
+            }
         }
 
         public void Reset() 
