@@ -49,10 +49,6 @@ namespace Breakneck_Brigade.Graphics
 
         public Matrix4 Transform;
 
-        public float xPos;
-        public float yPos;
-        public float zPos;
-
         public Vector4 LookingAt;
         public Vector4 Position;
         public Vector4 Up;
@@ -64,9 +60,7 @@ namespace Breakneck_Brigade.Graphics
             Transform = new Matrix4();
 			Reset();
 
-            xPos = 0.0f;
-            yPos = 0.0f;
-            zPos = 0.0f;
+            Position = new Vector4();
 
             LookingAt = new Vector4();
             Up = new Vector4();
@@ -80,12 +74,7 @@ namespace Breakneck_Brigade.Graphics
                 Incline = cp.Incline;
                 Up.Y = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
-                var pos = cp.GetPosition();
-                xPos = pos.X;
-                yPos = pos.Y;
-                zPos = pos.Z;
-
-                Position = new Vector4(xPos, yPos, zPos);
+                Position = cp.GetPosition(); //10 already added to Y here
 
                 anglesToAxis();
             }
@@ -116,7 +105,7 @@ namespace Breakneck_Brigade.Graphics
 			// Place camera            
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
-            Gl.glTranslatef(xPos, yPos, zPos);           
+            Gl.glTranslatef(Position.X, Position.Y, Position.Z);           
 
             Gl.glMultMatrixf(Transform.glArray);
 
@@ -131,7 +120,6 @@ namespace Breakneck_Brigade.Graphics
 
             //Vector4 side = new Vector4();
             //Vector4 up = new Vector4();
-            Vector4 forward = new Vector4();
 
             // X-axis rotation
             theta = Incline * DEG2RAD;
@@ -161,11 +149,15 @@ namespace Breakneck_Brigade.Graphics
              */
 
             // determine forward vector
-            forward.X = sy * cz + cy * sx * sz;
-            forward.Y = sy * sz - cy * sx * cz;
-            forward.Z = cy * cx;
+            var forward = new Vector4()
+            {
+                X = sy * cz + cy * sx * sz,
+                Y = sy * sz - cy * sx * cz,
+                Z = cy * cx
+            };
 
-            LookingAt.Set(xPos + forward.X, yPos + forward.Y, zPos + forward.Z, LookingAt.W);
+            var lookingAt = Position + forward;
+            LookingAt.Set(lookingAt.X, lookingAt.Y, lookingAt.Z, LookingAt.W);
         }
     }
 }

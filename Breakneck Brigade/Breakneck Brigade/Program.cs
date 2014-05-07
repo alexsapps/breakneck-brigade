@@ -338,6 +338,22 @@ namespace Breakneck_Brigade
                 prompter.Host = lastHost ?? globalConfig.GetSetting("server-host", BB.DefaultServerHost);
                 prompter.Port = lastPort ?? int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
+                lock (clientLock)
+                {
+                    client = new Client(clientLock);
+
+                    try
+                    {
+                        //try to autoconnect
+                        client.Connect(prompter.Host, prompter.Port);
+                        return client;
+                    }
+                    catch
+                    {
+                        //autoconnect failed.  continue to prompt user.
+                    }
+                }
+
                 prompter.BeginPrompt();
 
                 while (prompter.cont)
