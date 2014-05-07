@@ -78,12 +78,12 @@ namespace Breakneck_Brigade.Graphics
             {
                 Azimuth = cp.Orientation;
                 Incline = cp.Incline;
-                Up[1] = (float)Math.Cos(Incline * Math.PI / 180.0f);
+                Up.Y = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
                 var pos = cp.GetPosition();
-                xPos = pos[0];
-                yPos = pos[1];
-                zPos = pos[2];
+                xPos = pos.X;
+                yPos = pos.Y;
+                zPos = pos.Z;
 
                 Position = new Vector4(xPos, yPos, zPos);
 
@@ -161,11 +161,11 @@ namespace Breakneck_Brigade.Graphics
              */
 
             // determine forward vector
-            forward[0] = sy * cz + cy * sx * sz;
-            forward[1] = sy * sz - cy * sx * cz;
-            forward[2] = cy * cx;
+            forward.X = sy * cz + cy * sx * sz;
+            forward.Y = sy * sz - cy * sx * cz;
+            forward.Z = cy * cx;
 
-            LookingAt.Set(xPos + forward[0], yPos + forward[1], zPos + forward[2], LookingAt.W);
+            LookingAt.Set(xPos + forward.X, yPos + forward.Y, zPos + forward.Z, LookingAt.W);
         }
     }
 }

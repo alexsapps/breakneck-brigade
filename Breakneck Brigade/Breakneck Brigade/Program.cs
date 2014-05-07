@@ -149,6 +149,7 @@ namespace Breakneck_Brigade
             }
         }
 
+        static Thread serverMessageHandlerLoopThread;
         static void doGameCycle()
         {
             using (renderer = new Renderer())
@@ -161,8 +162,6 @@ namespace Breakneck_Brigade
                 
                 while (true)
                 {
-                    Thread serverMessageHandlerLoopThread;
-
                     Console.WriteLine("Prompting to connect...");
                     lock (clientLock)
                     {
@@ -179,10 +178,6 @@ namespace Breakneck_Brigade
                     }
 
                     bool playAgain = doGame();
-
-                    serverMessageHandlerLoopThread.Join();
-                    _disconnecting = false;
-                    _game_ending = false;
                     
                     if (!playAgain)
                         return; //user closed window.   quit.
@@ -202,8 +197,10 @@ namespace Breakneck_Brigade
                         doDisconnectCheck(oldMode == GameMode.Started || oldMode == GameMode.Paused);
                         bool playAgain1;
                         if (checkDisconnect(false, out playAgain1))
+                        {
+                            on_disconnected();
                             return playAgain1;
-
+                        }
                         if (gameMode != oldMode)
                         {
                             switch (gameMode)
@@ -216,7 +213,6 @@ namespace Breakneck_Brigade
                                     break;
                                 case GameMode.Stopping:
                                     Console.WriteLine("Game ended.");
-                                    on_disconnected();
                                     return true; //reconnect
                             }
                             oldMode = gameMode;
@@ -248,6 +244,7 @@ namespace Breakneck_Brigade
                 _game_ending = true;
                 _disconnecting = true;
                 _play_again = false;
+                return;
             }
 
             lock (clientLock)
@@ -257,6 +254,7 @@ namespace Breakneck_Brigade
                     _game_ending = true;
                     _disconnecting = true;
                     _play_again = true;
+                    return;
                 }
             }
 
@@ -266,6 +264,7 @@ namespace Breakneck_Brigade
                 {
                     _play_again = true; //play again
                     _game_ending = true;
+                    return;
                 }
             }
         }
@@ -313,6 +312,15 @@ namespace Breakneck_Brigade
         {
             clientLock.AssertHeld();
             gameLock.AssertHeld();
+
+            lock (client.ServerMessages)
+            {
+                Monitor.PulseAll(client.ServerMessages);
+            }
+            serverMessageHandlerLoopThread.Join();
+            _disconnecting = false;
+            _game_ending = false;
+
             client = null;
             game = null;
             gameMode = GameMode.None;
@@ -457,14 +465,14 @@ namespace Breakneck_Brigade
 
             while (true)
             {
-                bool b;
-                if (checkDisconnect(false, out b))
-                    return;
-                
                 lock (client.ServerMessages)
                 {
                     while(client.ServerMessages.Count == 0)
                     {
+                        bool b;
+                        if (checkDisconnect(false, out b))
+                            return;
+
                         Monitor.Wait(client.ServerMessages);
                     }
                     serverMessages = new List<ServerMessage>(client.ServerMessages);

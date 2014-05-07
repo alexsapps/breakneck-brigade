@@ -11,10 +11,6 @@ namespace SousChef
     public class Matrix4
     {
         /// <summary>
-        /// Backing data structure for the matrix
-        /// </summary>
-        public float[,] backingArray    { get; private set; }
-        /// <summary>
         /// Generated array for use in OpenGL. Updated on backing array mutation
         /// </summary>
         public float[]  glArray         { get; private set; }
@@ -24,10 +20,8 @@ namespace SousChef
         /// </summary>
         public Matrix4()
         {
-            backingArray    = new float[4,4];
             glArray         = new float[16];
             this.Identity();
-            UpdateGLArray();
         } 
 
         /// <summary>
@@ -59,7 +53,6 @@ namespace SousChef
                         float m20, float m21, float m22, float m23,
                         float m30, float m31, float m32, float m33 )
         {
-            backingArray    = new float[4, 4];
             glArray         = new float[16];
 
             this[0,0] = m00;
@@ -78,7 +71,6 @@ namespace SousChef
             this[3,1] = m31;
             this[3,2] = m32;
             this[3,3] = m33;
-            UpdateGLArray();
         }
 
         /// <summary>
@@ -110,7 +102,6 @@ namespace SousChef
                         double m20, double m21, double m22, double m23,
                         double m30, double m31, double m32, double m33 )
         {
-            backingArray    = new float[4, 4];
             glArray         = new float[16];
             this[0,0] = (float) m00;
             this[0,1] = (float) m01;
@@ -128,7 +119,6 @@ namespace SousChef
             this[3,1] = (float) m31;
             this[3,2] = (float) m32;
             this[3,3] = (float) m33;
-            UpdateGLArray();
         }
 
         /// <summary>
@@ -137,11 +127,9 @@ namespace SousChef
         /// <param name="position"></param>
         public Matrix4(Vector4 position)
         {
-            backingArray    = new float[4, 4];
             glArray         = new float[16];
             this.Identity();
             //this.TranslationMat(position[0], position[1], position[2]);
-            UpdateGLArray();
         }
 
         /// <summary>
@@ -152,8 +140,8 @@ namespace SousChef
         /// <returns></returns>
         public float this[int x, int y]
         {
-            get { return backingArray[x, y];                    }
-            set { backingArray[x, y] = value; UpdateGLArray();  }
+            get { return glArray[4 * x + y]; }
+            set { glArray[4 * x + y] = value; }
         }
 
         public void SetAll( float m00, float m10, float m20, float m30,
@@ -177,7 +165,6 @@ namespace SousChef
             this[3,1] = m31; 
             this[3,2] = m32; 
             this[3,3] = m33;
-            UpdateGLArray();
         }
 
         /// <summary>
@@ -263,13 +250,22 @@ namespace SousChef
         public Vector4 Multiply(Vector4 other)
         {
             Vector4 result = new Vector4();
-            for (int ii = 0; ii < 4; ii++)
-            {
-                for (int jj = 0; jj < 4; jj++)
-                {
-                    result[ii] += this[jj, ii] * other[jj];
-                }
-            }
+            result.X += this[0, 0] * other.X;
+            result.X += this[1, 0] * other.Y;
+            result.X += this[2, 0] * other.Z;
+            result.X += this[3, 0] * other.W;
+            result.Y += this[0, 1] * other.X;
+            result.Y += this[1, 1] * other.Y;
+            result.Y += this[2, 1] * other.Z;
+            result.Y += this[3, 1] * other.W;
+            result.Z += this[0, 2] * other.X;
+            result.Z += this[1, 2] * other.Y;
+            result.Z += this[2, 2] * other.Z;
+            result.Z += this[3, 2] * other.W;
+            result.W += this[0, 3] * other.X;
+            result.W += this[1, 3] * other.Y;
+            result.W += this[2, 3] * other.Z;
+            result.W += this[3, 3] * other.W;
             return result;
         }
 
@@ -511,9 +507,9 @@ namespace SousChef
         {
             float cTheta = (float)Math.Cos(angle);
             float sTheta = (float)Math.Sin(angle);
-            float ax = axis[0];
-            float ay = axis[1];
-            float az = axis[2];
+            float ax = axis.X;
+            float ay = axis.Y;
+            float az = axis.Z;
 
             this[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
             this[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
@@ -546,9 +542,9 @@ namespace SousChef
 	        angle = (float) (angle/180.0) * MathConstants.INVERSE_PI;
 	        float cTheta = (float) Math.Cos(angle);
 	        float sTheta = (float) Math.Sin(angle);
-	        float ax = axis[0];
-	        float ay = axis[1];
-	        float az = axis[2];
+	        float ax = axis.X;
+	        float ay = axis.Y;
+	        float az = axis.Z;
 
             float[,] t = new float[4,4];
 
@@ -865,29 +861,6 @@ namespace SousChef
             this[2,2] = mat[2, 2];
 
             return this;
-        }
-
-        /// <summary>
-        /// Updates the OpenGL array
-        /// </summary>
-        private void UpdateGLArray()
-        {
-            glArray[0]  = this[0, 0];
-            glArray[1]  = this[0, 1];
-            glArray[2]  = this[0, 2];
-            glArray[3]  = this[0, 3];
-            glArray[4]  = this[1, 0];
-            glArray[5]  = this[1, 1];
-            glArray[6]  = this[1, 2];
-            glArray[7]  = this[1, 3];
-            glArray[8]  = this[2, 0];
-            glArray[9]  = this[2, 1];
-            glArray[10] = this[2, 2];
-            glArray[11] = this[2, 3];
-            glArray[12] = this[3, 0];
-            glArray[13] = this[3, 1];
-            glArray[14] = this[3, 2];
-            glArray[15] = this[3, 3];
         }
     }
 }
