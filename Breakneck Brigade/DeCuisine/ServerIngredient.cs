@@ -69,11 +69,16 @@ namespace DeCuisine
 
         public override void Update()
         {
-            Console.WriteLine("Before simluation " + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
-            base.Update(); 
-            Console.WriteLine("After simluation " + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
-            
-            
+            base.Update();             
+        }
+
+        public override void OnCollide(ServerGameObject obj)
+        {
+            if (obj.ObjectClass == GameObjectClass.Player)
+            {
+                // player trying to pick up object, delegaete to player
+                obj.OnCollide(this);
+            }
         }
 
         

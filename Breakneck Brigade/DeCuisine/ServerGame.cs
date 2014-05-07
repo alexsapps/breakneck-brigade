@@ -334,6 +334,22 @@ namespace DeCuisine
             IntPtr b2 = Ode.dGeomGetBody(o2);
             if (b1 != IntPtr.Zero && b2 != IntPtr.Zero && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
 
+
+            // get the near objects
+            IntPtr gameObjectId1 = Ode.dGeomGetData(o1);
+            IntPtr gameObjectId2 = Ode.dGeomGetData(o2);
+            ServerGameObject gameObject1 = GameObjects[gameObjectId1.ToInt32()];
+            ServerGameObject gameObject2 = GameObjects[gameObjectId2.ToInt32()];
+
+            if (gameObject1.ObjectClass == GameObjectClass.Player || gameObject2.ObjectClass == GameObjectClass.Plane)
+            {
+                // don't do the plane, physics handles the floor physics for each object independent of the collisions
+                /// with the planes 
+                return;
+            }
+
+
+            // ode stuff I don't know what it does
             Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
             Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
             for (int i = 0; i < MAX_CONTACTS; i++)
@@ -348,31 +364,8 @@ namespace DeCuisine
             }
             if (numc > 0)
             {
-                for (int i = 0; i < numc; i++)
-                {
-                    // Collision physics parameters
-                    contact[i].surface.mode = (int)Ode.dContactFlags.dContactBounce | (int)Ode.dContactFlags.dContactSoftCFM;
-                    contact[i].surface.mu = 1;
-                    contact[i].surface.mu2 = 0;
-                    contact[i].surface.bounce = 0.1;
-                    contact[i].surface.bounce_vel = 0.1;
-                    contact[i].surface.soft_cfm = 0.01;
-                    contact[i].geom = contactGeoms[i];
-
-                    //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
-
-                    IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
-                    Ode.dJointAttach(c, b1, b2);
-                    Ode.dJointSetFixed(c);
-                }
+                gameObject1.OnCollide(gameObject2);
             }
-
-            // Call the objects onCollision() method
-            IntPtr gameObjectId1 = Ode.dGeomGetData(o1);
-            IntPtr gameObjectId2 = Ode.dGeomGetData(o2);
-            ServerGameObject gameObject1 = GameObjects[gameObjectId1.ToInt32()];
-            ServerGameObject gameObject2 = GameObjects[gameObjectId2.ToInt32()];
-            gameObject1.OnCollide(gameObject2);
         }
 
         private void SendModeChangeUpdate()

@@ -13,29 +13,7 @@ namespace DeCuisine
     /// </summary>
     class Physics
     {
-        public struct VelocityStruct
-        {
-            public double x, y, z;
-            public VelocityStruct(double x1, double y1, double z1)
-            {
-                x = x1;
-                y = y1;
-                z = z1;
-            }
-            public static VelocityStruct operator +(VelocityStruct a, VelocityStruct b)
-            {
-                return new VelocityStruct(a.x + b.x, a.y + b.y, a.z + b.z);
-            }
-            public static Ode.dVector3 operator +(VelocityStruct a, Ode.dVector3 b)
-            {
-                return new Ode.dVector3(a.x + b.X, a.y + b.Y, a.z + b.Z );
-            }
-            public static Ode.dVector3 operator +( Ode.dVector3 b, VelocityStruct a) // reverse for ease of use
-            {
-                return new Ode.dVector3(a.x + b.X, a.y + b.Y, a.z + b.Z );
-            }
-        }
-        public  VelocityStruct FRICTION = new VelocityStruct(-.1,-.1,.0); // No terminal velocity
+        public VelocityStruct FRICTION = new VelocityStruct(-.1,-.1,.0); // No terminal velocity
         public int FloorHeight = 0;
         public VelocityStruct Gravity;
 
@@ -44,9 +22,9 @@ namespace DeCuisine
         /// </summary>
         /// <param name="acc"></param>
         /// <param name="frameRate"></param>
-        public Physics(double acc, int frameRate)
+        public Physics(double acc, double frameRate)
         {
-            this.Gravity = new VelocityStruct(0, 0, -Math.Abs(acc / (frameRate / 1000)));
+            this.Gravity = new VelocityStruct(0, 0, -Math.Abs(acc * (frameRate / 1000)));
             Console.WriteLine(this.Gravity);
         }
 
@@ -65,11 +43,10 @@ namespace DeCuisine
             return this.Gravity + currentVelocity;
         }
 
-
         /// <summary>
         /// Apply the given force to the position and return the new position
         /// </summary>
-        public static Ode.dVector3 ApplyForce(VelocityStruct force, Ode.dVector3 postion)
+        public static Vector3 ApplyForce(VelocityStruct force, Vector3 postion)
         {
             return force + postion;
         }
@@ -90,13 +67,14 @@ namespace DeCuisine
         {
 
             obj.Velocity = this.ApplyGravity(obj.Velocity);
-            Ode.dVector3 newPosition = Physics.ApplyForce(obj.Velocity, obj.Position);
-            if (newPosition.Z < 1)
+            
+            Vector3 newPosition = Physics.ApplyForce(obj.Velocity, new Vector3(obj.Position));
+            if (newPosition.z < 1)
             {
                 // hit the ground, set position to the ground
-                newPosition.Z = 0;
+                newPosition.z = 0;
             }
-            return newPosition;
+            return newPosition.convertOde();
         }
 
         /// <summary>
@@ -120,7 +98,119 @@ namespace DeCuisine
                newVel.y = (vel.y + this.FRICTION.y) > .1 ? vel.y + this.FRICTION.y : 0;
             }
             return newVel + vel;
-
+        }
+        public DistanceJoint HoldObj(ServerGameObject obj1, ServerGameObject obj2)
+        {
+            Vector3 origin = new Vector3(obj1.Position);
+            Vector3 holdDistance = new Vector3(10,10,0);
+            obj2.PhysicsOn = false;
+            return new DistanceJoint(origin, holdDistance);
         }
     }
+
+    /// <summary>
+    /// Makes a joint as if they were held together by a pole
+    /// </summary>
+    public class DistanceJoint 
+    {
+        Vector3 _origin;
+        public Vector3 Origin { get { return this._origin; } set { this._origin = value; moveOrigin(value); } }
+        Vector3 HoldPoint, BobMaxDistance, BobRate, HoldDistance;
+
+       
+       /// <summary>
+       /// Make a DistanceJoint from origin to hold point. Bob rate 
+       /// is how fast the object bobs around in the x y and z direction
+       /// </summary>
+       /// <param name="origin"></param>
+       /// <param name="holdPoint"></param>
+       /// <param name="bobRate"></param>
+        public DistanceJoint(Vector3 origin, Vector3 holdDistance )
+        {
+            this.HoldPoint = new Vector3(origin.x + holdDistance.x, origin.y + holdDistance.y, origin.z + holdDistance.z);
+            this.HoldDistance = holdDistance;
+
+            this.Origin = origin;
+            //this.BobMaxDistance = bobMaxDistance;
+            //this.BobRate = bobRate;
+
+        }
+
+        /// <summary>
+        /// Update the joint to be at the position passed in, returns where the object at the hold 
+        /// point should be
+        /// </summary>
+        public Vector3 Update(Vector3 pos)
+        {
+            this.Origin = pos;
+            return HoldPoint;
+        }
+
+        /// <summary>
+        /// Moves everything associated with this joint
+        /// </summary>
+        /// <param name="value"></param>
+        private void moveOrigin(Vector3 value)
+        {
+            this._origin = value;
+            this.HoldPoint = this._origin + this.HoldDistance; 
+        }
+    }
+
+    public class VelocityStruct
+    {
+        public double x, y, z;
+        public VelocityStruct(double x, double y, double z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        public static VelocityStruct operator +(VelocityStruct a, VelocityStruct b)
+        {
+            return new VelocityStruct(a.x + b.x, a.y + b.y, a.z + b.z);
+        }
+        public static Vector3 operator +(VelocityStruct a, Vector3 b)
+        {
+            return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+        }
+    }
+
+    public class Vector3
+    {
+        public double x, y, z;
+        public Vector3(double x, double y, double z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        public Vector3(Ode.dVector3 vec)
+        {
+            this.x = vec.X;
+            this.y = vec.Y;
+            this.z = vec.Z;
+        }
+        public static Vector3 operator +(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+        }
+        public static Vector3 operator +(Vector3 b, VelocityStruct a) // reverse for ease of use
+        {
+            return new Vector3(a.x + b.x, a.y + b.x, a.z + b.x);
+        }
+        public static Vector3 operator +(Vector3 a, double[] b)
+        {
+            if(b.Length != 3)
+                throw new Exception();
+            return new Vector3(a.x + b[0], a.y + b[1], a.z + b[2]);
+        }
+
+        public Ode.dVector3 convertOde()
+        {
+            return new Ode.dVector3(this.x, this.y, this.z);
+        }
+    }
+
+    
 }

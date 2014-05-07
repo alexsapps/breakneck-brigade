@@ -37,6 +37,7 @@ namespace Breakneck_Brigade
 
             monitorKey(GlfwKeys.GLFW_KEY_SPACE);
             monitorKey(GlfwKeys.GLFW_KEY_W);
+            monitorKey(GlfwKeys.GLFW_KEY_T);
         }
 
         protected HashSet<GlfwKeys> keys;

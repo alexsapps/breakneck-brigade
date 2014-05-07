@@ -38,7 +38,8 @@ namespace DeCuisine
         private bool _toRender;
         public bool ToRender { get{return _toRender;} set{_toRender = value; this.MarkDirty();} }
         public bool OnFloor { get; set; }
-        public Physics.VelocityStruct Velocity;
+        public VelocityStruct Velocity;
+        public bool PhysicsOn{ get; set; }// are the physics of the object on or off
 
 
         private static int nextId;
@@ -55,7 +56,8 @@ namespace DeCuisine
             this._rotation = new Matrix4();
             this._position = new Vector4();
             this.ToRender = true; // class specific implementation can override
-            this.Velocity = new Physics.VelocityStruct(0, 0, 0);
+            this.Velocity = new VelocityStruct(0, 0, 0);
+            this.PhysicsOn = true;
             
             Game.ObjectAdded(this);
         }
@@ -91,9 +93,9 @@ namespace DeCuisine
         /// </summary>
         public virtual void Update()
         {
-            Console.WriteLine("Before update" + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
+            if (!this.PhysicsOn)
+                return;
             this.Position = this.Game.Engine.Simulate(this);
-            Console.WriteLine("After update" + this.Position.X + " " + this.Position.Y + " " + this.Position.Z);
 
             if (Math.Abs(this.lastPosition.X - this.Position.X) > .01 ||
                Math.Abs(this.lastPosition.Y - this.Position.Y) > .01 ||

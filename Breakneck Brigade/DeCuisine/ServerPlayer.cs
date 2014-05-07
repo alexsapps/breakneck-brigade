@@ -16,12 +16,12 @@ namespace DeCuisine
 
         public struct HandInventory
         {
-            public ServerGameObject Held;
-            public IntPtr Joint;
-            public HandInventory(ServerGameObject toHold, IntPtr joint)
+            public DistanceJoint Joint;
+            public ServerGameObject ObjHeld;
+            public HandInventory(DistanceJoint joint, ServerGameObject objToHold)
             {
-                this.Held = toHold;
                 this.Joint = joint;
+                this.ObjHeld = objToHold;
             }
         }
         public HandInventory LeftHand;
@@ -36,19 +36,20 @@ namespace DeCuisine
 
         public override void Serialize(BinaryWriter stream)
         {
+            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.Serialize(stream);
+            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
             //stream.Write(a,b);
             //stream.Write(c,d);
         }
 
-
         public override void UpdateStream(BinaryWriter stream)
         {
             // need to flip in order to get the camera rendering right
-            this.Position = new Ode.dVector3(-this.Position.X, -this.Position.Y, -this.Position.Z);
+            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.UpdateStream(stream);
             // flip back for sanity
-            this.Position = new Ode.dVector3(-this.Position.X, -this.Position.Y, -this.Position.Z);
+            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
             //stream.Write(c,d);
         }
 
@@ -66,39 +67,43 @@ namespace DeCuisine
             if (obj.ObjectClass == GameObjectClass.Ingredient)
             {
                 this.toHold = obj;
+                //this.LeftHand = new HandInventory(this.Game.Engine.HoldObj(this, obj));
             }
-
         }
 
 
-        private void makeJoint(string hand, ServerGameObject obj)
-        {
-            IntPtr joint = Ode.dJointCreateHinge(this.Game.World, IntPtr.Zero);
-            Ode.dVector3 pos = Ode.dGeomGetPosition(this.Geom);
-            Ode.dJointAttach(joint, this.Body, obj.Body);
-            Ode.dBodySetPosition(obj.Body, pos.X  , pos.Y - 10, pos.Z + 10);
-            Ode.dJointSetHingeAnchor(joint, pos[0] - 10, pos[1] - 10 , pos[2] + 10);
-            Ode.dJointSetHingeAxis(joint, 0, 0, 1.0);
+        //private void makeJoint(string hand, ServerGameObject obj)
+        //{
+        //    IntPtr joint = Ode.dJointCreateHinge(this.Game.World, IntPtr.Zero);
+        //    Ode.dVector3 pos = Ode.dGeomGetPosition(this.Geom);
+        //    Ode.dJointAttach(joint, this.Body, obj.Body);
+        //    Ode.dBodySetPosition(obj.Body, pos.X  , pos.Y - 10, pos.Z + 10);
+        //    Ode.dJointSetHingeAnchor(joint, pos[0] - 10, pos[1] - 10 , pos[2] + 10);
+        //    Ode.dJointSetHingeAxis(joint, 0, 0, 1.0);
             
-            if (hand == "left")
-            {
-                // TODO: make logic to drop object if we have something in the hand already
-                this.LeftHand = new HandInventory(obj, joint);
-            } else
-            {
-                this.RightHand = new HandInventory(obj, joint);
-            }
-        }
+        //    if (hand == "left")
+        //    {
+        //        // TODO: make logic to drop object if we have something in the hand already
+        //        this.LeftHand = new HandInventory(obj, joint);
+        //    } else
+        //    {
+        //        this.RightHand = new HandInventory(obj, joint);
+        //    }
+        //}
 
         public override void Update()
         {
             base.Update();
-            
             // Can't manipulate Ode in collide funtions, so a hacked flag has to do to make the joint
             if (this.toHold != null)
             {
-                this.makeJoint("left", this.toHold);
+                this.LeftHand = new HandInventory(this.Game.Engine.HoldObj(this, this.toHold), this.toHold);
                 this.toHold = null;
+            }
+            if (this.LeftHand.Joint != null)
+            {
+                Vector3 holdPosition = this.LeftHand.Joint.Update(new Vector3(this.Position));
+                this.LeftHand.ObjHeld.Position = holdPosition.convertOde();
             }
         }
     }
