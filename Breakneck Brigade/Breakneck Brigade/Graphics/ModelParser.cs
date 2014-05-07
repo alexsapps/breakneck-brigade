@@ -74,7 +74,8 @@ namespace Breakneck_Brigade.Graphics
                                 drawMode = Gl.GL_POLYGON;
                                 break;
                         }
-                        TexturedPolygon poly = new TexturedPolygon(drawMode);
+                        TexturedPolygon poly = new TexturedPolygon(drawMode, f.Count);
+                        
                         for(ii = 0; ii < f.Count; ii++)
                         {
                             int posInd  = f[ii].VertexIndex - 1 ;
@@ -117,7 +118,7 @@ namespace Breakneck_Brigade.Graphics
 
                             Vertex v = new Vertex(position, normal, tc);
 
-                            poly.Vertexes.Add(v);
+                            poly.Vertexes[ii] = v;
                         }
 
                         mesh.Polygons.Add(poly);

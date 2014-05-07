@@ -15,7 +15,7 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public int GlDrawMode;
 
-        public TexturedPolygon(int glDrawMode) : base()
+        public TexturedPolygon(int glDrawMode, int vertexCount) : base(vertexCount)
         {
             GlDrawMode = glDrawMode;
         }
@@ -36,16 +36,18 @@ namespace Breakneck_Brigade.Graphics
                 Renderer.CurrentDrawMode = GlDrawMode;
             }
             Gl.glBegin(Renderer.CurrentDrawMode);
-                foreach(Vertex v in Vertexes)
-                {
-                    Gl.glColor3f(1.0f, 1.0f,1.0f);
+            Gl.glColor3f(1.0f, 1.0f, 1.0f); //this was in the loop before, maybe it should still be there
+            for (int i = 0; i < Vertexes.Length; i++)
+            {
+                Vertex v = Vertexes[i];
+                
 
-                    if (v.TextureCoordinates != null)
-                        Gl.glTexCoord2f(v.TextureCoordinates[0], v.TextureCoordinates[1]);
-                    if (v.Normal != null)
-                        Gl.glNormal3f(v.Normal[0], v.Normal[1], v.Normal[2]);
-                    Gl.glVertex3f(v.Position[0],v.Position[1],v.Position[2]);
-                } 
+                //if (v.TextureCoordinates != null)
+                    Gl.glTexCoord2f(v.TextureCoordinates.X, v.TextureCoordinates.Y);
+                //if (v.Normal != null)
+                    Gl.glNormal3f(v.Normal.X, v.Normal.Y, v.Normal.Z);
+                Gl.glVertex3f(v.Position.X, v.Position.Y, v.Position.Z);
+            }
             Gl.glEnd();
         }
     }

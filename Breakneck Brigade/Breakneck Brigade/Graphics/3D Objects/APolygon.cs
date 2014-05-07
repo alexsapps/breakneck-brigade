@@ -9,10 +9,10 @@ namespace Breakneck_Brigade.Graphics
 {
     abstract class APolygon
     {
-        public List<Vertex> Vertexes;
-        public APolygon()
+        public Vertex[] Vertexes;
+        public APolygon(int vertexCount)
         {
-            Vertexes = new List<Vertex>();
+            Vertexes = new Vertex[vertexCount];
         }
 
         /// <summary>

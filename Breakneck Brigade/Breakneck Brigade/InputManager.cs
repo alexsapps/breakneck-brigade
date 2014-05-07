@@ -86,8 +86,6 @@ namespace Breakneck_Brigade
 
             //keys[GLFW_MOUSE_BUTTON_LEFT]    = false;
             //keys[GLFW_MOUSE_BUTTON_RIGHT]   = false;
-
-            Console.WriteLine("This happened.");
         }
 
         /// <summary>
@@ -126,16 +124,16 @@ namespace Breakneck_Brigade
 
                 // add movement to rotation modified by sensitivity setting
                 // positive X movement negatively rotates around Y axis
-                rot[1] -= tempX * sens;
+                rot.Y -= tempX * sens;
 
                 if (!invertY)
                 {
                     // positive Y movement negatively rotates around X axis with no invert
-                    rot[0] -= tempY * sens;
+                    rot.X -= tempY * sens;
                 }
                 else
                 {
-                    rot[0] += tempY * sens;
+                    rot.X += tempY * sens;
                 }
 
                 // Reset mouse to origin
@@ -193,8 +191,8 @@ namespace Breakneck_Brigade
 
         public void Clear()
         {
-            rot[0] = 0.0f;
-            rot[1] = 0.0f;
+            rot.X = 0.0f;
+            rot.Y = 0.0f;
         }
 
         /// <summary>
@@ -230,12 +228,12 @@ namespace Breakneck_Brigade
         /// </summary>
         public float GetRotX()
         {
-            return rot[0];
+            return rot.X;
         }
 
         public float GetRotY()
         {
-            return rot[1];
+            return rot.Y;
         }
 
         /// <summary>
@@ -244,8 +242,8 @@ namespace Breakneck_Brigade
         /// <param name="rotx"></param>
         /// <param name="roty"></param>
         public void GetRotAndClear(out float rotx, out float roty){
-            rotx = rot[0];
-            roty = rot[1];
+            rotx = rot.X;
+            roty = rot.Y;
 
             Clear();
         }
