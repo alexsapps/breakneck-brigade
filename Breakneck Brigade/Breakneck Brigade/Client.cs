@@ -15,14 +15,15 @@ namespace Breakneck_Brigade
 {
     class Client
     {
-        public BBLock Lock = new BBLock();
+        public BBLock Lock;
         TcpClient connection;
         public bool IsConnected { get; private set; }
         
         public class PlayerIdUpdatedEventArgs : EventArgs { public int GameObjId { get; set; } }
 
-        public Client()
+        public Client(BBLock @lock)
         {
+            Lock = @lock;
             ClientEvents = new List<ClientEvent>();
         }
 
@@ -32,13 +33,13 @@ namespace Breakneck_Brigade
 
             connection = new TcpClient();
             connection.Connect(host, port);
-            receiverThread = new Thread(() => receive());
+            receiverThread = new Thread(new ThreadStart(receive));
             receiverThread.Start();
 
             IsConnected = true;
         }
 
-        public List<ServerMessage> serverMessages = new List<ServerMessage>();
+        public List<ServerMessage> ServerMessages = new List<ServerMessage>();
 
         private Thread receiverThread;
         private void receive()
@@ -61,7 +62,7 @@ namespace Breakneck_Brigade
                     string ourhash = new GameObjectConfig().GetConfigSalad().Hash; //load config file just to compute hash.  (load again when playing the game, in case it changes later, which is okay.)
                     if(!ourhash.Equals(hash))
                     {
-                        lock (Program.ProgramLock) //lock UI so user gets confused and looks for the message
+                        lock (Lock) //lock UI so user gets confused and looks for the message
                         {
                             Console.WriteLine("Warning!!!  ConfigSalad hash mismatch between client and server.");
                             MessageBox.Show("ConfigSalad hash mismatch between client and server.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -76,9 +77,20 @@ namespace Breakneck_Brigade
                     while (true)
                     {
                         ServerMessageType type = (ServerMessageType)reader.ReadByte();
-                        ServerMessage msg = (ServerMessage)Activator.CreateInstance(getServerMessageType(type), reader);
-                        lock(serverMessages)
-                            serverMessages.Add(msg);
+                        ServerMessage msg = (ServerMessage)Activator.CreateInstance(getServerMessageType(type));
+                        msg.Read(reader);
+
+                        lock (Lock)
+                        {
+                            if (!IsConnected)
+                                return;
+
+                            lock (ServerMessages)
+                            {
+                                ServerMessages.Add(msg);
+                                Monitor.PulseAll(ServerMessages);
+                            }
+                        }
                     }
                 }
             }
@@ -116,20 +128,38 @@ namespace Breakneck_Brigade
             {
                 using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
                 {
-                    lock (ClientEvents)
+                    while (true)
                     {
-                        while (IsConnected)
+                        List<ClientEvent> clientEvents;
+                        
+                        lock(ClientEvents)
                         {
-                            foreach (var clientEvent in ClientEvents)
+                            while (ClientEvents.Count == 0)
                             {
-                                writer.Write((byte)ClientMessageType.ClientEvent);
-                                writer.Write((byte)clientEvent.Type);
-                                clientEvent.Write(writer);
-                                writer.Flush();
+                                if (!IsConnected)
+                                    return;
+                                Monitor.Wait(ClientEvents);
                             }
-                            ClientEvents.Clear();
+                        }
 
-                            Monitor.Wait(ClientEvents);
+                        lock (Lock)
+                        {
+                            if (!IsConnected)
+                                return;
+
+                            lock (ClientEvents)
+                            {
+                                clientEvents = new List<ClientEvent>(ClientEvents);
+                                ClientEvents.Clear();
+                            }
+                        }
+                        
+                        foreach (var clientEvent in clientEvents)
+                        {
+                            writer.Write((byte)ClientMessageType.ClientEvent);
+                            writer.Write((byte)clientEvent.Type);
+                            clientEvent.Write(writer);
+                            writer.Flush();
                         }
                     }
                 }
@@ -154,7 +184,6 @@ namespace Breakneck_Brigade
             if (!IsConnected)  //if connected, we are initiating disconnect.  if not connected, something else caused disconnect so no need to disconnect again.
                 return;
             IsConnected = false;
-
             lock (ClientEvents)
             {
                 Monitor.PulseAll(ClientEvents); //close sender thread
@@ -162,18 +191,19 @@ namespace Breakneck_Brigade
 
             connection.Close(); //close receiver thread
 
-            Monitor.Exit(Lock);
-            {
-                //receiver thread creates sender thread, so end receiver first
-                if (receiverThread != Thread.CurrentThread)
-                    receiverThread.Join();
+            //Monitor.Exit(Lock);
+            //{
+            //    //receiver thread creates sender thread, so end receiver first
+            //    if (receiverThread != Thread.CurrentThread)
+            //        receiverThread.Join();
 
-                //then end sender thread if it was already created
-                if (senderThread != null)
-                    if (senderThread != Thread.CurrentThread)
-                        senderThread.Join();
-            }
-            Monitor.Enter(Lock); //let's hope we didn't re-connect in the meantime.  not sure how to fix this.  actually...since it makes a new Client on every connection, it's fine for now.  ideally, receiver thread makes a signal to disconnect instead of actually disconnecting, and another thread actually does the disconnect.
+            //    //then end sender thread if it was already created
+            //    if (senderThread != null)
+            //        if (senderThread != Thread.CurrentThread)
+            //            senderThread.Join();
+            //}
+            //Monitor.Enter(Lock); //let's hope we didn't re-connect in the meantime.  not sure how to fix this.  actually...since it makes a new Client on every connection, it's fine for now.  ideally, receiver thread makes a signal to disconnect instead of actually disconnecting, and another thread actually does the disconnect.
+            //update: not sure why we were joining.  they should be guaranteed to terminate cleanly when they re-acquire the client lock and see that we've disconnected.
 
             //note: game thread constantly checks IsConnected to know when to terminate
         }

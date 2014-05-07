@@ -13,6 +13,8 @@ namespace Breakneck_Brigade.Graphics
 	/// </summary>
     class Camera
     {
+        public BBLock Lock = new BBLock();
+
         // Perspective controls
         /// <summary>
         /// Field of View Angle in degrees
@@ -57,6 +59,8 @@ namespace Breakneck_Brigade.Graphics
 
 		public Camera() 
 		{
+            //Transform.TranslationMat(0, -25, 0);
+
             Transform = new Matrix4();
 			Reset();
 
@@ -76,9 +80,10 @@ namespace Breakneck_Brigade.Graphics
                 Incline = cp.Incline;
                 Up[1] = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
-                xPos = cp.Position[0];
-                yPos = cp.Position[1];
-                zPos = cp.Position[2];
+                var pos = cp.GetPosition();
+                xPos = pos[0];
+                yPos = pos[1];
+                zPos = pos[2];
 
                 Position = new Vector4(xPos, yPos, zPos);
 

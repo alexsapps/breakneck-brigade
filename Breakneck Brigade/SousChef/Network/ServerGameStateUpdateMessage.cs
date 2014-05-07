@@ -13,7 +13,7 @@ namespace SousChef
     {
         public override ServerMessageType Type { get { return ServerMessageType.GameStateUpdate; } }
         public byte[] Binary;
-        
+        public ServerGameStateUpdateMessage() { }
         public override void Write(BinaryWriter writer)
         {
             BBStopwatch w1 = new BBStopwatch();
@@ -22,9 +22,7 @@ namespace SousChef
             writer.Write(Binary);
             w1.Stop(2, "Client: slow game state write. {0}");
         }
-
-        public ServerGameStateUpdateMessage() { }
-        public ServerGameStateUpdateMessage(BinaryReader reader)
+        public override void Read(BinaryReader reader)
         {
             int len = reader.ReadInt32();
             Binary = reader.ReadBytes(len);

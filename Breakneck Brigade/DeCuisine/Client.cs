@@ -135,9 +135,9 @@ namespace DeCuisine
             {
                 using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
                 {
+                    w3.Start();
                     while (true)
                     {
-                        w3.Start();
                         List<ServerMessage> svrMsgs = null;
                         
                         while (true)
@@ -157,10 +157,12 @@ namespace DeCuisine
                                     break;
                                 }
                                 
-                                //Monitor.Wait(ServerMessages);
+                                Monitor.Wait(ServerMessages);
                             }
                         }
-                        
+                        w3.Stop(Game.FrameRateMilliseconds + 5, "Client: slow waiting for game state from run thread. {0}");
+                        w3.Start();
+
                         w2.Start();
                         foreach (var message in svrMsgs)
                         {
@@ -178,8 +180,6 @@ namespace DeCuisine
 
                         }
                         w2.Stop(2, "Client: slow write loop. {0}");
-
-                        w3.Stop(Game.FrameRateMilliseconds + 5, "Client: slow waiting for game state from run thread. {0}");
                     }
                 }
             }
