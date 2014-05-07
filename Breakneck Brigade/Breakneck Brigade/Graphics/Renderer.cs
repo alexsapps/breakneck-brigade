@@ -9,6 +9,7 @@ using Tao.Glfw;
 using System.Xml;
 using System.IO;
 using SousChef;
+using System.Threading;
 
 namespace Breakneck_Brigade.Graphics
 {
@@ -192,8 +193,15 @@ namespace Breakneck_Brigade.Graphics
             }
 
             if (GameObjects != null)
-                foreach (ClientGameObject cgo in GameObjects)
-                    cgo.Render();
+            {
+                int i = 0;
+                foreach (var go in GameObjects)
+                {
+                    if (i++ % 5 == 0)
+                        Glfw.glfwPollEvents(); //when rendering is slow, still want to allow handling input in the background
+                    go.Render();
+                }
+            }
             
             CurrentDrawMode = -1;
 
