@@ -203,7 +203,14 @@ namespace DeCuisine
                                     case ClientEventType.Leave:
                                         break;
                                     case ClientEventType.Test:
-                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
+                                        var ppos = input.Client.Player.Position;
+                                        var pos = new Ode.dVector3()
+                                        {
+                                            X = ppos.X,
+                                            Y = ppos.Y,
+                                            Z = ppos.Z + 100
+                                        };
+                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, pos);
                                         break;
                                     case ClientEventType.ChangeOrientation:
                                         break;

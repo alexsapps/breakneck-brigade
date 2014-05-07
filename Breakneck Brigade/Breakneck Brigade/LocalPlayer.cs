@@ -41,8 +41,14 @@ namespace Breakneck_Brigade
 
         protected HashSet<GlfwKeys> keys;
         static float lastx, lastz;
+        long lasttime = 0;
         public void Update(InputManager IM, Dictionary<int, ClientGameObject> GOs, Graphics.Camera cam)
         {
+            long timediff = (DateTime.Now.Ticks - lasttime) / TimeSpan.TicksPerMillisecond;
+            if (timediff > 200)
+                timediff = 0;
+            lasttime = DateTime.Now.Ticks;
+
             keys = IM.GetKeys();
 
             detectKeys(IM);
@@ -66,7 +72,7 @@ namespace Breakneck_Brigade
 
             var xDiff = Velocity.Z * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Sin((Orientation / 180.0f * Math.PI));
-            Coordinate diff = new Coordinate(-xDiff, 0, -zDiff);
+            Coordinate diff = new Coordinate(-xDiff * timediff / 10, 0, -zDiff * timediff / 10);
             if (diff.x != 0 || diff.z != 0)
             {
                 NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
