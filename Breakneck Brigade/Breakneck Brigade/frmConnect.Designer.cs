@@ -31,8 +31,8 @@
             this.cmdConnect = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlConnect = new System.Windows.Forms.Panel();
-            this.txtConnect = new System.Windows.Forms.TextBox();
             this.lstHosts = new System.Windows.Forms.ListBox();
+            this.txtConnect = new System.Windows.Forms.TextBox();
             this.pnlConnect.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,13 +69,6 @@
             this.pnlConnect.Size = new System.Drawing.Size(284, 155);
             this.pnlConnect.TabIndex = 3;
             // 
-            // txtConnect
-            // 
-            this.txtConnect.Location = new System.Drawing.Point(12, 42);
-            this.txtConnect.Name = "txtConnect";
-            this.txtConnect.Size = new System.Drawing.Size(179, 20);
-            this.txtConnect.TabIndex = 0;
-            // 
             // lstHosts
             // 
             this.lstHosts.FormattingEnabled = true;
@@ -84,6 +77,14 @@
             this.lstHosts.Size = new System.Drawing.Size(179, 69);
             this.lstHosts.TabIndex = 3;
             this.lstHosts.SelectedIndexChanged += new System.EventHandler(this.lstHosts_SelectedIndexChanged);
+            this.lstHosts.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstHosts_MouseDoubleClick);
+            // 
+            // txtConnect
+            // 
+            this.txtConnect.Location = new System.Drawing.Point(12, 42);
+            this.txtConnect.Name = "txtConnect";
+            this.txtConnect.Size = new System.Drawing.Size(179, 20);
+            this.txtConnect.TabIndex = 0;
             // 
             // frmConnect
             // 

@@ -163,21 +163,20 @@ namespace DeCuisine
             /* initialize physics */
             lock (Lock)
             {
-            Ode.dInitODE();
-            ContactGroup = Ode.dJointGroupCreate(0);
+                Ode.dInitODE();
+                ContactGroup = Ode.dJointGroupCreate(0);
 
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
-            }
-            // loop over clients and make play objects for them
-            foreach (var client in clients)
-            {
-                client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 10));
-                lock(client.ServerMessages)
+
+                // loop over clients and make play objects for them
+                foreach (var client in clients)
                 {
-                    client.ServerMessages.Add(new LambdaServerMessage(
-                        (w) => { w.Write((Int32)client.Player.Id); }
-                        ) { Type = ServerMessageType.PlayerIdUpdate });
+                    client.Player = new ServerPlayer(server.Game, new Ode.dVector3(DC.random.Next(-100, 100), DC.random.Next(-100, 100), 10));
+                    lock (client.ServerMessages)
+                    {
+                        client.ServerMessages.Add(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
+                    }
                 }
             }
             try
@@ -205,7 +204,14 @@ namespace DeCuisine
                                     case ClientEventType.Leave:
                                         break;
                                     case ClientEventType.Test:
-                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Ode.dVector3(0.0, 1.0, 0.0));
+                                        var ppos = input.Client.Player.Position;
+                                        var pos = new Ode.dVector3()
+                                        {
+                                            X = ppos.X,
+                                            Y = ppos.Y,
+                                            Z = ppos.Z + 100
+                                        };
+                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, pos);
                                         break;
                                     case ClientEventType.ChangeOrientation:
                                         break;
@@ -279,9 +285,7 @@ namespace DeCuisine
                             }
                             var msg = new ServerGameStateUpdateMessage()
                             {
-                                Type = ServerMessageType.GameStateUpdate,
                                 Binary = bin,
-                                Length = binlen,
                                 Created = DateTime.Now
                             };
 
@@ -304,7 +308,7 @@ namespace DeCuisine
                     if (waitTime > 0)
                         Thread.Sleep(new TimeSpan(waitTime));
                     else
-                        Console.WriteLine("error:  tick rate too fast. " + (waitTime / millisecond_ticks) + "ms late.");
+                        Console.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
                 }
             }
             finally
@@ -378,7 +382,6 @@ namespace DeCuisine
                 {
                     client.ServerMessages.Add(new ServerGameModeUpdateMessage()
                     {
-                        Type = ServerMessageType.GameModeUpdate,
                         Mode = Mode
                     });
                     Monitor.PulseAll(client.ServerMessages);
