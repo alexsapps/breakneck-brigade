@@ -32,12 +32,12 @@ namespace Breakneck_Brigade
                 _game = value;
                 if (_game != null)
                 {
-                    cPlayer = new LocalPlayer();
-                    cPlayer.Game = _game;
+                    localPlayer = new LocalPlayer();
+                    localPlayer.Game = _game;
                 }
                 else
                 {
-                    cPlayer = null;
+                    localPlayer = null;
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace Breakneck_Brigade
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
 
-        static public LocalPlayer cPlayer;
+        static public LocalPlayer localPlayer;
         static public InputManager IM;
 
         static void Main(string[] args)
@@ -289,17 +289,17 @@ namespace Breakneck_Brigade
                         {
                             lock (camera.Lock)
                             {
-                                camera.Update(cPlayer);
-                                if (cPlayer != null)
-                                    cPlayer.Update(IM, game, camera);
+                                camera.Update(localPlayer);
+                                if (localPlayer != null)
+                                    localPlayer.Update(IM, game, camera);
                             }
                         }
-                        if (cPlayer != null)
+                        if (localPlayer != null)
                         {
-                            if (cPlayer.NetworkEvents.Count > 0)
+                            if (localPlayer.NetworkEvents.Count > 0)
                             {
-                                sendEvents(cPlayer.NetworkEvents);
-                                cPlayer.NetworkEvents.Clear();
+                                sendEvents(localPlayer.NetworkEvents);
+                                localPlayer.NetworkEvents.Clear();
                             }
                         }
                     }
@@ -472,7 +472,7 @@ namespace Breakneck_Brigade
 
         static void render()
         {
-            renderer.Render(camera);
+            renderer.Render(localPlayer);
         }
 
         static void serverMessageHandlerLoop()
