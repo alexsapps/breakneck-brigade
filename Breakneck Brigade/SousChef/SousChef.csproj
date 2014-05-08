@@ -52,17 +52,13 @@
     <Compile Include="Config\BBXFileParser.cs" />
     <Compile Include="Config\BBXml.cs" />
     <Compile Include="Config\ConfigSalad.cs" />
-    <Compile Include="Config\CookerParser.cs" />
     <Compile Include="Config\Cookers.cs" />
-    <Compile Include="Config\GameParser.cs" />
-    <Compile Include="Config\GlobalConfigParser.cs" />
     <Compile Include="Config\GlobalsConfigFile.cs" />
     <Compile Include="Config\GlobalsConfigFolder.cs" />
     <Compile Include="Config\Ingredients.cs" />
     <Compile Include="Config\BBXItemParser.cs" />
     <Compile Include="BB.cs" />
     <Compile Include="Config\Recipes.cs" />
-    <Compile Include="Config\RecipieParser.cs" />
     <Compile Include="Config\SHA512.cs" />
     <Compile Include="GameObjectClass.cs" />
     <Compile Include="GameObjectType.cs" />
