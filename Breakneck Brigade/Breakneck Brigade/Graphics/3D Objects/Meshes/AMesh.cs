@@ -13,25 +13,25 @@ namespace Breakneck_Brigade.Graphics
     abstract class AMesh : AObject3D
     {
         /// <summary>
-        /// A list of polygons that comprise the primative.
+        /// A set of buffers that comprises the object
         /// </summary>
-        public List<APolygon> Polygons;
+        public VBO VBO;
 
         /// <summary>
-        /// Instanciates a mesh with no transformations applied and an empty list of polygons.
+        /// Instanciates a mesh with no transformations applied and newly allocated VBO buffers.
         /// </summary>
         public AMesh() : base()
         {
-            Polygons        = new List<APolygon>();
+            VBO        = new VBO();
         }
 
         /// <summary>
-        /// Just sets the transform of the object, leaving the Children and Polygons lists empty
+        /// Just sets the transform of the object, leaving the Children and buffers empty
         /// </summary>
         /// <param name="trans"></param>
         public AMesh(Matrix4 trans) : base(trans)
         {
-            Polygons        = new List<APolygon>();
+            VBO        = new VBO();
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="trans"></param>
         /// <param name="children"></param>
         /// <param name="polys"></param>
-        public AMesh(Matrix4 trans, List<AObject3D> children, List<APolygon> polys) : base(trans, children)
+        public AMesh(Matrix4 trans, List<AObject3D> children, VBO buf) : base(trans, children)
         {
-            Polygons        = polys;
+            VBO        = buf;
         }
     }
 }

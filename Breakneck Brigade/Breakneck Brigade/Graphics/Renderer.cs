@@ -25,6 +25,8 @@ namespace Breakneck_Brigade.Graphics
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
+        private Stopwatch   _stopwatch;
+        private float       secondsPerFrame = 0.0f;
 
         public static int                           CurrentDrawMode = -1;
         /// <summary>
@@ -45,6 +47,8 @@ namespace Breakneck_Brigade.Graphics
 
         private     Matrix4         WorldTransform;
         private     Camera          Camera;
+        private     int             _windowWidth    = 0;
+        private     int             _windowHeight   = 0;
         private     int             _aspectX;
         private     int             _aspectY;
         private     float           _ratio;
@@ -61,6 +65,7 @@ namespace Breakneck_Brigade.Graphics
 
         public Renderer()
         {
+            _stopwatch      = new Stopwatch();
             parser          = new ModelParser();
             WorldTransform  = new Matrix4();
 
@@ -156,48 +161,25 @@ namespace Breakneck_Brigade.Graphics
             Models.Add("#plane:blank", plane);
         }
 
-        public void Render(LocalPlayer cp)
+        public void Render(LocalPlayer lp)
         {
-            int width, height;
-            Glfw.glfwGetWindowSize(out width, out height);
-            
-            // force aspect ratio, use saved aspect ratio
-            if (_getAspect)
-            {
-                _aspectX = width;
-                _aspectY = height;
-                _ratio = (float)_aspectY / (float)_aspectX;
-                _getAspect = false;
-            }
-            
-            // setting window viewport aspect to saved ratio
-            if ((float)height / (float)width > _ratio)
-            {
-                Gl.glViewport(0, 0, (int)((float)height / _ratio), height);
-            }
-            else if ((float)height / (float)width < _ratio)
-            {
-                Gl.glViewport(0, 0, width, (int)((float)width * _ratio));
-            }
-            else
-            {
-                Gl.glViewport(0, 0, width, height);
-            }
+            _stopwatch.Start();
+            setViewport();
             
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
-
-            Camera.Update(cp);
-            Camera.Render();
-
-            if (GameObjects != null)
-                foreach (ClientGameObject cgo in GameObjects)
-                {
-                    cgo.Render();
-                }
-            CurrentDrawMode = -1;
+            
+            prep2D();
+            render2D();
+            prep3D(lp);
+            render3D();
 
             Glfw.glfwSwapBuffers();
+            _stopwatch.Stop();
+            secondsPerFrame += _stopwatch.ElapsedTicks/MathConstants.TICKS_PER_SECOND;
+            secondsPerFrame /= 2;
+            //Console.WriteLine(1/secondsPerFrame);
+            _stopwatch.Restart();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
             //Glfw.glfwPollEvents();
         }
@@ -238,8 +220,6 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnable(Gl.GL_LIGHT0);
 
             /* RENDERING SETTINGS */
-            //Enables depth buffering for standard GL calls (glu rendering calls, etc.)
-            Gl.glEnable(Gl.GL_DEPTH_TEST);
             //Enables manual setting of colors and materials of primatives (through glColor__, etc)
             Gl.glEnable(Gl.GL_COLOR_MATERIAL);
             //Generates normals for objects which do not specify normals
@@ -256,6 +236,10 @@ namespace Breakneck_Brigade.Graphics
             //Optimizations
             Gl.glDisable(Gl.GL_DITHER);
 
+            //VBO
+            Gl.glEnableClientState(Gl.GL_VERTEX_ARRAY);
+            Gl.glEnableClientState(Gl.GL_NORMAL_ARRAY);
+            Gl.glEnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
 
             /* CAMERA */
             Camera = new Camera();
@@ -331,7 +315,6 @@ namespace Breakneck_Brigade.Graphics
             TexturedGluSphere mouth3         = new TexturedGluSphere(0.3, 10, 10,
                                                 (new Matrix4()).TranslationMat(-0.95f, 0.2f, -1.75f));
 
-
             snowmanHead.Children.Add(eyeL);
             snowmanHead.Children.Add(eyeR);
             snowmanHead.Children.Add(nose);
@@ -363,6 +346,73 @@ namespace Breakneck_Brigade.Graphics
         public Camera getCamera()
         {
             return Camera;
+        }
+
+        private void setViewport()
+        {
+            
+            Glfw.glfwGetWindowSize(out _windowWidth, out _windowHeight);
+
+            // force aspect ratio, use saved aspect ratio
+            if (_getAspect)
+            {
+                _aspectX = _windowWidth;
+                _aspectY = _windowHeight;
+                _ratio = (float)_aspectY / (float)_aspectX;
+                _getAspect = false;
+            }
+
+            // setting window viewport aspect to saved ratio
+            if ((float)_windowHeight / (float)_windowWidth > _ratio)
+            {
+                Gl.glViewport(0, 0, (int)((float)_windowHeight / _ratio), _windowHeight);
+            }
+            else if ((float)_windowHeight / (float)_windowWidth < _ratio)
+            {
+                Gl.glViewport(0, 0, _windowWidth, (int)((float)_windowWidth * _ratio));
+            }
+            else
+            {
+                Gl.glViewport(0, 0, _windowWidth, _windowHeight);
+            }
+        }
+
+        private void prep2D()
+        {
+            Gl.glMatrixMode(Gl.GL_PROJECTION);
+            Gl.glLoadIdentity();
+
+            Glu.gluOrtho2D(0.0f, _windowWidth, _windowHeight, 0.0f);
+
+            Gl.glMatrixMode(Gl.GL_MODELVIEW);
+            Gl.glLoadIdentity();
+            Gl.glTranslatef(0.375f, 0.375f, 0.0f);
+
+            Gl.glDisable(Gl.GL_DEPTH_TEST);
+        }
+
+        private void prep3D(LocalPlayer lp)
+        {
+            Camera.Update(lp);
+            Camera.Render();
+
+            Gl.glDepthFunc(Gl.GL_LEQUAL);
+            Gl.glEnable(Gl.GL_DEPTH_TEST);
+        }
+
+        private void render2D()
+        {
+
+        }
+
+        private void render3D()
+        {
+            if (GameObjects != null)
+                foreach (ClientGameObject cgo in GameObjects)
+                {
+                    cgo.Render();
+                }
+            CurrentDrawMode = -1;
         }
     }   
 }
