@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.IO;
 using SousChef;
 
+using BulletSharp;
+
 namespace DeCuisine
 {
     public static partial class DC
@@ -13,7 +15,7 @@ namespace DeCuisine
         //ReadCoordinate is in client program
         public static Random random = new Random();
 
-        public static void Write(this BinaryWriter stream, OdeDotNet.Vector3 value)
+        public static void Write(this BinaryWriter stream, Vector3 value)
         {
             // We need to flip the z and the y coordinate to make it fit with 
             // opengl coordinate system.

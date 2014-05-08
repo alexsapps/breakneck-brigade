@@ -67,10 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
-      <HintPath>..\..\..\..\..\Desktop\bulletsharp-demos-2.82\bin\BulletSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="DemoFramework">
-      <HintPath>..\..\..\..\..\Desktop\bulletsharp-demos-2.82\bin\DemoFramework.dll</HintPath>
+      <HintPath>..\..\..\..\..\Desktop\bulletsharp\bin\BulletSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

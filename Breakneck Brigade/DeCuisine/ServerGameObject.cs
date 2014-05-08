@@ -41,7 +41,7 @@ namespace DeCuisine
         public bool OnFloor { get; set; }
 
         private static int nextId;
-        private OdeDotNet.Vector3 lastPosition { get; set; }
+        private Vector3 lastPosition { get; set; }
         /// <summary>
         /// Base constructor. For every servergameobject create their should be a 
         /// coresponding ClientGameObject on each client with the same ID.
@@ -72,7 +72,7 @@ namespace DeCuisine
         {
             Game.Lock.AssertHeld();
             serializeEssential(stream);
-            stream.Write(this.Position.ToString());
+            stream.Write('\n'+ this.Position.X + "\n" + this.Position.Y + "\n" + this.Position.Z + '\n');
         }
 
         protected virtual void serializeEssential(BinaryWriter stream)
@@ -96,27 +96,25 @@ namespace DeCuisine
                }
         }
 
-        protected delegate Geom GeomMaker();
+        protected delegate CollisionShape GeomMaker();
 
         /// <summary>
         /// Add the object into the physical world.
         /// </summary>
         protected void AddToWorld(Vector3 coordinate)
         {
-            AddToWorld(() => { 
+            AddToWorld(() =>
+            {
                 CollisionShape geom = this.MakeGeom(GeomInfo, coordinate);
 
-                if (this.HasBody)
-                {
-                    Matrix startTransform = new Matrix();
-                    DefaultMotionState myMotionState = new DefaultMotionState(startTransform);
-                    RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(GeomInfo.Mass, myMotionState, geom, geom.CalculateLocalInertia(GeomInfo.Mass));
-                    this.Body = new RigidBody(rbInfo);
-                    rbInfo.Dispose();
-                }
+                DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);
+                RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(GeomInfo.Mass, myMotionState, geom, geom.CalculateLocalInertia(GeomInfo.Mass));
+                this.Body = new RigidBody(rbInfo);
+                rbInfo.Dispose();
 
                 //this.Geom.Position = new Vector3(coordinate.X, coordinate.Y, coordinate.Z);
                 // Ode.dGeomSetPosition(geom, coordinate.X, coordinate.Y, coordinate.Z); //this must happen after body is set
+                this.Body.Translate(coordinate);
                 return geom;
             });
             
@@ -157,6 +155,7 @@ namespace DeCuisine
             //Body body = this.Game.World.CreateBody();
             //mass.SetZero();
 
+            /*
             //IntPtr body = Ode.dBodyCreate(this.Game.World);
             switch (info.Shape)
             {
@@ -164,7 +163,6 @@ namespace DeCuisine
                     //mass.SetBox(info.Mass, info.Sides[0], info.Sides[1], info.Sides[2]);
                     //Ode.dMassSetBox(ref mass, info.Mass, info.Sides[0], info.Sides[1], info.Sides[2]);
                     //Ode.dBodySetMass(body, ref mass);
-                    RigidBody
 
                     break;
                 case GeomShape.Sphere:
@@ -175,8 +173,13 @@ namespace DeCuisine
                 default:
                     throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
             }
+            */
 
-            body.Mass = mass;
+            Vector3 localInertia = this.Geom.CalculateLocalInertia(info.Mass);
+            DefaultMotionState myMotionState = new DefaultMotionState(new Matrix());
+            RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(info.Mass, myMotionState, this.Geom, localInertia);
+            RigidBody body = new RigidBody(rbInfo);
+            rbInfo.Dispose();
             return body;
         }
 
@@ -227,7 +230,7 @@ namespace DeCuisine
         {
             stream.Write((Int32)Id);
             stream.Write((bool)ToRender); // no need to cast but being explicit gets my jollys off
-            stream.Write(this.Position.ToString());
+            stream.Write('\n' + this.Position.X + "\n" + this.Position.Y + "\n" + this.Position.Z + '\n');
         }
 
         public virtual void OnCollide(ServerGameObject obj)
@@ -245,12 +248,12 @@ namespace DeCuisine
             this.Remove();
         }
 
-        private OdeDotNet.Vector3 getPosition()
+        private Vector3 getPosition()
         {
             Game.Lock.AssertHeld();
             if (this.Geom != null)
             {
-                OdeDotNet.Vector3 m3 = this.Geom.Position;
+                Vector3 m3 = this.Body.CenterOfMassPosition;
                 _position.Set(m3.X, m3.Y, m3.Z);
                 return m3;
             }
@@ -260,22 +263,22 @@ namespace DeCuisine
             }
         }
 
-        private void setPosition(OdeDotNet.Vector3 value)
+        private void setPosition(Vector3 value)
         {
             this.Game.Lock.AssertHeld();
             this.MarkDirty(); // moved it, make sure you mark it to move
             this.lastPosition = value;
-            this.Geom.Position = new OdeDotNet.Vector3(value.X, value.Y, value.Z); 
+            this.Body.Translate(new Vector3(value.X, value.Y, value.Z)); 
         }
 
         private SousChef.Matrix4 getRotation()
         {
             if(this.Geom != null)
             {
-                OdeDotNet.Matrix3 r = this.Geom.Rotation;
-                _rotation.SetAll(r.M00,  r.M10,  r.M20,  0,
-                                 r.M01,  r.M11,  r.M21,  0,
-                                 r.M02,  r.M12,  r.M22,  0,
+                Matrix r = this.Body.CenterOfMassTransform;
+                _rotation.SetAll(r.M11,  r.M21,  r.M31,  0,
+                                 r.M12,  r.M22,  r.M32,  0,
+                                 r.M13,  r.M23,  r.M33,  0,
                                  0,      0,      0,      1);
                 return _rotation;
             }
@@ -291,17 +294,18 @@ namespace DeCuisine
                 double[] arr = {_rotation[0,0], _rotation[1,0], _rotation[2,0],
                                 _rotation[0,1], _rotation[1,1], _rotation[2,1],
                                 _rotation[0,2], _rotation[1,2], _rotation[2,2]};
-                OdeDotNet.Matrix3 r = new OdeDotNet.Matrix3();
-                r.SetIdentity();
-                r.M00 = _rotation[0, 0];
-                r.M10 = _rotation[1, 0];
-                r.M20 = _rotation[2, 0];
-                r.M01 = _rotation[0, 1]; 
-                r.M11 = _rotation[1, 1]; 
-                r.M21 = _rotation[2, 1];
-                r.M02 = _rotation[0, 2]; 
-                r.M12 = _rotation[1, 2];
-                r.M22 = _rotation[2, 2];
+                Matrix r = new Matrix();
+                //r.SetIdentity();
+                r = Matrix.Identity;
+                r.M11 = _rotation[0, 0];
+                r.M21 = _rotation[1, 0];
+                r.M31 = _rotation[2, 0];
+                r.M12 = _rotation[0, 1]; 
+                r.M22 = _rotation[1, 1]; 
+                r.M32 = _rotation[2, 1];
+                r.M13 = _rotation[0, 2]; 
+                r.M23 = _rotation[1, 2];
+                r.M33 = _rotation[2, 2];
             }
             else
             {

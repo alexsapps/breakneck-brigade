@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using BulletSharp;
-using DemoFramework;
 
 namespace DeCuisine
 {
@@ -57,7 +56,7 @@ namespace DeCuisine
         public DynamicsWorld World
         {
             get { return _world; }
-            protected set { _world = value; }
+            set { _world = value; }
         }
 
         protected CollisionConfiguration CollisionConf;
@@ -198,24 +197,8 @@ namespace DeCuisine
                 this.CollisionShapes = new AlignedCollisionShapeArray();
 
                 // collision configuration contains default setup for memory, collision setup
-                this.CollisionConf = new DefaultCollisionConfiguration();
-                this.Dispatcher = new CollisionDispatcher(CollisionConf);
-                this.Broadphase = new DbvtBroadphase();
-                this.World = new DiscreteDynamicsWorld(Dispatcher, Broadphase, null, CollisionConf);
-                this.World.Gravity = new Vector3(0, -10, 0);
-
-                // create the ground
-                BoxShape groundShape = new BoxShape(50, 1, 50);
-                //groundShape.InitializePolyhedralFeatures();
-                //CollisionShape groundShape = new StaticPlaneShape(new Vector3(0,1,0), 50);
-
-                this.CollisionShapes.Add(groundShape);
-                CollisionObject ground = LocalCreateRigidBody(0, Matrix.Identity, groundShape);
-                ground.UserObject = "Ground";
-
-                // Space.Collision += new CollisionEventHandler(CollideObjects);
-                // WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
-                // p.LoadFile(1);
+                WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
+                p.LoadFile(1);
             }
             // loop over clients and make play objects for them
             foreach (var client in clients)
@@ -268,7 +251,7 @@ namespace DeCuisine
                                         input.Client.Player.Position = newpos;
                                         //TEST
                                         //direction.Scale(3.0f);
-                                        //input.Client.Player.Position = new Ode.dVector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
+                                        input.Client.Player.Position = new Vector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
                                         break;
                                     case ClientEventType.EndMove:
                                         break;
@@ -501,10 +484,10 @@ namespace DeCuisine
             
         }
 
-        public ServerGameObject GeomToObj(Geom geom)
+        public ServerGameObject GeomToObj(CollisionShape geom)
         {
             Lock.AssertHeld();
-            return GameObjects[geom.Data.ToInt32()];
+            return GameObjects[((IntPtr)geom.UserObject).ToInt32()];
         }
 
         internal void PrintStatus()

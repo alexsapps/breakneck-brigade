@@ -1,4 +1,5 @@
-﻿using SousChef;
+﻿using BulletSharp;
+using SousChef;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,18 +17,18 @@ namespace DeCuisine
         public struct HandInventory
         {
             public ServerGameObject Held;
-            public Joint Joint;
-            public HandInventory(ServerGameObject toHold, Joint joint)
+            //public Joint Joint;
+            public HandInventory(ServerGameObject toHold) //, Joint joint)
             {
                 this.Held = toHold;
-                this.Joint = joint;
+                //this.Joint = joint;
             }
         }
         public HandInventory LeftHand;
         public HandInventory RightHand;
         private ServerGameObject toHold = null; // init to null as it's our flag TODO: Think smarter and don't do this
 
-        public ServerPlayer(ServerGame game, OdeDotNet.Vector3 position) 
+        public ServerPlayer(ServerGame game, Vector3 position) 
             : base(game)
         {
             base.AddToWorld(position);
@@ -51,7 +52,7 @@ namespace DeCuisine
         /// </summary>
         public void Move(float x, float y, float z)
         {
-            OdeDotNet.Vector3 newPos = new OdeDotNet.Vector3(Position.X + x, Position.Y + y, Position.Z + z);
+            Vector3 newPos = new Vector3(Position.X + x, Position.Y + y, Position.Z + z);
             this.Position = newPos;
         }
 
@@ -67,6 +68,7 @@ namespace DeCuisine
 
         private void makeJoint(string hand, ServerGameObject obj)
         {
+            /*
             HingeJoint joint = this.Game.World.CreateHingeJoint();
             joint.Attach(this.Body, obj.Body);
             OdeDotNet.Vector3 pos = this.Geom.Position; // Ode.dGeomGetPosition(this.Geom);
@@ -74,7 +76,7 @@ namespace DeCuisine
             joint.Anchor = new OdeDotNet.Vector3(pos[0] - 10, pos[1] - 10, pos[2] + 10);
             joint.Anchor2 = new OdeDotNet.Vector3(pos[0] - 10, pos[1] - 10, pos[2] + 10);
             joint.Axis = new OdeDotNet.Vector3(0, 0, 1.0f);
-
+            */
             /*
             Ode.dVector3 pos = Ode.dGeomGetPosition(this.Geom);
             Ode.dJointAttach(joint, this.Body, obj.Body);
@@ -86,10 +88,10 @@ namespace DeCuisine
             if (hand == "left")
             {
                 // TODO: make logic to drop object if we have something in the hand already
-                this.LeftHand = new HandInventory(obj, joint);
+                this.LeftHand = new HandInventory(obj);
             } else
             {
-                this.RightHand = new HandInventory(obj, joint);
+                this.RightHand = new HandInventory(obj);
             }
         }
 

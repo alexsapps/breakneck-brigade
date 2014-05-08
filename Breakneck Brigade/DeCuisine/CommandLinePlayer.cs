@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SousChef;
 
-using OdeDotNet;
-using OdeDotNet.Geometry;
-using OdeDotNet.Joints;
+using BulletSharp;
 
 namespace DeCuisine
 {
@@ -230,7 +228,7 @@ namespace DeCuisine
             List<IngredientType> types = new List<IngredientType>(game.Config.Ingredients.Values);
             Random rand = new Random();
             IngredientType randIng = types[rand.Next(types.Count)];
-            OdeDotNet.Vector3 spawnLoc = randomSpawn();
+            Vector3 spawnLoc = randomSpawn();
             new ServerIngredient(randIng, game, spawnLoc);
             Console.WriteLine("Made a " + randIng.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
@@ -240,7 +238,7 @@ namespace DeCuisine
         /// </summary>
         public static void SpawnIngredient(ServerGame game, string type)
         {
-            OdeDotNet.Vector3 spawnLoc = randomSpawn();
+            Vector3 spawnLoc = randomSpawn();
             new ServerIngredient(game.Config.Ingredients[type], game, spawnLoc);
             Console.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
@@ -250,7 +248,7 @@ namespace DeCuisine
         /// </summary>
         public static void SpawnIngredient(ServerGame game, string type, double x, double y, double z)
         {
-            OdeDotNet.Vector3 spawnLoc = new OdeDotNet.Vector3((float)x, (float)y, (float)z);
+            Vector3 spawnLoc = new Vector3((float)x, (float)y, (float)z);
             new ServerIngredient(game.Config.Ingredients[type], game, spawnLoc);
             Console.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
@@ -263,7 +261,7 @@ namespace DeCuisine
             List<CookerType> types = new List<CookerType>(game.Config.Cookers.Values);
             Random rand = new Random();
             CookerType randCooker = types[rand.Next(types.Count)];
-            OdeDotNet.Vector3 spawnLoc = new OdeDotNet.Vector3(rand.Next(100), rand.Next(100), rand.Next(10, 100));
+            Vector3 spawnLoc = new Vector3(rand.Next(100), rand.Next(100), rand.Next(10, 100));
             new ServerCooker(randCooker, game, spawnLoc);
             Console.WriteLine("Made a " + randCooker.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
@@ -273,7 +271,7 @@ namespace DeCuisine
         /// </summary>
         public static void SpawnCooker(ServerGame game, string type)
         {
-            OdeDotNet.Vector3 spawnLoc = randomSpawn();
+            Vector3 spawnLoc = randomSpawn();
             new ServerCooker(game.Config.Cookers[type], game, spawnLoc);
             Console.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
@@ -283,7 +281,7 @@ namespace DeCuisine
         /// </summary>
         public static void SpawnCooker(ServerGame game, string type, double x, double y, double z)
         {
-            OdeDotNet.Vector3 spawnLoc = new OdeDotNet.Vector3((float)x, (float)y, (float)z);
+            Vector3 spawnLoc = new Vector3((float)x, (float)y, (float)z);
             new ServerCooker(game.Config.Cookers[type], game, spawnLoc);
             Console.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
@@ -324,9 +322,9 @@ namespace DeCuisine
         /// helper to randomly spawn objects
         /// </summary>
         /// <returns></returns>
-        private static OdeDotNet.Vector3 randomSpawn()
+        private static Vector3 randomSpawn()
         {
-            return new OdeDotNet.Vector3(DC.random.Next(100), DC.random.Next(100), DC.random.Next(50, 200));
+            return new Vector3(DC.random.Next(100), DC.random.Next(100), DC.random.Next(50, 200));
         }
 
         /// <summary>
