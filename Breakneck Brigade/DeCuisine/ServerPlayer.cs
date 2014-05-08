@@ -71,26 +71,6 @@ namespace DeCuisine
             }
         }
 
-
-        //private void makeJoint(string hand, ServerGameObject obj)
-        //{
-        //    IntPtr joint = Ode.dJointCreateHinge(this.Game.World, IntPtr.Zero);
-        //    Ode.dVector3 pos = Ode.dGeomGetPosition(this.Geom);
-        //    Ode.dJointAttach(joint, this.Body, obj.Body);
-        //    Ode.dBodySetPosition(obj.Body, pos.X  , pos.Y - 10, pos.Z + 10);
-        //    Ode.dJointSetHingeAnchor(joint, pos[0] - 10, pos[1] - 10 , pos[2] + 10);
-        //    Ode.dJointSetHingeAxis(joint, 0, 0, 1.0);
-            
-        //    if (hand == "left")
-        //    {
-        //        // TODO: make logic to drop object if we have something in the hand already
-        //        this.LeftHand = new HandInventory(obj, joint);
-        //    } else
-        //    {
-        //        this.RightHand = new HandInventory(obj, joint);
-        //    }
-        //}
-
         public override void Update()
         {
             base.Update();
@@ -102,8 +82,8 @@ namespace DeCuisine
             }
             if (this.LeftHand.Joint != null)
             {
-                Vector3 holdPosition = this.LeftHand.Joint.Update(new Vector3(this.Position));
-                this.LeftHand.ObjHeld.Position = holdPosition.convertOde();
+                Vector4 holdPosition = this.LeftHand.Joint.Update(this.Position.ConvertToVector4());
+                this.LeftHand.ObjHeld.Position = holdPosition.ConvertToOde();
             }
         }
     }

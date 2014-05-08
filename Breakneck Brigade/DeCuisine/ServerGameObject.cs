@@ -38,7 +38,7 @@ namespace DeCuisine
         private bool _toRender;
         public bool ToRender { get{return _toRender;} set{_toRender = value; this.MarkDirty();} }
         public bool OnFloor { get; set; }
-        public VelocityStruct Velocity;
+        public Vector4 Velocity;
         public bool PhysicsOn{ get; set; }// are the physics of the object on or off
 
 
@@ -56,7 +56,7 @@ namespace DeCuisine
             this._rotation = new Matrix4();
             this._position = new Vector4();
             this.ToRender = true; // class specific implementation can override
-            this.Velocity = new VelocityStruct(0, 0, 0);
+            this.Velocity = new Vector4(0, 0, 0);
             this.PhysicsOn = true;
             
             Game.ObjectAdded(this);
