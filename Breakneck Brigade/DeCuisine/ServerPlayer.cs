@@ -36,21 +36,15 @@ namespace DeCuisine
 
         public override void Serialize(BinaryWriter stream)
         {
-            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.Serialize(stream);
-            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             //stream.Write(a,b);
             //stream.Write(c,d);
         }
 
         public override void UpdateStream(BinaryWriter stream)
         {
-            // need to flip in order to get the camera rendering right
-            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.UpdateStream(stream);
-            // flip back for sanity TODO: Put exception here for sanity check.
-            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
-            // stream.Write(c,d);
+            //stream.Write(c,d);
         }
 
         /// <summary>
@@ -90,7 +84,7 @@ namespace DeCuisine
             Ode.dJointSetHingeAnchor(joint, pos[0] - 10, pos[1] - 10 , pos[2] + 10);
             Ode.dJointSetHingeAxis(joint, 0, 0, 1.0);
             */
-
+            
             if (hand == "left")
             {
                 // TODO: make logic to drop object if we have something in the hand already

@@ -46,8 +46,9 @@ namespace Breakneck_Brigade
         {
             try
             {
+                connection.NoDelay = true;
                 new BinaryWriter(connection.GetStream()).Write(BB.ClientProtocolHandshakeStr);
-                
+
                 using (BinaryReader reader = new BinaryReader(connection.GetStream()))
                 {
                     connection.ReceiveTimeout = 10000;
@@ -126,40 +127,46 @@ namespace Breakneck_Brigade
         {
             try
             {
-                using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
+                var network = connection.GetStream();
+                using (MemoryStream buffer = new MemoryStream())
                 {
-                    while (true)
+                    using (BinaryWriter writer = new BinaryWriter(buffer))
                     {
-                        List<ClientEvent> clientEvents;
-                        
-                        lock(ClientEvents)
+                        while (true)
                         {
-                            while (ClientEvents.Count == 0)
-                            {
-                                if (!IsConnected)
-                                    return;
-                                Monitor.Wait(ClientEvents);
-                            }
-                        }
-
-                        lock (Lock)
-                        {
-                            if (!IsConnected)
-                                return;
+                            List<ClientEvent> clientEvents;
 
                             lock (ClientEvents)
                             {
-                                clientEvents = new List<ClientEvent>(ClientEvents);
-                                ClientEvents.Clear();
+                                while (ClientEvents.Count == 0)
+                                {
+                                    if (!IsConnected)
+                                        return;
+                                    Monitor.Wait(ClientEvents);
+                                }
                             }
-                        }
-                        
-                        foreach (var clientEvent in clientEvents)
-                        {
-                            writer.Write((byte)ClientMessageType.ClientEvent);
-                            writer.Write((byte)clientEvent.Type);
-                            clientEvent.Write(writer);
-                            writer.Flush();
+
+                            lock (Lock)
+                            {
+                                if (!IsConnected)
+                                    return;
+
+                                lock (ClientEvents)
+                                {
+                                    clientEvents = new List<ClientEvent>(ClientEvents);
+                                    ClientEvents.Clear();
+                                }
+                            }
+
+                            foreach (var clientEvent in clientEvents)
+                            {
+                                writer.Write((byte)ClientMessageType.ClientEvent);
+                                writer.Write((byte)clientEvent.Type);
+                                clientEvent.Write(writer);
+                                
+                                buffer.WriteTo(network);
+                                buffer.SetLength(0);
+                            }
                         }
                     }
                 }

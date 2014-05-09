@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<models numberOfModels = "6">
+<models numberOfModels = "7">
   <model>
     <filename>orange</filename>
     <scaleX>.1</scaleX>
@@ -36,5 +36,12 @@
     <scaleX>.4</scaleX>
     <scaleY>.4</scaleY>
     <scaleZ>.4</scaleZ>
+  </model>
+
+  <model>
+    <filename>sauce</filename>
+    <scaleX>.4</scaleX>
+    <scaleY>.4</scaleY>
+    <scaleZ>.4</scaleZ>     
   </model>
 </models>

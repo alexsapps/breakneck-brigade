@@ -49,10 +49,10 @@ namespace DeCuisine
         public void Receive(TcpClient c)
         {
             this.connection = c;
-
+            c.NoDelay = true; //this is why we use a buffered stream, so every int doesn't get written at once.
             try
             {
-                var w = new BinaryWriter(connection.GetStream());
+                var w = new BinaryWriter(c.GetStream());
                 w.Write(BB.ServerProtocolHandshakeStr);
                 string confighash;
                 lock (Server.Lock) {
@@ -85,7 +85,6 @@ namespace DeCuisine
                         switch (type)
                         {
                             case ClientMessageType.ClientEvent:
-                                
                                 ClientEventType eventType = (ClientEventType)reader.ReadByte();
                                 ClientEvent evt = (ClientEvent)Activator.CreateInstance(getClientEventType(eventType), reader);
                                 DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = evt };
@@ -133,53 +132,54 @@ namespace DeCuisine
             BBStopwatch w1 = new BBStopwatch(), w2 = new BBStopwatch(), w3 = new BBStopwatch();
             try
             {
-                using (BinaryWriter writer = new BinaryWriter(connection.GetStream()))
+                var network = connection.GetStream();
+                using (MemoryStream buffer = new MemoryStream())
                 {
-                    w3.Start();
-                    while (true)
+                    using (BinaryWriter writer = new BinaryWriter(buffer))
                     {
-                        List<ServerMessage> svrMsgs = null;
-                        
+                        w3.Start();
                         while (true)
                         {
-                            lock (Lock)
-                            {
-                                if (!IsConnected)
-                                    return;
-                            }
+                            List<ServerMessage> svrMsgs = null;
 
-                            lock (ServerMessages)
+                            while (true)
                             {
-                                if (ServerMessages.Count > 0)
+                                lock (Lock)
                                 {
-                                    svrMsgs = new List<ServerMessage>(ServerMessages);
-                                    ServerMessages.Clear();
-                                    break;
+                                    if (!IsConnected)
+                                        return;
                                 }
-                                
-                                Monitor.Wait(ServerMessages);
+
+                                lock (ServerMessages)
+                                {
+                                    if (ServerMessages.Count > 0)
+                                    {
+                                        svrMsgs = new List<ServerMessage>(ServerMessages);
+                                        ServerMessages.Clear();
+                                        break;
+                                    }
+
+                                    Monitor.Wait(ServerMessages);
+                                }
                             }
+                            w3.Stop(Game.FrameRateMilliseconds + 5, "Client: slow waiting for game state from run thread. {0}");
+                            w3.Start();
+
+                            w2.Start();
+                            foreach (var message in svrMsgs)
+                            {
+                                writer.Write((byte)message.Type);
+                                message.Write(writer);
+
+                                buffer.WriteTo(network);
+                                buffer.SetLength(0);
+
+                                if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 2)
+                                    Console.WriteLine("slow message");
+
+                            }
+                            w2.Stop(2, "Client: slow write loop. {0}");
                         }
-                        w3.Stop(Game.FrameRateMilliseconds + 5, "Client: slow waiting for game state from run thread. {0}");
-                        w3.Start();
-
-                        w2.Start();
-                        foreach (var message in svrMsgs)
-                        {
-                            writer.Write((byte)message.Type);
-                            message.Write(writer);
-
-                            BBStopwatch wn = new BBStopwatch();
-                            wn.Start();
-
-                            //writer.Flush();
-                            wn.Stop(2, "Client: slow flush. {0}");
-                            
-                            if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 2)
-                                Console.WriteLine("slow messagee");
-
-                        }
-                        w2.Stop(2, "Client: slow write loop. {0}");
                     }
                 }
             }

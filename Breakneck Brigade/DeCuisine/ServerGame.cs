@@ -212,10 +212,10 @@ namespace DeCuisine
             }
             try
             {
-                long next = DateTime.UtcNow.Ticks;
+                long next;
                 while (true)
                 {
-                    next += FrameRateTicks;
+                    next = DateTime.UtcNow.Ticks + FrameRateTicks; //not next+= FrameRateTicks because we don't want the server to ever wait less than the tick time
                     lock (Lock)
                     {
                         if (Mode != GameMode.Started)

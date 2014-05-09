@@ -82,7 +82,7 @@ namespace Breakneck_Brigade
         protected void finilizeConstruction()
         {
             initGeom();
-            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "teapotPillar"];
+            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "sauce"];
             Scale = Model.InitialScale;
         }
 
@@ -158,16 +158,19 @@ namespace Breakneck_Brigade
 
         protected virtual void updateMatrix()
         {
+            Matrix4 finalMat = new Matrix4();
             //Translate to location
-            Transformation.TranslationMat(Position.X, Position.Y, Position.Z);
+            finalMat.TranslationMat(Position.X, Position.Y, Position.Z);
 
             //Rotate to proper orientation: 
-            Transformation = Transformation*Matrix4.MakeRotateZ(Rotation.Z);
-            Transformation = Transformation*Matrix4.MakeRotateY(Rotation.Y);
-            Transformation = Transformation*Matrix4.MakeRotateX(Rotation.X);
-
+            finalMat = finalMat*Matrix4.MakeRotateZ(Rotation.Z);
+            finalMat = finalMat*Matrix4.MakeRotateY(Rotation.Y);
+            finalMat = finalMat*Matrix4.MakeRotateX(Rotation.X);
+            
             //Scale
-            Transformation = Transformation*Matrix4.MakeScalingMat(Scale.X, Scale.Y, Scale.Z);
+            finalMat = finalMat*Matrix4.MakeScalingMat(Scale.X, Scale.Y, Scale.Z);
+
+            Transformation = finalMat;
         }
 
     }
