@@ -24,10 +24,11 @@ namespace Breakneck_Brigade
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public Vector4 Velocity;
-        public float MoveSpeed = 0.35f;
+        public float MoveSpeed = 30f; 
         public List<ClientEvent> NetworkEvents;
 
         private bool _fpsToggle = true;
+        private bool _stopped = false;
         
         public LocalPlayer()
         {
@@ -46,10 +47,8 @@ namespace Breakneck_Brigade
             game.Lock.AssertHeld();
             cam.Lock.AssertHeld();
 
-            long timediff = (DateTime.Now.Ticks - lasttime) / TimeSpan.TicksPerMillisecond;
-            if (timediff > 200)
-                timediff = 0;
-            lasttime = DateTime.Now.Ticks;
+
+
 
             keys = IM.GetKeys();
 
@@ -68,15 +67,25 @@ namespace Breakneck_Brigade
                 NetworkEvents.Add(new ClientChangeOrientationEvent() { Roty = roty });
             }
 
+
             // Velocity update
             Velocity.X = -((IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f);
             Velocity.Z = -((IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f);
 
             var xDiff = Velocity.Z * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Sin((Orientation / 180.0f * Math.PI));
-            Coordinate diff = new Coordinate(xDiff * timediff / 10, 0, zDiff * timediff / 10);
+            Coordinate diff = new Coordinate(xDiff, 0, zDiff);
             if (diff.x != 0 || diff.z != 0)
             {
+                _stopped = false;
+                NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
+                var pos = GetPosition();
+                lastx = pos.X;
+                lastz = pos.Z;
+            }
+            else if(!_stopped)
+            {
+                _stopped = true;
                 NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
                 var pos = GetPosition();
                 lastx = pos.X;

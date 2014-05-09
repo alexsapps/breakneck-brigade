@@ -50,10 +50,18 @@ namespace DeCuisine
         /// <summary>
         /// Moves a player relative to his or her current position
         /// </summary>
+        public void Move(Vector3 vel)
+        {
+            this.Body.LinearVelocity = new Vector3(vel.X, this.Body.LinearVelocity.Y + vel.Y, vel.Z);
+            this.Body.ActivationState = ActivationState.ActiveTag;
+        }
+
+        /// <summary>
+        /// Moves a player relative to his or her current position
+        /// </summary>
         public void Move(float x, float y, float z)
         {
-            Vector3 newPos = new Vector3(Position.X + x, Position.Y + y, Position.Z + z);
-            this.Position = newPos;
+            this.Body.LinearVelocity = new Vector3(x, this.Body.LinearVelocity.Y + y, z);
         }
 
         public override void OnCollide(ServerGameObject obj)
@@ -68,22 +76,6 @@ namespace DeCuisine
 
         private void makeJoint(string hand, ServerGameObject obj)
         {
-            /*
-            HingeJoint joint = this.Game.World.CreateHingeJoint();
-            joint.Attach(this.Body, obj.Body);
-            OdeDotNet.Vector3 pos = this.Geom.Position; // Ode.dGeomGetPosition(this.Geom);
-            obj.Body.Position = new OdeDotNet.Vector3(pos.X, pos.Y - 10, pos.Z + 10);
-            joint.Anchor = new OdeDotNet.Vector3(pos[0] - 10, pos[1] - 10, pos[2] + 10);
-            joint.Anchor2 = new OdeDotNet.Vector3(pos[0] - 10, pos[1] - 10, pos[2] + 10);
-            joint.Axis = new OdeDotNet.Vector3(0, 0, 1.0f);
-            */
-            /*
-            Ode.dVector3 pos = Ode.dGeomGetPosition(this.Geom);
-            Ode.dJointAttach(joint, this.Body, obj.Body);
-            Ode.dBodySetPosition(obj.Body, pos.X  , pos.Y - 10, pos.Z + 10);
-            Ode.dJointSetHingeAnchor(joint, pos[0] - 10, pos[1] - 10 , pos[2] + 10);
-            Ode.dJointSetHingeAxis(joint, 0, 0, 1.0);
-            */
             
             if (hand == "left")
             {
