@@ -172,20 +172,13 @@ namespace DeCuisine
 
                         lock (Lock)
                         {
-                            if (Game.Mode == GameMode.Init)  //only connect during init
-                            {
-                                Client client = new Client(this);
-                                clients.Add(client);
-                                client.Connected += client_Connected;
-                                client.Disconnected += client_Disconnected;
-                                Thread client_thread = new Thread(() => { client.Receive(connection); });
-                                client.receiveThread = client_thread;
-                                client_thread.Start();
-                            }
-                            else
-                            {
-                                connection.Close();
-                            }
+                            Client client = new Client(this);
+                            clients.Add(client);
+                            client.Connected += client_Connected;
+                            client.Disconnected += client_Disconnected;
+                            Thread client_thread = new Thread(() => { client.Receive(connection); });
+                            client.receiveThread = client_thread;
+                            client_thread.Start();
                         }
                     }
                 }
