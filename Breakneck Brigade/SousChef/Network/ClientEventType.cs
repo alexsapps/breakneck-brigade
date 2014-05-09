@@ -44,10 +44,6 @@ namespace SousChef
         /// <summary>
         /// A test event. Forces the server to generate an object at a predefined space
         /// </summary>
-        Test,
-
-        /* below values are used by the server internally and should not be sent by the client */
-        Enter,
-        Leave
+        Test
     }
 }

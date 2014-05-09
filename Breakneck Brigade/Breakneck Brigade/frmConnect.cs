@@ -84,5 +84,15 @@ namespace Breakneck_Brigade
         {
             doConnect();
         }
+
+        private void txtConnect_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Down)
+            {
+                if(lstHosts.Items.Count > 0)
+                    lstHosts.SelectedIndex = 0;
+                lstHosts.Focus();
+            }
+        }
     }
 }

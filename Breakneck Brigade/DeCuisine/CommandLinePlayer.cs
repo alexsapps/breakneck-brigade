@@ -33,7 +33,7 @@ namespace DeCuisine
                     // put the ingredient, the second is the ingredient id of what you want to add
                     if (args.Length < 3)
                     {
-                        Console.WriteLine("add expects at least two arguments.");
+                        Program.WriteLine("add expects at least two arguments.");
                         break;
                     }
                     lock (server.Lock)
@@ -48,7 +48,7 @@ namespace DeCuisine
                     // list all objects ids in the game as well as there class 
                     lock (server.Lock)
                     {
-                        Console.WriteLine(server.Game.ListGameObjects());
+                        Program.WriteLine(server.Game.ListGameObjects());
                     }
                     break;
                 case "monitor":
@@ -62,19 +62,19 @@ namespace DeCuisine
                     // takes one argument, the cooker you want to list it's contents
                     if (args.Length < 2)
                     {
-                        Console.WriteLine("list cooker expects at least one argument.");
+                        Program.WriteLine("list cooker expects at least one argument.");
                         break;
                     }
                     lock (server.Lock)
                     {
-                        Console.WriteLine(server.Game.ListCookerContents(Convert.ToInt32(args[1])));
+                        Program.WriteLine(server.Game.ListCookerContents(Convert.ToInt32(args[1])));
                     }
                     break;
                 case "listing":
                     // lists all the ingredients by name in the game world
                     lock (server.Lock)
                     {
-                        Console.WriteLine(server.Game.ListIngredients());
+                        Program.WriteLine(server.Game.ListIngredients());
                     }
                     break;
                 case "spawn":
@@ -106,7 +106,7 @@ namespace DeCuisine
 
         private static void monitorThread(Server server)
         {   
-            while (!Program.consoleCancel)
+            while (!Program.cancelConsole)
             {
                 lock (server.Lock)
                 {
@@ -121,12 +121,13 @@ namespace DeCuisine
                     else
                     {
                         Console.Clear();
-                        Console.WriteLine("monitor is waiting for game to start");
+                        Program.WriteLine("monitor is waiting for game to start");
                     }
                 }
                 System.Threading.Thread.Sleep(50);
             }
-            Program.consoleCancel = false;
+            Program.cancelConsole = false;
+            Program.Prompt();
         }
 
         /// <summary>
@@ -154,7 +155,7 @@ namespace DeCuisine
             if (gameObjects.Count > 0)
             {
                 StringBuilder b = new StringBuilder();
-                b.AppendLine("Object Id " + "\t" + "Name" + "\t\t" + "Location" + "\t\t" + "ToRender");
+                b.AppendLine("Object Id\tName\t\tLocation\t\tVelocity\t\tToRender");
                 foreach (var x in gameObjects)
                     writeAttributes(x.Value, "", b);
 
@@ -191,7 +192,7 @@ namespace DeCuisine
                 return null; 
 
             // sanity checks passed list contents
-            Console.WriteLine("Object Id " + "\t" + "Name");
+            Program.WriteLine("Object Id " + "\t" + "Name");
             foreach (var x in ((ServerCooker)gameObjects[cookerId]).Contents)
             {
                 b.AppendLine(x.Id + "\t\t" + x.Type.Name);
@@ -219,7 +220,7 @@ namespace DeCuisine
         {
 
             if (args.Length < 2) 
-                Console.WriteLine("You need to specify what type of object to spawn");
+                Program.WriteLine("You need to specify what type of object to spawn");
             else
             {
                 switch (args[1])
@@ -231,7 +232,7 @@ namespace DeCuisine
                         spawnCookerHelper(game, args);
                         break;
                     default:
-                        Console.WriteLine("WTF is a " + args[1] + ". I can't spawn that.");
+                        Program.WriteLine("WTF is a " + args[1] + ". I can't spawn that.");
                         break;
                 }
             }
@@ -246,7 +247,7 @@ namespace DeCuisine
             else if (args.Length == 6) // spawn cooker type x y z
                 SpawnCooker(game, args[2], Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]));
             else
-                Console.WriteLine("Spawn takes 1 arguments: one string that " +
+                Program.WriteLine("Spawn takes 1 arguments: one string that " +
                                   "that is the type of object you want to spawn. 2 arguments: the type of object and " +
                                   "the type of that object i.e. a banana. 5 arguments: the type of object and the " +
                                   "type of that object i.e. a blender and 3 doubles for the x, y and z spawn location");
@@ -262,7 +263,7 @@ namespace DeCuisine
             else if (args.Length == 6) // spawn ingredient type x y z
                 SpawnIngredient(game, args[2], Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]));
             else
-                Console.WriteLine("Spawn takes 1 arguments: one string that " +
+                Program.WriteLine("Spawn takes 1 arguments: one string that " +
                                   "that is the type of object you want to spawn. 2 arguments: the type of object and " +
                                   "the type of that object i.e. a banana. 5 arguments: the type of object and the " +
                                   "type of that object i.e. a blender and 3 doubles for the x, y and z spawn location");
@@ -278,7 +279,7 @@ namespace DeCuisine
             IngredientType randIng = types[rand.Next(types.Count)];
             Vector3 spawnLoc = randomSpawn();
             new ServerIngredient(randIng, game, spawnLoc);
-            Console.WriteLine("Made a " + randIng.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            Program.WriteLine("Made a " + randIng.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
 
         /// <summary>
@@ -288,7 +289,7 @@ namespace DeCuisine
         {
             Vector3 spawnLoc = randomSpawn();
             new ServerIngredient(game.Config.Ingredients[type], game, spawnLoc);
-            Console.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            Program.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
 
         /// <summary>
@@ -298,7 +299,7 @@ namespace DeCuisine
         {
             Vector3 spawnLoc = new Vector3((float)x, (float)y, (float)z);
             new ServerIngredient(game.Config.Ingredients[type], game, spawnLoc);
-            Console.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            Program.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
 
         /// <summary>
@@ -311,7 +312,7 @@ namespace DeCuisine
             CookerType randCooker = types[rand.Next(types.Count)];
             Vector3 spawnLoc = new Vector3(rand.Next(100), rand.Next(100), rand.Next(10, 100));
             new ServerCooker(randCooker, game, spawnLoc);
-            Console.WriteLine("Made a " + randCooker.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            Program.WriteLine("Made a " + randCooker.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
 
         /// <summary>
@@ -321,7 +322,7 @@ namespace DeCuisine
         {
             Vector3 spawnLoc = randomSpawn();
             new ServerCooker(game.Config.Cookers[type], game, spawnLoc);
-            Console.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            Program.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
 
         /// <summary>
@@ -331,7 +332,7 @@ namespace DeCuisine
         {
             Vector3 spawnLoc = new Vector3((float)x, (float)y, (float)z);
             new ServerCooker(game.Config.Cookers[type], game, spawnLoc);
-            Console.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            Program.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
         }
 
         /// <summary>
@@ -342,13 +343,13 @@ namespace DeCuisine
         {
             if (!gameObjects.ContainsKey(objId))
             {
-                Console.WriteLine("Yo dawg, that Id " + objId + " ain't be in the world son");
+                Program.WriteLine("Yo dawg, that Id " + objId + " ain't be in the world son");
                 return false;
             }
 
             if (gameObjects[objId].ObjectClass != objType)
             {
-                Console.WriteLine("Yo dawg, object at id " + objId + " Be a " + gameObjects[objId].ObjectClass + 
+                Program.WriteLine("Yo dawg, object at id " + objId + " Be a " + gameObjects[objId].ObjectClass + 
                ". That ain't a " + objType + " son.");
                 return false;
             }
@@ -385,11 +386,11 @@ namespace DeCuisine
                 case "ing":
                     b.AppendLine(obj.Id + "\t\t" + ((ServerIngredient)obj).Type.Name + "\t\t" + 
                                       (int)obj.Position.X + " " + (int)obj.Position.Y + " " + (int)obj.Position.Z +
-                                      "\t\t" + obj.ToRender);
+                                      "\t\t" + obj.Body.LinearVelocity + "\t\t" + obj.ToRender);
                     break;
                 default:
                     b.AppendLine(obj.Id + "\t\t" + obj.ObjectClass + "\t\t" + (int)obj.Position.X + " " + 
-                                      (int)obj.Position.Y + " " + (int)obj.Position.Z + "\t\t" + obj.ToRender);
+                                      (int)obj.Position.Y + " " + (int)obj.Position.Z + "\t\t" + obj.Body.LinearVelocity + "\t\t" + obj.ToRender);
                     break;
             }
             return b.ToString();

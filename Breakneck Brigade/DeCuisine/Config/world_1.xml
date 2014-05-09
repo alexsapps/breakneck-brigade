@@ -1,4 +1,4 @@
-<world gravity="0,-10,0">
+<world gravity="0,-190,0">
 	<space>
 		<ingredient type="ice cream" coordinate="-15,15,0" />
 		<ingredient type="ice cream" coordinate="15,10,15" />

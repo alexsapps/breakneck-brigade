@@ -85,6 +85,7 @@
             this.txtConnect.Name = "txtConnect";
             this.txtConnect.Size = new System.Drawing.Size(179, 20);
             this.txtConnect.TabIndex = 0;
+            this.txtConnect.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtConnect_KeyDown);
             // 
             // frmConnect
             // 

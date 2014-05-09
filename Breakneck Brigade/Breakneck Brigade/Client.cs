@@ -65,7 +65,7 @@ namespace Breakneck_Brigade
                     {
                         lock (Lock) //lock UI so user gets confused and looks for the message
                         {
-                            Console.WriteLine("Warning!!!  ConfigSalad hash mismatch between client and server.");
+                            Program.WriteLine("Warning!!!  ConfigSalad hash mismatch between client and server.");
                             MessageBox.Show("ConfigSalad hash mismatch between client and server.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                     }
@@ -99,7 +99,7 @@ namespace Breakneck_Brigade
             catch (ObjectDisposedException) { lock (Lock) { Disconnect(); } return; }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Program.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
                 lock (Lock) { Disconnect(); }
                 throw;
@@ -179,7 +179,7 @@ namespace Breakneck_Brigade
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
-                Console.WriteLine(ex.ToString());
+                Program.WriteLine(ex.ToString());
                 lock (Lock) { Disconnect(); }
                 throw;
             }

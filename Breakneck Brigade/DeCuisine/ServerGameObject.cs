@@ -206,9 +206,7 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
-            //Vector3 x = this.Body.MotionState.WorldTransform.Origin;
-            //Vector3 y = this.Body.WorldTransform.Origin;
-            //this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(new Vector3(0, 0, 0)));
+
         }
 
         public void MarkDirty()
@@ -239,8 +237,9 @@ namespace DeCuisine
         {
             this.Game.Lock.AssertHeld();
             this.MarkDirty(); // moved it, make sure you mark it to move
+            Vector3 delta = value - this.Position;
             this.lastPosition = value;
-            this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(value));
+            this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(this.Position + delta));
             Debug.Assert(value.X == this.Body.WorldTransform.Origin.X); 
             Debug.Assert(value.Y == this.Body.WorldTransform.Origin.Y);
             Debug.Assert(value.Z == this.Body.WorldTransform.Origin.Z);

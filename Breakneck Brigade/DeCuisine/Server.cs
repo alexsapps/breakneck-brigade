@@ -159,7 +159,33 @@ namespace DeCuisine
             {
             keepGoing:
                 listener.Stop();
-                listener.Start();
+
+                {
+                    int retries = 0;
+                    while (true)
+                    {
+                        try
+                        {
+                            listener.Start();
+                            break;
+                        }
+                        catch
+                        {
+                            if (retries++ < 10)
+                            {
+                                Program.WriteLine("Listen failed.  Retrying...");
+                                System.Threading.Thread.Sleep(2000);
+                            }
+                            else
+                                throw;
+                        }
+                    }
+                    if(retries > 0)
+                    {
+                        Program.WriteLine("Finally acquired TCP port " + Port);
+                    }
+                }
+
 
                 try
                 {
@@ -188,7 +214,7 @@ namespace DeCuisine
                         return; //server is shutting down
                     else
                     {
-                        Console.WriteLine(ex.ToString());
+                        Program.WriteLine(ex.ToString());
                         System.Diagnostics.Debugger.Break();
                         goto keepGoing;
                     }
@@ -222,10 +248,10 @@ namespace DeCuisine
         public void PrintStatus()
         {
             Lock.AssertHeld();
-            Console.WriteLine(Started ? "Started." : "Offline.");
+            Program.WriteLine(Started ? "Started." : "Offline.");
             if (Started)
             {
-                Console.WriteLine(clients.Count.ToString() + " clients connected.");
+                Program.WriteLine(clients.Count.ToString() + " clients connected.");
                 lock(Game.Lock) {
                     Game.PrintStatus();
                 }

@@ -26,7 +26,7 @@ namespace Breakneck_Brigade.Graphics
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
         private Stopwatch   _stopwatch;
-        private float       secondsPerFrame = 0.0f;
+        public float       secondsPerFrame = 0.0f;
 
         public static int                           CurrentDrawMode = -1;
         /// <summary>
@@ -186,7 +186,6 @@ namespace Breakneck_Brigade.Graphics
             _stopwatch.Stop();
             secondsPerFrame += _stopwatch.ElapsedTicks/MathConstants.TICKS_PER_SECOND;
             secondsPerFrame /= 2;
-            Console.WriteLine(1/secondsPerFrame);
             _stopwatch.Restart();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
             //Glfw.glfwPollEvents();

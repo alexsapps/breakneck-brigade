@@ -74,7 +74,7 @@ namespace DeCuisine
                     connection.ReceiveTimeout = 0;
 
                     IsConnected = true;
-                    Connected(this, EventArgs.Empty);
+                    new Thread(() => { Connected(this, EventArgs.Empty); }).Start();
 
                     senderThread = new Thread(() => send());
                     senderThread.Start();
@@ -106,7 +106,7 @@ namespace DeCuisine
             catch (IOException) { lock (Lock) { Disconnect(); } }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Program.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
                 lock (Lock) { Disconnect(); }
             }
@@ -118,9 +118,8 @@ namespace DeCuisine
             {
                 case ClientEventType.BeginMove: return typeof(ClientBeginMoveEvent);
                 case ClientEventType.ChangeOrientation: return typeof(ClientChangeOrientationEvent);
-                case ClientEventType.Enter: return typeof(ClientEnterEvent);
-                case ClientEventType.Leave: return typeof(ClientLeaveEvent);
                 case ClientEventType.Test: return typeof(ClientTestEvent);
+                case ClientEventType.Jump: return typeof(ClientJumpEvent);
                 default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
         }
@@ -186,7 +185,7 @@ namespace DeCuisine
                                 buffer.SetLength(0);
 
                                 if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 2)
-                                    Console.WriteLine("slow message");
+                                    Program.WriteLine("slow message");
 
                             }
                             w2.Stop(2, "Client: slow write loop. {0}");
@@ -198,7 +197,7 @@ namespace DeCuisine
             catch (IOException) { lock (Lock) { Disconnect(); } }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Program.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
                 lock (Lock) { Disconnect(); }
                 throw;
@@ -225,7 +224,7 @@ namespace DeCuisine
             }
             catch { }
 
-            Disconnected(this, EventArgs.Empty);
+            new Thread(() => { Disconnected(this, EventArgs.Empty); }).Start();
         }
     }
 }

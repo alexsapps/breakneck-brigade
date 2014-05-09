@@ -102,7 +102,7 @@ namespace Breakneck_Brigade
             else
                 keys.Remove(key);
 
-            //Console.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
+            //Program.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
             
             lock (Lock)
                 Monitor.PulseAll(Lock);

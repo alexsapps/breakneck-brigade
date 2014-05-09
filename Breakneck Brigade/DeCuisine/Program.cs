@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,15 @@ namespace DeCuisine
 
         static void Main(string[] args)
         {
+            try { Console.SetWindowSize(120, 40); } catch { } //see also client's Main()
+            Mutex mutex = new Mutex(true, "ccf299f3-1ea2-48e1-84bd-72d1de57fbeb");
+            if (!mutex.WaitOne(TimeSpan.Zero, true)) //http://sanity-free.org/143/csharp_dotnet_single_instance_application.html
+            {
+                Program.WriteLine("Already started.");
+                System.Threading.Thread.Sleep(600);
+                return;
+            }
+
             globalConfig = config.Open("global-config.xml");
             int port = int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
@@ -24,12 +34,17 @@ namespace DeCuisine
             lock (server.Lock)
             {
                 start(); //start automatically
+                lock (server.Game.Lock)
+                {
+                    server.Game.Start(); //play automatically to make debugging easier.
+                    Program.WriteLine("Game started automatically.");
+                }
             }
 
             Console.CancelKeyPress += Console_CancelKeyPress;
 
             string line;
-            prompt();
+            
             while ((line = Console.ReadLine()) != null)
             {
                 try
@@ -39,7 +54,7 @@ namespace DeCuisine
                     {
                         case "cancel":
                             {
-                                consoleCancel = true;
+                                cancelConsole = true;
                                 break;
                             }
                         case "stop":
@@ -51,7 +66,7 @@ namespace DeCuisine
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Already stopped.");
+                                    Program.WriteLine("Already stopped.");
                                 }
                             }
                             break;
@@ -69,7 +84,7 @@ namespace DeCuisine
                             lock (server.Lock)
                             {
                                 if (server.Started)
-                                    Console.WriteLine("Already started.");
+                                    Program.WriteLine("Already started.");
                                 else
                                     start();
                             }
@@ -84,11 +99,11 @@ namespace DeCuisine
                                         if (server.Game.Mode == GameMode.Init)
                                             server.Game.Start();
                                         else
-                                            Console.WriteLine("Game already in " + server.Game.Mode.ToString() + " mode.");
+                                            Program.WriteLine("Game already in " + server.Game.Mode.ToString() + " mode.");
                                     }
                                 }
                                 else
-                                    Console.WriteLine("Server not started.");
+                                    Program.WriteLine("Server not started.");
                             }
                             break;
                         case "reconfig":
@@ -101,7 +116,7 @@ namespace DeCuisine
                         case "set":
                             if (parts.Length < 3)
                             {
-                                Console.WriteLine("set expects at least two arguments.");
+                                Program.WriteLine("set expects at least two arguments.");
                                 break;
                             }
                             lock (server.Lock)
@@ -117,11 +132,11 @@ namespace DeCuisine
                                                 if (val > 0)
                                                     server.Game.FrameRateMilliseconds = val;
                                                 else
-                                                    Console.WriteLine("ticks must be more than 0.");
+                                                    Program.WriteLine("ticks must be more than 0.");
                                                 break;
                                             default:
                                                 {
-                                                    Console.WriteLine("set doesn't understand " + parts[1]);
+                                                    Program.WriteLine("set doesn't understand " + parts[1]);
                                                     break;
                                                 }
                                         }
@@ -129,7 +144,7 @@ namespace DeCuisine
                                 }
                                 else
                                 {
-                                    Console.WriteLine("game must be started to set this variable.");
+                                    Program.WriteLine("game must be started to set this variable.");
                                 }
                             }
                             break;
@@ -147,36 +162,34 @@ namespace DeCuisine
                                     stop();
                                 }
                             }
-                            consoleCancel = true;
+                            cancelConsole = true;
                             return;
 
 
                         default:
                             if (!CommandLinePlayer.ReadArgs(parts, server)) 
-                                Console.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
+                                Program.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
                             break;
                     }
                 }
                 catch(Exception ex)
                 {
-                    Console.Write("Error:  ");
-                    Console.WriteLine(ex.ToString());
+                    Program.WriteLine("Error:  " + ex.ToString());
                 }
-                prompt();
             }
         }
 
-        public static bool consoleCancel;
+        public static bool cancelConsole;
         static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            consoleCancel = true;
+            cancelConsole = true;
         }
             
         static void start() {
             server.Lock.AssertHeld();
 
+            Program.WriteLine("Starting on port " + server.Port);
             server.Start();
-            Console.WriteLine(String.Format("Listening on port {0}", server.Port));
         }
 
         static void stop()
@@ -184,12 +197,21 @@ namespace DeCuisine
             server.Lock.AssertHeld();
 
             server.Stop();
-            Console.WriteLine("Stopped.");
+            Program.WriteLine("Stopped.");
         }
 
-        static void prompt()
+        static BBConsole serverConsole = new BBConsole("server", ConsoleColor.Yellow);
+        public static void ClearLine()
         {
-            Console.Write("> ");
+            serverConsole.ClearLine();
+        }
+        public static void WriteLine(string line)
+        {
+            serverConsole.WriteLine(line);
+        }
+        public static void Prompt()
+        {
+            serverConsole.Prompt();
         }
     }
 }

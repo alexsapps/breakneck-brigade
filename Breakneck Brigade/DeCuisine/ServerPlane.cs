@@ -19,12 +19,11 @@ namespace DeCuisine
             : base(game)
         {
             Texture = texture;
-            Position = new Vector3(0, 0, height);
+            Position = new Vector3(0, 0, 0);
             AddToWorld(() =>
             {
-                //dCreatePlane uses plane equation ax+by+cz+d=0.
-                //return Ode.dCreatePlane(game.Space, 0, 0, 1.0, 0);
-                BoxShape groundShape = new BoxShape(500, 1, 500);
+
+                BoxShape groundShape = new BoxShape(500, 10, 500);
 
                 //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
                 DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);

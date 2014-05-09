@@ -49,8 +49,6 @@ namespace DeCuisine
         private float _frameRateSeconds;
         float FrameRateSeconds { get { return _frameRateSeconds; } }
 
-        int MAX_CONTACTS = 8;
-
         // Physics
         DynamicsWorld _world;
         public DynamicsWorld World
@@ -59,10 +57,10 @@ namespace DeCuisine
             set { _world = value; }
         }
 
-        protected CollisionConfiguration CollisionConf;
-        protected CollisionDispatcher Dispatcher;
-        protected BroadphaseInterface Broadphase;
-        protected ConstraintSolver Solver;
+        public CollisionConfiguration CollisionConf;
+        public CollisionDispatcher Dispatcher;
+        public BroadphaseInterface Broadphase;
+        public ConstraintSolver Solver;
         public AlignedCollisionShapeArray CollisionShapes { get; private set; }
 
         public ServerGame(Server server)
@@ -99,15 +97,12 @@ namespace DeCuisine
                 lock (e.Client.Lock)
                 {
                     clients.Add(e.Client);
-                    lock (ClientInput)
-                    {
-                        ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEnterEvent() }); //we can change this.
-                    }
 
                     SendMode(e.Client);
 
                     if (Mode == GameMode.Started)
                     {
+                        e.Client.SendMessage(CalculateGameStateMessage(CalculateGameStateFull)); //do this before StartClient so it doesn't get sent its player object right away, since it's already going to be in HasChanged
                         StartClient(e.Client);
                     }
                 }
@@ -117,7 +112,6 @@ namespace DeCuisine
         private void StartClient(Client client)
         {
             client.Lock.AssertHeld();
-            client.SendMessage(CalculateGameStateMessage(CalculateGameStateFull)); //do this BEFORE creating a ServerPlayer, which adds the player to HasAdded, which would be sent for a 2nd time in the next update
             client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10));
             client.SendMessage(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
         }
@@ -126,12 +120,8 @@ namespace DeCuisine
         {
             lock (Lock)
             {
+                e.Client.Player.Remove();
                 clients.Remove(e.Client);
-
-                lock (ClientInput)
-                {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientLeaveEvent() });
-                }
             }
         }
 
@@ -215,9 +205,11 @@ namespace DeCuisine
             HasRemoved.Clear();
 
             // loop over clients and make play objects for them
+            var startMsg = CalculateGameStateMessage(CalculateGameStateFull); //must be computed before StartClient called for any client, because it should not include their players, which are already in HasChanged
             foreach (var client in clients)
             {
                 StartClient(client);
+                client.SendMessage(startMsg);
             }
             try
             {
@@ -239,10 +231,6 @@ namespace DeCuisine
                             {
                                 switch (input.Event.Type)
                                 {
-                                    case ClientEventType.Enter:
-                                        break;
-                                    case ClientEventType.Leave:
-                                        break;
                                     case ClientEventType.Test:
                                         var ppos = input.Client.Player.Position;
                                         var pos = new Vector3()
@@ -257,18 +245,12 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.BeginMove:
                                         ClientBeginMoveEvent e = (ClientBeginMoveEvent)input.Event;
-                                        //SousChef.Vector4 direction = (input.Client.Player.Rotation * new SousChef.Vector4(0.0, 1.0, 0.0));
-                                        var lastPos = input.Client.Player.Position;
-                                        var newpos = new Vector3();
-                                        newpos.X = (lastPos.X + e.Delta.x);
-                                        newpos.Y = (lastPos.Y + e.Delta.y);
-                                        newpos.Z = (lastPos.Z + e.Delta.z);
-                                        input.Client.Player.Position = newpos;
-                                        //TEST
-                                        // direction.Scale(3.0f);
-                                        // input.Client.Player.Position = new Vector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
+                                        input.Client.Player.Move(e.Delta.x, e.Delta.y, e.Delta.z);
                                         break;
                                     case ClientEventType.EndMove:
+                                        break;
+                                    case ClientEventType.Jump:
+                                        input.Client.Player.Move(0, 400, 0);
                                         break;
                                     default:
                                         Debugger.Break();
@@ -277,11 +259,12 @@ namespace DeCuisine
                             }
                             ClientInput.Clear();
                         }
-                        //ServerPlayer Last = clients[0].Player;
+
                         /*
                          * Physics happens here.
                          */
                         _world.StepSimulation(0.1f);
+
                         /*
                          * handle an instant in time, e.g. gravity, collisions
                          */
@@ -313,7 +296,7 @@ namespace DeCuisine
                     if (waitTime > 0)
                         Thread.Sleep(new TimeSpan(waitTime));
                     else
-                        Console.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
+                        Program.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
                 }
             }
             finally
@@ -326,7 +309,7 @@ namespace DeCuisine
                     {
                         TypedConstraint constraint = _world.GetConstraint(i);
                         _world.RemoveConstraint(constraint);
-                        constraint.Dispose(); ;
+                        constraint.Dispose();
                     }
 
                     //remove the rigidbodies from the dynamics world and delete them
@@ -513,8 +496,8 @@ namespace DeCuisine
         internal void PrintStatus()
         {
             Lock.AssertHeld();
-            Console.WriteLine("Game mode: " + Mode.ToString());
-            Console.WriteLine(GameObjects.Count + " game objects");
+            Program.WriteLine("Game mode: " + Mode.ToString());
+            Program.WriteLine(GameObjects.Count + " game objects");
         }
 
 
