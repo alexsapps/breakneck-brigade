@@ -106,7 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config\settings.xml" />
-    <None Include="config\world_1.xml" />
+    <None Include="config\world_1.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="config\world_example.xml" />

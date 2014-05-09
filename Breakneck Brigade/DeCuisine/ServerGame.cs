@@ -204,12 +204,11 @@ namespace DeCuisine
             // loop over clients and make play objects for them
             foreach (var client in clients)
             {
-                client.Player = new ServerPlayer(server.Game, new Vector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 10));
+                client.Player = new ServerPlayer(server.Game, new Vector3(10, 10, 10));
                 lock(client.ServerMessages)
                 {
                         client.ServerMessages.Add(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
                 }
-            }
             }
             try
             {
@@ -237,7 +236,7 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.Test:
                                         var ppos = input.Client.Player.Position;
-                                        var pos = new Ode.dVector3()
+                                        var pos = new Vector3()
                                         {
                                             X = ppos.X,
                                             Y = ppos.Y,

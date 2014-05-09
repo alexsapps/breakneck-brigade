@@ -36,9 +36,9 @@ namespace DeCuisine
 
         public override void Serialize(BinaryWriter stream)
         {
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.Serialize(stream);
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             //stream.Write(a,b);
             //stream.Write(c,d);
         }
@@ -46,10 +46,10 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             // need to flip in order to get the camera rendering right
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.UpdateStream(stream);
             // flip back for sanity
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             //stream.Write(c,d);
         }
 
