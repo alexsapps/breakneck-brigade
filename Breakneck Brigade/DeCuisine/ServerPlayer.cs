@@ -58,10 +58,10 @@ namespace DeCuisine
 
         public override void OnCollide(ServerGameObject obj)
         {
-            if (obj.ObjectClass == GameObjectClass.Ingredient)
-            {
-                this.toHold = obj;
-            }
+            //if (obj.ObjectClass == GameObjectClass.Ingredient)
+            //{
+            //    this.toHold = obj;
+            //}
 
         }
 
@@ -97,12 +97,12 @@ namespace DeCuisine
 
         public override void Update()
         {
-            // Can't manipulate Ode in collide funtions, so a hacked flag has to do to make the joint
-            if (this.toHold != null)
-            {
-                this.makeJoint("left", this.toHold);
-                this.toHold = null;
-            }
+            //// Can't manipulate Ode in collide funtions, so a hacked flag has to do to make the joint
+            //if (this.toHold != null)
+            //{
+            //    this.makeJoint("left", this.toHold);
+            //    this.toHold = null;
+            //}
         }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SousChef;
 using System.IO;
 using System.Diagnostics;
@@ -94,6 +90,8 @@ namespace DeCuisine
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
                }
+
+            this.MarkDirty();
            
         }
 
@@ -211,9 +209,9 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
-            Vector3 x = this.Body.MotionState.WorldTransform.Origin;
-            Vector3 y = this.Body.WorldTransform.Origin;
-            this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(new Vector3(0, 0, 0)));
+            //Vector3 x = this.Body.MotionState.WorldTransform.Origin;
+            //Vector3 y = this.Body.WorldTransform.Origin;
+            //this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(new Vector3(0, 0, 0)));
         }
 
         public void MarkDirty()

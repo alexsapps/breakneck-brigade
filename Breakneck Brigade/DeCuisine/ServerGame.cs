@@ -268,12 +268,11 @@ namespace DeCuisine
                             }
                             ClientInput.Clear();
                         }
-
+                        //ServerPlayer Last = clients[0].Player;
                         /*
                          * Physics happens here.
                          */
                         _world.StepSimulation(0.1f);
-
                         /*
                          * handle an instant in time, e.g. gravity, collisions
                          */
@@ -411,7 +410,7 @@ namespace DeCuisine
                     }
                 }
 
-                if (didCollide && obA.CollisionShape.UserObject  != null && obB.CollisionShape.UserObject != null)
+                if (didCollide && obA.CollisionShape.UserObject != null && obB.CollisionShape.UserObject != null)
                 {
                     ServerGameObject obj1 = (ServerGameObject)obA.CollisionShape.UserObject;
                     ServerGameObject obj2 = (ServerGameObject)obB.CollisionShape.UserObject;
