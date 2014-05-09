@@ -69,8 +69,8 @@ namespace Breakneck_Brigade
             }
 
             // Velocity update
-            Velocity.X = (IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f;
-            Velocity.Z = (IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f;
+            Velocity.X = -((IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f);
+            Velocity.Z = -((IM[GlfwKeys.GLFW_KEY_S] || IM[GlfwKeys.GLFW_KEY_DOWN]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_W] || IM[GlfwKeys.GLFW_KEY_UP]) ? 1 * MoveSpeed : 0.0f);
 
             var xDiff = Velocity.Z * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Sin((Orientation / 180.0f * Math.PI));

@@ -106,7 +106,7 @@ namespace Breakneck_Brigade.Graphics
 			// Place camera            
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
-            Gl.glTranslatef(Position.X, Position.Y, Position.Z);           
+            Gl.glTranslatef(-(Position.X), -(Position.Y) - 25, -(Position.Z));           
 
             Gl.glMultMatrixf(Transform.glArray);
 
