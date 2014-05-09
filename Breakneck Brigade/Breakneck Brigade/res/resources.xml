@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<models numberOfModels = "7">
+<models>
   <model>
     <filename>orange</filename>
     <scaleX>.1</scaleX>
@@ -40,8 +40,29 @@
 
   <model>
     <filename>sauce</filename>
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>     
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>     
+  </model>
+
+  <model>
+    <filename>iceCream</filename>
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>     
+  </model>
+
+  <model>
+    <filename>egg</filename>
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>     
+  </model>
+
+  <model>
+    <filename>steak</filename>
+    <scaleX>.1</scaleX>
+    <scaleY>.1</scaleY>
+    <scaleZ>.1</scaleZ>     
   </model>
 </models>

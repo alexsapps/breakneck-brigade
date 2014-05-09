@@ -119,10 +119,23 @@ namespace Breakneck_Brigade.Graphics
         {
             using (FileStream resFile = new FileStream(RESOURCES_XML_PATH, FileMode.Open))
             {
+                int numberOfModels = 0;
+                using (XmlReader firstPass = XmlReader.Create(resFile))
+                {
+                    firstPass.ReadToFollowing("models");
+                    if (firstPass.ReadToDescendant("model"))
+                    {
+                        numberOfModels++;
+                    }
+                    while (firstPass.ReadToNextSibling("model"))
+                    {
+                        numberOfModels++;
+                    }
+                }
+                resFile.Seek(0, SeekOrigin.Begin);
                 using (XmlReader reader = XmlReader.Create(resFile))
                 {
                     reader.ReadToFollowing("models");
-                    int numberOfModels = int.Parse(reader.GetAttribute("numberOfModels"));
                     reader.ReadToDescendant("model");
                     for(int ii = 0; ii < numberOfModels; ii++)
                     {
