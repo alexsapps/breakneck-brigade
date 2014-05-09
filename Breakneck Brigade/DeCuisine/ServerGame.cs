@@ -188,7 +188,7 @@ namespace DeCuisine
 
             return body;
         }
-        
+
         public void Run()
         {
             /* initialize physics */
@@ -205,9 +205,9 @@ namespace DeCuisine
             foreach (var client in clients)
             {
                 client.Player = new ServerPlayer(server.Game, new Vector3(10, 10, 10));
-                lock(client.ServerMessages)
+                lock (client.ServerMessages)
                 {
-                        client.ServerMessages.Add(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
+                    client.ServerMessages.Add(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
                 }
             }
             try
@@ -361,10 +361,10 @@ namespace DeCuisine
                         if (body != null && body.MotionState != null)
                         {
                             body.MotionState.Dispose();
-            }
+                        }
                         _world.RemoveCollisionObject(obj);
                         obj.Dispose();
-        }
+                    }
 
                     //delete collision shapes
                     foreach (CollisionShape shape in CollisionShapes)
@@ -372,25 +372,22 @@ namespace DeCuisine
                     CollisionShapes.Clear();
 
                     _world.Dispose();
-                    Broadphase.Dispose();
-                    Dispatcher.Dispose();
-                    CollisionConf.Dispose();
                 }
 
                 if (Broadphase != null)
-        {
+                {
                     Broadphase.Dispose();
                 }
                 if (Dispatcher != null)
-            {
+                {
                     Dispatcher.Dispose();
-            }
+                }
                 if (CollisionConf != null)
-            {
+                {
                     CollisionConf.Dispose();
                 }
             }
-            }
+        }
 
         private void CollisionCallback(DynamicsWorld world, float timeStep)
         {

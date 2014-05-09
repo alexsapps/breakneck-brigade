@@ -75,7 +75,7 @@ namespace Breakneck_Brigade.Graphics
                 Up.Y = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
                 Position = cp.GetPosition();
-                Position.Y -= 10; //eyes are a little above the center of mass
+                Position.Y += 25; //eyes are a little above the center of mass
 
                 anglesToAxis();
             }
