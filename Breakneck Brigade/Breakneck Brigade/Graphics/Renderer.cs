@@ -178,7 +178,7 @@ namespace Breakneck_Brigade.Graphics
             _stopwatch.Stop();
             secondsPerFrame += _stopwatch.ElapsedTicks/MathConstants.TICKS_PER_SECOND;
             secondsPerFrame /= 2;
-            //Console.WriteLine(1/secondsPerFrame);
+            Console.WriteLine(1/secondsPerFrame);
             _stopwatch.Restart();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
             //Glfw.glfwPollEvents();

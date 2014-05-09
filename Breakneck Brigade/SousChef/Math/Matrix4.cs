@@ -25,6 +25,31 @@ namespace SousChef
         } 
 
         /// <summary>
+        /// Copy constructor. Copies the values and instanciates a new matrix from the values.
+        /// </summary>
+        /// <param name="toCopy"></param>
+        public Matrix4(Matrix4 toCopy)
+        {
+            glArray    = new float[16];
+            this[0, 0] = toCopy[0, 0];
+            this[0, 1] = toCopy[0, 1];
+            this[0, 2] = toCopy[0, 2];
+            this[0, 3] = toCopy[0, 3];
+            this[1, 0] = toCopy[1, 0];
+            this[1, 1] = toCopy[1, 1];
+            this[1, 2] = toCopy[1, 2];
+            this[1, 3] = toCopy[1, 3];
+            this[2, 0] = toCopy[2, 0];
+            this[2, 1] = toCopy[2, 1];
+            this[2, 2] = toCopy[2, 2];
+            this[2, 3] = toCopy[2, 3];
+            this[3, 0] = toCopy[3, 0];
+            this[3, 1] = toCopy[3, 1];
+            this[3, 2] = toCopy[3, 2];
+            this[3, 3] = toCopy[3, 3];
+        }
+
+        /// <summary>
         /// Initializes the matrix to the specified matrix with row-major parameter order.
         /// That is, the matrix will have the values:
         /// m00, m01, m02, m03
