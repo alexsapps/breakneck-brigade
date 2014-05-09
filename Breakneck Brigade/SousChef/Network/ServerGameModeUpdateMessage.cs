@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using SousChef;
+using System.IO;
+
+namespace SousChef
+{
+    public class ServerGameModeUpdateMessage : ServerMessage
+    {
+        public GameMode Mode { get; set; }
+        public override ServerMessageType Type { get { return ServerMessageType.GameModeUpdate; } }
+        public ServerGameModeUpdateMessage() { }
+        public override void Write(BinaryWriter writer)
+        {
+            writer.Write((byte)(Mode));
+        }
+        public override void Read(BinaryReader reader)
+        {
+            Mode = (GameMode)reader.ReadByte();
+        }
+    }
+}

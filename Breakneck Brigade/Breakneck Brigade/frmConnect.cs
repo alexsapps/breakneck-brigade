@@ -73,12 +73,16 @@ namespace Breakneck_Brigade
         {
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.BackgroundImage = global::Breakneck_Brigade.Properties.Resources.background;
-            doConnect();
         }
 
         private void lstHosts_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtConnect.Text = lstHosts.SelectedItem as string;
+        }
+
+        private void lstHosts_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            doConnect();
         }
     }
 }

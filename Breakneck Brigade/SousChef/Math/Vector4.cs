@@ -13,14 +13,12 @@ namespace SousChef
     /// </author>
     public class Vector4
     {
-        public float X { get { return this[0]; } set { this[0] = value; } }
-        public float Y { get { return this[1]; } set { this[1] = value; } }
-        public float Z { get { return this[2]; } set { this[2] = value; } }
-        public float W { get { return this[3]; } set { this[3] = value; } }
+        public float X;
+        public float Y;
+        public float Z;
+        public float W;
 
         const int size = 4;
-
-        float[] v = new float[size];              //Backing array for the object
 
        /// <summary>
        /// Initializes all dimensions of the vector to 0.
@@ -36,7 +34,10 @@ namespace SousChef
         /// <param name="other"></param>
         public Vector4(Vector4 other)
         {
-            Array.Copy(other.v, this.v, size);
+            this.X = other.X;
+            this.Y = other.Y;
+            this.Z = other.Z;
+            this.W = other.W;
         }
 
         /// <summary>
@@ -48,10 +49,10 @@ namespace SousChef
         /// <param name="w"></param>
         public Vector4(float x, float y, float z, float w)
         {
-	        v[0] = x;
-	        v[1] = y;
-	        v[2] = z;
-	        v[3] = w;
+	        this.X = x;
+	        this.Y = y;
+	        this.Z = z;
+	        this.W = w;
         }
 
         /// <summary>
@@ -63,10 +64,10 @@ namespace SousChef
         /// <param name="w"></param>
         public Vector4(double x, double y, double z, double w)
         {
-	        v[0] = (float) x;
-	        v[1] = (float) y;
-	        v[2] = (float) z;
-	        v[3] = (float) w;
+	        this.X = (float) x;
+	        this.Y = (float) y;
+	        this.Z = (float) z;
+	        this.W = (float) w;
         }
 
         /// <summary>
@@ -78,10 +79,10 @@ namespace SousChef
         /// <param name="z"></param>
         public Vector4(float x, float y, float z)
         {
-            v[0] = x;
-            v[1] = y;
-            v[2] = z;
-            v[3] = 1;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
+            this.W = 1;
         }
 
         /// <summary>
@@ -93,28 +94,13 @@ namespace SousChef
         /// <param name="z"></param>
         public Vector4(double x, double y, double z)
         {
-            v[0] = (float) x;
-            v[1] = (float) y;
-            v[2] = (float) z;
-            v[3] = 1;
+            this.X = (float) x;
+            this.Y = (float) y;
+            this.Z = (float) z;
+            this.W = 1;
         }
 
         public Vector4(SousChef.Coordinate coordinate) : this(coordinate.x, coordinate.y, coordinate.z) { }
-
-        /// <summary>
-        /// Gets the specified dimension of the vector.
-        /// x = 0
-        /// y = 1
-        /// z = 2
-        /// w = 3
-        /// </summary>
-        /// <param name="ind"></param>
-        /// <returns></returns>
-        public float this[int ind]
-        {
-            get { return v[ind]; }
-            set { v[ind] = value; }
-        }
         
         /// <summary>
         /// Scalar multiplication.
@@ -125,9 +111,9 @@ namespace SousChef
         public static Vector4 operator * (float scalar, Vector4 rhs)
         {
 	        Vector4 retVect = new Vector4(rhs);
-	        retVect[0] *= scalar;
-	        retVect[1] *= scalar;
-	        retVect[2] *= scalar;
+	        retVect.X *= scalar;
+	        retVect.Y *= scalar;
+	        retVect.Z *= scalar;
 	        return retVect;
         }
 
@@ -150,10 +136,10 @@ namespace SousChef
         /// <returns>A scalar that represents the result of multiplying the two vectors</returns>
         public static float operator * (Vector4 lhs, Vector4 rhs)
         {
-	        return  lhs[0]*rhs[0] +
-                    lhs[1]*rhs[1] +
-                    lhs[2]*rhs[2] +
-                    lhs[3]*rhs[3];
+	        return  lhs.X*rhs.X +
+                    lhs.Y*rhs.Y +
+                    lhs.Z*rhs.Z +
+                    lhs.W*rhs.W;
         }
 
         /// <summary>
@@ -164,9 +150,9 @@ namespace SousChef
         /// <returns>The Vector4 that is the result of the two vectors added together. This does NOT add the homogenous coordinate.</returns>
         public static Vector4 operator + (Vector4 lhs, Vector4 rhs)
         {
-	        return new Vector4( lhs[0]+rhs[0],
-					            lhs[1]+rhs[1],
-                                lhs[2]+rhs[2]);	
+	        return new Vector4( lhs.X+rhs.X,
+					            lhs.Y+rhs.Y,
+                                lhs.Z+rhs.Z);	
         }
 
         /// <summary>
@@ -177,9 +163,9 @@ namespace SousChef
         /// <returns>The Vector4 that is the result of lhs-rhs. This does NOT add the homogenous coordinate.</returns>
         public static Vector4 operator - (Vector4 lhs, Vector4 rhs)
         {
-	        return new Vector4( lhs[0]-rhs[0],
-					            lhs[1]-rhs[1],
-					            lhs[2]-rhs[2]);
+	        return new Vector4( lhs.X-rhs.X,
+					            lhs.Y-rhs.Y,
+					            lhs.Z-rhs.Z);
         }
 
         /// <summary>
@@ -191,10 +177,10 @@ namespace SousChef
         /// <param name="w"></param>
         public void Set(float x, float y, float z, float w)
         {
-	        v[0] = x;
-	        v[1] = y;
-	        v[2] = z;
-	        v[3] = w;
+	        this.X = x;
+	        this.Y = y;
+	        this.Z = z;
+	        this.W = w;
         }
         
         /// <summary>
@@ -206,10 +192,10 @@ namespace SousChef
         /// <param name="w"></param>
         public void Set(double x, double y, double z, double w)
         {
-	        v[0] = (float) x;
-	        v[1] = (float) y;
-	        v[2] = (float) z;
-	        v[3] = (float) w;
+	        this.X = (float) x;
+	        this.Y = (float) y;
+	        this.Z = (float) z;
+	        this.W = (float) w;
         }
 
         /// <summary>
@@ -220,7 +206,7 @@ namespace SousChef
         /// <param name="z"></param>
         public void Set(double x, double y, double z)
         {
-            this.Set(x, y, z, this[3]);
+            this.Set(x, y, z, this.W);
         }
 
         /// <summary>
@@ -231,7 +217,7 @@ namespace SousChef
         /// <param name="z"></param>
         public void Set(float x, float y, float z)
         {
-            this.Set(x, y, z, this[3]);
+            this.Set(x, y, z, this.W);
         }
 
         /// <summary>
@@ -241,9 +227,9 @@ namespace SousChef
         /// <returns>The dot product of this vector, disregarding the homogenous coordinate.</returns>
         public float DotProduct(Vector4 other)
         {
-	        return	v[0]*other[0]+
-			        v[1]*other[1]+
-			        v[2]*other[2];
+	        return	this.X*other.X+
+			        this.Y*other.Y+
+			        this.Z*other.Z;
         }
 
         /// <summary>
@@ -253,9 +239,9 @@ namespace SousChef
         /// <returns>The cross product of the vector, disregarding the homogenous coordinate.</returns>
         public Vector4 CrossProduct(Vector4 other)
         {
-            float x = (v[1]*other[2]) - (v[2]*other[1]);
-            float y = (v[2]*other[0]) - (v[0]*other[2]);
-            float z = (v[0]*other[1]) - (v[1]*other[0]);
+            float x = (this.Y*other.Z) - (this.Z*other.Y);
+            float y = (this.Z*other.X) - (this.X*other.Z);
+            float z = (this.X*other.Y) - (this.Y*other.X);
             return new Vector4(x,y,z,0);
         }
 
@@ -265,9 +251,9 @@ namespace SousChef
         /// <returns>The magnitude of the 3D vector, disregarding the homogenous coordinate.</returns>
         public float Magnitude()
         {
-            return (float)Math.Sqrt(v[0]*v[0]+
-				                    v[1]*v[1]+
-				                    v[2]*v[2]);
+            return (float)Math.Sqrt(this.X*this.X+
+				                    this.Y*this.Y+
+				                    this.Z*this.Z);
         }
 
         /// <summary>
@@ -275,9 +261,9 @@ namespace SousChef
         /// </summary>
         public void Negate()
         {
-	        v[0]=-v[0];
-	        v[1]=-v[1];
-	        v[2]=-v[2];
+	        this.X=-this.X;
+	        this.Y=-this.Y;
+	        this.Z=-this.Z;
         }
 
         /// <summary>
@@ -285,10 +271,10 @@ namespace SousChef
         /// </summary>
         public void Dehomogenize()
         {
-	        v[0] /= v[3];
-	        v[1] /= v[3];
-	        v[2] /= v[3];
-	        v[3] /= v[3];
+	        this.X /= this.W;
+	        this.Y /= this.W;
+	        this.Z /= this.W;
+	        this.W /= this.W;
         }
         /// <summary>
         /// Normalizes the vector, skipping the homogenous coordinate.
@@ -296,9 +282,9 @@ namespace SousChef
         public void Normalize()
         {
 	        float mag = this.Magnitude();
-	        v[0]=v[0]/mag;
-	        v[1]=v[1]/mag;
-	        v[2]=v[2]/mag;
+	        this.X=this.X/mag;
+	        this.Y=this.Y/mag;
+	        this.Z=this.Z/mag;
         }
 
         /// <summary>
@@ -307,9 +293,9 @@ namespace SousChef
         /// <param name="scalar"></param>
         public void Scale(float scalar)
         {
-	        v[0] *= scalar;
-	        v[1] *= scalar;
-	        v[2] *= scalar;
+	        this.X *= scalar;
+	        this.Y *= scalar;
+	        this.Z *= scalar;
         }
 
         /// <summary>
@@ -326,10 +312,10 @@ namespace SousChef
         public override string ToString()
         {
             return "Vector4: " +
-                v[0] + "," +
-                v[1] + "," +
-                v[2] + "," +
-                v[3];
+                this.X + "," +
+                this.Y + "," +
+                this.Z + "," +
+                this.W;
         }
     }
 }

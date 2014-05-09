@@ -82,7 +82,6 @@
     <Compile Include="ClientEventArgs.cs" />
     <Compile Include="CommandLinePlayer.cs" />
     <Compile Include="dcutils\DC.cs" />
-    <Compile Include="LambdaServerMessage.cs" />
     <Compile Include="ServerBox.cs" />
     <Compile Include="ServerPlane.cs" />
     <Compile Include="config parsing\WorldParser.cs" />
@@ -92,11 +91,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />
-    <Compile Include="ServerGameModeUpdateMessage.cs" />
     <Compile Include="ServerGameObject.cs" />
-    <Compile Include="ServerGameStateUpdateMessage.cs" />
     <Compile Include="ServerIngredient.cs" />
-    <Compile Include="ServerMessage.cs" />
     <Compile Include="ServerPlayer.cs" />
   </ItemGroup>
   <ItemGroup>

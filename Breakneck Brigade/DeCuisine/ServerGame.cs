@@ -172,7 +172,7 @@ namespace DeCuisine
         {
             //rigidbody is dynamic if and only if mass is non zero, otherwise static
             bool isDynamic = (mass != 0.0f);
-
+        
             Vector3 localInertia = Vector3.Zero;
             if (isDynamic)
                 shape.CalculateLocalInertia(mass, out localInertia);
@@ -207,10 +207,9 @@ namespace DeCuisine
                 client.Player = new ServerPlayer(server.Game, new Vector3(DC.random.Next(-100,100), DC.random.Next(-100,100), 10));
                 lock(client.ServerMessages)
                 {
-                    client.ServerMessages.Add(new LambdaServerMessage(
-                        (w) => { w.Write((Int32)client.Player.Id); }
-                        ) { Type = ServerMessageType.PlayerIdUpdate });
+                        client.ServerMessages.Add(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
                 }
+            }
             }
             try
             {
@@ -237,7 +236,14 @@ namespace DeCuisine
                                     case ClientEventType.Leave:
                                         break;
                                     case ClientEventType.Test:
-                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, new Vector3(0.0f, 1.0f, 0.0f));
+                                        var ppos = input.Client.Player.Position;
+                                        var pos = new Ode.dVector3()
+                                        {
+                                            X = ppos.X,
+                                            Y = ppos.Y,
+                                            Z = ppos.Z + 100
+                                        };
+                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, pos);
                                         break;
                                     case ClientEventType.ChangeOrientation:
                                         break;
@@ -309,9 +315,7 @@ namespace DeCuisine
                             }
                             var msg = new ServerGameStateUpdateMessage()
                             {
-                                Type = ServerMessageType.GameStateUpdate,
                                 Binary = bin,
-                                Length = binlen,
                                 Created = DateTime.Now
                             };
 
@@ -334,7 +338,7 @@ namespace DeCuisine
                     if (waitTime > 0)
                         Thread.Sleep(new TimeSpan(waitTime));
                     else
-                        Console.WriteLine("error:  tick rate too fast. " + (waitTime / millisecond_ticks) + "ms late.");
+                        Console.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
                 }
             }
             finally
@@ -358,10 +362,10 @@ namespace DeCuisine
                         if (body != null && body.MotionState != null)
                         {
                             body.MotionState.Dispose();
-                        }
+            }
                         _world.RemoveCollisionObject(obj);
                         obj.Dispose();
-                    }
+        }
 
                     //delete collision shapes
                     foreach (CollisionShape shape in CollisionShapes)
@@ -375,19 +379,19 @@ namespace DeCuisine
                 }
 
                 if (Broadphase != null)
-                {
+        {
                     Broadphase.Dispose();
                 }
                 if (Dispatcher != null)
-                {
+            {
                     Dispatcher.Dispose();
-                }
+            }
                 if (CollisionConf != null)
-                {
+            {
                     CollisionConf.Dispose();
                 }
             }
-        }
+            }
 
         private void CollisionCallback(DynamicsWorld world, float timeStep)
         {
@@ -400,10 +404,10 @@ namespace DeCuisine
                 CollisionObject obB = (CollisionObject)contactManifold.Body1; //btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
                 int numContacts = contactManifold.NumContacts;
                 for (int j=0;j<numContacts;j++)
-                {
+            {
                     ManifoldPoint pt = contactManifold.GetContactPoint(j);
                     if (pt.Distance<0.0f)
-                    {
+                {
                         Vector3 ptA = pt.PositionWorldOnA; //.getPositionWorldOnA();
                         Vector3 ptB = pt.PositionWorldOnB; // pt.getPositionWorldOnB();
                         Vector3 normalOnB = pt.NormalWorldOnB;
@@ -418,8 +422,8 @@ namespace DeCuisine
                     obj1.OnCollide(obj2);
                     obj2.OnCollide(obj1);
                 }
+                }
             }
-        }
 
 
         private void SendModeChangeUpdate()
@@ -430,7 +434,6 @@ namespace DeCuisine
                 {
                     client.ServerMessages.Add(new ServerGameModeUpdateMessage()
                     {
-                        Type = ServerMessageType.GameModeUpdate,
                         Mode = Mode
                     });
                     Monitor.PulseAll(client.ServerMessages);

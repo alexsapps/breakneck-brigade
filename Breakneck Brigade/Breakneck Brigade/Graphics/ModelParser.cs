@@ -53,79 +53,137 @@ namespace Breakneck_Brigade.Graphics
                 LoadResult parsedFile = loader.Load(objFileStream);
                 IList<OL_Vertex> positions  = parsedFile.Vertices;
                 IList<OL_Normal> normals    = parsedFile.Normals;
-                IList<OL_Texture> textures  = parsedFile.Textures;
+                IList<OL_Texture> texCords  = parsedFile.Textures;
 
-                foreach(Group g in parsedFile.Groups)  //meshes
+                foreach(Group g in parsedFile.Groups)
                 {
                     TexturedMesh mesh = new TexturedMesh();
-                    int ii = 0;
-                    foreach(Face f in g.Faces) //polys
+                    int vertInd = 0;
+                    foreach(Face f in g.Faces)
                     {
-                        int drawMode;
-                        switch (f.Count)
-                        {
-                            case 3:
-                                drawMode = Gl.GL_TRIANGLES;
-                                break;
-                            case 4:
-                                drawMode = Gl.GL_QUADS;
-                                break;
-                            default:
-                                drawMode = Gl.GL_POLYGON;
-                                break;
-                        }
-                        TexturedPolygon poly = new TexturedPolygon(drawMode);
-                        for(ii = 0; ii < f.Count; ii++)
-                        {
-                            int posInd  = f[ii].VertexIndex - 1 ;
-                            int normInd = f[ii].NormalIndex - 1;
-                            int textInd = f[ii].TextureIndex - 1;
-                            Vector4 position = new Vector4
-                                    (
-                                        positions[posInd].X,
-                                        positions[posInd].Y,
-                                        positions[posInd].Z
-                                    );
-                            Vector4 normal;
-                            if(normals.Count > 0)
-                            { 
-                                 normal = new Vector4
-                                    (
-                                        normals[normInd].X,
-                                        normals[normInd].Y,
-                                        normals[normInd].Z
-                                    );
-                            }
-                            else
+                        ///Parse and interpret everything as triangles
+                        if(f.Count == 3)
+                        { 
+                            for(int ii = 0; ii < f.Count; ii++)
                             {
-                                normal = null;
-                            }
-                            Vector4 tc;
-                            if(textures.Count > 0)
-                            { 
-                                 tc = new Vector4
-                                    (
-                                        textures[textInd].X,
-                                        textures[textInd].Y,
-                                        0
-                                    );  
-                            }
-                            else
-                            {
-                                tc = null;
-                            }
+                                int posInd  = f[ii].VertexIndex - 1;
+                                int normInd = f[ii].NormalIndex - 1;
+                                int textInd = f[ii].TextureIndex - 1;
 
-                            Vertex v = new Vertex(position, normal, tc);
+                                /// Data format
+                                /// { 
+                                ///     v0.x, v0.y, v0.z, 
+                                ///     n0.x, n0.y, n0.z, 
+                                ///     t0.x, t0.y,
+                                ///     v1.x, v1.y, v1.z,
+                                ///     n1.x, n1.y, n1.z, 
+                                ///     t1.x, t1.y, 
+                                ///     ...
+                                /// }
 
-                            poly.Vertexes.Add(v);
+                                mesh.VBO.Indices.Add(vertInd++);
+
+                                mesh.VBO.Data.Add(positions[posInd].X);
+                                mesh.VBO.Data.Add(positions[posInd].Y);
+                                mesh.VBO.Data.Add(positions[posInd].Z);
+
+                                mesh.VBO.Data.Add(normals[normInd].X);
+                                mesh.VBO.Data.Add(normals[normInd].Y);
+                                mesh.VBO.Data.Add(normals[normInd].Z);
+
+                                mesh.VBO.Data.Add(texCords[textInd].X);
+                                mesh.VBO.Data.Add(texCords[textInd].Y);
+                            }
                         }
+                        else if(f.Count == 4)
+                        {
+                            int posInd;
+                            int normInd;
+                            int textInd;
+                            for (int ii = 0; ii < 3; ii++)
+                            {
+                                posInd  = f[ii].VertexIndex - 1;
+                                normInd = f[ii].NormalIndex - 1;
+                                textInd = f[ii].TextureIndex - 1;
 
-                        mesh.Polygons.Add(poly);
+                                /// Data format
+                                /// { 
+                                ///     v0.x, v0.y, v0.z, 
+                                ///     n0.x, n0.y, n0.z, 
+                                ///     t0.x, t0.y,
+                                ///     v1.x, v1.y, v1.z,
+                                ///     n1.x, n1.y, n1.z, 
+                                ///     t1.x, t1.y, 
+                                ///     ...
+                                /// }
+
+                                mesh.VBO.Indices.Add(vertInd++);
+
+                                mesh.VBO.Data.Add(positions[posInd].X);
+                                mesh.VBO.Data.Add(positions[posInd].Y);
+                                mesh.VBO.Data.Add(positions[posInd].Z);
+
+                                mesh.VBO.Data.Add(normals[normInd].X);
+                                mesh.VBO.Data.Add(normals[normInd].Y);
+                                mesh.VBO.Data.Add(normals[normInd].Z);
+
+                                mesh.VBO.Data.Add(texCords[textInd].X);
+                                mesh.VBO.Data.Add(texCords[textInd].Y);
+                            }
+
+                                posInd  = f[2].VertexIndex - 1;
+                                normInd = f[2].NormalIndex - 1;
+                                textInd = f[2].TextureIndex - 1;
+
+                                mesh.VBO.Indices.Add(vertInd++);
+
+                                mesh.VBO.Data.Add(positions[posInd].X);
+                                mesh.VBO.Data.Add(positions[posInd].Y);
+                                mesh.VBO.Data.Add(positions[posInd].Z);
+
+                                mesh.VBO.Data.Add(normals[normInd].X);
+                                mesh.VBO.Data.Add(normals[normInd].Y);
+                                mesh.VBO.Data.Add(normals[normInd].Z);
+
+                                mesh.VBO.Data.Add(texCords[textInd].X);
+                                mesh.VBO.Data.Add(texCords[textInd].Y);
+
+                                posInd  = f[3].VertexIndex - 1;
+                                normInd = f[3].NormalIndex - 1;
+                                textInd = f[3].TextureIndex - 1;
+
+                                mesh.VBO.Indices.Add(vertInd++);
+
+                                mesh.VBO.Data.Add(positions[posInd].X);
+                                mesh.VBO.Data.Add(positions[posInd].Y);
+                                mesh.VBO.Data.Add(positions[posInd].Z);
+
+                                mesh.VBO.Data.Add(normals[normInd].X);
+                                mesh.VBO.Data.Add(normals[normInd].Y);
+                                mesh.VBO.Data.Add(normals[normInd].Z);
+
+                                mesh.VBO.Data.Add(texCords[textInd].X);
+                                mesh.VBO.Data.Add(texCords[textInd].Y);
+
+                                posInd  = f[0].VertexIndex - 1;
+                                normInd = f[0].NormalIndex - 1;
+                                textInd = f[0].TextureIndex - 1;
+
+                                mesh.VBO.Indices.Add(vertInd++);
+
+                                mesh.VBO.Data.Add(positions[posInd].X);
+                                mesh.VBO.Data.Add(positions[posInd].Y);
+                                mesh.VBO.Data.Add(positions[posInd].Z);
+
+                                mesh.VBO.Data.Add(normals[normInd].X);
+                                mesh.VBO.Data.Add(normals[normInd].Y);
+                                mesh.VBO.Data.Add(normals[normInd].Z);
+
+                                mesh.VBO.Data.Add(texCords[textInd].X);
+                                mesh.VBO.Data.Add(texCords[textInd].Y);
+                        }
                     }
-                    //Set up polygon rendering mode for this mesh
 
-
-                    //Texturing
                     if(g.Material != null && g.Material.DiffuseTextureMap != null)
                     {
                         Texture diffuseTexture;
@@ -144,10 +202,9 @@ namespace Breakneck_Brigade.Graphics
                     {
                         mesh.Texture = Renderer.DefaultTexture;
                     }
-
+                    mesh.VBO.LoadData();
                     result.Meshes.Add(mesh);
                 }
-
             }
             return result;
         }

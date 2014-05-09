@@ -65,7 +65,7 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="trans"></param>
         /// <param name="children"></param>
         /// <param name="polys"></param>
-        public TexturedMesh(Matrix4 trans, List<AObject3D> children, List<APolygon> polys) : base(trans, children, polys)
+        public TexturedMesh(Matrix4 trans, List<AObject3D> children, VBO buf) : base(trans, children, buf)
         {
             Texture = null;
         }
@@ -77,7 +77,7 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="children"></param>
         /// <param name="polys"></param>
         /// <param name="texture"></param>
-        public TexturedMesh(Matrix4 trans, List<AObject3D> children, List<APolygon> polys, Texture texture) : base(trans, children, polys)
+        public TexturedMesh(Matrix4 trans, List<AObject3D> children, VBO buf, Texture texture) : base(trans, children, buf)
         {
             Texture = texture;
         }
@@ -93,11 +93,7 @@ namespace Breakneck_Brigade.Graphics
             Texture.Bind();
 
             //Render parent
-            foreach (TexturedPolygon p in Polygons)
-            {
-                p.Render();
-            }
-            Gl.glEnd();
+            VBO.Render();
 
             //Render children, preserving the parent transformations
             foreach(AObject3D c in Children)

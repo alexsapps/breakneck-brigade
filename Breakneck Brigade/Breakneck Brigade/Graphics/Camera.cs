@@ -13,6 +13,8 @@ namespace Breakneck_Brigade.Graphics
 	/// </summary>
     class Camera
     {
+        public BBLock Lock = new BBLock();
+
         // Perspective controls
         /// <summary>
         /// Field of View Angle in degrees
@@ -47,22 +49,18 @@ namespace Breakneck_Brigade.Graphics
 
         public Matrix4 Transform;
 
-        public float xPos;
-        public float yPos;
-        public float zPos;
-
         public Vector4 LookingAt;
         public Vector4 Position;
         public Vector4 Up;
 
 		public Camera() 
 		{
+            //Transform.TranslationMat(0, -25, 0);
+
             Transform = new Matrix4();
 			Reset();
 
-            xPos = 0.0f;
-            yPos = 0.0f;
-            zPos = 0.0f;
+            Position = new Vector4();
 
             LookingAt = new Vector4();
             Up = new Vector4();
@@ -70,17 +68,16 @@ namespace Breakneck_Brigade.Graphics
 
 		public void Update(LocalPlayer cp) 
         {
-            Azimuth = cp.Orientation;
-            Incline = cp.Incline;
-            Up[1] = (float)Math.Cos(Incline * Math.PI / 180.0f);
+            if (cp != null) //if not connected, or no current game, then no local palyer
+            {
+                Azimuth = cp.Orientation;
+                Incline = cp.Incline;
+                Up.Y = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
-            xPos = cp.Position[0];
-            yPos = cp.Position[1];
-            zPos = cp.Position[2];
+                Position = cp.GetPosition(); //10 already added to Y here
 
-            Position = new Vector4(xPos, yPos, zPos);
-
-            anglesToAxis();
+                anglesToAxis();
+            }
         }
 
         public void Reset() 
@@ -108,7 +105,7 @@ namespace Breakneck_Brigade.Graphics
 			// Place camera            
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
-            Gl.glTranslatef(xPos, yPos, zPos);           
+            Gl.glTranslatef(Position.X, Position.Y, Position.Z);           
 
             Gl.glMultMatrixf(Transform.glArray);
 
@@ -123,7 +120,6 @@ namespace Breakneck_Brigade.Graphics
 
             //Vector4 side = new Vector4();
             //Vector4 up = new Vector4();
-            Vector4 forward = new Vector4();
 
             // X-axis rotation
             theta = Incline * DEG2RAD;
@@ -153,11 +149,15 @@ namespace Breakneck_Brigade.Graphics
              */
 
             // determine forward vector
-            forward[0] = sy * cz + cy * sx * sz;
-            forward[1] = sy * sz - cy * sx * cz;
-            forward[2] = cy * cx;
+            var forward = new Vector4()
+            {
+                X = sy * cz + cy * sx * sz,
+                Y = sy * sz - cy * sx * cz,
+                Z = cy * cx
+            };
 
-            LookingAt.Set(xPos + forward[0], yPos + forward[1], zPos + forward[2], LookingAt.W);
+            var lookingAt = Position + forward;
+            LookingAt.Set(lookingAt.X, lookingAt.Y, lookingAt.Z, LookingAt.W);
         }
     }
 }
