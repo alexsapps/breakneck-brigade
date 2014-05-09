@@ -10,7 +10,7 @@ namespace Breakneck_Brigade
 {
     class ClientPlayer : ClientGameObject
     {
-        public override string ModelName { get { return "player"; } }
+        public override string ModelName { get { return "teapotPillar"; } }
 
         public ClientPlayer(int id, Vector4 position, ClientGame game)
             : base(id, game, position)

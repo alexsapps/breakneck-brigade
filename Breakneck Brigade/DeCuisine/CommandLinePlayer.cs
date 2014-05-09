@@ -228,7 +228,7 @@ namespace DeCuisine
             int numOfCookers = 0;
             int numOfIngredients = n;
             for (int x = 0; x < numOfIngredients; x++ )
-                SpawnIngredient(game, "orange");
+                SpawnIngredient(game);
             for (int x = 0; x < numOfCookers; x++)
                 SpawnCooker(game);
         }
@@ -291,8 +291,7 @@ namespace DeCuisine
         public static string SpawnIngredient(ServerGame game)
         {
             List<IngredientType> types = new List<IngredientType>(game.Config.Ingredients.Values);
-            Random rand = new Random();
-            IngredientType randIng = types[rand.Next(types.Count)];
+            IngredientType randIng = types[DC.random.Next(types.Count)];
             Vector3 spawnLoc = randomSpawn();
             new ServerIngredient(randIng, game, spawnLoc);
             return "Made a " + randIng.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
@@ -326,7 +325,7 @@ namespace DeCuisine
             List<CookerType> types = new List<CookerType>(game.Config.Cookers.Values);
             Random rand = new Random();
             CookerType randCooker = types[rand.Next(types.Count)];
-            Vector3 spawnLoc = new Vector3(rand.Next(100), rand.Next(100), rand.Next(10, 100));
+            Vector3 spawnLoc = new Vector3(rand.Next(-500,500), rand.Next(300), rand.Next(-500, 500));
             new ServerCooker(randCooker, game, spawnLoc);
             return "Made a " + randCooker.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
@@ -389,7 +388,7 @@ namespace DeCuisine
         /// <returns></returns>
         private static Vector3 randomSpawn()
         {
-            return new Vector3(DC.random.Next(100), DC.random.Next(100), DC.random.Next(50, 200));
+            return new Vector3(DC.random.Next(-250,250), DC.random.Next(100), DC.random.Next(-250, 250));
         }
 
         /// <summary>

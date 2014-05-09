@@ -232,14 +232,6 @@ namespace DeCuisine
                                 switch (input.Event.Type)
                                 {
                                     case ClientEventType.Test:
-                                        var ppos = input.Client.Player.Position;
-                                        var pos = new Vector3()
-                                        {
-                                            X = 10,
-                                            Y = 10,
-                                            Z = 10
-                                        };
-                                        ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, pos);
                                         break;
                                     case ClientEventType.ChangeOrientation:
                                         break;
