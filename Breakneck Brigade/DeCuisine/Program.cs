@@ -36,6 +36,7 @@ namespace DeCuisine
                 lock (server.Game.Lock)
                 {
                     server.Game.Start(); //play automatically to make debugging easier.
+                    Console.WriteLine("Game started automatically.");
                 }
             }
 

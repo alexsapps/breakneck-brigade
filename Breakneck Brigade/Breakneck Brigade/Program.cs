@@ -94,6 +94,7 @@ namespace Breakneck_Brigade
         {
             try
             {
+                Console.CancelKeyPress += Console_CancelKeyPress;
                 while (true)
                 {
                     var line = Console.ReadLine();
@@ -104,6 +105,9 @@ namespace Breakneck_Brigade
                     {
                         switch (parts[0])
                         {
+                            case "cancel":
+                                cancelConsole = true;
+                                break;
                             case "exit":
                                 lock (clientLock)
                                 {
@@ -112,8 +116,9 @@ namespace Breakneck_Brigade
                                         client.Disconnect();
                                     }
                                 }
+                                cancelConsole = true;
                                 Environment.Exit(0);
-                                
+
                                 break;
                             case "status":
                                 lock(clientLock)
@@ -136,6 +141,9 @@ namespace Breakneck_Brigade
                                     }
                                 }
                                 break;
+                            case "rate":
+                                new Thread(() => { rateThread(); }).Start();
+                                break;
                             default:
                                 Console.WriteLine("Command not recognized.");
                                 break;
@@ -146,6 +154,22 @@ namespace Breakneck_Brigade
             catch (ThreadAbortException)
             {
 
+            }
+        }
+
+        static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            cancelConsole = true;
+        }
+        public static bool cancelConsole = false;
+
+        private static void rateThread()
+        {
+            while (!cancelConsole)
+            {
+                Console.Write("\r                                             \rRate: ");
+                Console.Write(1 / renderer.secondsPerFrame);
+                System.Threading.Thread.Sleep(200);
             }
         }
 
