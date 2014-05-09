@@ -85,6 +85,7 @@
     <Compile Include="Network\ServerGameStateUpdateMessage.cs" />
     <Compile Include="Network\ServerMessage.cs" />
     <Compile Include="Network\ServerPlayerIdUpdateMessage.cs" />
+    <Compile Include="Utils\BBConsole.cs" />
     <Compile Include="Utils\BBLock.cs" />
     <Compile Include="Network\ClientEvent.cs" />
     <Compile Include="Network\ClientEventType.cs" />

@@ -34,7 +34,7 @@ namespace Breakneck_Brigade.Graphics
             int loadResult = Glfw.glfwLoadTexture2D(TEXTURE_DIRECTORY + filename, Glfw.GLFW_BUILD_MIPMAPS_BIT);
             if(loadResult == Gl.GL_FALSE)
             {
-                Console.Error.WriteLine("Error loading file: " + filename);
+                Program.WriteLine("Error loading file: " + filename);
             }
             
             //Billinear Filtering for decreases and increases in size

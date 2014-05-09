@@ -291,7 +291,7 @@ namespace DeCuisine
                     if (waitTime > 0)
                         Thread.Sleep(new TimeSpan(waitTime));
                     else
-                        Console.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
+                        Program.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
                 }
             }
             finally
@@ -491,8 +491,8 @@ namespace DeCuisine
         internal void PrintStatus()
         {
             Lock.AssertHeld();
-            Console.WriteLine("Game mode: " + Mode.ToString());
-            Console.WriteLine(GameObjects.Count + " game objects");
+            Program.WriteLine("Game mode: " + Mode.ToString());
+            Program.WriteLine(GameObjects.Count + " game objects");
         }
 
 

@@ -95,6 +95,7 @@ namespace Breakneck_Brigade
             try
             {
                 Console.CancelKeyPress += Console_CancelKeyPress;
+
                 while (true)
                 {
                     var line = Console.ReadLine();
@@ -125,17 +126,17 @@ namespace Breakneck_Brigade
                                 {
                                     if (client == null || !client.IsConnected)
                                     {
-                                        Console.WriteLine("Not connected.");
+                                        Program.WriteLine("Not connected.");
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Connected.");
+                                        Program.WriteLine("Connected.");
                                         lock (gameLock)
                                         {
-                                            Console.WriteLine("GameMode: " + gameMode.ToString());
+                                            Program.WriteLine("GameMode: " + gameMode.ToString());
                                             if (gameMode == GameMode.Started || gameMode == GameMode.Paused)
                                             {
-                                                Console.WriteLine(game.gameObjects.Count + " game objects.");
+                                                Program.WriteLine(game.gameObjects.Count + " game objects.");
                                             }
                                         }
                                     }
@@ -145,7 +146,7 @@ namespace Breakneck_Brigade
                                 new Thread(() => { rateThread(); }).Start();
                                 break;
                             default:
-                                Console.WriteLine("Command not recognized.");
+                                Program.WriteLine("Command not recognized.");
                                 break;
                         }
                     }
@@ -171,6 +172,8 @@ namespace Breakneck_Brigade
                 Console.Write(1 / renderer.secondsPerFrame);
                 System.Threading.Thread.Sleep(200);
             }
+            cancelConsole = false;
+            Prompt();
         }
 
         static Thread serverMessageHandlerLoopThread;
@@ -186,7 +189,7 @@ namespace Breakneck_Brigade
                 
                 while (true)
                 {
-                    Console.WriteLine("Prompting to connect...");
+                    Program.WriteLine("Prompting to connect...");
                     lock (clientLock)
                     {
                         client = promptConnect();
@@ -233,13 +236,13 @@ namespace Breakneck_Brigade
                             switch (gameMode)
                             {
                                 case GameMode.Init:
-                                    Console.WriteLine("Waiting for other players to join.");
+                                    Program.WriteLine("Waiting for other players to join.");
                                     break;
                                 case GameMode.Started:
-                                    Console.WriteLine("Game started.");
+                                    Program.WriteLine("Game started.");
                                     break;
                                 case GameMode.Stopping:
-                                    Console.WriteLine("Game ended.");
+                                    Program.WriteLine("Game ended.");
                                     return true; //reconnect
                             }
                             oldMode = gameMode;
@@ -352,7 +355,7 @@ namespace Breakneck_Brigade
             game = null;
             gameMode = GameMode.None;
             renderer.GameObjects = null;
-            Console.WriteLine("Disconnected.");
+            Program.WriteLine("Disconnected.");
         }
 
         static string lastHost;
@@ -623,6 +626,20 @@ namespace Breakneck_Brigade
                 }
             }
             closing = true;
+        }
+
+        static BBConsole clientConsole = new BBConsole("client", ConsoleColor.Green);
+        public static void ClearLine()
+        {
+            clientConsole.ClearLine();
+        }
+        public static void WriteLine(string line)
+        {
+            clientConsole.WriteLine(line);
+        }
+        public static void Prompt()
+        {
+            clientConsole.Prompt();
         }
 
         // P/Invoke:

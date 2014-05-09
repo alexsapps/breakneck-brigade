@@ -106,7 +106,7 @@ namespace DeCuisine
             catch (IOException) { lock (Lock) { Disconnect(); } }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Program.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
                 lock (Lock) { Disconnect(); }
             }
@@ -184,7 +184,7 @@ namespace DeCuisine
                                 buffer.SetLength(0);
 
                                 if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 2)
-                                    Console.WriteLine("slow message");
+                                    Program.WriteLine("slow message");
 
                             }
                             w2.Stop(2, "Client: slow write loop. {0}");
@@ -196,7 +196,7 @@ namespace DeCuisine
             catch (IOException) { lock (Lock) { Disconnect(); } }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Program.WriteLine(ex.ToString());
                 System.Diagnostics.Debugger.Break();
                 lock (Lock) { Disconnect(); }
                 throw;

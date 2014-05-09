@@ -173,7 +173,7 @@ namespace DeCuisine
                         {
                             if (retries++ < 10)
                             {
-                                Console.WriteLine("Listen failed.  Retrying...");
+                                Program.WriteLine("Listen failed.  Retrying...");
                                 System.Threading.Thread.Sleep(2000);
                             }
                             else
@@ -182,7 +182,7 @@ namespace DeCuisine
                     }
                     if(retries > 0)
                     {
-                        Console.WriteLine("Finally acquired TCP port " + Port);
+                        Program.WriteLine("Finally acquired TCP port " + Port);
                     }
                 }
 
@@ -214,7 +214,7 @@ namespace DeCuisine
                         return; //server is shutting down
                     else
                     {
-                        Console.WriteLine(ex.ToString());
+                        Program.WriteLine(ex.ToString());
                         System.Diagnostics.Debugger.Break();
                         goto keepGoing;
                     }
@@ -248,10 +248,10 @@ namespace DeCuisine
         public void PrintStatus()
         {
             Lock.AssertHeld();
-            Console.WriteLine(Started ? "Started." : "Offline.");
+            Program.WriteLine(Started ? "Started." : "Offline.");
             if (Started)
             {
-                Console.WriteLine(clients.Count.ToString() + " clients connected.");
+                Program.WriteLine(clients.Count.ToString() + " clients connected.");
                 lock(Game.Lock) {
                     Game.PrintStatus();
                 }
