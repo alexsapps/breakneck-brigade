@@ -13,6 +13,10 @@ namespace DeCuisine
     {
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
         protected override GeometryInfo getGeomInfo() { return new GeometryInfo() { Mass = 5, Shape = GeomShape.Box, Sides = new float[] { 1.0f, 3.0f, 1.0f } }; }
+        private bool isFalling { get; set; }
+        private bool canJump { get; set; }
+        private Vector3 lastVelocity { get; set; }
+        private float JUMPSPEED = 100;
 
         public struct HandInventory
         {
@@ -74,6 +78,15 @@ namespace DeCuisine
 
         }
 
+        public void Jump()
+        {
+            if (this.canJump)
+            {
+                this.Move(this.Body.LinearVelocity.X, this.JUMPSPEED, this.Body.LinearVelocity.Z);
+                this.canJump = false;
+                this.isFalling = false;
+            }
+        }
 
         private void makeJoint(string hand, ServerGameObject obj)
         {
@@ -91,7 +104,14 @@ namespace DeCuisine
         public override void Update()
         {
             base.Update();
-
+            if (this.Body.LinearVelocity.Y < 0)
+            {
+                this.isFalling = true;
+            }
+            if (this.isFalling && this.Body.LinearVelocity.Y >= 0)
+            {
+                this.canJump = true;
+            }
             //// Can't manipulate Ode in collide funtions, so a hacked flag has to do to make the joint
             //if (this.toHold != null)
             //{

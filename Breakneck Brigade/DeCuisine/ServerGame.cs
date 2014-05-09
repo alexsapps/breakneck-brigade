@@ -250,7 +250,7 @@ namespace DeCuisine
                                     case ClientEventType.EndMove:
                                         break;
                                     case ClientEventType.Jump:
-                                        input.Client.Player.Move(0, 400, 0);
+                                        input.Client.Player.Jump();
                                         break;
                                     default:
                                         Debugger.Break();
@@ -483,7 +483,7 @@ namespace DeCuisine
             Lock.AssertHeld();
             this.HasRemoved.Add(obj.Id);
             this.HasChanged.Remove(obj);
-            GameObjects.Remove(obj.Id);
+            GameObjects.Remove(obj.Id); // 
 
         }
 
@@ -521,6 +521,11 @@ namespace DeCuisine
         public string ListCookerContents(int cookerId)
         {
             return CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
+        }
+
+        public void RemoveObj(int id)
+        {
+            this.GameObjects[id].Remove();
         }
     }
 }

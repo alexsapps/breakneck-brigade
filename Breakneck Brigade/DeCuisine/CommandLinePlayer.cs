@@ -86,17 +86,36 @@ namespace DeCuisine
                     break;
                 case "stresstest":
                     // spawn stuff, see function definition for right argument format
-                    int n;
-                    if (args.Length < 2 || !int.TryParse(args[1], out n))
-                        n = 50;
-                    lock (server.Lock)
                     {
-                        lock (server.Game.Lock)
+                        int n;
+                        if (args.Length < 2 || !int.TryParse(args[1], out n))
+                            n = 50;
+                        lock (server.Lock)
                         {
-                            StressTest(server.Game, n);
+                            lock (server.Game.Lock)
+                            {
+                                StressTest(server.Game, n);
+                            }
                         }
-                    }                    
-                    break;
+                        break;
+                    }
+                case "remove":
+                    {
+                        int n;
+                        if (args.Length < 2 || !int.TryParse(args[1], out n))
+                        {
+                            Console.WriteLine("Needs an id");
+                            break;
+                        }
+                        lock (server.Lock)
+                        {
+                            lock (server.Game.Lock)
+                            {
+                                server.Game.RemoveObj(n);
+                            }
+                        }
+                        break;
+                    }
                 default:
                     success = false;
                     break;
