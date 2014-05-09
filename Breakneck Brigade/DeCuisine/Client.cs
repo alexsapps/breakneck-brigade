@@ -119,6 +119,7 @@ namespace DeCuisine
                 case ClientEventType.BeginMove: return typeof(ClientBeginMoveEvent);
                 case ClientEventType.ChangeOrientation: return typeof(ClientChangeOrientationEvent);
                 case ClientEventType.Test: return typeof(ClientTestEvent);
+                case ClientEventType.Jump: return typeof(ClientJumpEvent);
                 default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
         }

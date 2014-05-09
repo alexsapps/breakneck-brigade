@@ -249,6 +249,9 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.EndMove:
                                         break;
+                                    case ClientEventType.Jump:
+                                        input.Client.Player.Move(0, 400, 0);
+                                        break;
                                     default:
                                         Debugger.Break();
                                         throw new Exception("server does not understand client event " + input.Event.Type.ToString());

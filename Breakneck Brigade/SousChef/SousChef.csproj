@@ -76,6 +76,7 @@
     <Compile Include="Math\Coordinate.cs" />
     <Compile Include="Math\GeomShape.cs" />
     <Compile Include="Network\ClientChangeOrientationEvent.cs" />
+    <Compile Include="Network\ClientJumpEvent.cs" />
     <Compile Include="Network\ClientMoveEvent.cs" />
     <Compile Include="Network\ClientTestEvent.cs" />
     <Compile Include="Math\MathConstants.cs" />

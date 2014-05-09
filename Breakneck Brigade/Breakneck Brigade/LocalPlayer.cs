@@ -91,6 +91,11 @@ namespace Breakneck_Brigade
                 lastx = pos.X;
                 lastz = pos.Z;
             }
+
+            if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_SPACE))
+            {
+                NetworkEvents.Add(new ClientJumpEvent() { isJumping = true});
+            }
             
             if (IM[GlfwKeys.GLFW_KEY_ESCAPE] || Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_FALSE)
             {
