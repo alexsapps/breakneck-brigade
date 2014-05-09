@@ -94,6 +94,7 @@ namespace DeCuisine
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
                }
+           
         }
 
         protected delegate CollisionShape GeomMaker();
@@ -121,7 +122,7 @@ namespace DeCuisine
             Debug.Assert(!InWorld);
 
             this.Geom = geomMaker();
-            this.Geom.UserObject = new IntPtr(Id);
+            this.Geom.UserObject = this;
 
             InWorld = true;
         }
@@ -142,7 +143,7 @@ namespace DeCuisine
                 default: throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
             }
 
-            geom.UserObject = new IntPtr(Id);
+            geom.UserObject = this;
             return geom;
         }
 
@@ -210,7 +211,9 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
-
+            Vector3 x = this.Body.MotionState.WorldTransform.Origin;
+            Vector3 y = this.Body.WorldTransform.Origin;
+            this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(new Vector3(0, 0, 0)));
         }
 
         public void MarkDirty()

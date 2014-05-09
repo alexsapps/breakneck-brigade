@@ -36,8 +36,8 @@ namespace DeCuisine
         public int FrameRateMilliseconds // Tick time in milliseconds
         {
             get { return _frameRate; }
-            set 
-            { 
+            set
+            {
                 _frameRate = value;
                 _frameRateTicks = FrameRateMilliseconds * millisecond_ticks; //rate to wait in ticks
                 _frameRateSeconds = FrameRateMilliseconds * 0.001f;
@@ -172,7 +172,7 @@ namespace DeCuisine
         {
             //rigidbody is dynamic if and only if mass is non zero, otherwise static
             bool isDynamic = (mass != 0.0f);
-        
+
             Vector3 localInertia = Vector3.Zero;
             if (isDynamic)
                 shape.CalculateLocalInertia(mass, out localInertia);
@@ -204,7 +204,7 @@ namespace DeCuisine
             // loop over clients and make play objects for them
             foreach (var client in clients)
             {
-                client.Player = new ServerPlayer(server.Game, new Vector3(10, 10, 10));
+                client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10));
                 lock (client.ServerMessages)
                 {
                     client.ServerMessages.Add(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
@@ -391,19 +391,19 @@ namespace DeCuisine
 
         private void CollisionCallback(DynamicsWorld world, float timeStep)
         {
-            int numManifolds = this.World.Dispatcher.NumManifolds; 
-            for (int i=0;i<numManifolds;i++)
+            int numManifolds = this.World.Dispatcher.NumManifolds;
+            for (int i = 0; i < numManifolds; i++)
             {
                 bool didCollide = false;
                 PersistentManifold contactManifold = this.World.Dispatcher.GetManifoldByIndexInternal(i);
                 CollisionObject obA = (CollisionObject)contactManifold.Body0; //btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
                 CollisionObject obB = (CollisionObject)contactManifold.Body1; //btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
                 int numContacts = contactManifold.NumContacts;
-                for (int j=0;j<numContacts;j++)
-            {
-                    ManifoldPoint pt = contactManifold.GetContactPoint(j);
-                    if (pt.Distance<0.0f)
+                for (int j = 0; j < numContacts; j++)
                 {
+                    ManifoldPoint pt = contactManifold.GetContactPoint(j);
+                    if (pt.Distance < 0.0f)
+                    {
                         Vector3 ptA = pt.PositionWorldOnA; //.getPositionWorldOnA();
                         Vector3 ptB = pt.PositionWorldOnB; // pt.getPositionWorldOnB();
                         Vector3 normalOnB = pt.NormalWorldOnB;
@@ -411,15 +411,17 @@ namespace DeCuisine
                     }
                 }
 
-                if (didCollide && obA.UserObject != null && obA.UserObject != null)
+                if (didCollide && obA.CollisionShape.UserObject  != null && obB.CollisionShape.UserObject != null)
                 {
-                    ServerGameObject obj1 = this.GameObjects[((IntPtr)obA.UserObject).ToInt32()];
-                    ServerGameObject obj2 = this.GameObjects[((IntPtr)obB.UserObject).ToInt32()];
+                    ServerGameObject obj1 = (ServerGameObject)obA.CollisionShape.UserObject;
+                    ServerGameObject obj2 = (ServerGameObject)obB.CollisionShape.UserObject;
                     obj1.OnCollide(obj2);
                     obj2.OnCollide(obj1);
-                }
+                    // Get position vectors 
+                    // regidbody.movementstate.worldtransform.origin
                 }
             }
+        }
 
 
         private void SendModeChangeUpdate()
@@ -439,7 +441,7 @@ namespace DeCuisine
 
         public void Dispose()
         {
-            
+
         }
 
         /*
@@ -464,13 +466,13 @@ namespace DeCuisine
             this.HasRemoved.Add(obj.Id);
             this.HasChanged.Remove(obj);
             GameObjects.Remove(obj.Id);
-            
+
         }
 
         public ServerGameObject GeomToObj(CollisionShape geom)
         {
             Lock.AssertHeld();
-            return GameObjects[((IntPtr)geom.UserObject).ToInt32()];
+            return (ServerGameObject)geom.UserObject;
         }
 
         internal void PrintStatus()
