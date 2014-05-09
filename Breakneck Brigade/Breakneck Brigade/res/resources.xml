@@ -72,4 +72,25 @@
     <scaleY>1.0</scaleY>
     <scaleZ>10.0</scaleZ>     
   </model>
+
+  <model>
+    <filename>shelf</filename>
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>     
+  </model>
+
+  <model>
+    <filename>table</filename>
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>     
+  </model>
+
+  <model>
+    <filename>wooden counter</filename>
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>     
+  </model>
 </models>
