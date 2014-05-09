@@ -102,6 +102,7 @@ namespace DeCuisine
 
                     if (Mode == GameMode.Started)
                     {
+                        e.Client.SendMessage(CalculateGameStateMessage(CalculateGameStateFull)); //do this before StartClient so it doesn't get sent its player object right away, since it's already going to be in HasChanged
                         StartClient(e.Client);
                     }
                 }
@@ -111,7 +112,6 @@ namespace DeCuisine
         private void StartClient(Client client)
         {
             client.Lock.AssertHeld();
-            client.SendMessage(CalculateGameStateMessage(CalculateGameStateFull)); //do this BEFORE creating a ServerPlayer, which adds the player to HasAdded, which would be sent for a 2nd time in the next update
             client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10));
             client.SendMessage(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
         }
@@ -205,9 +205,11 @@ namespace DeCuisine
             HasRemoved.Clear();
 
             // loop over clients and make play objects for them
+            var startMsg = CalculateGameStateMessage(CalculateGameStateFull); //must be computed before StartClient called for any client, because it should not include their players, which are already in HasChanged
             foreach (var client in clients)
             {
                 StartClient(client);
+                client.SendMessage(startMsg);
             }
             try
             {

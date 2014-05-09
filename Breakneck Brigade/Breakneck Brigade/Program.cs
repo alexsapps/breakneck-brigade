@@ -55,6 +55,7 @@ namespace Breakneck_Brigade
 
         static void Main(string[] args)
         {
+            try { Console.SetWindowSize(120, 40); } catch { } //see also server's Main()
 
 #if PROJECT_GRAPHICS_TEST
             Renderer renderer = new Renderer();
@@ -67,11 +68,9 @@ namespace Breakneck_Brigade
             }
             Environment.Exit(0);
 #endif
-#if PROJECT_GAMECODE_TEST
+
 
             globalConfig = config.Open(BB.GlobalConfigFilename);
-
-            
 
             Thread inputThread = null;
             inputThread = new Thread(new ThreadStart(readInput));
@@ -87,7 +86,6 @@ namespace Breakneck_Brigade
 
             CloseHandle(GetStdHandle(StdHandle.Stdin)); //terminate input thread
             inputThread.Abort();
-#endif
         }
 
         static void readInput()

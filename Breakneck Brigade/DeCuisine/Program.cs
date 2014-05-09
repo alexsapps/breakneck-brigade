@@ -18,6 +18,7 @@ namespace DeCuisine
 
         static void Main(string[] args)
         {
+            try { Console.SetWindowSize(120, 40); } catch { } //see also client's Main()
             Mutex mutex = new Mutex(true, "ccf299f3-1ea2-48e1-84bd-72d1de57fbeb");
             if (!mutex.WaitOne(TimeSpan.Zero, true)) //http://sanity-free.org/143/csharp_dotnet_single_instance_application.html
             {
