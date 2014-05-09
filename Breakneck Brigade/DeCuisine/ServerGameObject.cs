@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using SousChef;
 using System.IO;
 using System.Diagnostics;
-using Tao.Ode;
+
+using BulletSharp;
 
 namespace DeCuisine
 {
@@ -24,23 +25,23 @@ namespace DeCuisine
         public GeometryInfo GeomInfo { get { return _geominfo ?? (_geominfo = getGeomInfo()); } } //cache
         protected abstract GeometryInfo getGeomInfo();
 
-        protected Vector4 _position;
-        public virtual Ode.dVector3 Position { get { return getPosition(); } set { setPosition(value); } }
-        protected Matrix4 _rotation;
+        protected SousChef.Vector4 _position;
+        public virtual Vector3 Position { get { return getPosition(); } set { setPosition(value); } }
+        protected SousChef.Matrix4 _rotation;
         /// <summary>
         /// ODE Matrix (X = left right, Y = in out, Z = up down)
         /// </summary>
-        public Matrix4 Rotation { get { return getRotation(); } set { setRotation(value); } }
+        public SousChef.Matrix4 Rotation { get { return getRotation(); } set { setRotation(value); } }
 
         public bool InWorld { get; protected set; }
-        public IntPtr Geom { get; set; }
-        public IntPtr Body { get; set; } //null for walls
+        public CollisionShape Geom { get; set; }
+        public RigidBody Body { get; set; } //null for walls
         private bool _toRender;
         public bool ToRender { get{return _toRender;} set{_toRender = value; this.MarkDirty();} }
         public bool OnFloor { get; set; }
 
         private static int nextId;
-        private Ode.dVector3 lastPosition { get; set; }
+        private Vector3 lastPosition { get; set; }
         /// <summary>
         /// Base constructor. For every servergameobject create their should be a 
         /// coresponding ClientGameObject on each client with the same ID.
@@ -49,8 +50,8 @@ namespace DeCuisine
         {
             this.Id = nextId++;
             this.Game = game;
-            this._rotation = new Matrix4();
-            this._position = new Vector4();
+            this._rotation = new SousChef.Matrix4();
+            this._position = new SousChef.Vector4();
             this.ToRender = true; // class specific implementation can override
             
             Game.ObjectAdded(this);
@@ -71,7 +72,9 @@ namespace DeCuisine
         {
             Game.Lock.AssertHeld();
             serializeEssential(stream);
-            stream.Write(this.Position);
+            stream.Write(this.Position.X);
+            stream.Write(this.Position.Y);
+            stream.Write(this.Position.Z);
         }
 
         protected virtual void serializeEssential(BinaryWriter stream)
@@ -95,72 +98,63 @@ namespace DeCuisine
                }
         }
 
-        protected delegate IntPtr GeomMaker();
+        protected delegate CollisionShape GeomMaker();
 
         /// <summary>
         /// Add the object into the physical world.
         /// </summary>
-        protected void AddToWorld(Ode.dVector3 coordinate)
+        protected void AddToWorld(Vector3 coordinate)
         {
-            AddToWorld(() => { 
-                
-                var geom = makeGeom(GeomInfo, coordinate);
-
-                if (this.HasBody)
-                {
-                    Body = makeBody(GeomInfo, Geom);
-                    Ode.dGeomSetBody(geom, Body);
-                }
-
-                Ode.dGeomSetPosition(geom, coordinate.X, coordinate.Y, coordinate.Z); //this must happen after body is set
-
+            AddToWorld(() =>
+            {
+                CollisionShape geom = this.MakeGeom(this.GeomInfo, coordinate);
+                this.Geom = geom;
+                this.Body = this.MakeBody(this.GeomInfo);
+                this.Game.World.AddRigidBody(this.Body);
+                this.Body.Translate(coordinate);
                 return geom;
-
             });
             
         }
 
         protected void AddToWorld(GeomMaker geomMaker)
         {
-            Game.Lock.AssertHeld();
+            this.Game.Lock.AssertHeld();
             Debug.Assert(!InWorld);
 
-            Geom = geomMaker();
-            Ode.dGeomSetData(Geom, new IntPtr(Id));
+            this.Geom = geomMaker();
+            this.Geom.UserObject = new IntPtr(Id);
 
             InWorld = true;
         }
 
-        private IntPtr makeGeom(GeometryInfo info, Ode.dVector3 coordinate)
+        private CollisionShape MakeGeom(GeometryInfo info, Vector3 coordinate)
         {
-            IntPtr geom;
+            CollisionShape geom;
             switch (info.Shape)
             {
-                case GeomShape.Box: geom = Ode.dCreateBox(Game.Space, info.Sides[0], info.Sides[1], info.Sides[2]); break;
-                case GeomShape.Sphere: geom = Ode.dCreateSphere(Game.Space, info.Sides[0]); break;
+                case GeomShape.Box: 
+                    //geom = this.Game.Space.CreateBox(info.Sides[0], info.Sides[1], info.Sides[2]);
+                    geom = new BoxShape(info.Sides[0], info.Sides[1], info.Sides[2]);
+                    break;
+                case GeomShape.Sphere: 
+                    //geom = this.Game.Space.CreateSphere(info.Sides[0]); 
+                    geom = new SphereShape(info.Sides[0]);
+                    break;
                 default: throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
             }
+
+            geom.UserObject = new IntPtr(Id);
             return geom;
         }
 
-        private IntPtr makeBody(GeometryInfo info, IntPtr geom)
+        private RigidBody MakeBody(GeometryInfo info)
         {
-            Ode.dMass mass = new Ode.dMass();
-            IntPtr body = Ode.dBodyCreate(this.Game.World);
-            switch (info.Shape)
-            {
-                case GeomShape.Box:
-                    Ode.dMassSetBox(ref mass, info.Mass, info.Sides[0], info.Sides[1], info.Sides[2]);
-                    Ode.dBodySetMass(body, ref mass);
-                    break;
-                case GeomShape.Sphere:
-                    Ode.dMassSetZero(ref mass);
-                    Ode.dMassSetSphereTotal(ref mass, GeomInfo.Mass, GeomInfo.Sides[0]);
-                    Ode.dBodySetMass(body, ref mass);
-                    break;
-                default:
-                    throw new Exception("AddToWorld not defined for GeomShape of " + GeomInfo.Shape.ToString());
-            }
+            Vector3 localInertia = this.Geom.CalculateLocalInertia(info.Mass);
+            DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);
+            RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(info.Mass, myMotionState, this.Geom, localInertia);
+            RigidBody body = new RigidBody(rbInfo);
+            rbInfo.Dispose();
             return body;
         }
 
@@ -173,24 +167,28 @@ namespace DeCuisine
             this.removeFromWorld();        // tell simulation to remove from ode
             this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
         }
+
+        /// <summary>
+        /// Remove from the physics world.
+        /// </summary>
         private void removeFromWorld()
         {
-            Game.Lock.AssertHeld();
+            this.Game.Lock.AssertHeld();
             Debug.Assert(InWorld);
 
-            if(this.Geom != IntPtr.Zero)
+            if(this.Geom != null)
             {
-                Ode.dGeomDestroy(this.Geom);
+                this.Geom.Dispose();
             }
 
-            if(this.Body != IntPtr.Zero)
+            if(this.Body != null)
             {
-                Ode.dBodyDestroy(this.Body);
+                this.Body.Dispose();
             }
 
-            this.Geom = IntPtr.Zero;
-            this.Body = IntPtr.Zero;
-            InWorld = false;
+            this.Geom = null;
+            this.Body = null;
+            this.InWorld = false;
         }
 
         /// <summary>
@@ -207,7 +205,9 @@ namespace DeCuisine
         {
             stream.Write((Int32)Id);
             stream.Write((bool)ToRender); // no need to cast but being explicit gets my jollys off
-            stream.Write(this.Position);
+            stream.Write(this.Position.X);
+            stream.Write(this.Position.Y);
+            stream.Write(this.Position.Z);
         }
 
         public virtual void OnCollide(ServerGameObject obj)
@@ -225,12 +225,12 @@ namespace DeCuisine
             this.Remove();
         }
 
-        private Ode.dVector3 getPosition()
+        private Vector3 getPosition()
         {
             Game.Lock.AssertHeld();
-            if (this.Geom != IntPtr.Zero)
+            if (this.Geom != null)
             {
-                Ode.dVector3 m3 = Ode.dGeomGetPosition(this.Geom);
+                Vector3 m3 = this.Body.CenterOfMassPosition;
                 _position.Set(m3.X, m3.Y, m3.Z);
                 return m3;
             }
@@ -240,22 +240,22 @@ namespace DeCuisine
             }
         }
 
-        private void setPosition(Ode.dVector3 value)
+        private void setPosition(Vector3 value)
         {
-            Game.Lock.AssertHeld();
+            this.Game.Lock.AssertHeld();
             this.MarkDirty(); // moved it, make sure you mark it to move
             this.lastPosition = value;
-            Ode.dGeomSetPosition(this.Geom, value.X, value.Y, value.Z); 
+            this.Body.Translate(new Vector3(value.X, value.Y, value.Z)); 
         }
 
-        private Matrix4 getRotation()
+        private SousChef.Matrix4 getRotation()
         {
-            if(this.Geom != IntPtr.Zero)
+            if(this.Geom != null)
             {
-                Ode.dMatrix3 r = Ode.dGeomGetRotation(this.Geom);
-                _rotation.SetAll(r.M00,  r.M10,  r.M20,  0,
-                                 r.M01,  r.M11,  r.M21,  0,
-                                 r.M02,  r.M12,  r.M22,  0,
+                Matrix r = this.Body.CenterOfMassTransform;
+                _rotation.SetAll(r.M11,  r.M21,  r.M31,  0,
+                                 r.M12,  r.M22,  r.M32,  0,
+                                 r.M13,  r.M23,  r.M33,  0,
                                  0,      0,      0,      1);
                 return _rotation;
             }
@@ -264,14 +264,25 @@ namespace DeCuisine
                 throw new Exception("Geom is null");
             }
         }
-        private void setRotation(Matrix4 rotation)
+        private void setRotation(SousChef.Matrix4 rotation)
         {
-            if (this.Geom != IntPtr.Zero)
+            if (this.Geom != null)
             {
                 double[] arr = {_rotation[0,0], _rotation[1,0], _rotation[2,0],
                                 _rotation[0,1], _rotation[1,1], _rotation[2,1],
                                 _rotation[0,2], _rotation[1,2], _rotation[2,2]};
-                Ode.dMatrix3 r = new Ode.dMatrix3(arr);
+                Matrix r = new Matrix();
+                //r.SetIdentity();
+                r = Matrix.Identity;
+                r.M11 = _rotation[0, 0];
+                r.M21 = _rotation[1, 0];
+                r.M31 = _rotation[2, 0];
+                r.M12 = _rotation[0, 1]; 
+                r.M22 = _rotation[1, 1]; 
+                r.M32 = _rotation[2, 1];
+                r.M13 = _rotation[0, 2]; 
+                r.M23 = _rotation[1, 2];
+                r.M33 = _rotation[2, 2];
             }
             else
             {

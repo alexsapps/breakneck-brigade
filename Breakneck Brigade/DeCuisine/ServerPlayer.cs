@@ -1,11 +1,11 @@
-﻿using SousChef;
+﻿using BulletSharp;
+using SousChef;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tao.Ode;
 
 namespace DeCuisine
 {
@@ -17,18 +17,18 @@ namespace DeCuisine
         public struct HandInventory
         {
             public ServerGameObject Held;
-            public IntPtr Joint;
-            public HandInventory(ServerGameObject toHold, IntPtr joint)
+            //public Joint Joint;
+            public HandInventory(ServerGameObject toHold) //, Joint joint)
             {
                 this.Held = toHold;
-                this.Joint = joint;
+                //this.Joint = joint;
             }
         }
         public HandInventory LeftHand;
         public HandInventory RightHand;
         private ServerGameObject toHold = null; // init to null as it's our flag TODO: Think smarter and don't do this
 
-        public ServerPlayer(ServerGame game, Ode.dVector3 position) 
+        public ServerPlayer(ServerGame game, Vector3 position) 
             : base(game)
         {
             base.AddToWorld(position);
@@ -36,9 +36,9 @@ namespace DeCuisine
 
         public override void Serialize(BinaryWriter stream)
         {
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.Serialize(stream);
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             //stream.Write(a,b);
             //stream.Write(c,d);
         }
@@ -46,10 +46,10 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             // need to flip in order to get the camera rendering right
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.UpdateStream(stream);
             // flip back for sanity
-            this.Position = new Ode.dVector3(this.Position.X, this.Position.Y, -this.Position.Z);
+            this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             //stream.Write(c,d);
         }
 
@@ -58,7 +58,7 @@ namespace DeCuisine
         /// </summary>
         public void Move(float x, float y, float z)
         {
-            Ode.dVector3 newPos = new Ode.dVector3(Position.X + x, Position.Y + y, Position.Z + z);
+            Vector3 newPos = new Vector3(Position.X + x, Position.Y + y, Position.Z + z);
             this.Position = newPos;
         }
 
@@ -74,20 +74,30 @@ namespace DeCuisine
 
         private void makeJoint(string hand, ServerGameObject obj)
         {
-            IntPtr joint = Ode.dJointCreateHinge(this.Game.World, IntPtr.Zero);
+            /*
+            HingeJoint joint = this.Game.World.CreateHingeJoint();
+            joint.Attach(this.Body, obj.Body);
+            OdeDotNet.Vector3 pos = this.Geom.Position; // Ode.dGeomGetPosition(this.Geom);
+            obj.Body.Position = new OdeDotNet.Vector3(pos.X, pos.Y - 10, pos.Z + 10);
+            joint.Anchor = new OdeDotNet.Vector3(pos[0] - 10, pos[1] - 10, pos[2] + 10);
+            joint.Anchor2 = new OdeDotNet.Vector3(pos[0] - 10, pos[1] - 10, pos[2] + 10);
+            joint.Axis = new OdeDotNet.Vector3(0, 0, 1.0f);
+            */
+            /*
             Ode.dVector3 pos = Ode.dGeomGetPosition(this.Geom);
             Ode.dJointAttach(joint, this.Body, obj.Body);
             Ode.dBodySetPosition(obj.Body, pos.X  , pos.Y - 10, pos.Z + 10);
             Ode.dJointSetHingeAnchor(joint, pos[0] - 10, pos[1] - 10 , pos[2] + 10);
             Ode.dJointSetHingeAxis(joint, 0, 0, 1.0);
-            
+            */
+
             if (hand == "left")
             {
                 // TODO: make logic to drop object if we have something in the hand already
-                this.LeftHand = new HandInventory(obj, joint);
+                this.LeftHand = new HandInventory(obj);
             } else
             {
-                this.RightHand = new HandInventory(obj, joint);
+                this.RightHand = new HandInventory(obj);
             }
         }
 

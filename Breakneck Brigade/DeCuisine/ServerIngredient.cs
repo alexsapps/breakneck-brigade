@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SousChef;
 using System.IO;
-using Tao.Ode;
+
+using BulletSharp;
 
 namespace DeCuisine
 {
@@ -20,7 +21,7 @@ namespace DeCuisine
         /// Create the object and add it to the game world at vector4. Also added it to the 
         /// serial stream passed in.
         /// </summary>
-        public ServerIngredient(IngredientType type, ServerGame game, Ode.dVector3 position) 
+        public ServerIngredient(IngredientType type, ServerGame game, Vector3 position) 
             : base(game)
         {
             this.Type = type;
