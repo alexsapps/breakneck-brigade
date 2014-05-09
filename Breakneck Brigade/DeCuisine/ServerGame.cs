@@ -49,8 +49,6 @@ namespace DeCuisine
         private float _frameRateSeconds;
         float FrameRateSeconds { get { return _frameRateSeconds; } }
 
-        int MAX_CONTACTS = 8;
-
         // Physics
         DynamicsWorld _world;
         public DynamicsWorld World
@@ -59,10 +57,10 @@ namespace DeCuisine
             set { _world = value; }
         }
 
-        protected CollisionConfiguration CollisionConf;
-        protected CollisionDispatcher Dispatcher;
-        protected BroadphaseInterface Broadphase;
-        protected ConstraintSolver Solver;
+        public CollisionConfiguration CollisionConf;
+        public CollisionDispatcher Dispatcher;
+        public BroadphaseInterface Broadphase;
+        public ConstraintSolver Solver;
         public AlignedCollisionShapeArray CollisionShapes { get; private set; }
 
         public ServerGame(Server server)
@@ -99,10 +97,6 @@ namespace DeCuisine
                 lock (e.Client.Lock)
                 {
                     clients.Add(e.Client);
-                    lock (ClientInput)
-                    {
-                        ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEnterEvent() }); //we can change this.
-                    }
 
                     SendMode(e.Client);
 
@@ -126,12 +120,8 @@ namespace DeCuisine
         {
             lock (Lock)
             {
+                e.Client.Player.Remove();
                 clients.Remove(e.Client);
-
-                lock (ClientInput)
-                {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientLeaveEvent() });
-                }
             }
         }
 
@@ -239,10 +229,6 @@ namespace DeCuisine
                             {
                                 switch (input.Event.Type)
                                 {
-                                    case ClientEventType.Enter:
-                                        break;
-                                    case ClientEventType.Leave:
-                                        break;
                                     case ClientEventType.Test:
                                         var ppos = input.Client.Player.Position;
                                         var pos = new Vector3()
@@ -326,7 +312,7 @@ namespace DeCuisine
                     {
                         TypedConstraint constraint = _world.GetConstraint(i);
                         _world.RemoveConstraint(constraint);
-                        constraint.Dispose(); ;
+                        constraint.Dispose();
                     }
 
                     //remove the rigidbodies from the dynamics world and delete them

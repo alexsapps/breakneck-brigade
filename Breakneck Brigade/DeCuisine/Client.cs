@@ -74,7 +74,7 @@ namespace DeCuisine
                     connection.ReceiveTimeout = 0;
 
                     IsConnected = true;
-                    Connected(this, EventArgs.Empty);
+                    new Thread(() => { Connected(this, EventArgs.Empty); }).Start();
 
                     senderThread = new Thread(() => send());
                     senderThread.Start();
@@ -118,8 +118,6 @@ namespace DeCuisine
             {
                 case ClientEventType.BeginMove: return typeof(ClientBeginMoveEvent);
                 case ClientEventType.ChangeOrientation: return typeof(ClientChangeOrientationEvent);
-                case ClientEventType.Enter: return typeof(ClientEnterEvent);
-                case ClientEventType.Leave: return typeof(ClientLeaveEvent);
                 case ClientEventType.Test: return typeof(ClientTestEvent);
                 default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
@@ -225,7 +223,7 @@ namespace DeCuisine
             }
             catch { }
 
-            Disconnected(this, EventArgs.Empty);
+            new Thread(() => { Disconnected(this, EventArgs.Empty); }).Start();
         }
     }
 }

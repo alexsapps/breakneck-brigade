@@ -167,7 +167,10 @@ namespace Breakneck_Brigade
                     {
                         client = promptConnect();
                         if (client == null)
+                        {
+                            onClosed();
                             break;
+                        }
 
                         lock (gameLock)
                         {

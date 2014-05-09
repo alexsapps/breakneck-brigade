@@ -33,6 +33,10 @@ namespace DeCuisine
             lock (server.Lock)
             {
                 start(); //start automatically
+                lock (server.Game.Lock)
+                {
+                    server.Game.Start(); //play automatically to make debugging easier.
+                }
             }
 
             Console.CancelKeyPress += Console_CancelKeyPress;

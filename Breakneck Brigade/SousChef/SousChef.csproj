@@ -38,7 +38,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
@@ -76,8 +76,6 @@
     <Compile Include="Math\Coordinate.cs" />
     <Compile Include="Math\GeomShape.cs" />
     <Compile Include="Network\ClientChangeOrientationEvent.cs" />
-    <Compile Include="Network\ClientEnterEvent.cs" />
-    <Compile Include="Network\ClientLeaveEvent.cs" />
     <Compile Include="Network\ClientMoveEvent.cs" />
     <Compile Include="Network\ClientTestEvent.cs" />
     <Compile Include="Math\MathConstants.cs" />

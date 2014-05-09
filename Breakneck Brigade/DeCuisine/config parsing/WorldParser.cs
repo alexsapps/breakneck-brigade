@@ -75,17 +75,17 @@ namespace DeCuisine
 
         protected override void HandleAttributes()
         {
-            DefaultCollisionConfiguration CollisionConf = new DefaultCollisionConfiguration();
-            CollisionDispatcher Dispatcher = new CollisionDispatcher(CollisionConf);
-            DbvtBroadphase Broadphase = new DbvtBroadphase();
-            this.world = new DiscreteDynamicsWorld(Dispatcher, Broadphase, null, CollisionConf);
+            serverGame.CollisionConf = new DefaultCollisionConfiguration();
+            serverGame.Dispatcher = new CollisionDispatcher(serverGame.CollisionConf);
+            serverGame.Broadphase = new DbvtBroadphase();
+            this.world = new DiscreteDynamicsWorld(serverGame.Dispatcher, serverGame.Broadphase, null, serverGame.CollisionConf);
 
             var gravity = getFloats(attributes["gravity"]);
             Debug.Assert(gravity.Length == 3);
             this.world.Gravity = new Vector3(gravity[0], gravity[1], gravity[2]);
 
             Debug.Assert(this.serverGame.World == null);
-            this.serverGame.World = this.world;
+            serverGame.World = this.world;
         }
 
         protected override void handleSubtree(System.Xml.XmlReader reader)
