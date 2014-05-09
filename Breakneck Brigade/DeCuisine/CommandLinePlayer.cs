@@ -22,8 +22,9 @@ namespace DeCuisine
         /// read the arguments from the command line.
         /// </summary>
         /// <param name="args"></param>
-        public static bool ReadArgs(string[] args, Server server)
+        public static bool ReadArgs(string[] args, Server server, out string ret)
         {
+            ret = null;
             bool success = true;
             switch (args[0])
             {
@@ -33,7 +34,7 @@ namespace DeCuisine
                     // put the ingredient, the second is the ingredient id of what you want to add
                     if (args.Length < 3)
                     {
-                        Program.WriteLine("add expects at least two arguments.");
+                        ret = "add expects at least two arguments.";
                         break;
                     }
                     lock (server.Lock)
@@ -48,7 +49,7 @@ namespace DeCuisine
                     // list all objects ids in the game as well as there class 
                     lock (server.Lock)
                     {
-                        Program.WriteLine(server.Game.ListGameObjects());
+                        ret = server.Game.ListGameObjects();
                     }
                     break;
                 case "monitor":
@@ -62,19 +63,19 @@ namespace DeCuisine
                     // takes one argument, the cooker you want to list it's contents
                     if (args.Length < 2)
                     {
-                        Program.WriteLine("list cooker expects at least one argument.");
+                        ret = "list cooker expects at least one argument.";
                         break;
                     }
                     lock (server.Lock)
                     {
-                        Program.WriteLine(server.Game.ListCookerContents(Convert.ToInt32(args[1])));
+                        ret = server.Game.ListCookerContents(Convert.ToInt32(args[1]));
                     }
                     break;
                 case "listing":
                     // lists all the ingredients by name in the game world
                     lock (server.Lock)
                     {
-                        Program.WriteLine(server.Game.ListIngredients());
+                        ret = server.Game.ListIngredients();
                     }
                     break;
                 case "spawn":
@@ -235,123 +236,119 @@ namespace DeCuisine
         /// <summary>
         /// processes spawn command arguments and calls the appropiate spawn functions
         /// </summary>
-        public static void Spawn(ServerGame game, string[] args)
+        public static string Spawn(ServerGame game, string[] args)
         {
-
             if (args.Length < 2) 
-                Program.WriteLine("You need to specify what type of object to spawn");
+                return "You need to specify what type of object to spawn";
             else
             {
                 switch (args[1])
                 {
                     case "ingredient":
-                        spawnIngredientHelper(game, args);
-                        break;
+                        return spawnIngredientHelper(game, args);
                     case "cooker":
-                        spawnCookerHelper(game, args);
-                        break;
+                        return spawnCookerHelper(game, args);
                     default:
-                        Program.WriteLine("WTF is a " + args[1] + ". I can't spawn that.");
-                        break;
+                        return "WTF is a " + args[1] + ". I can't spawn that.";
                 }
             }
         }
 
-        private static void spawnCookerHelper(ServerGame game, string[] args)
+        private static string spawnCookerHelper(ServerGame game, string[] args)
         {
             if (args.Length == 2) // spawn cooker
-                SpawnCooker(game);
+                return SpawnCooker(game);
             else if (args.Length == 3) // spawn cooker type
-                SpawnCooker(game, args[2]);
+                return SpawnCooker(game, args[2]);
             else if (args.Length == 6) // spawn cooker type x y z
-                SpawnCooker(game, args[2], Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]));
+                return SpawnCooker(game, args[2], Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]));
             else
-                Program.WriteLine("Spawn takes 1 arguments: one string that " +
+                return "Spawn takes 1 arguments: one string that " +
                                   "that is the type of object you want to spawn. 2 arguments: the type of object and " +
                                   "the type of that object i.e. a banana. 5 arguments: the type of object and the " +
-                                  "type of that object i.e. a blender and 3 doubles for the x, y and z spawn location");
+                                  "type of that object i.e. a blender and 3 doubles for the x, y and z spawn location";
 
         }
 
-        private static void spawnIngredientHelper(ServerGame game, string[] args)
+        private static string spawnIngredientHelper(ServerGame game, string[] args)
         {
             if (args.Length == 2) // spawn ingredient
-                SpawnIngredient(game);
+                return SpawnIngredient(game);
             else if (args.Length == 3) // spawn ingredient type
-                SpawnIngredient(game, args[2]);
+                return SpawnIngredient(game, args[2]);
             else if (args.Length == 6) // spawn ingredient type x y z
-                SpawnIngredient(game, args[2], Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]));
+                return SpawnIngredient(game, args[2], Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]));
             else
-                Program.WriteLine("Spawn takes 1 arguments: one string that " +
+                return "Spawn takes 1 arguments: one string that " +
                                   "that is the type of object you want to spawn. 2 arguments: the type of object and " +
                                   "the type of that object i.e. a banana. 5 arguments: the type of object and the " +
-                                  "type of that object i.e. a blender and 3 doubles for the x, y and z spawn location");
+                                  "type of that object i.e. a blender and 3 doubles for the x, y and z spawn location";
         }
 
         /// <summary>
         /// Spawn a random ingredient at a random location.
         /// </summary>
-        public static void SpawnIngredient(ServerGame game)
+        public static string SpawnIngredient(ServerGame game)
         {
             List<IngredientType> types = new List<IngredientType>(game.Config.Ingredients.Values);
             Random rand = new Random();
             IngredientType randIng = types[rand.Next(types.Count)];
             Vector3 spawnLoc = randomSpawn();
             new ServerIngredient(randIng, game, spawnLoc);
-            Program.WriteLine("Made a " + randIng.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            return "Made a " + randIng.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
         /// <summary>
         /// Spawn a the ingredient at a random location.
         /// </summary>
-        public static void SpawnIngredient(ServerGame game, string type)
+        public static string SpawnIngredient(ServerGame game, string type)
         {
             Vector3 spawnLoc = randomSpawn();
             new ServerIngredient(game.Config.Ingredients[type], game, spawnLoc);
-            Program.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            return "Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
         /// <summary>
         /// Spawn an ingredient of the type passed  at the location. 
         /// </summary>
-        public static void SpawnIngredient(ServerGame game, string type, double x, double y, double z)
+        public static string SpawnIngredient(ServerGame game, string type, double x, double y, double z)
         {
             Vector3 spawnLoc = new Vector3((float)x, (float)y, (float)z);
             new ServerIngredient(game.Config.Ingredients[type], game, spawnLoc);
-            Program.WriteLine("Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            return "Made a " + game.Config.Ingredients[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
         /// <summary>
         /// Spawn a random ingredient at a random location.
         /// </summary>
-        public static void SpawnCooker(ServerGame game)
+        public static string SpawnCooker(ServerGame game)
         {
             List<CookerType> types = new List<CookerType>(game.Config.Cookers.Values);
             Random rand = new Random();
             CookerType randCooker = types[rand.Next(types.Count)];
             Vector3 spawnLoc = new Vector3(rand.Next(100), rand.Next(100), rand.Next(10, 100));
             new ServerCooker(randCooker, game, spawnLoc);
-            Program.WriteLine("Made a " + randCooker.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            return "Made a " + randCooker.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
         /// <summary>
         /// Spawn a the ingredient at a random location.
         /// </summary>
-        public static void SpawnCooker(ServerGame game, string type)
+        public static string SpawnCooker(ServerGame game, string type)
         {
             Vector3 spawnLoc = randomSpawn();
             new ServerCooker(game.Config.Cookers[type], game, spawnLoc);
-            Program.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            return "Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
         /// <summary>
         /// Spawn an ingredient of the type passed  at the location. 
         /// </summary>
-        public static void SpawnCooker(ServerGame game, string type, double x, double y, double z)
+        public static string SpawnCooker(ServerGame game, string type, double x, double y, double z)
         {
             Vector3 spawnLoc = new Vector3((float)x, (float)y, (float)z);
             new ServerCooker(game.Config.Cookers[type], game, spawnLoc);
-            Program.WriteLine("Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z);
+            return "Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
         /// <summary>

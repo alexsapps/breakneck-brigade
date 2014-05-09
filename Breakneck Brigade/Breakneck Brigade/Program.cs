@@ -99,11 +99,12 @@ namespace Breakneck_Brigade
                     var line = Console.ReadLine();
                     if (line == null)
                         return; //thread asked to abort
-                    string[] parts = line.Split(new string[] { Environment.NewLine }, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(new string[] { " " }, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length > 0)
                     {
                         switch (parts[0])
                         {
+                            case "q":
                             case "cancel":
                                 cancelConsole = true;
                                 break;
@@ -119,6 +120,7 @@ namespace Breakneck_Brigade
                                 Environment.Exit(0);
 
                                 break;
+                            case "t":
                             case "status":
                                 lock(clientLock)
                                 {
@@ -140,8 +142,25 @@ namespace Breakneck_Brigade
                                     }
                                 }
                                 break;
+                            case "r":
                             case "rate":
                                 new Thread(() => { rateThread(); }).Start();
+                                break;
+                            case "s":
+                            case "server":
+                                if (parts.Length > 1)
+                                {
+                                    lock (clientLock)
+                                    {
+                                        string[] serverparts = new string[parts.Length - 1];
+                                        Array.Copy(parts, 1, serverparts, 0, parts.Length - 1);
+                                        client.SendConsoleCommand(serverparts);
+                                    }
+                                }
+                                else
+                                {
+                                    Program.WriteLine("you didn't specify a command to send to the server.");
+                                }
                                 break;
                             default:
                                 Program.WriteLine("Command not recognized.");
@@ -593,6 +612,11 @@ namespace Breakneck_Brigade
                         {
                             game.PlayerObjId = msg.PlayerId;
                         }
+                    }
+                    else if (m is ServerCommandResponseMessage)
+                    {
+                        var msg = (ServerCommandResponseMessage)m;
+                        WriteLine(msg.Result);
                     }
                     else
                     {

@@ -50,110 +50,12 @@ namespace DeCuisine
                 try
                 {
                     String[] parts = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                    switch (parts[0])
-                    {
-                        case "cancel":
-                            {
-                                cancelConsole = true;
-                                break;
-                            }
-                        case "stop":
-                            lock (server.Lock)
-                            {
-                                if (server.Started)
-                                {
-                                    stop();
-                                }
-                                else
-                                {
-                                    Program.WriteLine("Already stopped.");
-                                }
-                            }
-                            break;
-                        case "restart":
-                            lock (server.Lock)
-                            {
-                                if (server.Started)
-                                {
-                                    stop();
-                                }
-                                start();
-                            }
-                            break;
-                        case "start":
-                            lock (server.Lock)
-                            {
-                                if (server.Started)
-                                    Program.WriteLine("Already started.");
-                                else
-                                    start();
-                            }
-                            break;
-                        case "play":
-                            lock (server.Lock)
-                            {
-                                if (server.Started)
-                                {
-                                    lock (server.Game.Lock)
-                                    {
-                                        if (server.Game.Mode == GameMode.Init)
-                                            server.Game.Start();
-                                        else
-                                            Program.WriteLine("Game already in " + server.Game.Mode.ToString() + " mode.");
-                                    }
-                                }
-                                else
-                                    Program.WriteLine("Server not started.");
-                            }
-                            break;
-                        case "reconfig":
-                        case "reload":
-                            lock (server.Lock)
-                            {
-                                server.ReloadConfig();
-                            }
-                            break;
-                        case "set":
-                            if (parts.Length < 3)
-                            {
-                                Program.WriteLine("set expects at least two arguments.");
-                                break;
-                            }
-                            lock (server.Lock)
-                            {
-                                if (server.Game != null)
-                                {
-                                    lock (server.Game.Lock)
-                                    {
-                                        switch (parts[1])
-                                        {
-                                            case "tick":
-                                                int val = int.Parse(parts[2]);
-                                                if (val > 0)
-                                                    server.Game.FrameRateMilliseconds = val;
-                                                else
-                                                    Program.WriteLine("ticks must be more than 0.");
-                                                break;
-                                            default:
-                                                {
-                                                    Program.WriteLine("set doesn't understand " + parts[1]);
-                                                    break;
-                                                }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    Program.WriteLine("game must be started to set this variable.");
-                                }
-                            }
-                            break;
-                        case "status":
-                            lock (server.Lock)
-                            {
-                                server.PrintStatus();
-                            }
-                            break;
+
+                    /*
+                     * server only commands here
+                     */
+                    switch(parts[0])
+                    { 
                         case "exit":
                             lock (server.Lock)
                             {
@@ -163,12 +65,25 @@ namespace DeCuisine
                                 }
                             }
                             cancelConsole = true;
-                            return;
-
-
+                            break;
+                        case "cancel":
+                            {
+                                cancelConsole = true;
+                                break;
+                            }
+                        case "start":
+                            lock (server.Lock)
+                            {
+                                if (server.Started)
+                                    Program.WriteLine("Already started.");
+                                else
+                                    start();
+                            }
+                            break;
                         default:
-                            if (!CommandLinePlayer.ReadArgs(parts, server)) 
-                                Program.WriteLine(String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]));
+                            var result = DoCommand(parts);
+                            if (result != null)
+                                Program.WriteLine(result);
                             break;
                     }
                 }
@@ -177,6 +92,112 @@ namespace DeCuisine
                     Program.WriteLine("Error:  " + ex.ToString());
                 }
             }
+        }
+
+        /// <summary>
+        /// does a command and returns the result to be printed.  commands here can also be run by client
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static string DoCommand(string[] parts)
+        {
+            string ret = null;
+
+            switch (parts[0])
+            {
+                case "stop":
+                    lock (server.Lock)
+                    {
+                        if (server.Started)
+                        {
+                            stop();
+                        }
+                        else
+                        {
+                            ret = "Already stopped.";
+                        }
+                    }
+                    break;
+                case "restart":
+                    lock (server.Lock)
+                    {
+                        if (server.Started)
+                        {
+                            stop();
+                        }
+                        start();
+                    }
+                    break;
+                case "play":
+                    lock (server.Lock)
+                    {
+                        if (server.Started)
+                        {
+                            lock (server.Game.Lock)
+                            {
+                                if (server.Game.Mode == GameMode.Init)
+                                    server.Game.Start();
+                                else
+                                    ret = "Game already in " + server.Game.Mode.ToString() + " mode.";
+                            }
+                        }
+                        else
+                            ret = "Server not started.";
+                    }
+                    break;
+                case "reconfig":
+                case "reload":
+                    lock (server.Lock)
+                    {
+                        server.ReloadConfig();
+                    }
+                    break;
+                case "set":
+                    if (parts.Length < 3)
+                    {
+                        ret = "set expects at least two arguments.";
+                    }
+                    lock (server.Lock)
+                    {
+                        if (server.Game != null)
+                        {
+                            lock (server.Game.Lock)
+                            {
+                                switch (parts[1])
+                                {
+                                    case "tick":
+                                        int val = int.Parse(parts[2]);
+                                        if (val > 0)
+                                            server.Game.FrameRateMilliseconds = val;
+                                        else
+                                            ret = "ticks must be more than 0.";
+                                        break;
+                                    default:
+                                        {
+                                            ret = "set doesn't understand " + parts[1];
+                                            break;
+                                        }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ret = "game must be started to set this variable.";
+                        }
+                    }
+                    break;
+                case "status":
+                    lock (server.Lock)
+                    {
+                        server.PrintStatus();
+                    }
+                    break;
+                default:
+                    if (!CommandLinePlayer.ReadArgs(parts, server, out ret))
+                        ret = String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]);
+                    break;
+            }
+            return ret;
         }
 
         public static bool cancelConsole;

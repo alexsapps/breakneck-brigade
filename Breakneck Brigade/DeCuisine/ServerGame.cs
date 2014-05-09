@@ -252,6 +252,10 @@ namespace DeCuisine
                                     case ClientEventType.Jump:
                                         input.Client.Player.Jump();
                                         break;
+                                    case ClientEventType.Command:
+                                        DoServerCommandAsync(((ClientCommandEvent)input.Event).args, input.Client, AsyncCommandCallback);
+                                        
+                                        break;
                                     default:
                                         Debugger.Break();
                                         throw new Exception("server does not understand client event " + input.Event.Type.ToString());
@@ -346,6 +350,28 @@ namespace DeCuisine
                     CollisionConf.Dispose();
                 }
             }
+        }
+
+        protected delegate void AsyncCommandResultCallback(string result, Client client);
+        protected void DoServerCommandAsync(string[] args, Client client, AsyncCommandResultCallback callback)
+        {
+            new Thread(() => { asyncServerCommandThread(args, client, callback); }).Start();
+        }
+        protected void asyncServerCommandThread(string[] args, Client client, AsyncCommandResultCallback callback)
+        {
+            string result = Program.DoCommand(args);
+            try
+            {
+                callback(result, client);
+            }
+            catch(Exception ex)
+            {
+                Program.WriteLine("Error sending result to client:\n" + ex.Message);
+            }
+        }
+        protected void AsyncCommandCallback(string result, Client client)
+        {
+            client.SendMessage(new ServerCommandResponseMessage() { Result = result ?? "{server did not issue a text response}" });
         }
 
         protected delegate void GameStateWriter(BinaryWriter writer);

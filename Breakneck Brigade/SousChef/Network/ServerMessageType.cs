@@ -10,7 +10,7 @@ namespace SousChef
     {
         GameModeUpdate,
         GameStateUpdate,
-        PlayerIdUpdate
-
+        PlayerIdUpdate,
+        ServerCommandResponse
     }
 }

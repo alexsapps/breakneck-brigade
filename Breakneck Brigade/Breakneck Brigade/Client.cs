@@ -116,6 +116,8 @@ namespace Breakneck_Brigade
                     return typeof(ServerGameModeUpdateMessage);
                 case ServerMessageType.PlayerIdUpdate:
                     return typeof(ServerPlayerIdUpdateMessage);
+                case ServerMessageType.ServerCommandResponse:
+                    return typeof(ServerCommandResponseMessage);
                 default:
                     throw new Exception("getServerMessageType not defined for " + type.ToString());
             }
@@ -213,6 +215,17 @@ namespace Breakneck_Brigade
             //update: not sure why we were joining.  they should be guaranteed to terminate cleanly when they re-acquire the client lock and see that we've disconnected.
 
             //note: game thread constantly checks IsConnected to know when to terminate
+        }
+
+        public void SendConsoleCommand(string[] parts)
+        {
+            Lock.AssertHeld();
+            lock(ClientEvents)
+            {
+                ClientEvents.Add(new ClientCommandEvent() { args = parts });
+                Monitor.PulseAll(ClientEvents);
+            }
+            
         }
     }
 }

@@ -44,6 +44,10 @@ namespace SousChef
         /// <summary>
         /// A test event. Forces the server to generate an object at a predefined space
         /// </summary>
-        Test
+        Test,
+        /// <summary>
+        /// Run a server command
+        /// </summary>
+        Command
     }
 }

@@ -76,12 +76,14 @@
     <Compile Include="Math\Coordinate.cs" />
     <Compile Include="Math\GeomShape.cs" />
     <Compile Include="Network\ClientChangeOrientationEvent.cs" />
+    <Compile Include="Network\ClientCommandEvent.cs" />
     <Compile Include="Network\ClientJumpEvent.cs" />
     <Compile Include="Network\ClientMoveEvent.cs" />
     <Compile Include="Network\ClientTestEvent.cs" />
     <Compile Include="Math\MathConstants.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Network\ServerCommandResponseMessage.cs" />
     <Compile Include="Network\ServerGameModeUpdateMessage.cs" />
     <Compile Include="Network\ServerGameStateUpdateMessage.cs" />
     <Compile Include="Network\ServerMessage.cs" />
