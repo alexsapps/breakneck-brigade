@@ -26,6 +26,8 @@ namespace DeCuisine
                 start(); //start automatically
             }
 
+            Console.CancelKeyPress += Console_CancelKeyPress;
+
             string line;
             prompt();
             while ((line = Console.ReadLine()) != null)
@@ -35,6 +37,11 @@ namespace DeCuisine
                     String[] parts = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     switch (parts[0])
                     {
+                        case "cancel":
+                            {
+                                consoleCancel = true;
+                                break;
+                            }
                         case "stop":
                             lock (server.Lock)
                             {
@@ -156,6 +163,12 @@ namespace DeCuisine
                 }
                 prompt();
             }
+        }
+
+        public static bool consoleCancel;
+        static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            consoleCancel = true;
         }
             
         static void start() {

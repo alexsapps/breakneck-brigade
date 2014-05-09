@@ -155,19 +155,6 @@ namespace DeCuisine
         // clients Lock(ClientInput) without locking the whole server, just to specify their input
         public List<DCClientEvent> ClientInput { get; private set; }
 
-        void monitor()
-        {
-            lock (Lock)
-            {
-                Console.Clear();
-                Console.WriteLine("MONITOR:");
-                foreach (ServerGameObject sgo in GameObjects.Values)
-                {
-                    Console.WriteLine("Position: " + sgo.Position.X + ", " + sgo.Position.Y + ", " + sgo.Position.Z);
-                }
-            }
-        }
-
         public virtual RigidBody LocalCreateRigidBody(float mass, Matrix startTransform, CollisionShape shape)
         {
             //rigidbody is dynamic if and only if mass is non zero, otherwise static
@@ -491,17 +478,17 @@ namespace DeCuisine
         }
 
         // TODO: Dev Code to list current game objects
-        public void ListGameObjects()
+        public string ListGameObjects()
         {
-            CommandLinePlayer.ListGameObjects(this.GameObjects);
+            return CommandLinePlayer.ListGameObjects(this.GameObjects);
         }
-        public void ListIngredients()
+        public string ListIngredients()
         {
-            CommandLinePlayer.ListIngredients(this.GameObjects);
+            return CommandLinePlayer.ListIngredients(this.GameObjects);
         }
-        public void ListCookerContents(int cookerId)
+        public string ListCookerContents(int cookerId)
         {
-            CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
+            return CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
         }
     }
 }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using SousChef;
 
 using BulletSharp;
+using System.Threading;
+using System.Diagnostics;
+using System.IO;
 
 namespace DeCuisine
 {
@@ -45,10 +48,16 @@ namespace DeCuisine
                     // list all objects ids in the game as well as there class 
                     lock (server.Lock)
                     {
-                        server.Game.ListGameObjects();
+                        Console.WriteLine(server.Game.ListGameObjects());
                     }
                     break;
+                case "monitor":
+                    Thread m = new Thread(() => {
+                        monitorThread(server);
+                    });
+                    m.Start();
 
+                    break;
                 case "listcooker":
                     // takes one argument, the cooker you want to list it's contents
                     if (args.Length < 2)
@@ -58,14 +67,14 @@ namespace DeCuisine
                     }
                     lock (server.Lock)
                     {
-                        server.Game.ListCookerContents(Convert.ToInt32(args[1]));
+                        Console.WriteLine(server.Game.ListCookerContents(Convert.ToInt32(args[1])));
                     }
                     break;
                 case "listing":
                     // lists all the ingredients by name in the game world
                     lock (server.Lock)
                     {
-                        server.Game.ListIngredients();
+                        Console.WriteLine(server.Game.ListIngredients());
                     }
                     break;
                 case "spawn":
@@ -95,6 +104,31 @@ namespace DeCuisine
             return success;
         }
 
+        private static void monitorThread(Server server)
+        {   
+            while (!Program.consoleCancel)
+            {
+                lock (server.Lock)
+                {
+                    if (server.Game != null)
+                    {
+                        lock (server.Game.Lock)
+                        {
+                            Console.Clear();
+                            Console.Write(server.Game.ListGameObjects());
+                        }
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("monitor is waiting for game to start");
+                    }
+                }
+                System.Threading.Thread.Sleep(50);
+            }
+            Program.consoleCancel = false;
+        }
+
         /// <summary>
         /// Technically, calls the collision function between the cooker and 
         /// ingredient. The collision function adds the ingredient to the cooker 
@@ -115,40 +149,54 @@ namespace DeCuisine
         /// <summary>
         /// Lists all the game objects that exist in the world and various properties.
         /// </summary>
-        public static void ListGameObjects(Dictionary<int, ServerGameObject> gameObjects)
+        public static string ListGameObjects(Dictionary<int, ServerGameObject> gameObjects)
         {
-            Console.WriteLine("Object Id " + "\t" + "Name" + "\t\t" + "Location" + "\t\t" + "ToRender");
-            foreach (var x in gameObjects)
-                writeAttributes(x.Value, "");
+            if (gameObjects.Count > 0)
+            {
+                StringBuilder b = new StringBuilder();
+                b.AppendLine("Object Id " + "\t" + "Name" + "\t\t" + "Location" + "\t\t" + "ToRender");
+                foreach (var x in gameObjects)
+                    writeAttributes(x.Value, "", b);
+
+                return b.ToString();
+            }
+            else
+            {
+                return "No objects\n";
+            }
         }
 
         /// <summary>
         /// Lists only the ingredients in the world and various properties
         /// </summary>
-        public static void ListIngredients(Dictionary<int, ServerGameObject> gameObjects)
+        public static string ListIngredients(Dictionary<int, ServerGameObject> gameObjects)
         {
-            Console.WriteLine("Object Id " + "\t" + "Name" + "\t\t" + "Location" + "\t\t" + "ToRender");
+            StringBuilder b = new StringBuilder();
+            b.AppendLine("Object Id " + "\t" + "Name" + "\t\t" + "Location" + "\t\t" + "ToRender");
             foreach (var x in gameObjects)
             {
                 if (x.Value.ObjectClass == GameObjectClass.Ingredient)
-                    writeAttributes(x.Value, "ing");
+                    writeAttributes(x.Value, "ing", b);
             }
+            return b.ToString();
         }
 
         /// <summary>
         /// Lists the contents of the current cooker.
         /// </summary>
-        public static void ListCookerContents(Dictionary<int,ServerGameObject> gameObjects, int cookerId)
+        public static string ListCookerContents(Dictionary<int,ServerGameObject> gameObjects, int cookerId)
         {
+            StringBuilder b = new StringBuilder();
             if (!sanityChecks(gameObjects, cookerId, GameObjectClass.Cooker))
-                return; 
+                return null; 
 
             // sanity checks passed list contents
             Console.WriteLine("Object Id " + "\t" + "Name");
             foreach (var x in ((ServerCooker)gameObjects[cookerId]).Contents)
             {
-                Console.WriteLine(x.Id + "\t\t" + x.Type.Name);
+                b.AppendLine(x.Id + "\t\t" + x.Type.Name);
             }
+            return b.ToString();
         }
 
         /// <summary>
@@ -330,19 +378,21 @@ namespace DeCuisine
         /// <summary>
         /// Write them in a similar format. I can't format well though so there's that.
         /// </summary>
-        private static void writeAttributes(ServerGameObject obj, string format)
+        private static string writeAttributes(ServerGameObject obj, string format, StringBuilder b)
         {
-            switch(format){
+            switch(format)
+            {
                 case "ing":
-                    Console.WriteLine(obj.Id + "\t\t" + ((ServerIngredient)obj).Type.Name + "\t\t" + 
+                    b.AppendLine(obj.Id + "\t\t" + ((ServerIngredient)obj).Type.Name + "\t\t" + 
                                       (int)obj.Position.X + " " + (int)obj.Position.Y + " " + (int)obj.Position.Z +
                                       "\t\t" + obj.ToRender);
                     break;
                 default:
-                    Console.WriteLine(obj.Id + "\t\t" + obj.ObjectClass + "\t\t" + (int)obj.Position.X + " " + 
+                    b.AppendLine(obj.Id + "\t\t" + obj.ObjectClass + "\t\t" + (int)obj.Position.X + " " + 
                                       (int)obj.Position.Y + " " + (int)obj.Position.Z + "\t\t" + obj.ToRender);
                     break;
-            }            
+            }
+            return b.ToString();
         }
     }
 }
