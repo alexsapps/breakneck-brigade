@@ -74,7 +74,7 @@ namespace Breakneck_Brigade
 
             var xDiff = Velocity.Z * (float)Math.Sin(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Cos((Orientation / 180.0f * Math.PI));
             var zDiff = Velocity.Z * (float)Math.Cos(Orientation / 180.0f * -1.0f * Math.PI) - Velocity.X * (float)Math.Sin((Orientation / 180.0f * Math.PI));
-            Coordinate diff = new Coordinate(-xDiff * timediff / 10, 0, -zDiff * timediff / 10);
+            Coordinate diff = new Coordinate(xDiff * timediff / 10, 0, zDiff * timediff / 10);
             if (diff.x != 0 || diff.z != 0)
             {
                 NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
@@ -238,11 +238,7 @@ namespace Breakneck_Brigade
                 {
                     if (Player != null)
                     {
-                        var result = new Vector4(Player.Position);
-                        result.X = -result.X;
-                        result.Y -= 10;
-                        result.Z = -result.Z;
-                        return result;
+                        return new Vector4(Player.Position);
                     }
                 }
             }
