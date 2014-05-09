@@ -46,9 +46,11 @@ namespace Breakneck_Brigade
         {
             try
             {
-                new BinaryWriter(connection.GetStream()).Write(BB.ClientProtocolHandshakeStr);
+                connection.NoDelay = true;
+                var streamBuffer = new BufferedStream(connection.GetStream());
+                new BinaryWriter(streamBuffer).Write(BB.ClientProtocolHandshakeStr);
                 
-                using (BinaryReader reader = new BinaryReader(connection.GetStream()))
+                using (BinaryReader reader = new BinaryReader(streamBuffer))
                 {
                     connection.ReceiveTimeout = 10000;
                     if (!reader.ReadString().Equals(BB.ServerProtocolHandshakeStr))

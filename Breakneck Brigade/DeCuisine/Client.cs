@@ -49,10 +49,12 @@ namespace DeCuisine
         public void Receive(TcpClient c)
         {
             this.connection = c;
-
+            c.NoDelay = true; //this is why we use a buffered stream, so every int doesn't get written at once.
             try
             {
-                var w = new BinaryWriter(connection.GetStream());
+                var stream = c.GetStream();
+                var bufferStream = new BufferedStream(stream);
+                var w = new BinaryWriter(bufferStream);
                 w.Write(BB.ServerProtocolHandshakeStr);
                 string confighash;
                 lock (Server.Lock) {
@@ -63,7 +65,7 @@ namespace DeCuisine
                 w.Write(confighash);
                 w = null;
 
-                using (BinaryReader reader = new BinaryReader(c.GetStream()))
+                using (BinaryReader reader = new BinaryReader(bufferStream))
                 {
                     connection.ReceiveTimeout = 10000;
                     if (!reader.ReadString().Equals(BB.ClientProtocolHandshakeStr))
@@ -85,7 +87,6 @@ namespace DeCuisine
                         switch (type)
                         {
                             case ClientMessageType.ClientEvent:
-                                
                                 ClientEventType eventType = (ClientEventType)reader.ReadByte();
                                 ClientEvent evt = (ClientEvent)Activator.CreateInstance(getClientEventType(eventType), reader);
                                 DCClientEvent clientEvent = new DCClientEvent() { Client = this, Event = evt };
@@ -168,15 +169,9 @@ namespace DeCuisine
                         {
                             writer.Write((byte)message.Type);
                             message.Write(writer);
-
-                            BBStopwatch wn = new BBStopwatch();
-                            wn.Start();
-
-                            //writer.Flush();
-                            wn.Stop(2, "Client: slow flush. {0}");
-                            
+                            writer.Flush();
                             if (message.Created.Subtract(DateTime.Now).TotalMilliseconds > 2)
-                                Console.WriteLine("slow messagee");
+                                Console.WriteLine("slow message");
 
                         }
                         w2.Stop(2, "Client: slow write loop. {0}");
