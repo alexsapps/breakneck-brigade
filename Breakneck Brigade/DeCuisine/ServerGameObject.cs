@@ -25,7 +25,6 @@ namespace DeCuisine
         public GeometryInfo GeomInfo { get { return _geominfo ?? (_geominfo = getGeomInfo()); } } //cache
         protected abstract GeometryInfo getGeomInfo();
 
-        protected SousChef.Vector4 _position;
         public virtual Vector3 Position { get { return getPosition(); } set { setPosition(value); } }
         protected SousChef.Matrix4 _rotation;
         /// <summary>
@@ -51,7 +50,6 @@ namespace DeCuisine
             this.Id = nextId++;
             this.Game = game;
             this._rotation = new SousChef.Matrix4();
-            this._position = new SousChef.Vector4();
             this.ToRender = true; // class specific implementation can override
             
             Game.ObjectAdded(this);
@@ -111,7 +109,7 @@ namespace DeCuisine
                 this.Geom = geom;
                 this.Body = this.MakeBody(this.GeomInfo);
                 this.Game.World.AddRigidBody(this.Body);
-                this.Body.Translate(coordinate);
+                this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(coordinate));
                 return geom;
             });
             
@@ -231,7 +229,6 @@ namespace DeCuisine
             if (this.Geom != null)
             {
                 Vector3 m3 = this.Body.CenterOfMassPosition;
-                _position.Set(m3.X, m3.Y, m3.Z);
                 return m3;
             }
             else
@@ -245,7 +242,10 @@ namespace DeCuisine
             this.Game.Lock.AssertHeld();
             this.MarkDirty(); // moved it, make sure you mark it to move
             this.lastPosition = value;
-            this.Body.Translate(new Vector3(value.X, value.Y, value.Z)); 
+            this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(value));
+            Debug.Assert(value.X == this.Body.WorldTransform.Origin.X); 
+            Debug.Assert(value.Y == this.Body.WorldTransform.Origin.Y);
+            Debug.Assert(value.Z == this.Body.WorldTransform.Origin.Z);
         }
 
         private SousChef.Matrix4 getRotation()

@@ -20,8 +20,8 @@ namespace SousChef
         public override void Write(BinaryWriter writer) 
         {
             writer.Write(Delta.x);
-            writer.Write(Delta.z); //client reverses z and y for server
             writer.Write(Delta.y);
+            writer.Write(Delta.z);
         }
     }
 }

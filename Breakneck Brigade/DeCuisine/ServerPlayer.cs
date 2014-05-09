@@ -48,9 +48,9 @@ namespace DeCuisine
             // need to flip in order to get the camera rendering right
             this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
             base.UpdateStream(stream);
-            // flip back for sanity
+            // flip back for sanity TODO: Put exception here for sanity check.
             this.Position = new Vector3(this.Position.X, this.Position.Y, -this.Position.Z);
-            //stream.Write(c,d);
+            // stream.Write(c,d);
         }
 
         /// <summary>

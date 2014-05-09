@@ -238,9 +238,9 @@ namespace DeCuisine
                                         var ppos = input.Client.Player.Position;
                                         var pos = new Vector3()
                                         {
-                                            X = ppos.X,
-                                            Y = ppos.Y,
-                                            Z = ppos.Z + 100
+                                            X = 10,
+                                            Y = 10,
+                                            Z = 10
                                         };
                                         ServerIngredient ing = new ServerIngredient(Config.Ingredients["banana"], this, pos);
                                         break;
@@ -248,16 +248,16 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.BeginMove:
                                         ClientBeginMoveEvent e = (ClientBeginMoveEvent)input.Event;
-                                        SousChef.Vector4 direction = (input.Client.Player.Rotation * new SousChef.Vector4(0.0, 1.0, 0.0));
+                                        //SousChef.Vector4 direction = (input.Client.Player.Rotation * new SousChef.Vector4(0.0, 1.0, 0.0));
                                         var lastPos = input.Client.Player.Position;
                                         var newpos = new Vector3();
-                                        newpos.X = lastPos.X + e.Delta.x;
-                                        newpos.Y = lastPos.Y + e.Delta.y;
-                                        newpos.Z = lastPos.Z + e.Delta.z;
+                                        newpos.X = (lastPos.X + e.Delta.x);
+                                        newpos.Y = (lastPos.Y + e.Delta.y);
+                                        newpos.Z = (lastPos.Z + e.Delta.z);
                                         input.Client.Player.Position = newpos;
                                         //TEST
-                                        //direction.Scale(3.0f);
-                                        input.Client.Player.Position = new Vector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
+                                        // direction.Scale(3.0f);
+                                        // input.Client.Player.Position = new Vector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
                                         break;
                                     case ClientEventType.EndMove:
                                         break;
@@ -272,7 +272,7 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        _world.StepSimulation(0.01f);
+                        _world.StepSimulation(0.1f);
 
                         /*
                          * handle an instant in time, e.g. gravity, collisions
