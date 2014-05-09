@@ -65,4 +65,11 @@
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>     
   </model>
+
+  <model>
+    <filename>floor</filename>
+    <scaleX>10.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>10.0</scaleZ>     
+  </model>
 </models>

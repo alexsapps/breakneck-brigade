@@ -12,7 +12,7 @@ namespace Breakneck_Brigade
     class ClientPlane : ClientGameObject
     {
         public string Texture { get; set; }
-        public override string ModelName { get { return "#plane:" + Texture; } }
+        public override string ModelName { get { return "floor"; } }
 
         public ClientPlane(int id, ClientGame game, Vector4 position) : base (id, game, position)
         {

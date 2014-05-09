@@ -82,7 +82,7 @@ namespace Breakneck_Brigade
         protected void finilizeConstruction()
         {
             initGeom();
-            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "egg"];
+            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "sauce"];
             Scale = Model.InitialScale;
         }
 
