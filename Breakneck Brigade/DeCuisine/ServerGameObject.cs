@@ -89,10 +89,7 @@ namespace DeCuisine
                Math.Abs(this.lastPosition.Z - this.Position.Z) > .01){
                    this.MarkDirty(); // it's position moved from the last one
                    this.lastPosition = this.Position;
-               }
-
-            this.MarkDirty();
-           
+               }           
         }
 
         protected delegate CollisionShape GeomMaker();

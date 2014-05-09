@@ -147,6 +147,7 @@ namespace DeCuisine
                                     stop();
                                 }
                             }
+                            consoleCancel = true;
                             return;
 
 

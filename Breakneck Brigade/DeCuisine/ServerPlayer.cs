@@ -97,6 +97,8 @@ namespace DeCuisine
 
         public override void Update()
         {
+            base.Update();
+
             //// Can't manipulate Ode in collide funtions, so a hacked flag has to do to make the joint
             //if (this.toHold != null)
             //{

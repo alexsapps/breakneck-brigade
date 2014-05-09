@@ -81,7 +81,7 @@ namespace DeCuisine
                     // spawn stuff, see function definition for right argument format
                     lock (server.Lock)
                     {
-                        CommandLinePlayer.Spawn(server.Game, args);
+                        Spawn(server.Game, args);
                     }
                     break;
                 case "stresstest":
@@ -93,7 +93,7 @@ namespace DeCuisine
                     {
                         lock (server.Game.Lock)
                         {
-                            CommandLinePlayer.StressTest(server.Game, n);
+                            StressTest(server.Game, n);
                         }
                     }                    
                     break;
