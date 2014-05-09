@@ -159,7 +159,33 @@ namespace DeCuisine
             {
             keepGoing:
                 listener.Stop();
-                listener.Start();
+
+                {
+                    int retries = 0;
+                    while (true)
+                    {
+                        try
+                        {
+                            listener.Start();
+                            break;
+                        }
+                        catch
+                        {
+                            if (retries++ < 10)
+                            {
+                                Console.WriteLine("Listen failed.  Retrying...");
+                                System.Threading.Thread.Sleep(2000);
+                            }
+                            else
+                                throw;
+                        }
+                    }
+                    if(retries > 0)
+                    {
+                        Console.WriteLine("Finally acquired TCP port " + Port);
+                    }
+                }
+
 
                 try
                 {

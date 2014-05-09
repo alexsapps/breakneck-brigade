@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,14 @@ namespace DeCuisine
 
         static void Main(string[] args)
         {
+            Mutex mutex = new Mutex(true, "ccf299f3-1ea2-48e1-84bd-72d1de57fbeb");
+            if (!mutex.WaitOne(TimeSpan.Zero, true)) //http://sanity-free.org/143/csharp_dotnet_single_instance_application.html
+            {
+                Console.WriteLine("Already started.");
+                System.Threading.Thread.Sleep(600);
+                return;
+            }
+
             globalConfig = config.Open("global-config.xml");
             int port = int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
@@ -175,8 +184,8 @@ namespace DeCuisine
         static void start() {
             server.Lock.AssertHeld();
 
+            Console.WriteLine("Starting on port {0}", server.Port);
             server.Start();
-            Console.WriteLine(String.Format("Listening on port {0}", server.Port));
         }
 
         static void stop()
