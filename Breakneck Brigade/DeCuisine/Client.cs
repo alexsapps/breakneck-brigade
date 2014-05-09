@@ -126,7 +126,18 @@ namespace DeCuisine
         }
 
         private Thread senderThread;
-        public List<ServerMessage> ServerMessages { get; private set; }
+        
+        private List<ServerMessage> ServerMessages { get; set; }
+        public void SendMessage(ServerMessage message)
+        {
+            Lock.AssertHeld();
+            lock (ServerMessages)
+            {
+                ServerMessages.Add(message);
+                Monitor.PulseAll(ServerMessages);
+            }
+        }
+
         private void send()
         {
             BBStopwatch w1 = new BBStopwatch(), w2 = new BBStopwatch(), w3 = new BBStopwatch();

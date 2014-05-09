@@ -96,12 +96,30 @@ namespace DeCuisine
         {
             lock (Lock)
             {
-                clients.Add(e.Client);
-                lock (ClientInput)
+                lock (e.Client.Lock)
                 {
-                    ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEnterEvent() }); //we can change this.
+                    clients.Add(e.Client);
+                    lock (ClientInput)
+                    {
+                        ClientInput.Add(new DCClientEvent() { Client = e.Client, Event = new ClientEnterEvent() }); //we can change this.
+                    }
+
+                    SendMode(e.Client);
+
+                    if (Mode == GameMode.Started)
+                    {
+                        StartClient(e.Client);
+                    }
                 }
             }
+        }
+
+        private void StartClient(Client client)
+        {
+            client.Lock.AssertHeld();
+            client.SendMessage(CalculateGameStateMessage(CalculateGameStateFull)); //do this BEFORE creating a ServerPlayer, which adds the player to HasAdded, which would be sent for a 2nd time in the next update
+            client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10));
+            client.SendMessage(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
         }
 
         void server_ClientLeave(object sender, ClientEventArgs e)
@@ -188,14 +206,18 @@ namespace DeCuisine
                 p.LoadFile(1);
                 _world.SetInternalTickCallback(CollisionCallback);
             }
+
+            //we just loaded the config file, and the objects think everything has been added in a delta kind of way, but really it was just initing, so clear this.  init data is not just a big delta anymore,
+            //it's it's own thing sent in StartClient which uses the CalculateGameStateFull function.  this is a workaround that's easier than an actual solution, such as game objects checking if the game is
+            //in init mode before adding it to HasAdded
+            HasAdded.Clear();
+            HasChanged.Clear();
+            HasRemoved.Clear();
+
             // loop over clients and make play objects for them
             foreach (var client in clients)
             {
-                client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10));
-                lock (client.ServerMessages)
-                {
-                    client.ServerMessages.Add(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
-                }
+                StartClient(client);
             }
             try
             {
@@ -272,44 +294,12 @@ namespace DeCuisine
                          * send updates to clients
                          */
                         {
-                            byte[] bin;
-                            int binlen;
-
-                            using (MemoryStream membin = new MemoryStream())
-                            {
-                                using (BinaryWriter writer = new BinaryWriter(membin))
-                                {
-                                    writer.Write(HasAdded.Count);
-                                    foreach (var obj in HasAdded)
-                                    {
-                                        obj.Serialize(writer);
-                                        HasChanged.Remove(obj);
-                                    }
-                                    writer.Write(HasChanged.Count);
-                                    foreach (var obj in HasChanged)
-                                        obj.UpdateStream(writer);
-                                    writer.Write(HasRemoved.Count);
-                                    foreach (var obj in HasRemoved)
-                                        writer.Write(obj);
-                                    HasAdded.Clear();
-                                    HasChanged.Clear();
-                                    HasRemoved.Clear();
-                                }
-                                bin = membin.ToArray();
-                                binlen = bin.Length;
-                            }
-                            var msg = new ServerGameStateUpdateMessage()
-                            {
-                                Binary = bin,
-                                Created = DateTime.Now
-                            };
-
+                            var msg = CalculateGameStateMessage(CalculateGameStateDifference);
                             foreach (Client client in clients)
                             {
-                                lock (client.ServerMessages)
+                                lock (client.Lock)
                                 {
-                                    client.ServerMessages.Add(msg);
-                                    Monitor.PulseAll(client.ServerMessages);
+                                    client.SendMessage(msg);
                                 }
                             }
                         }
@@ -375,6 +365,59 @@ namespace DeCuisine
             }
         }
 
+        protected delegate void GameStateWriter(BinaryWriter writer);
+        protected ServerGameStateUpdateMessage CalculateGameStateMessage(GameStateWriter calculator)
+        {
+            byte[] bin;
+            int binlen;
+
+            using (MemoryStream membin = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(membin))
+                {
+                    calculator(writer);
+                }
+                bin = membin.ToArray();
+                binlen = bin.Length;
+            }
+            var msg = new ServerGameStateUpdateMessage()
+            {
+                Binary = bin,
+                Created = DateTime.Now
+            };
+            return msg;
+        }
+
+        protected void CalculateGameStateDifference(BinaryWriter writer)
+        {
+            writer.Write(HasAdded.Count);
+            foreach (var obj in HasAdded)
+            {
+                obj.Serialize(writer);
+                HasChanged.Remove(obj);
+            }
+            writer.Write(HasChanged.Count);
+            foreach (var obj in HasChanged)
+                obj.UpdateStream(writer);
+            writer.Write(HasRemoved.Count);
+            foreach (var obj in HasRemoved)
+                writer.Write(obj);
+            HasAdded.Clear();
+            HasChanged.Clear();
+            HasRemoved.Clear();
+        }
+        protected void CalculateGameStateFull(BinaryWriter writer)
+        {
+            writer.Write(GameObjects.Count);
+            foreach (var obj in GameObjects.Values)
+            {
+                obj.Serialize(writer);
+            }
+            writer.Write(0); //0 "changed"
+            writer.Write(0); //0 "deleted"
+        }
+
+
         private void CollisionCallback(DynamicsWorld world, float timeStep)
         {
             int numManifolds = this.World.Dispatcher.NumManifolds;
@@ -414,15 +457,21 @@ namespace DeCuisine
         {
             foreach (Client client in clients)
             {
-                lock (client.ServerMessages)
+                lock (client.Lock)
                 {
-                    client.ServerMessages.Add(new ServerGameModeUpdateMessage()
-                    {
-                        Mode = Mode
-                    });
-                    Monitor.PulseAll(client.ServerMessages);
+                    SendMode(client);
                 }
             }
+        }
+
+        private void SendMode(Client client)
+        {
+            client.Lock.AssertHeld();
+            var update = new ServerGameModeUpdateMessage()
+            {
+                Mode = Mode
+            };
+            client.SendMessage(update);
         }
 
         public void Dispose()
