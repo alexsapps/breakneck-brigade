@@ -243,12 +243,7 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.BeginMove:
                                         ClientBeginMoveEvent e = (ClientBeginMoveEvent)input.Event;
-                                        //SousChef.Vector4 direction = (input.Client.Player.Rotation * new SousChef.Vector4(0.0, 1.0, 0.0));
                                         input.Client.Player.Move(e.Delta.x, e.Delta.y, e.Delta.z);
-
-                                        //TEST
-                                        // direction.Scale(3.0f);
-                                        // input.Client.Player.Position = new Vector3(lastPos.X + direction.X, lastPos.Y + direction.Y, lastPos.Z + direction.Z);
                                         break;
                                     case ClientEventType.EndMove:
                                         break;
@@ -403,37 +398,37 @@ namespace DeCuisine
 
         private void CollisionCallback(DynamicsWorld world, float timeStep)
         {
-            //int numManifolds = this.World.Dispatcher.NumManifolds;
-            //for (int i = 0; i < numManifolds; i++)
-            //{
-            //    bool didCollide = false;
-            //    PersistentManifold contactManifold = this.World.Dispatcher.GetManifoldByIndexInternal(i);
-            //    CollisionObject obA = (CollisionObject)contactManifold.Body0; //btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
-            //    CollisionObject obB = (CollisionObject)contactManifold.Body1; //btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-            //    int numContacts = contactManifold.NumContacts;
-            //    for (int j = 0; j < numContacts; j++)
-            //    {
-            //        ManifoldPoint pt = contactManifold.GetContactPoint(j);
-            //        if (pt.Distance < 0.0f)
-            //        {
-            //            Vector3 ptA = pt.PositionWorldOnA; //.getPositionWorldOnA();
-            //            Vector3 ptB = pt.PositionWorldOnB; // pt.getPositionWorldOnB();
-            //            Vector3 normalOnB = pt.NormalWorldOnB;
-            //            didCollide = true;
-            //        }
-            //    }
+            int numManifolds = this.World.Dispatcher.NumManifolds;
+            for (int i = 0; i < numManifolds; i++)
+            {
+                bool didCollide = false;
+                PersistentManifold contactManifold = this.World.Dispatcher.GetManifoldByIndexInternal(i);
+                CollisionObject obA = (CollisionObject)contactManifold.Body0; //btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+                CollisionObject obB = (CollisionObject)contactManifold.Body1; //btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+                int numContacts = contactManifold.NumContacts;
+                for (int j = 0; j < numContacts; j++)
+                {
+                    ManifoldPoint pt = contactManifold.GetContactPoint(j);
+                    if (pt.Distance < 0.0f)
+                    {
+                        Vector3 ptA = pt.PositionWorldOnA; //.getPositionWorldOnA();
+                        Vector3 ptB = pt.PositionWorldOnB; // pt.getPositionWorldOnB();
+                        Vector3 normalOnB = pt.NormalWorldOnB;
+                        didCollide = true;
+                    }
+                }
 
-            //        if (didCollide && obA.CollisionShape.UserObject != null && obB.CollisionShape.UserObject != null)
-            //        {
-            //            ServerGameObject obj1 = (ServerGameObject)obA.CollisionShape.UserObject;
-            //            ServerGameObject obj2 = (ServerGameObject)obB.CollisionShape.UserObject;
-            //            obj1.OnCollide(obj2);
-            //            obj2.OnCollide(obj1);
-            //            // Get position vectors 
-            //            // regidbody.movementstate.worldtransform.origin
-            //        }
-            //    }
+                if (didCollide && obA.CollisionShape.UserObject != null && obB.CollisionShape.UserObject != null)
+                {
+                    ServerGameObject obj1 = (ServerGameObject)obA.CollisionShape.UserObject;
+                    ServerGameObject obj2 = (ServerGameObject)obB.CollisionShape.UserObject;
+                    obj1.OnCollide(obj2);
+                    obj2.OnCollide(obj1);
+                    // Get position vectors 
+                    // regidbody.movementstate.worldtransform.origin
+                }
             }
+        }
 
 
         private void SendModeChangeUpdate()

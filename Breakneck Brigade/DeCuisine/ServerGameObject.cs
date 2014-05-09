@@ -206,10 +206,7 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
-            //Vector3 x = this.Body.MotionState.WorldTransform.Origin;
-            //Vector3 y = this.Body.WorldTransform.Origin;
-            //this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(this.Position + delta));
-            //this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(new Vector3(0, 0, 0)));
+
         }
 
         public void MarkDirty()

@@ -62,6 +62,7 @@ namespace DeCuisine
         public void Move(float x, float y, float z)
         {
             this.Body.LinearVelocity = new Vector3(x, this.Body.LinearVelocity.Y + y, z);
+            this.Body.ActivationState = ActivationState.ActiveTag;
         }
 
         public override void OnCollide(ServerGameObject obj)

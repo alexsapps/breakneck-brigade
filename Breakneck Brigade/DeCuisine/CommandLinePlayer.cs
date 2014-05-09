@@ -154,7 +154,7 @@ namespace DeCuisine
             if (gameObjects.Count > 0)
             {
                 StringBuilder b = new StringBuilder();
-                b.AppendLine("Object Id " + "\t" + "Name" + "\t\t" + "Location" + "\t\t" + "ToRender");
+                b.AppendLine("Object Id\tName\t\tLocation\t\tVelocity\t\tToRender");
                 foreach (var x in gameObjects)
                     writeAttributes(x.Value, "", b);
 
@@ -385,11 +385,11 @@ namespace DeCuisine
                 case "ing":
                     b.AppendLine(obj.Id + "\t\t" + ((ServerIngredient)obj).Type.Name + "\t\t" + 
                                       (int)obj.Position.X + " " + (int)obj.Position.Y + " " + (int)obj.Position.Z +
-                                      "\t\t" + obj.ToRender);
+                                      "\t\t" + obj.Body.LinearVelocity + "\t\t" + obj.ToRender);
                     break;
                 default:
                     b.AppendLine(obj.Id + "\t\t" + obj.ObjectClass + "\t\t" + (int)obj.Position.X + " " + 
-                                      (int)obj.Position.Y + " " + (int)obj.Position.Z + "\t\t" + obj.ToRender);
+                                      (int)obj.Position.Y + " " + (int)obj.Position.Z + "\t\t" + obj.Body.LinearVelocity + "\t\t" + obj.ToRender);
                     break;
             }
             return b.ToString();

@@ -24,7 +24,7 @@ namespace Breakneck_Brigade
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public Vector4 Velocity;
-        public float MoveSpeed = 30f; 
+        public float MoveSpeed = 140f; 
         public List<ClientEvent> NetworkEvents;
 
         private bool _fpsToggle = true;
