@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using SousChef;
 using System.Xml;
 using System.Diagnostics;
-using Tao.Ode;
+
+using BulletSharp;
 
 namespace DeCuisine
 {
@@ -60,10 +61,11 @@ namespace DeCuisine
             }
         }
     }
+
     class WorldParser : BBXItemParser<BBWorld>
     {
-        ServerGame serverGame;
-        IntPtr World;
+        ServerGame serverGame = null;
+        DynamicsWorld world;
         List<BBSpace> spaces = new List<BBSpace>();
 
         public WorldParser(GameObjectConfig config, ServerGame serverGame) : base(config)
@@ -73,13 +75,17 @@ namespace DeCuisine
 
         protected override void HandleAttributes()
         {
-            World = Ode.dWorldCreate();
+            DefaultCollisionConfiguration CollisionConf = new DefaultCollisionConfiguration();
+            CollisionDispatcher Dispatcher = new CollisionDispatcher(CollisionConf);
+            DbvtBroadphase Broadphase = new DbvtBroadphase();
+            this.world = new DiscreteDynamicsWorld(Dispatcher, Broadphase, null, CollisionConf);
+
             var gravity = getFloats(attributes["gravity"]);
             Debug.Assert(gravity.Length == 3);
-            Ode.dWorldSetGravity(World, gravity[0], gravity[1], gravity[2]);
+            this.world.Gravity = new Vector3(gravity[0], gravity[1], gravity[2]);
 
-            Debug.Assert(serverGame.World == IntPtr.Zero);
-            serverGame.World = World;
+            Debug.Assert(this.serverGame.World == null);
+            this.serverGame.World = this.world;
         }
 
         protected override void handleSubtree(System.Xml.XmlReader reader)
@@ -98,7 +104,7 @@ namespace DeCuisine
 
         protected override void reset()
         {
-            World = default(IntPtr);
+            this.world = null;
             spaces = new List<BBSpace>();
         }
 
@@ -109,19 +115,21 @@ namespace DeCuisine
     }
     class SpaceParser : BBXItemParser<BBSpace>
     {
-        IntPtr space;
         List<ServerGameObject> gameObjects = new List<ServerGameObject>();
         ServerGame serverGame;
 
-        public SpaceParser(GameObjectConfig config, ServerGame serverGame) : base(config) { this.serverGame = serverGame; }
+        public SpaceParser(GameObjectConfig config, ServerGame serverGame) : base(config) 
+        { 
+            this.serverGame = serverGame; 
+        }
 
         protected override void HandleAttributes()
         {
-            space = Ode.dHashSpaceCreate(IntPtr.Zero);
+            // this.space = new Space(); // Ode.dHashSpaceCreate(IntPtr.Zero);
             Debug.Assert(attributes.Count == 0);
 
-            Debug.Assert(serverGame.Space == IntPtr.Zero); //only one space currently supported
-            serverGame.Space = space;
+            // Debug.Assert(this.serverGame.Space == null); //only one space currently supported
+            // this.serverGame.Space = this.space;
         }
 
         protected override void handleSubtree(System.Xml.XmlReader reader)
@@ -147,13 +155,17 @@ namespace DeCuisine
             switch (reader.Name)
             {
                 case "plane":
-                    obj = parseSubItem<ServerPlane>(reader, new PlaneParser(config, serverGame, space)); break;
+                    obj = parseSubItem<ServerPlane>(reader, new PlaneParser(config, serverGame)); 
+                    break;
                 case "box":
-                    obj = parseSubItem<ServerBox>(reader, new BoxParser(config, serverGame, space)); break;
+                    obj = parseSubItem<ServerBox>(reader, new BoxParser(config, serverGame)); 
+                    break;
                 case "ingredient":
-                    obj = parseSubItem<ServerIngredient>(reader, new IngredientParser(config, serverGame)); break;
+                    obj = parseSubItem<ServerIngredient>(reader, new IngredientParser(config, serverGame)); 
+                    break;
                 case "cooker":
-                    obj = parseSubItem<ServerCooker>(reader, new CookerParser(config, serverGame)); break;
+                    obj = parseSubItem<ServerCooker>(reader, new CookerParser(config, serverGame)); 
+                    break;
                 default:
                     throw new Exception(reader.Name + " tag not expected in <game>");
             }
@@ -187,13 +199,12 @@ namespace DeCuisine
 
     class PlaneParser : GameObjectParser<ServerPlane>
     {
-        IntPtr space;
 
         ServerPlane serverPlane;
 
-        public PlaneParser(GameObjectConfig config, ServerGame serverGame, IntPtr space) : base (config, serverGame) 
+        public PlaneParser(GameObjectConfig config, ServerGame serverGame) : base (config, serverGame) 
         {
-            this.space = space;
+            //this.space = space;
         }
         protected override void HandleAttributes()
         {
@@ -212,14 +223,14 @@ namespace DeCuisine
 
     class BoxParser : GameObjectParser<ServerBox>
     {
-        IntPtr space;
+        // Space space;
 
         ServerBox serverBox;
 
-        public BoxParser(GameObjectConfig config, ServerGame serverGame, IntPtr space)
+        public BoxParser(GameObjectConfig config, ServerGame serverGame)
             : base(config, serverGame)
         {
-            this.space = space;
+            // this.space = space;
         }
         protected override void HandleAttributes()
         {
@@ -244,19 +255,19 @@ namespace DeCuisine
         {
             this.serverGame = serverGame;
         }
-        protected Ode.dVector3 getCoordinateAttrib()
+        protected Vector3 getCoordinateAttrib()
         {
             return getCoordinateAttrib("coordinate");
         }
-        protected Ode.dVector3 getCoordinateAttrib(string attrib)
+        protected Vector3 getCoordinateAttrib(string attrib)
         {
             return getCoordinate(attributes[attrib]);
         }
-        protected Ode.dVector3 getCoordinate(string str)
+        protected Vector3 getCoordinate(string str)
         {
             var floats = getFloats(str);
             Debug.Assert(floats.Length == 3);
-            return new Ode.dVector3(floats[0], floats[1], floats[2]);
+            return new Vector3(floats[0], floats[1], floats[2]);
         }
     }
 
