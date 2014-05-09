@@ -75,7 +75,7 @@ namespace Breakneck_Brigade.Graphics
                 Up.Y = (float)Math.Cos(Incline * Math.PI / 180.0f);
 
                 Position = cp.GetPosition();
-                Position.Y -= 10; //eyes are a little above the center of mass
+                Position.Y += 25; //eyes are a little above the center of mass
 
                 anglesToAxis();
             }
@@ -106,7 +106,7 @@ namespace Breakneck_Brigade.Graphics
 			// Place camera            
 			Gl.glRotatef(Incline,1.0f,0.0f,0.0f);
 			Gl.glRotatef(Azimuth,0.0f,1.0f,0.0f);
-            Gl.glTranslatef(-(Position.X), -(Position.Y) - 25, -(Position.Z));           
+            Gl.glTranslatef(-(Position.X), -(Position.Y), -(Position.Z));           
 
             Gl.glMultMatrixf(Transform.glArray);
 
