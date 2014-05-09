@@ -12,5 +12,5 @@ newmtl Material__25
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka C:\Users\abw004\Desktop\hardwood.tga
-	map_Kd C:\Users\abw004\Desktop\hardwood.tga
+	map_Ka hardwood.tga
+	map_Kd hardwood.tga

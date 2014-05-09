@@ -93,4 +93,11 @@
     <scaleY>1.0</scaleY>
     <scaleZ>1.0</scaleZ>     
   </model>
+
+  <model>
+    <filename>bread</filename>
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>     
+  </model>
 </models>
