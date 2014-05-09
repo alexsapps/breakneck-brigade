@@ -199,6 +199,7 @@ namespace DeCuisine
                 // collision configuration contains default setup for memory, collision setup
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
+                _world.SetInternalTickCallback(CollisionCallback);
             }
             // loop over clients and make play objects for them
             foreach (var client in clients)
@@ -388,54 +389,37 @@ namespace DeCuisine
             }
         }
 
-        /*
-        private void dNearCallback(IntPtr data, IntPtr o1, IntPtr o2)
+        private void CollisionCallback(DynamicsWorld world, float timeStep)
         {
-            // exit without doing anything if the two bodies are connected by a joint
-            IntPtr b1 = Ode.dGeomGetBody(o1);
-            IntPtr b2 = Ode.dGeomGetBody(o2);
-            if (b1 != IntPtr.Zero && b2 != IntPtr.Zero && Ode.dAreConnectedExcluding(b1, b2, (int)Ode.dJointTypes.dJointTypeContact) > 0) return;
-
-            Ode.dContact[] contact = new Ode.dContact[MAX_CONTACTS];   // up to MAX_CONTACTS contacts per box-box
-            Ode.dContactGeom[] contactGeoms = new Ode.dContactGeom[MAX_CONTACTS];
-            for (int i = 0; i < MAX_CONTACTS; i++)
+            int numManifolds = this.World.Dispatcher.NumManifolds; 
+            for (int i=0;i<numManifolds;i++)
             {
-                contactGeoms[i] = new Ode.dContactGeom();
-                contact[i] = new Ode.dContact();
-            }
-            int numc;
-            unsafe
-            {
-                numc =  Ode.dCollide(o1, o2, MAX_CONTACTS, contactGeoms, sizeof(Ode.dContactGeom));
-            }
-            if (numc > 0)
-            {
-                for (int i = 0; i < numc; i++)
+                bool didCollide = false;
+                PersistentManifold contactManifold = this.World.Dispatcher.GetManifoldByIndexInternal(i);
+                CollisionObject obA = (CollisionObject)contactManifold.Body0; //btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+                CollisionObject obB = (CollisionObject)contactManifold.Body1; //btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+                int numContacts = contactManifold.NumContacts;
+                for (int j=0;j<numContacts;j++)
                 {
-                    // Collision physics parameters
-                    contact[i].surface.mode = (int)Ode.dContactFlags.dContactBounce | (int)Ode.dContactFlags.dContactSoftCFM;
-                    contact[i].surface.mu = 1;
-                    contact[i].surface.mu2 = 0;
-                    contact[i].surface.bounce = 0.1;
-                    contact[i].surface.bounce_vel = 0.1;
-                    contact[i].surface.soft_cfm = 0.01;
-                    contact[i].geom = contactGeoms[i];
+                    ManifoldPoint pt = contactManifold.GetContactPoint(j);
+                    if (pt.Distance<0.0f)
+                    {
+                        Vector3 ptA = pt.PositionWorldOnA; //.getPositionWorldOnA();
+                        Vector3 ptB = pt.PositionWorldOnB; // pt.getPositionWorldOnB();
+                        Vector3 normalOnB = pt.NormalWorldOnB;
+                        didCollide = true;
+                    }
+                }
 
-                    //IntPtr c = Ode.dJointCreateContact(this.World, this.ContactGroup, ref contact[i]);
-
-                    IntPtr c = Ode.dJointCreateFixed(this.World, this.ContactGroup);
-                    Ode.dJointAttach(c, b1, b2);
-                    Ode.dJointSetFixed(c);
+                if (didCollide && obA.UserObject != null && obA.UserObject != null)
+                {
+                    ServerGameObject obj1 = this.GameObjects[((IntPtr)obA.UserObject).ToInt32()];
+                    ServerGameObject obj2 = this.GameObjects[((IntPtr)obB.UserObject).ToInt32()];
+                    obj1.OnCollide(obj2);
+                    obj2.OnCollide(obj1);
                 }
             }
-
-            // Call the objects onCollision() method
-            IntPtr gameObjectId1 = Ode.dGeomGetData(o1);
-            IntPtr gameObjectId2 = Ode.dGeomGetData(o2);
-            ServerGameObject gameObject1 = GameObjects[gameObjectId1.ToInt32()];
-            ServerGameObject gameObject2 = GameObjects[gameObjectId2.ToInt32()];
-            gameObject1.OnCollide(gameObject2);
-        }*/
+        }
 
 
         private void SendModeChangeUpdate()

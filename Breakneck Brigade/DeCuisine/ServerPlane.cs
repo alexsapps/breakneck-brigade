@@ -24,7 +24,7 @@ namespace DeCuisine
             {
                 //dCreatePlane uses plane equation ax+by+cz+d=0.
                 //return Ode.dCreatePlane(game.Space, 0, 0, 1.0, 0);
-                BoxShape groundShape = new BoxShape(50, 1, 50);
+                BoxShape groundShape = new BoxShape(500, 1, 500);
 
                 //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
                 DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);
@@ -32,6 +32,7 @@ namespace DeCuisine
                 this.Body = new RigidBody(rbInfo);
                 rbInfo.Dispose();
 
+                this.Game.World.AddRigidBody(this.Body);
                 return groundShape;
             });
         }

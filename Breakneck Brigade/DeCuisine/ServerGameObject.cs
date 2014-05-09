@@ -72,7 +72,9 @@ namespace DeCuisine
         {
             Game.Lock.AssertHeld();
             serializeEssential(stream);
-            stream.Write('\n'+ this.Position.X + "\n" + this.Position.Y + "\n" + this.Position.Z + '\n');
+            stream.Write(this.Position.X);
+            stream.Write(this.Position.Y);
+            stream.Write(this.Position.Z);
         }
 
         protected virtual void serializeEssential(BinaryWriter stream)
@@ -105,15 +107,10 @@ namespace DeCuisine
         {
             AddToWorld(() =>
             {
-                CollisionShape geom = this.MakeGeom(GeomInfo, coordinate);
-
-                DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);
-                RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(GeomInfo.Mass, myMotionState, geom, geom.CalculateLocalInertia(GeomInfo.Mass));
-                this.Body = new RigidBody(rbInfo);
-                rbInfo.Dispose();
-
-                //this.Geom.Position = new Vector3(coordinate.X, coordinate.Y, coordinate.Z);
-                // Ode.dGeomSetPosition(geom, coordinate.X, coordinate.Y, coordinate.Z); //this must happen after body is set
+                CollisionShape geom = this.MakeGeom(this.GeomInfo, coordinate);
+                this.Geom = geom;
+                this.Body = this.MakeBody(this.GeomInfo);
+                this.Game.World.AddRigidBody(this.Body);
                 this.Body.Translate(coordinate);
                 return geom;
             });
@@ -146,37 +143,15 @@ namespace DeCuisine
                     break;
                 default: throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
             }
+
+            geom.UserObject = new IntPtr(Id);
             return geom;
         }
 
-        private RigidBody makeBody(GeometryInfo info)
+        private RigidBody MakeBody(GeometryInfo info)
         {
-            //Mass mass = new Mass();
-            //Body body = this.Game.World.CreateBody();
-            //mass.SetZero();
-
-            /*
-            //IntPtr body = Ode.dBodyCreate(this.Game.World);
-            switch (info.Shape)
-            {
-                case GeomShape.Box:
-                    //mass.SetBox(info.Mass, info.Sides[0], info.Sides[1], info.Sides[2]);
-                    //Ode.dMassSetBox(ref mass, info.Mass, info.Sides[0], info.Sides[1], info.Sides[2]);
-                    //Ode.dBodySetMass(body, ref mass);
-
-                    break;
-                case GeomShape.Sphere:
-                    //mass.SetSphere(info.Mass, info.Sides[0]);
-                    //Ode.dMassSetSphereTotal(ref mass, GeomInfo.Mass, GeomInfo.Sides[0]);
-                    //Ode.dBodySetMass(body, ref mass);
-                    break;
-                default:
-                    throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
-            }
-            */
-
             Vector3 localInertia = this.Geom.CalculateLocalInertia(info.Mass);
-            DefaultMotionState myMotionState = new DefaultMotionState(new Matrix());
+            DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);
             RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(info.Mass, myMotionState, this.Geom, localInertia);
             RigidBody body = new RigidBody(rbInfo);
             rbInfo.Dispose();
@@ -230,7 +205,9 @@ namespace DeCuisine
         {
             stream.Write((Int32)Id);
             stream.Write((bool)ToRender); // no need to cast but being explicit gets my jollys off
-            stream.Write('\n' + this.Position.X + "\n" + this.Position.Y + "\n" + this.Position.Z + '\n');
+            stream.Write(this.Position.X);
+            stream.Write(this.Position.Y);
+            stream.Write(this.Position.Z);
         }
 
         public virtual void OnCollide(ServerGameObject obj)
