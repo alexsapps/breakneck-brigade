@@ -67,7 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
-      <HintPath>..\..\..\..\..\Desktop\bulletsharp\bin\BulletSharp.dll</HintPath>
+      <HintPath>..\Breakneck Brigade\lib\BulletSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
