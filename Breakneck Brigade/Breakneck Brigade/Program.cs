@@ -152,9 +152,16 @@ namespace Breakneck_Brigade
                                 {
                                     lock (clientLock)
                                     {
-                                        string[] serverparts = new string[parts.Length - 1];
-                                        Array.Copy(parts, 1, serverparts, 0, parts.Length - 1);
-                                        client.SendConsoleCommand(serverparts);
+                                        if (client != null)
+                                        {
+                                            string[] serverparts = new string[parts.Length - 1];
+                                            Array.Copy(parts, 1, serverparts, 0, parts.Length - 1);
+                                            client.SendConsoleCommand(serverparts);
+                                        }
+                                        else
+                                        {
+                                            Program.WriteLine("not connected to server.");
+                                        }
                                     }
                                 }
                                 else
@@ -183,11 +190,20 @@ namespace Breakneck_Brigade
 
         private static void rateThread()
         {
-            while (!cancelConsole)
+            if (renderer != null)
             {
-                Console.Write("\r                                             \rRate: ");
-                Console.Write(1 / renderer.secondsPerFrame);
-                System.Threading.Thread.Sleep(200);
+                while (!cancelConsole)
+                {
+                    //do not use Program.WriteLine for this
+                    Console.Write("\r                                             \rRate: ");
+                    if (renderer.secondsPerFrame > 0)
+                        Console.Write(1 / renderer.secondsPerFrame);
+                    System.Threading.Thread.Sleep(200);
+                }
+            }
+            else
+            {
+                Program.WriteLine("renderer not loaded yet.");
             }
             cancelConsole = false;
             Prompt();
@@ -199,7 +215,7 @@ namespace Breakneck_Brigade
             using (renderer = new Renderer())
             {
                 IM = new InputManager();
-                IM.EnableFPSMode();
+                IM.FpsOk = true;
 
                 camera = new Camera();
                 new Thread(new ThreadStart(input_loop)).Start();
@@ -323,6 +339,7 @@ namespace Breakneck_Brigade
 
         static void input_loop()
         {
+            int i = 0;
             lock (IM.Lock)
             {
                 while (true)
@@ -347,10 +364,11 @@ namespace Breakneck_Brigade
                             {
                                 sendEvents(localPlayer.NetworkEvents);
                                 localPlayer.NetworkEvents.Clear();
+                                Program.WriteLine((++i).ToString());
                             }
                         }
                     }
-                    Monitor.Wait(IM.Lock, 1);
+                    Monitor.Wait(IM.Lock, 3);
                 }
             }
         }
@@ -650,7 +668,7 @@ namespace Breakneck_Brigade
             closing = true;
         }
 
-        static BBConsole clientConsole = new BBConsole("client", ConsoleColor.Green);
+        public static BBConsole clientConsole = new BBConsole("client", ConsoleColor.Green);
         public static void ClearLine()
         {
             clientConsole.ClearLine();

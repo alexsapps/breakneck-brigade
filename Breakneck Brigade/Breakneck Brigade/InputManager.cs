@@ -34,7 +34,62 @@ namespace Breakneck_Brigade
         /// <summary>
         /// fpsMode means locking mouse to center of screen and hiding the cursor
         /// </summary>
-        public bool fpsMode = false;        
+        private bool _fpsOk = false; //true if window has focus
+        public bool FpsOk
+        {
+            get
+            {
+                return _fpsOk;
+            }
+            set
+            {
+                _fpsOk = value;
+                updateGlfwMouseDisabled();
+            }
+        }
+
+        private bool _captureMouse = true; // true if user wants their mouse captured
+        public bool CaptureMouse
+        {
+            get
+            {
+                return _captureMouse;
+            }
+            set
+            {
+                _captureMouse = value;
+                updateGlfwMouseDisabled();
+            }
+        }
+
+        private bool _fpsMode = false; //prevent accidentally setting this variable by separating it from the FpsMode property
+        public bool FpsMode { get { return _fpsMode; } set { throw new NotSupportedException(); } }
+        private void updateGlfwMouseDisabled()
+        {
+            bool shouldBeDisabled = FpsOk && CaptureMouse; //both must be true: [window has focus] and [user wants mouse captured (ie user is not debugging)]
+            if (shouldBeDisabled != FpsMode)
+            {
+                if (shouldBeDisabled)
+                    _enableFPSMode();
+                else
+                    _disableFPSMode();
+                _fpsMode = shouldBeDisabled; //remember computed value.  this is the only ok place to set this variable.
+            }
+        }
+        /// <summary>
+        /// Methods for toggling FPS mouse mode.
+        /// </summary>
+        private void _enableFPSMode()
+        {
+            MousePosInit();
+            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR); //this doesn't always work.  bug in tao, can't be fixed.
+        }
+        private void _disableFPSMode()
+        {
+            Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
+        }
+
+
 
         /// <summary>
         /// Variables for storing the "center" mouse position
@@ -53,7 +108,7 @@ namespace Breakneck_Brigade
         bool invertY = false;
 
         /// <summary>
-        /// Variables for GLFW callbacks
+        /// Variables for GLFW callbacks.  Kept alive here so they don't get garbage collected (since we're using unmanaged code for this.)
         /// </summary>
         private Glfw.GLFWkeyfun         keyboardCallback;
         private Glfw.GLFWmouseposfun    mouseMoveCallback;
@@ -97,13 +152,25 @@ namespace Breakneck_Brigade
         {
             bool pressed = (action == Glfw.GLFW_PRESS);
             GlfwKeys key = remap(temp);
-            if (pressed)
-                keys.Add(key); // = pressed;
-            else
-                keys.Remove(key);
+            lock (Lock)
+            {
+                if (pressed)
+                {
+                    keys.Add(key);
+                    downKeyEdges.Add(key);
+                }
+                else
+                {
+                    keys.Remove(key);
+                    upKeyEdges.Add(key);
+                }
+            }
 
             //Program.WriteLine("key " + key.ToString() + (pressed ? " pressed." : " released."));
-            
+
+            if (pressed && key == GlfwKeys.GLFW_KEY_ESCAPE)
+                CaptureMouse = !CaptureMouse; //toggle mouse capture
+
             lock (Lock)
                 Monitor.PulseAll(Lock);
         }
@@ -115,9 +182,8 @@ namespace Breakneck_Brigade
         /// <param name="y">position of mouse y position at callback</param>
         void MousePos(int x, int y)
         {
-            if (fpsMode)
+            if (FpsMode)
             {
-                Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
                 // Get difference of mouse pos & origin
                 int tempX = originX - x;
                 int tempY = originY - y;
@@ -141,7 +207,7 @@ namespace Breakneck_Brigade
             }
             else
             {
-                Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
+                //Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
             }
             lock (Lock)
                 Monitor.PulseAll(Lock);
@@ -180,10 +246,20 @@ namespace Breakneck_Brigade
         {
             var button = (GlfwKeys)temp;
             bool pressed = (action == Glfw.GLFW_PRESS);
-            if (pressed)
-                keys.Add(button);
-            else
-                keys.Remove(button);
+            
+            lock (Lock)
+            {
+                if (pressed)
+                {
+                    keys.Add(button);
+                    downKeyEdges.Add(button);
+                }
+                else
+                {
+                    keys.Remove(button);
+                    upKeyEdges.Add(button);
+                }
+            }
 
             lock (Lock)
                 Monitor.PulseAll(Lock);
@@ -205,22 +281,6 @@ namespace Breakneck_Brigade
             // if config load is broken,
             // return key;
             return (GlfwKeys)int.Parse(globalConfig.GetSetting(key.ToString(), key));
-        }
-
-        /// <summary>
-        /// Methods for toggling FPS mouse mode.
-        /// </summary>
-        public void EnableFPSMode()
-        {
-            MousePosInit();
-            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
-            fpsMode = true;
-            
-        }
-        public void DisableFPSMode()
-        {
-            Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
-            fpsMode = false;
         }
 
         /// <summary>
@@ -259,6 +319,23 @@ namespace Breakneck_Brigade
             {
                 return keys.Contains(key);
             }
+        }
+
+        HashSet<GlfwKeys> downKeyEdges = new HashSet<GlfwKeys>();
+        HashSet<GlfwKeys> upKeyEdges = new HashSet<GlfwKeys>();
+        public HashSet<GlfwKeys> GetDownKeyEdges()
+        {
+            Lock.AssertHeld();
+            var r = downKeyEdges;
+            downKeyEdges = new HashSet<GlfwKeys>();
+            return r;
+        }
+        public HashSet<GlfwKeys> GetUpKeyEdges()
+        {
+            Lock.AssertHeld();
+            var r = upKeyEdges;
+            upKeyEdges = new HashSet<GlfwKeys>();
+            return r;
         }
     }
 

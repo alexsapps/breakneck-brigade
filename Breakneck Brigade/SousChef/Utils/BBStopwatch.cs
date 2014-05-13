@@ -10,10 +10,12 @@ namespace SousChef
     public class BBStopwatch
     {
         Stopwatch stopwatch;
+        BBConsole console;
 
-        public BBStopwatch()
+        public BBStopwatch(BBConsole console)
         {
             this.stopwatch = new Stopwatch();
+            this.console = console;
         }
 
         public void Start()
@@ -25,7 +27,7 @@ namespace SousChef
         {
             stopwatch.Stop();
             if (stopwatch.ElapsedMilliseconds > maxMs)
-                Console.WriteLine(String.Format(errorMsg, stopwatch.ElapsedMilliseconds));
+                console.WriteLine(String.Format(errorMsg, stopwatch.ElapsedMilliseconds));
         }
 
         public void Pause()

@@ -140,7 +140,7 @@ namespace DeCuisine
 
         private void send()
         {
-            BBStopwatch w1 = new BBStopwatch(), w2 = new BBStopwatch(), w3 = new BBStopwatch();
+            BBStopwatch w1 = new BBServerStopwatch(), w2 = new BBServerStopwatch(), w3 = new BBServerStopwatch();
             try
             {
                 var network = connection.GetStream();
@@ -189,7 +189,7 @@ namespace DeCuisine
                                     Program.WriteLine("slow message");
 
                             }
-                            w2.Stop(2, "Client: slow write loop. {0}");
+                            w2.Stop(5, "Client: slow write loop. {0}");
                         }
                     }
                 }

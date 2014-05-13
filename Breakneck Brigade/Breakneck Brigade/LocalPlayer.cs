@@ -27,16 +27,12 @@ namespace Breakneck_Brigade
         public float MoveSpeed = 140f; 
         public List<ClientEvent> NetworkEvents;
 
-        private bool _fpsToggle = true;
         private bool _stopped = false;
         
         public LocalPlayer()
         {
             Velocity = new Vector4();
             NetworkEvents = new List<ClientEvent>();
-
-            monitorKey(GlfwKeys.GLFW_KEY_SPACE);
-            monitorKey(GlfwKeys.GLFW_KEY_W);
         }
 
         protected HashSet<GlfwKeys> keys;
@@ -46,13 +42,11 @@ namespace Breakneck_Brigade
         {
             game.Lock.AssertHeld();
             cam.Lock.AssertHeld();
-
-
-
+            IM.Lock.AssertHeld();
 
             keys = IM.GetKeys();
-
-            detectKeys(IM);
+            downKeys = IM.GetDownKeyEdges();
+            upKeys = IM.GetUpKeyEdges();
 
             // Orientation & Incline update
             float rotx, roty;
@@ -96,33 +90,13 @@ namespace Breakneck_Brigade
             {
                 NetworkEvents.Add(new ClientJumpEvent() { isJumping = true});
             }
-            
-            if (IM[GlfwKeys.GLFW_KEY_ESCAPE] || Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_FALSE)
-            {
-                if (_fpsToggle)
-                {
-                    if (IM.fpsMode)
-                    {
-                        IM.DisableFPSMode();  
-                    }
-                    else
-                    {
-                        IM.EnableFPSMode();
-                    }
-                    _fpsToggle = false;
-                }
-            }
-            else
-            {
-                _fpsToggle = true;
-            }
 
+            IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;
+            
             if (IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])
             {
-                if (!IM.fpsMode)
-                {
-                    IM.EnableFPSMode();
-                }
+                IM.FpsOk = true;
+                IM.CaptureMouse = true;
             }
 
             if (keyDown(GlfwKeys.GLFW_KEY_SPACE))
@@ -174,41 +148,6 @@ namespace Breakneck_Brigade
 
         HashSet<GlfwKeys> downKeys = new HashSet<GlfwKeys>();
         HashSet<GlfwKeys> upKeys = new HashSet<GlfwKeys>();
-
-        bool[] setKeys = new bool[512];
-        List<GlfwKeys> monitorKeys = new List<GlfwKeys>();
-        protected void monitorKey(GlfwKeys key)
-        {
-            monitorKeys.Add(key);
-        }
-        protected void unmonitorKey(GlfwKeys key)
-        {
-            monitorKeys.Remove(key);
-        }
-        protected void detectKeys(InputManager IM)
-        {
-           downKeys.Clear();
-           upKeys.Clear();
-           foreach (GlfwKeys i in monitorKeys)
-           {
-               if(IM[i])
-               {
-                   if (!setKeys[(int)i])
-                   {
-                       setKeys[(int)i] = true;
-                       downKeys.Add(i);
-                   }
-               }
-               else
-               {
-                   if (setKeys[(int)i])
-                   {
-                       setKeys[(int)i] = false;
-                       upKeys.Add(i);
-                   }
-               }
-           }
-        }
 
         /// <summary>
         /// determines if key was pressed down

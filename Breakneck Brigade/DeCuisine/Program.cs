@@ -221,7 +221,7 @@ namespace DeCuisine
             Program.WriteLine("Stopped.");
         }
 
-        static BBConsole serverConsole = new BBConsole("server", ConsoleColor.Yellow);
+        public static BBConsole serverConsole = new BBConsole("server", ConsoleColor.Yellow);
         public static void ClearLine()
         {
             serverConsole.ClearLine();
