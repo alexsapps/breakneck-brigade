@@ -96,7 +96,7 @@ namespace Breakneck_Brigade
             // handle throwing key
             if (this.downKeys.Contains(GlfwKeys.GLFW_MOUSE_BUTTON_LEFT))
             {
-                Vector4 impulse = new Vector4(0.0f, 0.0f, 100.0f);
+                Vector4 impulse = new Vector4(0.0f, 0.0f, -100.0f);
                 Matrix4 rotate = Matrix4.MakeRotateYDeg(-Orientation) * Matrix4.MakeRotateXDeg(Incline) ;
                 impulse = rotate * impulse;
                 Coordinate impCoor = new Coordinate(impulse.X, impulse.Y, impulse.Z);
