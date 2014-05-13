@@ -65,7 +65,7 @@ namespace DeCuisine
                                 }
                             }
                             cancelConsole = true;
-                            break;
+                            return; //exit program
                         case "cancel":
                             {
                                 cancelConsole = true;
@@ -171,6 +171,18 @@ namespace DeCuisine
                                             server.Game.FrameRateMilliseconds = val;
                                         else
                                             ret = "ticks must be more than 0.";
+                                        break;
+                                    case "multijump":
+                                        if (parts.Length >= 3)
+                                        {
+                                            var on = parts[2].Equals("on");
+                                            server.Game.MultiJump = on;
+                                            ret = "multijump turned " + (on ? "on" : "off");
+                                        }
+                                        else
+                                        {
+                                            ret = "say on or off";
+                                        }
                                         break;
                                     default:
                                         {

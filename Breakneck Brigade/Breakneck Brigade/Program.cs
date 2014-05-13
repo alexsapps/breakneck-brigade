@@ -364,7 +364,6 @@ namespace Breakneck_Brigade
                             {
                                 sendEvents(localPlayer.NetworkEvents);
                                 localPlayer.NetworkEvents.Clear();
-                                Program.WriteLine((++i).ToString());
                             }
                         }
                     }

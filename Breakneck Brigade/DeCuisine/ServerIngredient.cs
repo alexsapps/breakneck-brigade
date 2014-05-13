@@ -68,9 +68,8 @@ namespace DeCuisine
             stream.Write((Int16)this.Cleanliness);
         }
 
-        public override void Update()
+        protected override void updateHook()
         {
-            base.Update();
             var lastPos = this.Position;
         }
 

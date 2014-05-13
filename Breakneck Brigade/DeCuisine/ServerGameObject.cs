@@ -80,16 +80,36 @@ namespace DeCuisine
 
         /// <summary>
         /// Keeps track of the last position and marks dirty if the object 
-        /// has moved
+        /// has moved.
+        /// 
+        /// should only be overridden if drastically different logic needed.  e.g. object doesn't move.
         /// </summary>
         public virtual void Update()
         {
             if(Math.Abs(this.lastPosition.X - this.Position.X)  > .01 ||
                Math.Abs(this.lastPosition.Y - this.Position.Y) > .01 ||
-               Math.Abs(this.lastPosition.Z - this.Position.Z) > .01){
-                   this.MarkDirty(); // it's position moved from the last one
-                   this.lastPosition = this.Position;
-               }           
+               Math.Abs(this.lastPosition.Z - this.Position.Z) > .01)
+            {
+                this.MarkDirty(); // it's position moved from the last one
+                this.lastPosition = this.Position;
+
+                if (this.Position.Y < -500)
+                {
+                    Remove();
+                    return;
+                }
+            }
+
+            updateHook();
+        }
+
+        /// <summary>
+        /// allows objects to do custom updating.  should be overridden to handle things
+        /// like doing some action if something changed.
+        /// </summary>
+        protected virtual void updateHook()
+        {
+
         }
 
         protected delegate CollisionShape GeomMaker();
@@ -177,6 +197,7 @@ namespace DeCuisine
 
             if(this.Body != null)
             {
+                this.Game.World.RemoveRigidBody(this.Body);
                 this.Body.Dispose();
             }
 

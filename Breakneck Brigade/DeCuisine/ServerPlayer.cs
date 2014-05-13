@@ -12,7 +12,8 @@ namespace DeCuisine
     class ServerPlayer : ServerGameObject
     {
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
-        protected override GeometryInfo getGeomInfo() { return new GeometryInfo() { Mass = 40, Shape = GeomShape.Box, Sides = new float[] { 3.0f, 3.0f, 3.0f } }; }
+        protected override GeometryInfo getGeomInfo() { return new GeometryInfo() { Mass = 40, Shape = GeomShape.Box, Sides = new float[] { 6.0f, 6.0f, 6.0f } }; }
+        public Client Client { get; private set; }
         private bool isFalling { get; set; }
         private bool canJump { get; set; }
         private Vector3 lastVelocity { get; set; }
@@ -32,10 +33,11 @@ namespace DeCuisine
         public HandInventory RightHand;
         private ServerGameObject toHold = null; // init to null as it's our flag TODO: Think smarter and don't do this
 
-        public ServerPlayer(ServerGame game, Vector3 position) 
+        public ServerPlayer(ServerGame game, Vector3 position, Client client) 
             : base(game)
         {
             base.AddToWorld(position);
+            this.Client = client;
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -80,7 +82,7 @@ namespace DeCuisine
 
         public void Jump()
         {
-            if (this.canJump)
+            if (this.canJump || Game.MultiJump)
             {
                 this.Move(this.Body.LinearVelocity.X, this.JUMPSPEED, this.Body.LinearVelocity.Z);
                 this.canJump = false;
@@ -101,9 +103,8 @@ namespace DeCuisine
             }
         }
 
-        public override void Update()
+        protected override void updateHook()
         {
-            base.Update();
             if (this.Body.LinearVelocity.Y < 0)
             {
                 this.isFalling = true;
@@ -118,6 +119,13 @@ namespace DeCuisine
             //    this.makeJoint("left", this.toHold);
             //    this.toHold = null;
             //}
+        }
+
+        public override void Remove()
+        {
+            base.Remove();
+
+            Client.Disconnect();
         }
     }
 }

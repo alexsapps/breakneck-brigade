@@ -129,9 +129,9 @@ namespace DeCuisine
             writeIngredients(stream);
         }
 
-        public override void Update()
+        protected override void updateHook()
         {
-            base.Update();
+           
         }
 
         protected void writeIngredients(BinaryWriter stream)

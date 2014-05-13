@@ -112,7 +112,7 @@ namespace DeCuisine
         private void StartClient(Client client)
         {
             client.Lock.AssertHeld();
-            client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10));
+            client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10), client);
             client.SendMessage(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
         }
 
@@ -120,7 +120,10 @@ namespace DeCuisine
         {
             lock (Lock)
             {
-                e.Client.Player.Remove();
+                if(Mode == GameMode.Started || Mode == GameMode.Paused)
+                if(e.Client.Player != null)
+                    if(e.Client.Player.InWorld) //could have disconnected BECAUSE the player was removed (fell off screeen), so we need to do this check.
+                        e.Client.Player.Remove();
                 clients.Remove(e.Client);
             }
         }
@@ -132,7 +135,7 @@ namespace DeCuisine
             if (Mode != GameMode.Init)
                 throw new Exception("can't start from state " + Mode.ToString() + ".");
 
-            runThread = new Thread(() => Run());
+            runThread = new Thread(new ThreadStart(Run));
             runThread.Start();
 
             Mode = GameMode.Started;
@@ -225,10 +228,19 @@ namespace DeCuisine
                         /*
                          * handle client input, e.g. move
                          */
+                        List<DCClientEvent> inputs;
                         lock (ClientInput)
                         {
-                            foreach (DCClientEvent input in ClientInput)
+                            inputs = new List<DCClientEvent>(ClientInput);
+                            ClientInput.Clear();
+                        }
+                        foreach (DCClientEvent input in inputs)
+                        {
+                            lock (input.Client.Lock)
                             {
+                                if (!input.Client.IsConnected)
+                                    break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
+
                                 switch (input.Event.Type)
                                 {
                                     case ClientEventType.Test:
@@ -246,15 +258,15 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.Command:
                                         DoServerCommandAsync(((ClientCommandEvent)input.Event).args, input.Client, AsyncCommandCallback);
-                                        
                                         break;
                                     default:
                                         Debugger.Break();
                                         throw new Exception("server does not understand client event " + input.Event.Type.ToString());
                                 }
                             }
-                            ClientInput.Clear();
                         }
+                            
+                        
 
                         /*
                          * Physics happens here.
@@ -264,9 +276,9 @@ namespace DeCuisine
                         /*
                          * handle an instant in time, e.g. gravity, collisions
                          */
-                        foreach (var obj in GameObjects)
+                        foreach (var obj in new List<ServerGameObject>(GameObjects.Values)) //allow removing items while enumerating
                         {
-                            obj.Value.Update();
+                            obj.Update();
                         }
 
                         /*
@@ -545,5 +557,7 @@ namespace DeCuisine
         {
             this.GameObjects[id].Remove();
         }
+
+        public bool MultiJump { get; set; }
     }
 }

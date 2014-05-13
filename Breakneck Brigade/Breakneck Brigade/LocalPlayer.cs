@@ -176,8 +176,11 @@ namespace Breakneck_Brigade
                 lock (Game.Lock)
                 {
                     ClientGameObject x;
-                    Game.gameObjects.TryGetValue(Game.PlayerObjId, out x);
-                    _player = (ClientPlayer)x;
+                    if (Game.PlayerObjId.HasValue)
+                    {
+                        Game.gameObjects.TryGetValue(Game.PlayerObjId.Value, out x);
+                        _player = (ClientPlayer)x;
+                    }
                 }
             }
             return _player;

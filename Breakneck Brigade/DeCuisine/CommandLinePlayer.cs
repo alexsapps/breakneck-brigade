@@ -388,7 +388,11 @@ namespace DeCuisine
         /// <returns></returns>
         private static Vector3 randomSpawn()
         {
-            return new Vector3(DC.random.Next(-250,250), (float)Math.Pow(DC.random.Next(10, 100), 2), DC.random.Next(-250, 250));
+            return new Vector3(
+                (float)Math.Pow(DC.random.Next(-800, 800), 1),
+                (float)Math.Pow(DC.random.Next(10, 100), 2),
+                (float)Math.Pow(DC.random.Next(-800, 800), 1))
+            ;
         }
 
         /// <summary>

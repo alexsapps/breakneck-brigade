@@ -11,7 +11,7 @@ namespace Breakneck_Brigade
     {
         public BBLock Lock;
 
-        public int PlayerObjId { get; set; }
+        public int? PlayerObjId { get; set; }
 
         //locking directly on gameObjects before accessing
         public Dictionary<int, ClientGameObject> gameObjects { get; set; }

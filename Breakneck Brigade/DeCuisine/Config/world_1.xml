@@ -1,9 +1,9 @@
 <world gravity="0,-190,0">
 	<space>
-		<ingredient type="ice cream" coordinate="-15,15,0" />
-		<ingredient type="ice cream" coordinate="15,10,15" />
-		<ingredient type="ice cream" coordinate="15,15,0" />
-		<ingredient type="ice cream" coordinate="-15,10,15" />
+		<ingredient type="ice cream" coordinate="-45,160,-45" />
+		<ingredient type="ice cream" coordinate="-45,20,45" />
+		<ingredient type="ice cream" coordinate="45,80,-45" />
+		<ingredient type="ice cream" coordinate="45,40,45" />
 		<plane height="1" texture="blank" />
 	</space>
 </world>

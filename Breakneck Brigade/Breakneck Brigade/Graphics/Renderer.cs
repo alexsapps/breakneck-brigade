@@ -51,8 +51,8 @@ namespace Breakneck_Brigade.Graphics
         private     int             _windowHeight   = 0;
         private     int             _aspectX;
         private     int             _aspectY;
-        private     float           _ratio;
-        private     bool            _getAspect      = true;
+        private     float           _ratio = 1;
+        private     bool            _getAspect      = false; // = true   (why not use ratio 1?)
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
