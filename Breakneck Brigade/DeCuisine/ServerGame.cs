@@ -257,8 +257,7 @@ namespace DeCuisine
                                         input.Client.Player.Jump();
                                         break;
                                     case ClientEventType.Command:
-                                        DoServerCommandAsync(((ClientCommandEvent)input.Event).args, input.Client, AsyncCommandCallback);
-                                        break;
+                                        throw new InvalidOperationException(); //this is handled elsewhere
                                     default:
                                         Debugger.Break();
                                         throw new Exception("server does not understand client event " + input.Event.Type.ToString());
@@ -356,14 +355,22 @@ namespace DeCuisine
             }
         }
 
-        protected delegate void AsyncCommandResultCallback(string result, Client client);
-        protected void DoServerCommandAsync(string[] args, Client client, AsyncCommandResultCallback callback)
+        public delegate void AsyncCommandResultCallback(string result, Client client);
+        public static void DoServerCommandAsync(string[] args, Client client, AsyncCommandResultCallback callback)
         {
             new Thread(() => { asyncServerCommandThread(args, client, callback); }).Start();
         }
-        protected void asyncServerCommandThread(string[] args, Client client, AsyncCommandResultCallback callback)
+
+        protected static void asyncServerCommandThread(string[] args, Client client, AsyncCommandResultCallback callback)
         {
             string result = Program.DoCommand(args);
+            
+            //do not do anything complicated between beginwrite and endwrite or it will cause deadlock
+            Program.serverConsole.BeginWrite();
+            Program.serverConsole.Write("client: ", ConsoleColor.Green);
+            Program.serverConsole.Write(string.Join(" ", args) + "\n" + result + "\n", ConsoleColor.Gray);
+            Program.serverConsole.EndWrite();
+
             try
             {
                 callback(result, client);
@@ -373,7 +380,7 @@ namespace DeCuisine
                 Program.WriteLine("Error sending result to client:\n" + ex.Message);
             }
         }
-        protected void AsyncCommandCallback(string result, Client client)
+        public static void AsyncCommandCallback(string result, Client client)
         {
             client.SendMessage(new ServerCommandResponseMessage() { Result = result ?? "{server did not issue a text response}" });
         }
@@ -523,11 +530,11 @@ namespace DeCuisine
             return (ServerGameObject)geom.UserObject;
         }
 
-        internal void PrintStatus()
+        public void PrintStatus(StringBuilder b)
         {
             Lock.AssertHeld();
-            Program.WriteLine("Game mode: " + Mode.ToString());
-            Program.WriteLine(GameObjects.Count + " game objects");
+            b.AppendLine("Game mode: " + Mode.ToString());
+            b.AppendLine(GameObjects.Count + " game objects");
         }
 
 

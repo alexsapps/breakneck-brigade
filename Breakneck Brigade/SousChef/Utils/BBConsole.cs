@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SousChef
@@ -11,6 +12,8 @@ namespace SousChef
         public ConsoleColor Color { get; set; }
         private string clrstr;
         private string _program;
+        BBLock Lock = new BBLock();
+
         public string Program
         {
             get
@@ -25,25 +28,61 @@ namespace SousChef
         }
         public BBConsole(string program, ConsoleColor color)
         {
-            this.Program = program;
-            this.Color = color;
-            Prompt();
+            lock (Lock)
+            {
+                this.Program = program;
+                this.Color = color;
+                Prompt();
+            }
         }
         public void Prompt()
         {
-            Console.ForegroundColor = Color;
-            Console.Write(Program + "> ");
-            Console.ResetColor();
+            lock (Lock)
+            {
+                ClearLine();
+                Console.ForegroundColor = Color;
+                Console.Write(Program + "> ");
+                Console.ResetColor();
+            }
         }
         public void ClearLine()
         {
-            Console.Write(clrstr);
+            lock (Lock)
+            {
+                Console.Write(clrstr);
+            }
         }
         public void WriteLine(string line)
         {
+            lock (Lock)
+            {
+                ClearLine();
+                Console.WriteLine(line);
+                Prompt();
+            }
+        }
+
+        public void BeginWrite()
+        {
+            Monitor.Enter(Lock);
             ClearLine();
-            Console.WriteLine(line);
+        }
+        public void Write(string text, ConsoleColor color)
+        {
+            Lock.AssertHeld();
+            Console.ForegroundColor = color;
+            Write(text);
+            Console.ResetColor();
+        }
+        public void Write(string text)
+        {
+            Lock.AssertHeld();
+            Console.Write(text);
+        }
+        public void EndWrite()
+        {
             Prompt();
+            Monitor.Exit(Lock);
         }
     }
 }

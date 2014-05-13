@@ -39,6 +39,7 @@ namespace Breakneck_Brigade
             IsConnected = true;
         }
 
+        public BBLock ServerMessagesLock = new BBLock();
         public List<ServerMessage> ServerMessages = new List<ServerMessage>();
 
         private Thread receiverThread;
@@ -86,10 +87,10 @@ namespace Breakneck_Brigade
                             if (!IsConnected)
                                 return;
 
-                            lock (ServerMessages)
+                            lock (ServerMessagesLock)
                             {
                                 ServerMessages.Add(msg);
-                                Monitor.PulseAll(ServerMessages);
+                                Monitor.PulseAll(ServerMessagesLock);
                             }
                         }
                     }

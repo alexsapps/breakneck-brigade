@@ -377,9 +377,9 @@ namespace Breakneck_Brigade
             clientLock.AssertHeld();
             gameLock.AssertHeld();
 
-            lock (client.ServerMessages)
+            lock (client.ServerMessagesLock)
             {
-                Monitor.PulseAll(client.ServerMessages);
+                Monitor.PulseAll(client.ServerMessagesLock);
             }
             serverMessageHandlerLoopThread.Join();
             _disconnecting = false;
@@ -545,7 +545,7 @@ namespace Breakneck_Brigade
 
             while (true)
             {
-                lock (client.ServerMessages)
+                lock (client.ServerMessagesLock)
                 {
                     while(client.ServerMessages.Count == 0)
                     {
@@ -553,7 +553,7 @@ namespace Breakneck_Brigade
                         if (checkDisconnect(false, out b))
                             return;
 
-                        Monitor.Wait(client.ServerMessages);
+                        Monitor.Wait(client.ServerMessagesLock);
                     }
                     serverMessages = new List<ServerMessage>(client.ServerMessages);
                     client.ServerMessages.Clear();
@@ -633,7 +633,10 @@ namespace Breakneck_Brigade
                     else if (m is ServerCommandResponseMessage)
                     {
                         var msg = (ServerCommandResponseMessage)m;
-                        WriteLine(msg.Result);
+                        clientConsole.BeginWrite();
+                        clientConsole.Write("server: ", ConsoleColor.Yellow);
+                        clientConsole.Write(msg.Result + "\n");
+                        clientConsole.EndWrite();
                     }
                     else
                     {

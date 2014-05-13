@@ -91,7 +91,15 @@ namespace DeCuisine
 
                                 lock (Game.ClientInput)
                                 {
-                                    Game.ClientInput.Add(clientEvent);
+                                    if (!(clientEvent.Event is ClientCommandEvent))
+                                        Game.ClientInput.Add(clientEvent);
+                                    else
+                                    {
+                                        //this should technically be handled in a separate thread like everything else, but this won't hold up the network much, and it'll be working in a new thread soon.
+                                        //do not add to ClientInput because this only gets read when the game has started.
+                                        var input = (ClientCommandEvent)clientEvent.Event;
+                                        ServerGame.DoServerCommandAsync(((ClientCommandEvent)input).args, clientEvent.Client, ServerGame.AsyncCommandCallback);
+                                    }
                                 }
 
                                 break;
@@ -140,7 +148,6 @@ namespace DeCuisine
 
         private void send()
         {
-            BBStopwatch w1 = new BBServerStopwatch(), w2 = new BBServerStopwatch(), w3 = new BBServerStopwatch();
             try
             {
                 var network = connection.GetStream();
@@ -148,7 +155,6 @@ namespace DeCuisine
                 {
                     using (BinaryWriter writer = new BinaryWriter(buffer))
                     {
-                        w3.Start();
                         while (true)
                         {
                             List<ServerMessage> svrMsgs = null;
@@ -173,10 +179,7 @@ namespace DeCuisine
                                     Monitor.Wait(ServerMessages);
                                 }
                             }
-                            w3.Stop(Game.FrameRateMilliseconds + 5, "Client: slow waiting for game state from run thread. {0}");
-                            w3.Start();
 
-                            w2.Start();
                             foreach (var message in svrMsgs)
                             {
                                 writer.Write((byte)message.Type);
@@ -189,7 +192,6 @@ namespace DeCuisine
                                     Program.WriteLine("slow message");
 
                             }
-                            w2.Stop(5, "Client: slow write loop. {0}");
                         }
                     }
                 }

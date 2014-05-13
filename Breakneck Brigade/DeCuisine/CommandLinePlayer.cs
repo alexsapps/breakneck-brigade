@@ -38,19 +38,15 @@ namespace DeCuisine
                         break;
                     }
                     lock (server.Lock)
-                    {
-                        lock (server.Game)
-                        {
-                            server.Game.TestCookerAdd(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
-                        }
-                    }
+                        lock (server.Game.Lock)
+                            if(server.Game.Mode == GameMode.Started)
+                                server.Game.TestCookerAdd(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
                     break;
                 case "listworld":
                     // list all objects ids in the game as well as there class 
                     lock (server.Lock)
-                    {
-                        ret = server.Game.ListGameObjects();
-                    }
+                        lock(server.Game.Lock)
+                            ret = server.Game.ListGameObjects();
                     break;
                 case "monitor":
                     Thread m = new Thread(() => {
@@ -67,54 +63,52 @@ namespace DeCuisine
                         break;
                     }
                     lock (server.Lock)
-                    {
-                        ret = server.Game.ListCookerContents(Convert.ToInt32(args[1]));
-                    }
+                        lock(server.Game.Lock)
+                            if (server.Game.Mode == GameMode.Started)
+                                ret = server.Game.ListCookerContents(Convert.ToInt32(args[1]));
                     break;
                 case "listing":
                     // lists all the ingredients by name in the game world
                     lock (server.Lock)
-                    {
-                        ret = server.Game.ListIngredients();
-                    }
+                        lock(server.Game.Lock)
+                            if (server.Game.Mode == GameMode.Started)
+                                ret = server.Game.ListIngredients();
                     break;
                 case "spawn":
                     // spawn stuff, see function definition for right argument format
                     lock (server.Lock)
-                    {
-                        Spawn(server.Game, args);
-                    }
+                        lock(server.Game.Lock)
+                            if (server.Game.Mode == GameMode.Started)
+                                Spawn(server.Game, args);
                     break;
                 case "stresstest":
                     // spawn stuff, see function definition for right argument format
                     {
-                        int n;
-                        if (args.Length < 2 || !int.TryParse(args[1], out n))
-                            n = 50;
-                        lock (server.Lock)
-                        {
-                            lock (server.Game.Lock)
-                            {
-                                StressTest(server.Game, n);
-                            }
-                        }
+                        lock(server.Lock)
+                            lock(server.Game.Lock)
+                                if (server.Game.Mode == GameMode.Started)
+                                {
+                                    int n;
+                                    if (args.Length < 2 || !int.TryParse(args[1], out n))
+                                        n = 50;
+                                    StressTest(server.Game, n);
+                                }
                         break;
                     }
                 case "remove":
                     {
-                        int n;
-                        if (args.Length < 2 || !int.TryParse(args[1], out n))
-                        {
-                            Console.WriteLine("Needs an id");
-                            break;
-                        }
                         lock (server.Lock)
-                        {
                             lock (server.Game.Lock)
-                            {
-                                server.Game.RemoveObj(n);
-                            }
-                        }
+                                if (server.Game.Mode == GameMode.Started)
+                                {
+                                    int n;
+                                    if (args.Length < 2 || !int.TryParse(args[1], out n))
+                                    {
+                                        Console.WriteLine("Needs an id");
+                                        break;
+                                    }
+                                    server.Game.RemoveObj(n);
+                                }
                         break;
                     }
                 default:

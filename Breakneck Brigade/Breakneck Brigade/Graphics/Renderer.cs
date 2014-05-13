@@ -171,7 +171,6 @@ namespace Breakneck_Brigade.Graphics
 
         public void Render(LocalPlayer lp)
         {
-            _stopwatch.Start();
             setViewport();
             
             //Always clear both color and depth
@@ -183,6 +182,7 @@ namespace Breakneck_Brigade.Graphics
             render3D();
 
             Glfw.glfwSwapBuffers();
+
             _stopwatch.Stop();
             secondsPerFrame += _stopwatch.ElapsedTicks/MathConstants.TICKS_PER_SECOND;
             secondsPerFrame /= 2;

@@ -103,7 +103,6 @@ namespace DeCuisine
             listener = new TcpListener(IP, Port);
             listener_thread = new Thread(new ThreadStart(Listen));
             listener_thread.Start();
-            Started = true;
         }
 
         public void Stop()
@@ -158,35 +157,40 @@ namespace DeCuisine
             try
             {
             keepGoing:
-                listener.Stop();
+                ;
 
+                lock (Lock)
                 {
-                    int retries = 0;
-                    while (true)
+                    listener.Stop();
+
                     {
-                        try
+                        int retries = 0;
+                        while (true)
                         {
-                            listener.Start();
-                            break;
-                        }
-                        catch
-                        {
-                            if (retries++ < 10)
+                            try
                             {
-                                Program.WriteLine("Listen failed.  Retrying...");
-                                System.Threading.Thread.Sleep(2000);
+                                listener.Start();
+                                break;
                             }
-                            else
-                                throw;
+                            catch
+                            {
+                                if (retries++ < 10)
+                                {
+                                    Program.WriteLine("Listen failed.  Retrying...");
+                                    System.Threading.Thread.Sleep(2000);
+                                }
+                                else
+                                    throw;
+                            }
+                        }
+                        if (retries > 0)
+                        {
+                            Program.WriteLine("Finally acquired TCP port " + Port);
                         }
                     }
-                    if(retries > 0)
-                    {
-                        Program.WriteLine("Finally acquired TCP port " + Port);
-                    }
+                    Started = true;
                 }
-
-
+                
                 try
                 {
                     while (true)
@@ -245,17 +249,19 @@ namespace DeCuisine
             }
         }
 
-        public void PrintStatus()
+        public string PrintStatus()
         {
+            StringBuilder b = new StringBuilder();
             Lock.AssertHeld();
-            Program.WriteLine(Started ? "Started." : "Offline.");
+            b.AppendLine(Started ? "Started." : "Offline.");
             if (Started)
             {
-                Program.WriteLine(clients.Count.ToString() + " clients connected.");
+                b.AppendLine(clients.Count.ToString() + " clients connected.");
                 lock(Game.Lock) {
-                    Game.PrintStatus();
+                    Game.PrintStatus(b);
                 }
             }
+            return b.ToString();
         }
     }
 }

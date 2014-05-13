@@ -84,6 +84,8 @@ namespace DeCuisine
                             var result = DoCommand(parts);
                             if (result != null)
                                 Program.WriteLine(result);
+                            else
+                                serverConsole.Prompt();
                             break;
                     }
                 }
@@ -201,7 +203,7 @@ namespace DeCuisine
                 case "status":
                     lock (server.Lock)
                     {
-                        server.PrintStatus();
+                        ret = server.PrintStatus();
                     }
                     break;
                 default:
