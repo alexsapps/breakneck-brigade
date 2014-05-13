@@ -248,13 +248,17 @@ namespace DeCuisine
                                     case ClientEventType.ChangeOrientation:
                                         break;
                                     case ClientEventType.BeginMove:
-                                        ClientBeginMoveEvent e = (ClientBeginMoveEvent)input.Event;
-                                        input.Client.Player.Move(e.Delta.x, e.Delta.y, e.Delta.z);
+                                        ClientBeginMoveEvent moveEv = (ClientBeginMoveEvent)input.Event;
+                                        input.Client.Player.Move(moveEv.Delta.x, moveEv.Delta.y, moveEv.Delta.z);
                                         break;
                                     case ClientEventType.EndMove:
                                         break;
                                     case ClientEventType.Jump:
                                         input.Client.Player.Jump();
+                                        break;
+                                    case ClientEventType.ThrowItem:
+                                        ClientThrowEvent thrEv = (ClientThrowEvent)input.Event;
+                                        input.Client.Player.Throw(thrEv.Hand, thrEv.Impulse.x, thrEv.Impulse.y, thrEv.Impulse.z);
                                         break;
                                     case ClientEventType.Command:
                                         throw new InvalidOperationException(); //this is handled elsewhere
@@ -540,13 +544,13 @@ namespace DeCuisine
 
 
 
-        // TODO: Dev code for cooker adding
+        // TEST: Dev code for cooker adding
         public void TestCookerAdd(int cookerId, int ingredientId)
         {
             CommandLinePlayer.TestCookerAdd(this.GameObjects, cookerId, ingredientId);
         }
 
-        // TODO: Dev Code to list current game objects
+        // TEST: Dev Code to list current game objects
         public string ListGameObjects()
         {
             return CommandLinePlayer.ListGameObjects(this.GameObjects);
@@ -558,6 +562,12 @@ namespace DeCuisine
         public string ListCookerContents(int cookerId)
         {
             return CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
+        }
+
+        // TEST
+        public string ClearBoard()
+        {
+            return CommandLinePlayer.ClearBoard(this.GameObjects);
         }
 
         public void RemoveObj(int id)

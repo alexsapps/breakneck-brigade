@@ -339,7 +339,6 @@ namespace Breakneck_Brigade
 
         static void input_loop()
         {
-            int i = 0;
             lock (IM.Lock)
             {
                 while (true)

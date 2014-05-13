@@ -111,6 +111,16 @@ namespace DeCuisine
                                 }
                         break;
                     }
+                case "clear":
+                    {
+                        lock (server.Lock)
+                            lock (server.Game.Lock)
+                                if (server.Game.Mode == GameMode.Started)
+                                {
+                                    server.Game.ClearBoard();
+                                }
+                        break;
+                    }
                 default:
                     success = false;
                     break;
@@ -247,6 +257,27 @@ namespace DeCuisine
                 }
             }
         }
+        public static string ClearBoard(Dictionary<int,ServerGameObject> gameObj)
+        {
+            StringBuilder b = new StringBuilder();
+            int numCleared = 0;
+            foreach (var x in gameObj)
+            {
+                if (x.Value.ObjectClass != GameObjectClass.Player &&
+                    x.Value.ObjectClass != GameObjectClass.Plane)
+                {
+                    x.Value.Body.LinearVelocity = new Vector3(0, 5000, 5000);
+                    numCleared++;
+                }
+                    
+            }
+            b.AppendLine("Cleared " + numCleared + " Objects");
+            return b.ToString();
+        }
+
+        /// <summary>
+        /// Clears the board in a dramatic fashion
+        /// </summary>
 
         private static string spawnCookerHelper(ServerGame game, string[] args)
         {

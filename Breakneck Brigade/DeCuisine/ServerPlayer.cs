@@ -19,25 +19,30 @@ namespace DeCuisine
         private Vector3 lastVelocity { get; set; }
         private float JUMPSPEED = 100;
 
+        // TEST CODE
+        bool flag = false;
+        //
+
         public struct HandInventory
         {
             public ServerGameObject Held;
-            //public Joint Joint;
-            public HandInventory(ServerGameObject toHold) //, Joint joint)
+            public Point2PointConstraint Joint;
+            public HandInventory(ServerGameObject toHold, Point2PointConstraint joint) //, Joint joint)
             {
                 this.Held = toHold;
-                //this.Joint = joint;
+                this.Joint = joint;
             }
         }
         public HandInventory LeftHand;
         public HandInventory RightHand;
-        private ServerGameObject toHold = null; // init to null as it's our flag TODO: Think smarter and don't do this
 
         public ServerPlayer(ServerGame game, Vector3 position, Client client) 
             : base(game)
         {
             base.AddToWorld(position);
             this.Client = client;
+            this.LeftHand = new HandInventory(null, null);
+            this.RightHand = new HandInventory(null, null);
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -73,13 +78,63 @@ namespace DeCuisine
 
         public override void OnCollide(ServerGameObject obj)
         {
-            //if (obj.ObjectClass == GameObjectClass.Ingredient)
-            //{
-            //    this.toHold = obj;
-            //}
+            if (obj.ObjectClass == GameObjectClass.Ingredient
+                && !flag)
+            {
+                // TODO: Try different joints to see what works best.
+
+                //obj.Position = new Vector3(this.Position.X, this.Position.Y + 10, this.Position.Z);
+                Vector3 pivotA = new Vector3(0,0,0);
+                Vector3 pivotB = new Vector3(0,0,0);
+               
+                //Vector3 axisInA = Vector3.Zero;
+                //Vector3 axisInB = new Vector3(0, 1, 0); // new Vector
+                //HingeConstraint joint = new HingeConstraint(this.Body, obj.Body, pivotA, pivotB, axisInA, axisInB);
+                //joint.SetLimit(-(float)Math.PI / 8, (float)Math.PI / 8);
+                //SliderConstraint joint = new SliderConstraint(this.Body, obj.Body, Matrix.Identity, Matrix.Identity, true);
+                //joint.LowerLinLimit = 1f;
+                //joint.UpperLinLimit = 1f;
+                //joint.UpperAngularLimit = 1f;
+                //joint.LowerAngularLimit = 1f;
+                obj.Body.Gravity = Vector3.Zero;
+                //joint.SetLimit(0f, 0f);
+                //Generic6DofConstraint joint = new Generic6DofConstraint(this.Body, obj.Body, Matrix.Identity, Matrix.Identity, true);
+                //joint.LinearLowerLimit = new Vector3(0, 1, 1);
+                //joint.LinearUpperLimit = new Vector3(0, 1, 1);
+                //joint.AngularUpperLimit = new Vector3(0, 1, 1);
+                //joint.AngularLowerLimit = new Vector3(0, 1, 1);
+                Point2PointConstraint joint = new Point2PointConstraint(this.Body, obj.Body, pivotA, pivotB);
+                //joint.SetParam()
+                Game.World.AddConstraint(joint, true);
+                flag = true;
+                this.LeftHand = new HandInventory(obj, joint); // book keeping to keep track
+
+                
+            }
 
         }
 
+        /// <summary>
+        /// Throw an object from the passed in hand
+        /// </summary>
+        /// <param name="hand"></param>
+        public void Throw(string hand, float x, float y, float z)
+        {
+            HandInventory tmp;
+            if (hand == "left" && this.LeftHand.Held != null)
+                tmp = this.LeftHand;
+            else if (this.RightHand.Held != null)
+                tmp = this.RightHand;
+            else
+                return;
+
+            this.Game.World.RemoveConstraint(tmp.Joint);
+            tmp.Held.Body.Gravity = this.Game.World.Gravity;
+            tmp.Held.Body.LinearVelocity = new Vector3(x, 40, z);
+            tmp.Held.Position = new Vector3(tmp.Held.Position.X, tmp.Held.Position.Y + 20, tmp.Held.Position.Z);
+            this.flag = false;
+
+        }
         public void Jump()
         {
             if (this.canJump || Game.MultiJump)
@@ -93,14 +148,6 @@ namespace DeCuisine
         private void makeJoint(string hand, ServerGameObject obj)
         {
             
-            if (hand == "left")
-            {
-                // TODO: make logic to drop object if we have something in the hand already
-                this.LeftHand = new HandInventory(obj);
-            } else
-            {
-                this.RightHand = new HandInventory(obj);
-            }
         }
 
         protected override void updateHook()
@@ -113,12 +160,6 @@ namespace DeCuisine
             {
                 this.canJump = true;
             }
-            //// Can't manipulate Ode in collide funtions, so a hacked flag has to do to make the joint
-            //if (this.toHold != null)
-            //{
-            //    this.makeJoint("left", this.toHold);
-            //    this.toHold = null;
-            //}
         }
 
         public override void Remove()

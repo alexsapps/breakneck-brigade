@@ -441,7 +441,7 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateXDeg(float angle)
         {
-	        angle = (angle/180.0f) * MathConstants.INVERSE_PI;
+	        angle = (angle/180.0f) * (float) Math.PI;
 
 	        this[0,0] = 1;
 	        this[0,1] = 0;
@@ -470,7 +470,7 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateYDeg(float angle)
         {
-            angle = (angle/180.0f) * MathConstants.INVERSE_PI;
+            angle = (angle / 180.0f) * (float)Math.PI;
 
 	        this[0,0] = (float) Math.Cos(angle);
 	        this[0,1] = 0;
@@ -499,7 +499,7 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateZDeg(float angle)
         {
-            angle = (float) (angle/180.0) * MathConstants.INVERSE_PI;
+            angle = (float) (angle/180.0) * (float) Math.PI;
 
 	        this[0,0] = (float) Math.Cos(angle);
 	        this[0,1] = (float) Math.Sin(angle);
