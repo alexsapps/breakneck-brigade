@@ -16,9 +16,8 @@ namespace DeCuisine
     class ServerCooker : ServerGameObject
     {
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
-        public List<ServerIngredient> Contents { get; private set; }
+        public Dictionary<int, ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
-        public List<ServerIngredient> ToAdd { get; set; }
         protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
 
         private string HashCache { get; set; }
@@ -36,7 +35,7 @@ namespace DeCuisine
             : base(game)
         {
             this.Type = type;
-            this.Contents = new List<ServerIngredient>(); 
+            this.Contents = new Dictionary<int, ServerIngredient>(); 
             AddToWorld(transform);
         }
 
@@ -72,8 +71,9 @@ namespace DeCuisine
             if (Type.ValidIngredients.Contains(ingredient.Type.Name))
             {
                 HashCache = null;
-                Contents.Add(ingredient);
+                Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
+                
                 this.Cook(); // check if you can cook. 
                 return true;
             }
@@ -90,22 +90,23 @@ namespace DeCuisine
             if (HashCache == null)
             {
                 //recompute hash since an item was added since last cook
-                Contents = Contents.OrderBy(o => o.Type.Name).ToList();//put in sorted order before hashing
-                this.HashCache = Recipe.Hash(Contents.ConvertAll<IngredientType>(x => x.Type));
+                List<ServerIngredient> ingList = Contents.Values.ToList();
+                ingList = ingList.OrderBy(o => o.Type.Name).ToList();//put in sorted order before hashing
+                this.HashCache = Recipe.Hash(ingList.ConvertAll<IngredientType>(x => x.Type));
             }
 
             if (Type.Recipes.ContainsKey(this.HashCache))
             {
-                foreach(var ingredeint in this.Contents)
+                foreach(var ingredeint in this.Contents.Values)
                 {
                     //remove all the ingredients from the game world
                     ingredeint.MarkDeleted();
                 }
-                this.Contents = new List<ServerIngredient>(); // clear contents
-                Vector3 ingSpawn = new Vector3(this.Position.X + 30, this.Position.Y + 30, this.Position.Z + 30); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-                ServerIngredient ToAdd = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
-                this.Contents.Add(ToAdd);
-                return ToAdd;
+                this.Contents = new Dictionary<int, ServerIngredient>(); // clear contents
+                Vector3 ingSpawn = new Vector3(this.Position.X, this.Position.Y + 20, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                ServerIngredient newIng = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
+                newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
+                return newIng;
             }
             return null;
         }
@@ -137,14 +138,13 @@ namespace DeCuisine
         protected void writeIngredients(BinaryWriter stream)
         {
             stream.Write((Int16)Contents.Count);
-            foreach (var ingredient in Contents)
+            foreach (var ingredient in Contents.Values)
                 stream.Write((Int32)ingredient.Id);
         }
 
         public override void OnCollide(ServerGameObject obj)
-        {
-            base.OnCollide(obj); // Fake floor for now
-            if (obj.ObjectClass == GameObjectClass.Ingredient)
+        { 
+            if (obj.ObjectClass == GameObjectClass.Ingredient && !this.Contents.ContainsKey(obj.Id))
             {
                 this.AddIngredient((ServerIngredient)obj);
             }

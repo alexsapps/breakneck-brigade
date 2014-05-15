@@ -17,11 +17,9 @@ namespace DeCuisine
         private bool isFalling { get; set; }
         private bool canJump { get; set; }
         private Vector3 lastVelocity { get; set; }
-        private float JUMPSPEED = 100;
+        private const float JUMPSPEED = 100;
+        private const float THROWSPEED = 80;
 
-        // TEST CODE
-        bool flag = false;
-        //
 
         public struct HandInventory
         {
@@ -33,16 +31,17 @@ namespace DeCuisine
                 this.Joint = joint;
             }
         }
-        public HandInventory LeftHand;
-        public HandInventory RightHand;
+        public Dictionary<string,HandInventory> Hands;
 
         public ServerPlayer(ServerGame game, Vector3 position, Client client) 
             : base(game)
         {
             base.AddToWorld(position);
             this.Client = client;
-            this.LeftHand = new HandInventory(null, null);
-            this.RightHand = new HandInventory(null, null);
+            this.Hands = new Dictionary<string, HandInventory>();
+            HandInventory tmp = new HandInventory(null, null);
+            this.Hands.Add("left", tmp);
+            this.Hands.Add("right", tmp);
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -79,7 +78,7 @@ namespace DeCuisine
         public override void OnCollide(ServerGameObject obj)
         {
             if (obj.ObjectClass == GameObjectClass.Ingredient
-                && !flag)
+                && this.Hands["left"].Held == null)
             {
                 // TODO: Try different joints to see what works best.
 
@@ -106,10 +105,7 @@ namespace DeCuisine
                 Point2PointConstraint joint = new Point2PointConstraint(this.Body, obj.Body, pivotA, pivotB);
                 //joint.SetParam()
                 Game.World.AddConstraint(joint, true);
-                flag = true;
-                this.LeftHand = new HandInventory(obj, joint); // book keeping to keep track
-
-                
+                this.Hands["left"] = new HandInventory(obj, joint); // book keeping to keep track
             }
 
         }
@@ -120,26 +116,21 @@ namespace DeCuisine
         /// <param name="hand"></param>
         public void Throw(string hand, float x, float y, float z)
         {
-            HandInventory tmp;
-            if (hand == "left" && this.LeftHand.Held != null)
-                tmp = this.LeftHand;
-            else if (this.RightHand.Held != null)
-                tmp = this.RightHand;
-            else
-                return;
+            if (this.Hands[hand].Held == null)
+                return; //nothing in your hands
 
-            this.Game.World.RemoveConstraint(tmp.Joint);
-            tmp.Held.Body.Gravity = this.Game.World.Gravity;
-            tmp.Held.Body.LinearVelocity = new Vector3(x, 40, z);
-            tmp.Held.Position = new Vector3(tmp.Held.Position.X, tmp.Held.Position.Y + 20, tmp.Held.Position.Z);
-            this.flag = false;
+            this.Game.World.RemoveConstraint(this.Hands[hand].Joint);
+            this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
+            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(x, 80, z);
+            this.Hands[hand].Held.Position = new Vector3(this.Hands[hand].Held.Position.X, this.Hands[hand].Held.Position.Y + 20, this.Hands[hand].Held.Position.Z);
 
+            this.Hands[hand] = new HandInventory(null, null); //clear the hands
         }
         public void Jump()
         {
             if (this.canJump || Game.MultiJump)
             {
-                this.Move(this.Body.LinearVelocity.X, this.JUMPSPEED, this.Body.LinearVelocity.Z);
+                this.Move(this.Body.LinearVelocity.X, ServerPlayer.JUMPSPEED, this.Body.LinearVelocity.Z);
                 this.canJump = false;
                 this.isFalling = false;
             }

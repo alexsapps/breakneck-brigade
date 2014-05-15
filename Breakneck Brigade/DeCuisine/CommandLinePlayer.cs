@@ -217,7 +217,7 @@ namespace DeCuisine
 
             // sanity checks passed list contents
             Program.WriteLine("Object Id " + "\t" + "Name");
-            foreach (var x in ((ServerCooker)gameObjects[cookerId]).Contents)
+            foreach (var x in ((ServerCooker)gameObjects[cookerId]).Contents.Values)
             {
                 b.AppendLine(x.Id + "\t\t" + x.Type.Name);
             }

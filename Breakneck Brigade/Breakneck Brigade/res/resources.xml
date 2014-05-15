@@ -37,7 +37,6 @@
     <scaleY>.4</scaleY>
     <scaleZ>.4</scaleZ>
   </model>
-
   <model>
     <filename>sauce</filename>
     <scaleX>.1</scaleX>
@@ -86,23 +85,20 @@
     <scaleY>1.0</scaleY>
     <scaleZ>1.0</scaleZ>     
   </model>
-
-  <model>
-    <filename>wooden counter</filename>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>     
-  </model>
-
   <model>
     <filename>bread</filename>
     <scaleX>1.0</scaleX>
     <scaleY>1.0</scaleY>
     <scaleZ>1.0</scaleZ>     
   </model>
-
   <model>
     <filename>lettuce</filename>
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>     
+  </model>
+  <model>
+    <filename>salt</filename>
     <scaleX>1.0</scaleX>
     <scaleY>1.0</scaleY>
     <scaleZ>1.0</scaleZ>     
