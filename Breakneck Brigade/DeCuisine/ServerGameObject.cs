@@ -265,7 +265,6 @@ namespace DeCuisine
         {
             this.Game.Lock.AssertHeld();
             this.MarkDirty(); // moved it, make sure you mark it to move
-            Vector3 delta = value - this.Position;
             this.lastPosition = value;
             this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(value));
             Debug.Assert(value.X == this.Body.WorldTransform.Origin.X); 

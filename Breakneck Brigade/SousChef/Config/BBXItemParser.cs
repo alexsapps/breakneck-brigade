@@ -111,7 +111,7 @@ namespace SousChef
             return items;
         }
 
-        protected GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRestitution)
+        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRestitution)
         {
             var shape = BB.ParseGeomShape(attributes.get("shape"), GeomShape.Box);
             float[] sides = parseFloats(attributes.get("sides"), defaultSides);

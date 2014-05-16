@@ -10,37 +10,24 @@ namespace Breakneck_Brigade
 {
     class ClientStaticObject : ClientGameObject
     {
-        public Vector4 c1 { get; set; }
-        public Vector4 c2 { get; set; }
-        public string Texture { get; set; }
-
+        private string _modelName;
         public override string ModelName
         {
-            get { throw new NotImplementedException(); }
+            get { return _modelName; }
         }
-
-        public ClientStaticObject(int id, Vector4 c1, Vector4 c2, string texture, ClientGame game) : base(id, game)
+        public ClientStaticObject(int id,  ClientGame game) : base(id, game)
         {
-            this.c1 = c1;
-            this.c2 = c2;
-            this.Texture = texture;
         }
 
         public ClientStaticObject(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
-            this.c1 = reader.ReadCoordinate();
-            this.c2 = reader.ReadCoordinate();
-            this.Texture = reader.ReadString();
-        }
-
-        protected override void readGeom(BinaryReader reader)
-        {
-            //don't read coordinates, do not call baes.readGeom()
+            this._modelName = reader.ReadString();
+            base.finalizeConstruction();
         }
 
         public override void StreamUpdate(BinaryReader reader)
         {
-            throw new NotSupportedException();
+            base.StreamUpdate(reader);
         }
 
     }

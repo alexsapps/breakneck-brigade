@@ -83,7 +83,6 @@
     <Compile Include="ClientEventArgs.cs" />
     <Compile Include="CommandLinePlayer.cs" />
     <Compile Include="dcutils\DC.cs" />
-    <Compile Include="ServerBox.cs" />
     <Compile Include="ServerGameController.cs" />
     <Compile Include="ServerStaticObject.cs" />
     <Compile Include="ServerPlane.cs" />

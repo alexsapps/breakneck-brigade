@@ -19,6 +19,6 @@ namespace SousChef
         Ingredient,
         Cooker,
         Plane,
-        Static
+        StaticObject
     }
 }

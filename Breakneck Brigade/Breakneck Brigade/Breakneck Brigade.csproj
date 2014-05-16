@@ -115,7 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
-    <Compile Include="ClientBox.cs" />
+    <Compile Include="ClientStaticObject.cs" />
     <Compile Include="ClientCooker.cs" />
     <Compile Include="ClientGameObject.cs" />
     <Compile Include="ClientIngredient.cs" />
