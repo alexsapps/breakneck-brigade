@@ -14,12 +14,7 @@ namespace SousChef
         public BBXItemParser(GameObjectConfig config) { this.config = config; }
 
         protected Dictionary<string, string> attributes;
-        public string attrib(string name) { return attrib(attributes, name); }
-        public static string attrib(Dictionary<string,string>attribs, string name)
-        {
-            string val;
-            return attribs.TryGetValue(name, out val) ? val : null;
-        }
+        public string attrib(string name) { return attributes.get(name); }
 
         bool _needsReset = false;
         public T Parse(XmlReader reader)
@@ -30,7 +25,7 @@ namespace SousChef
                 _needsReset = true;
 
             reader.MoveToContent();
-            attributes = getAttributes(reader);
+            attributes = BBXml.getAttributes(reader);
             HandleAttributes();
             ParseContents(reader);
 
@@ -101,20 +96,6 @@ namespace SousChef
             return items;
         }
 
-        //reads <... att1="val1" att2="val2" /> ... into a dictionary
-        public static Dictionary<string, string> getAttributes(XmlReader reader)
-        {
-            var attributes = new Dictionary<string, string>();
-            if (reader.MoveToFirstAttribute())
-            {
-                do
-                {
-                    attributes.Add(reader.Name, reader.Value); //handleAttribute(reader.Name, reader.Value); //protected abstract void handleAttribute(string name, string value);
-                } while (reader.MoveToNextAttribute());
-            }
-            return attributes;
-        }
-
         //reads <item ...>...</item><item ...>...</item>... into a list of items
         public static List<T> ParseList(XmlReader reader, BBXItemParser<T> itemParser)
         {
@@ -132,11 +113,11 @@ namespace SousChef
 
         protected GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRestitution)
         {
-            var shape = BB.ParseGeomShape(attrib("shape"), GeomShape.Box);
-            float[] sides = parseFloats(attrib("sides"), defaultSides);
-            float mass = parseFloat(attrib("mass"), defaultMass);
-            float friction = parseFloat(attrib("friction"), defaultFriction);
-            float restitution = parseFloat(attrib("restitution"), defaultRestitution);
+            var shape = BB.ParseGeomShape(attributes.get("shape"), GeomShape.Box);
+            float[] sides = parseFloats(attributes.get("sides"), defaultSides);
+            float mass = parseFloat(attributes.get("mass"), defaultMass);
+            float friction = parseFloat(attributes.get("friction"), defaultFriction);
+            float restitution = parseFloat(attributes.get("restitution"), defaultRestitution);
 
             GeometryInfo info = new GeometryInfo()
             {

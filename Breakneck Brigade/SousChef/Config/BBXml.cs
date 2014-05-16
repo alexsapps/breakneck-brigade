@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace SousChef
 {
-    public class BBXml
+    public static class BBXml
     {
         public static XmlReaderSettings getSettings()
         {
@@ -71,5 +71,26 @@ exit 0
                 return null;
             }
         }
+
+        //reads <... att1="val1" att2="val2" /> ... into a dictionary
+        public static Dictionary<string, string> getAttributes(XmlReader reader)
+        {
+            var attributes = new Dictionary<string, string>();
+            if (reader.MoveToFirstAttribute())
+            {
+                do
+                {
+                    attributes.Add(reader.Name, reader.Value); //handleAttribute(reader.Name, reader.Value); //protected abstract void handleAttribute(string name, string value);
+                } while (reader.MoveToNextAttribute());
+            }
+            return attributes;
+        }
+
+        public static string get(this Dictionary<string, string> d, string attribName)
+        {
+            string val;
+            return d.TryGetValue(attribName, out val) ? val : null;
+        }
+
     }
 }
