@@ -1,12 +1,17 @@
 <world gravity="0,-190,0">
 	<space>
      Red team side
-    <cooker type="blender" coordinate="-100,40,-100"/>
-    <cooker type="stove" coordinate="-50,40,-100"/>
+    <cooker type="blender" coordinate="-300,40,-300"/>
+    <cooker type="stove" coordinate="-300,40,-200"/>
+    <static type="shelf" coordinate="-200,-40,-100" model="shelf"/>
+    <static type="woodenCounter" coordinate="-300,40,-100" model="woodenCounter"/>
+    <static type="deliveryWindow" coordinate="-200,40,100" model="deliveryWindow"/>
     Blue team side
     <cooker type="blender" coordinate="100,40,100"/>
     <cooker type="stove" coordinate="50,40,10"/>
     <static type="shelf" coordinate="200,40,100" model="shelf"/>
+    <static type="woodenCounter" coordinate="300,40,100" model="woodenCounter"/>
+    <static type="deliveryWindow" coordinate="-200,40,100" model="deliveryWindow"/>
 		<plane height="1" texture="blank" />
 	</space>
 </world>

@@ -78,6 +78,7 @@
     <Compile Include="Math\GeomShape.cs" />
     <Compile Include="Network\ClientChangeOrientationEvent.cs" />
     <Compile Include="Network\ClientCommandEvent.cs" />
+    <Compile Include="Network\ClientDashEvent.cs" />
     <Compile Include="Network\ClientJumpEvent.cs" />
     <Compile Include="Network\ClientMoveEvent.cs" />
     <Compile Include="Network\ClientTestEvent.cs" />

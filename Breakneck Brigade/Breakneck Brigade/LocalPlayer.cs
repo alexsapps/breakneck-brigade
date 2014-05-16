@@ -97,6 +97,12 @@ namespace Breakneck_Brigade
                 NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline });
             }
 
+            // handle dashing key
+            if (this.downKeys.Contains(GlfwKeys.GLFW_MOUSE_BUTTON_RIGHT))
+            {
+                NetworkEvents.Add(new ClientDashEvent() { isDashing = true});
+            }
+
             IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;
             
             if (IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])

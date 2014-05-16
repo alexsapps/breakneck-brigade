@@ -266,6 +266,9 @@ namespace DeCuisine
                                         ClientThrowEvent thrEv = (ClientThrowEvent)input.Event;
                                         input.Client.Player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline);
                                         break;
+                                    case ClientEventType.Dash:
+                                        input.Client.Player.Dash();
+                                        break;
                                     case ClientEventType.Command:
                                         throw new InvalidOperationException(); //this is handled elsewhere
                                     default:

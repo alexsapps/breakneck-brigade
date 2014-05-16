@@ -19,6 +19,7 @@ namespace DeCuisine
         private Vector3 lastVelocity { get; set; }
         private const float JUMPSPEED = 100;
         private const float THROWSPEED = 300;
+        private const float SHOOTSCALER = 10; // A boy can dream right?
         private const float HOLDDISTANCE = 40.0f;
 
 
@@ -89,54 +90,44 @@ namespace DeCuisine
             if (obj.ObjectClass == GameObjectClass.Ingredient
                 && this.Hands["left"].Held == null)
             {
-                // TODO: Try different joints to see what works best.
-
-                //obj.Position = new Vector3(this.Position.X, this.Position.Y + 10, this.Position.Z);
-                Vector3 pivotA = new Vector3(0,0,0);
-                Vector3 pivotB = new Vector3(0,0,0);
-               
-                //Vector3 axisInA = Vector3.Zero;
-                //Vector3 axisInB = new Vector3(0, 1, 0); // new Vector
-                //HingeConstraint joint = new HingeConstraint(this.Body, obj.Body, pivotA, pivotB, axisInA, axisInB);
-                //joint.SetLimit(-(float)Math.PI / 8, (float)Math.PI / 8);
-                //SliderConstraint joint = new SliderConstraint(this.Body, obj.Body, Matrix.Identity, Matrix.Identity, true);
-                //joint.LowerLinLimit = 1f;
-                //joint.UpperLinLimit = 1f;
-                //joint.UpperAngularLimit = 1f;
-                //joint.LowerAngularLimit = 1f;
                 obj.Body.Gravity = Vector3.Zero;
-                //joint.SetLimit(0f, 0f);
-                //Generic6DofConstraint joint = new Generic6DofConstraint(this.Body, obj.Body, Matrix.Identity, Matrix.Identity, true);
-                //joint.LinearLowerLimit = new Vector3(0, 1, 1);
-                //joint.LinearUpperLimit = new Vector3(0, 1, 1);
-                //joint.AngularUpperLimit = new Vector3(0, 1, 1);
-                //joint.AngularLowerLimit = new Vector3(0, 1, 1);
-                //Point2PointConstraint joint = new Point2PointConstraint(this.Body, obj.Body, pivotA, pivotB);
-                //joint.SetParam()
-                //Game.World.AddConstraint(joint, true);
                 this.Hands["left"] = new HandInventory(obj, null); // book keeping to keep track
             }
 
         }
 
+
+        public void Dash()
+        {
+            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -ServerPlayer.THROWSPEED);
+            Matrix4 rotate = Matrix4.MakeRotateYDeg(-this.Orientation) * Matrix4.MakeRotateXDeg(-this.Incline);
+            imp = rotate * imp;
+
+            this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * 3;
+        }
         /// <summary>
         /// Throw an object from the passed in hand
         /// </summary>
         /// <param name="hand"></param>
         public void Throw(string hand, float orientation, float incline)
         {
-            if (this.Hands[hand].Held == null)
-                return; //nothing in your hands
-
             SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -ServerPlayer.THROWSPEED);
             Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(-incline);
             imp = rotate * imp;
 
-            //this.Game.World.RemoveConstraint(this.Hands[hand].Joint);
+            // Cause you can shoot oranges now. Why the fuck not? 
+            if (this.Hands[hand].Held == null)
+            {
+                var ingSpawn = new Vector3(this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
+                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
+                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
+                var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, ingSpawn);
+                tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
+                return;
+            }
+
             this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
             this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z);
-            //this.Hands[hand].Held.Position = new Vector3(this.Position.X, this.Hands[hand].Held.Position.Y + 30, this.Position.Z);
-
             this.Hands[hand] = new HandInventory(null, null); //clear the hands
         }
         public void Jump()

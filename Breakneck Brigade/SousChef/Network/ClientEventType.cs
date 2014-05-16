@@ -48,6 +48,7 @@ namespace SousChef
         /// <summary>
         /// Run a server command
         /// </summary>
-        Command
+        Command,
+        Dash
     }
 }
