@@ -27,9 +27,9 @@
   </model>
   <model>
     <filename>teapotPillar</filename>
-    <scaleX>.1</scaleX>
-    <scaleY>.1</scaleY>
-    <scaleZ>.1</scaleZ>
+    <scaleX>1</scaleX>
+    <scaleY>1</scaleY>
+    <scaleZ>1</scaleZ>
   </model>
   <model>
     <filename>blender</filename>
