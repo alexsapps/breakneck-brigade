@@ -115,4 +115,22 @@
     <scaleY>.4</scaleY>
     <scaleZ>.4</scaleZ>     
   </model>
+  <model>
+    <filename>woodenCounter</filename>
+    <scaleX>.4</scaleX>
+    <scaleY>.4</scaleY>
+    <scaleZ>.4</scaleZ>     
+  </model>
+  <model>
+    <filename>deliveryWindow</filename>
+    <scaleX>.4</scaleX>
+    <scaleY>.4</scaleY>
+    <scaleZ>.4</scaleZ>     
+  </model>
+  <model>
+    <filename>carrot</filename>
+    <scaleX>.4</scaleX>
+    <scaleY>.4</scaleY>
+    <scaleZ>.4</scaleZ>     
+  </model>
 </models>

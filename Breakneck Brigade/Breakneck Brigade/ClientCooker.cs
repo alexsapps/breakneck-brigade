@@ -62,7 +62,11 @@ namespace Breakneck_Brigade
             int count = reader.ReadInt16();
             Contents.Clear();
             for (int i = 0; i < count; i++)
-                Contents.Add((ClientIngredient)Game.LiveGameObjects[reader.ReadInt32()]);
+            {
+                int x = reader.ReadInt32();
+                Contents.Add((ClientIngredient)Game.LiveGameObjects[x]);
+            }
+                
         }
 
         public override void Render()

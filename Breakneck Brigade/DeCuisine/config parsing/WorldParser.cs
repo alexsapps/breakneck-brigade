@@ -235,7 +235,7 @@ namespace DeCuisine
         protected override void HandleAttributes()
         {
             var position = getCoordinateAttrib("coordinate");
-            var geomInfo = getGeomInfo(attributes, new float[] {5, 5, 5}, 5, 5, 5);
+            var geomInfo = getGeomInfo(attributes, new float[] {5, 5, 5}, 5, 5, 0);
             serverStatic = new ServerStaticObject(serverGame, geomInfo, attributes["model"], position);
         }
         protected override void reset()
