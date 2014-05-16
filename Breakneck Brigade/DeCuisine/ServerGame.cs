@@ -18,7 +18,9 @@ namespace DeCuisine
 
         public GameMode Mode { get; private set; }
 
-        private Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>();
+        public Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>();
+
+        public ServerGameController Controller { get; private set; }
 
         private Thread runThread;
 
@@ -75,6 +77,7 @@ namespace DeCuisine
             lock (Lock)
             {
                 ClientInput = new List<DCClientEvent>();
+                Controller = new ServerGameController(this);
                 loadConfig();
             }
         }
@@ -87,10 +90,14 @@ namespace DeCuisine
         void loadConfig()
         {
             Lock.AssertHeld();
+            
+            Config = new GameObjectConfig().GetConfigSalad();
+
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
-            FrameRateMilliseconds = int.Parse(config.GetSetting("frame-rate", 1000));
-            Config = new GameObjectConfig().GetConfigSalad();
+            FrameRateMilliseconds = int.Parse(config.GetSetting("frame-rate", 100));
+            
+            Controller.UpdateConfig(Config, int.Parse(config.GetSetting("num-goals", 1)));
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -285,13 +292,7 @@ namespace DeCuisine
                          */
                         _world.StepSimulation(0.1f);
 
-                        /*
-                         * handle an instant in time, e.g. gravity, collisions
-                         */
-                        foreach (var obj in new List<ServerGameObject>(GameObjects.Values)) //allow removing items while enumerating
-                        {
-                            obj.Update();
-                        }
+                        Controller.Update();
 
                         /*
                          * send updates to clients
