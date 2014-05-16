@@ -157,8 +157,8 @@ namespace DeCuisine
                 case "plane":
                     obj = parseSubItem<ServerPlane>(reader, new PlaneParser(config, serverGame)); 
                     break;
-                case "box":
-                    obj = parseSubItem<ServerBox>(reader, new BoxParser(config, serverGame)); 
+                case "static":
+                    obj = parseSubItem<ServerStaticObject>(reader, new StaticParser(config, serverGame)); 
                     break;
                 case "ingredient":
                     obj = parseSubItem<ServerIngredient>(reader, new IngredientParser(config, serverGame)); 
@@ -221,30 +221,29 @@ namespace DeCuisine
         }
     }
 
-    class BoxParser : GameObjectParser<ServerBox>
+    class StaticParser : GameObjectParser<ServerStaticObject>
     {
         // Space space;
 
-        ServerBox serverBox;
+        ServerStaticObject serverStatic;
 
-        public BoxParser(GameObjectConfig config, ServerGame serverGame)
+        public StaticParser(GameObjectConfig config, ServerGame serverGame)
             : base(config, serverGame)
         {
             // this.space = space;
         }
         protected override void HandleAttributes()
         {
-            var coord1 = getCoordinateAttrib("coordinate1");
-            var coord2 = getCoordinateAttrib("coordinate2");
-            serverBox = new ServerBox(serverGame, attributes["texture"], coord1, coord2);
+            var position = getCoordinateAttrib("coordinate");
+            serverStatic = new ServerStaticObject(serverGame, attributes["texture"], position);
         }
         protected override void reset()
         {
-            serverBox = null;
+            serverStatic = null;
         }
-        protected override ServerBox returnItem()
+        protected override ServerStaticObject returnItem()
         {
-            return serverBox;
+            return serverStatic;
         }
     }
 

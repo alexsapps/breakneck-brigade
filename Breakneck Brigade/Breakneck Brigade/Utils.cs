@@ -20,8 +20,8 @@ namespace Breakneck_Brigade
                     return typeof(ClientCooker);
                 case GameObjectClass.Plane:
                     return typeof(ClientPlane);
-                case GameObjectClass.Box:
-                    return typeof(ClientBox);
+                case GameObjectClass.StaticObject:
+                    return typeof(ClientStaticObject);
                 case GameObjectClass.Player:
                     return typeof(ClientPlayer);
                 default:

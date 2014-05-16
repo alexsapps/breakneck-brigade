@@ -8,7 +8,7 @@ using SousChef;
 
 namespace Breakneck_Brigade
 {
-    class ClientBox : ClientGameObject
+    class ClientStaticObject : ClientGameObject
     {
         public Vector4 c1 { get; set; }
         public Vector4 c2 { get; set; }
@@ -19,14 +19,14 @@ namespace Breakneck_Brigade
             get { throw new NotImplementedException(); }
         }
 
-        public ClientBox(int id, Vector4 c1, Vector4 c2, string texture, ClientGame game) : base(id, game)
+        public ClientStaticObject(int id, Vector4 c1, Vector4 c2, string texture, ClientGame game) : base(id, game)
         {
             this.c1 = c1;
             this.c2 = c2;
             this.Texture = texture;
         }
 
-        public ClientBox(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
+        public ClientStaticObject(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
             this.c1 = reader.ReadCoordinate();
             this.c2 = reader.ReadCoordinate();

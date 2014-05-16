@@ -105,14 +105,14 @@
   </model>
   <model>
     <filename>stove</filename>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>     
+    <scaleX>.4</scaleX>
+    <scaleY>.4</scaleY>
+    <scaleZ>.4</scaleZ>     
   </model>
   <model>
     <filename>milk</filename>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>     
+    <scaleX>.4</scaleX>
+    <scaleY>.4</scaleY>
+    <scaleZ>.4</scaleZ>     
   </model>
 </models>
