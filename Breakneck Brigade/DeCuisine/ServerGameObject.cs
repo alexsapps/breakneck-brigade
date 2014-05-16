@@ -13,6 +13,7 @@ namespace DeCuisine
     abstract class ServerGameObject : IGameObject
     {
         public ServerGame Game;
+
         public int Id { get; set; }
         public abstract GameObjectClass ObjectClass { get; }
 
@@ -36,6 +37,9 @@ namespace DeCuisine
         private bool _toRender;
         public bool ToRender { get{return _toRender;} set{_toRender = value; this.MarkDirty();} }
         public bool OnFloor { get; set; }
+
+        public event EventHandler Removed;
+        public event EventHandler Collided;
 
         private static int nextId;
         private Vector3 lastPosition { get; set; }
@@ -187,6 +191,9 @@ namespace DeCuisine
         {
             this.removeFromWorld();        // tell simulation to remove from ode
             this.Game.ObjectRemoved(this); // tell the game to remove from all data structures
+
+            if (Removed != null)
+                Removed(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -234,17 +241,13 @@ namespace DeCuisine
 
         public virtual void OnCollide(ServerGameObject obj)
         {
-
+            if (Collided != null)
+                Collided(this, EventArgs.Empty);
         }
 
         public void MarkDirty()
         {
             this.Game.ObjectChanged(this);
-        }
-
-        public void MarkDeleted()
-        {
-            this.Remove();
         }
 
         private Vector3 getPosition()

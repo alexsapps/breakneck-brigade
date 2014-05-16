@@ -100,7 +100,7 @@ namespace DeCuisine
                 foreach(var ingredeint in this.Contents.Values)
                 {
                     //remove all the ingredients from the game world
-                    ingredeint.MarkDeleted();
+                    ingredeint.Remove();
                 }
                 this.Contents = new Dictionary<int, ServerIngredient>(); // clear contents
                 Vector3 ingSpawn = new Vector3(this.Position.X, this.Position.Y + 20, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
@@ -143,7 +143,8 @@ namespace DeCuisine
         }
 
         public override void OnCollide(ServerGameObject obj)
-        { 
+        {
+            base.OnCollide(obj);
             if (obj.ObjectClass == GameObjectClass.Ingredient && !this.Contents.ContainsKey(obj.Id))
             {
                 this.AddIngredient((ServerIngredient)obj);

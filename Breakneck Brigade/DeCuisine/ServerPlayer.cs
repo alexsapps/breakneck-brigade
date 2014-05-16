@@ -2,6 +2,7 @@
 using SousChef;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,9 +24,30 @@ namespace DeCuisine
         private const float HOLDDISTANCE = 40.0f;
 
 
-        public struct HandInventory
+        public class HandInventory
         {
-            public ServerGameObject Held;
+            private ServerGameObject _held;
+            public ServerGameObject Held
+            {
+                get
+                {
+                    return _held;
+                }
+                set
+                {
+                    if (_held != null)
+                        _held.Removed -= Held_Removed;
+                    _held = value;
+                    if (_held != null)
+                        _held.Removed += Held_Removed;
+                }
+            }
+
+            void Held_Removed(object sender, EventArgs e)
+            {
+                Debug.Assert(sender == Held);
+                Held = null;
+            }
            
             public Point2PointConstraint Joint;
             public HandInventory(ServerGameObject toHold, Point2PointConstraint joint) //, Joint joint)
@@ -87,6 +109,8 @@ namespace DeCuisine
 
         public override void OnCollide(ServerGameObject obj)
         {
+            base.OnCollide(obj);
+
             if (obj.ObjectClass == GameObjectClass.Ingredient
                 && this.Hands["left"].Held == null)
             {
