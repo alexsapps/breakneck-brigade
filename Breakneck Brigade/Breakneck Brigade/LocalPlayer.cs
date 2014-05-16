@@ -92,15 +92,10 @@ namespace Breakneck_Brigade
             {
                 NetworkEvents.Add(new ClientJumpEvent() { isJumping = true});
             }
-
             // handle throwing key
             if (this.downKeys.Contains(GlfwKeys.GLFW_MOUSE_BUTTON_LEFT))
             {
-                Vector4 impulse = new Vector4(0.0f, 0.0f, -100.0f);
-                Matrix4 rotate = Matrix4.MakeRotateYDeg(-Orientation) * Matrix4.MakeRotateXDeg(Incline) ;
-                impulse = rotate * impulse;
-                Coordinate impCoor = new Coordinate(impulse.X, impulse.Y, impulse.Z);
-                NetworkEvents.Add(new ClientThrowEvent() { Impulse = impCoor,  Hand = "left"});
+                NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline });
             }
 
             IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;

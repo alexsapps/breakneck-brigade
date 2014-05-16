@@ -31,6 +31,7 @@ namespace DeCuisine
         public List<int> HasRemoved = new List<int>();
 
 
+
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
         public int FrameRateMilliseconds // Tick time in milliseconds
@@ -48,6 +49,8 @@ namespace DeCuisine
         long FrameRateTicks { get { return _frameRateTicks; } }
         private float _frameRateSeconds;
         float FrameRateSeconds { get { return _frameRateSeconds; } }
+
+        public bool MultiJump { get; set; } 
 
         // Physics
         DynamicsWorld _world;
@@ -258,7 +261,7 @@ namespace DeCuisine
                                         break;
                                     case ClientEventType.ThrowItem:
                                         ClientThrowEvent thrEv = (ClientThrowEvent)input.Event;
-                                        input.Client.Player.Throw(thrEv.Hand, thrEv.Impulse.x, thrEv.Impulse.y, thrEv.Impulse.z);
+                                        input.Client.Player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline);
                                         break;
                                     case ClientEventType.Command:
                                         throw new InvalidOperationException(); //this is handled elsewhere
@@ -575,6 +578,6 @@ namespace DeCuisine
             this.GameObjects[id].Remove();
         }
 
-        public bool MultiJump { get; set; }
+
     }
 }

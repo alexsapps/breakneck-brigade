@@ -18,7 +18,7 @@ namespace DeCuisine
         private bool canJump { get; set; }
         private Vector3 lastVelocity { get; set; }
         private const float JUMPSPEED = 100;
-        private const float THROWSPEED = 80;
+        private const float THROWSPEED = 300;
 
 
         public struct HandInventory
@@ -51,9 +51,16 @@ namespace DeCuisine
             //stream.Write(c,d);
         }
 
+
+        /// <summary>
+        /// Update the current stream. Mostly position but orientation and
+        /// incline are handled here
+        /// </summary>
+        /// <param name="stream"></param>
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
+
             //stream.Write(c,d);
         }
 
@@ -102,10 +109,10 @@ namespace DeCuisine
                 //joint.LinearUpperLimit = new Vector3(0, 1, 1);
                 //joint.AngularUpperLimit = new Vector3(0, 1, 1);
                 //joint.AngularLowerLimit = new Vector3(0, 1, 1);
-                Point2PointConstraint joint = new Point2PointConstraint(this.Body, obj.Body, pivotA, pivotB);
+                //Point2PointConstraint joint = new Point2PointConstraint(this.Body, obj.Body, pivotA, pivotB);
                 //joint.SetParam()
-                Game.World.AddConstraint(joint, true);
-                this.Hands["left"] = new HandInventory(obj, joint); // book keeping to keep track
+                //Game.World.AddConstraint(joint, true);
+                this.Hands["left"] = new HandInventory(obj, null); // book keeping to keep track
             }
 
         }
@@ -114,14 +121,18 @@ namespace DeCuisine
         /// Throw an object from the passed in hand
         /// </summary>
         /// <param name="hand"></param>
-        public void Throw(string hand, float x, float y, float z)
+        public void Throw(string hand, float orientation, float incline)
         {
             if (this.Hands[hand].Held == null)
                 return; //nothing in your hands
 
-            this.Game.World.RemoveConstraint(this.Hands[hand].Joint);
+            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -ServerPlayer.THROWSPEED);
+            Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(incline);
+            imp = rotate * imp;
+
+            //this.Game.World.RemoveConstraint(this.Hands[hand].Joint);
             this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
-            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(x, 80, z);
+            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, 80, imp.Z);
             this.Hands[hand].Held.Position = new Vector3(this.Hands[hand].Held.Position.X, this.Hands[hand].Held.Position.Y + 20, this.Hands[hand].Held.Position.Z);
 
             this.Hands[hand] = new HandInventory(null, null); //clear the hands
@@ -150,6 +161,12 @@ namespace DeCuisine
             if (this.isFalling && this.Body.LinearVelocity.Y >= 0)
             {
                 this.canJump = true;
+            }
+
+            if (this.Hands["left"].Held != null)
+            {
+                // move the object in front of you
+                this.Hands["left"].Held.Position = new Vector3(this.Position.X + 15, this.Position.Y + 15, this.Position.Z);
             }
         }
 

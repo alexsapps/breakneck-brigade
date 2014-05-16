@@ -260,7 +260,7 @@ namespace DeCuisine
             this.MarkDirty(); // moved it, make sure you mark it to move
             Vector3 delta = value - this.Position;
             this.lastPosition = value;
-            this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(this.Position + delta));
+            this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(value));
             Debug.Assert(value.X == this.Body.WorldTransform.Origin.X); 
             Debug.Assert(value.Y == this.Body.WorldTransform.Origin.Y);
             Debug.Assert(value.Z == this.Body.WorldTransform.Origin.Z);
