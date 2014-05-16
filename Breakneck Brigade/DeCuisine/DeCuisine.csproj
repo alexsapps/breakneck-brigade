@@ -84,6 +84,7 @@
     <Compile Include="CommandLinePlayer.cs" />
     <Compile Include="dcutils\DC.cs" />
     <Compile Include="ServerBox.cs" />
+    <Compile Include="ServerGameController.cs" />
     <Compile Include="ServerPlane.cs" />
     <Compile Include="config parsing\WorldParser.cs" />
     <Compile Include="DCClientEvent.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="ServerGameObject.cs" />
     <Compile Include="ServerIngredient.cs" />
     <Compile Include="ServerPlayer.cs" />
+    <Compile Include="ServerTeam.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
