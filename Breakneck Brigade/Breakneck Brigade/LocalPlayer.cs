@@ -37,7 +37,6 @@ namespace Breakneck_Brigade
 
         protected HashSet<GlfwKeys> keys;
         static float lastx, lastz;
-        long lasttime = 0;
         public void Update(InputManager IM, ClientGame game, Graphics.Camera cam)
         {
             game.Lock.AssertHeld();

@@ -63,7 +63,7 @@ namespace DeCuisine
         public CollisionConfiguration CollisionConf;
         public CollisionDispatcher Dispatcher;
         public BroadphaseInterface Broadphase;
-        public ConstraintSolver Solver;
+        //public ConstraintSolver Solver;
         public AlignedCollisionShapeArray CollisionShapes { get; private set; }
 
         public ServerGame(Server server)
