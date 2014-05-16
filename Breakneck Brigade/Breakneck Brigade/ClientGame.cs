@@ -14,13 +14,18 @@ namespace Breakneck_Brigade
         public int? PlayerObjId { get; set; }
 
         //locking directly on gameObjects before accessing
-        public Dictionary<int, ClientGameObject> gameObjects { get; set; }
+        public Dictionary<int, ClientGameObject> LiveGameObjects { get; set; }
+        public Dictionary<int, ClientGameObject> GameObjectsCache { get; set; }
+
         public ConfigSalad Config { get; private set; }
 
         public ClientGame(BBLock @lock)
         {
             Lock = @lock;
-            gameObjects = new Dictionary<int, ClientGameObject>();
+            
+            LiveGameObjects = new Dictionary<int, ClientGameObject>();
+            GameObjectsCache = new Dictionary<int, ClientGameObject>();
+
             Config = new GameObjectConfig().GetConfigSalad();
         }
    

@@ -136,7 +136,7 @@ namespace Breakneck_Brigade
                                             Program.WriteLine("GameMode: " + gameMode.ToString());
                                             if (gameMode == GameMode.Started || gameMode == GameMode.Paused)
                                             {
-                                                Program.WriteLine(game.gameObjects.Count + " game objects.");
+                                                Program.WriteLine(game.LiveGameObjects.Count + " game objects.");
                                             }
                                         }
                                     }
@@ -284,7 +284,7 @@ namespace Breakneck_Brigade
                         {
                             case GameMode.Started:
                             case GameMode.Paused:
-                                renderer.GameObjects = game.gameObjects.Values.ToList<ClientGameObject>();
+                                renderer.GameObjects = game.GameObjectsCache.Values.ToList<ClientGameObject>();
                                 break;
                         }
                     }
@@ -586,39 +586,34 @@ namespace Breakneck_Brigade
                     {
                         var msg = (ServerGameStateUpdateMessage)m;
 
-                        Dictionary<int, ClientGameObject> gos;
                         lock (gameLock)
                         {
-                            gos = new Dictionary<int,ClientGameObject>(game.gameObjects);
-                        }
-                        using (MemoryStream mem = new MemoryStream(msg.Binary))
-                        {
-                            using (BinaryReader reader = new BinaryReader(mem))
+                            using (MemoryStream mem = new MemoryStream(msg.Binary))
                             {
-                                int len = reader.ReadInt32();
-                                for (int i = 0; i < len; i++)
+                                using (BinaryReader reader = new BinaryReader(mem))
                                 {
-                                    int id = reader.ReadInt32();
-                                    ClientGameObject obj = ClientGameObject.Deserialize(id, reader, game);
-                                    gos.Add(obj.Id, obj);
-                                }
-                                len = reader.ReadInt32();
-                                for (int i = 0; i < len; i++)
-                                {
-                                    int id = reader.ReadInt32();
-                                    gos[id].StreamUpdate(reader);
-                                }
-                                len = reader.ReadInt32();
-                                for (int i = 0; i < len; i++)
-                                {
-                                    int id = reader.ReadInt32();
-                                    gos.Remove(id);
+                                    int len = reader.ReadInt32();
+                                    for (int i = 0; i < len; i++)
+                                    {
+                                        int id = reader.ReadInt32();
+                                        ClientGameObject obj = ClientGameObject.Deserialize(id, reader, game);
+                                        game.LiveGameObjects.Add(obj.Id, obj);
+                                    }
+                                    len = reader.ReadInt32();
+                                    for (int i = 0; i < len; i++)
+                                    {
+                                        int id = reader.ReadInt32();
+                                        game.LiveGameObjects[id].StreamUpdate(reader);
+                                    }
+                                    len = reader.ReadInt32();
+                                    for (int i = 0; i < len; i++)
+                                    {
+                                        int id = reader.ReadInt32();
+                                        game.LiveGameObjects.Remove(id);
+                                    }
                                 }
                             }
-                        }
-                        lock(gameLock)
-                        {
-                            game.gameObjects = gos;
+                            game.GameObjectsCache = new Dictionary<int,ClientGameObject>(game.LiveGameObjects);
                         }
                     }
                     else if (m is ServerPlayerIdUpdateMessage)

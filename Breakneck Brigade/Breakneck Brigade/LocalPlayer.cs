@@ -147,7 +147,7 @@ namespace Breakneck_Brigade
             Vector4 v = cam.Position;
             Vector4 d = v - cam.LookingAt;
 
-            foreach (var go in game.gameObjects.Values)
+            foreach (var go in game.GameObjectsCache.Values)
             {
 
             }
@@ -185,7 +185,7 @@ namespace Breakneck_Brigade
                     ClientGameObject x;
                     if (Game.PlayerObjId.HasValue)
                     {
-                        Game.gameObjects.TryGetValue(Game.PlayerObjId.Value, out x);
+                        Game.GameObjectsCache.TryGetValue(Game.PlayerObjId.Value, out x);
                         _player = (ClientPlayer)x;
                     }
                 }

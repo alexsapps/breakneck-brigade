@@ -27,9 +27,12 @@ namespace DeCuisine
 
                 //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
                 DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);
-                RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(0, myMotionState, groundShape, Vector3.Zero);
-                this.Body = new RigidBody(rbInfo);
-                rbInfo.Dispose();
+                using (var rbInfo = new RigidBodyConstructionInfo(0, myMotionState, groundShape, Vector3.Zero))
+                {
+                    rbInfo.Friction = 0;
+                    rbInfo.Restitution = 1.0f;
+                    this.Body = new RigidBody(rbInfo);
+                }
 
                 this.Game.World.AddRigidBody(this.Body);
                 return groundShape;
