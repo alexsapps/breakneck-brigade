@@ -10,7 +10,8 @@ namespace SousChef
     {
         None,
         Box,
-        Sphere
+        Sphere,
+        Cylinder
     }
 
     public partial class BB
@@ -41,6 +42,8 @@ namespace SousChef
                     return GeomShape.Box;
                 case "sphere":
                     return GeomShape.Sphere;
+                case "cylinder":
+                    return GeomShape.Cylinder;
                 default:
                     return GeomShape.None;
             }

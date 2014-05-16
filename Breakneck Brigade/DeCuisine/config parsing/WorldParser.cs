@@ -155,7 +155,7 @@ namespace DeCuisine
             switch (reader.Name)
             {
                 case "plane":
-                    obj = parseSubItem<ServerPlane>(reader, new PlaneParser(config, serverGame)); 
+                    obj = parseSubItem<ServerTerrain>(reader, new PlaneParser(config, serverGame)); 
                     break;
                 case "static":
                     obj = parseSubItem<ServerStaticObject>(reader, new StaticParser(config, serverGame)); 
@@ -197,10 +197,10 @@ namespace DeCuisine
         }
     }
 
-    class PlaneParser : GameObjectParser<ServerPlane>
+    class PlaneParser : GameObjectParser<ServerTerrain>
     {
 
-        ServerPlane serverPlane;
+        ServerTerrain serverPlane;
 
         public PlaneParser(GameObjectConfig config, ServerGame serverGame) : base (config, serverGame) 
         {
@@ -209,13 +209,13 @@ namespace DeCuisine
         protected override void HandleAttributes()
         {
             float height = float.Parse(attributes["height"]);
-            serverPlane = new ServerPlane(serverGame, attributes["texture"], height);
+            serverPlane = new ServerTerrain(serverGame, attributes["texture"], height);
         }
         protected override void reset()
         {
             serverPlane = null;
         }
-        protected override ServerPlane returnItem()
+        protected override ServerTerrain returnItem()
         {
             return serverPlane;
         }
