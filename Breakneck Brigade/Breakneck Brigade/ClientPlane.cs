@@ -16,13 +16,13 @@ namespace Breakneck_Brigade
 
         public ClientPlane(int id, ClientGame game, Vector4 position) : base (id, game, position)
         {
-            finilizeConstruction();
+            finalizeConstruction();
         }
 
         public ClientPlane(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
             Texture = reader.ReadString();
-            finilizeConstruction();
+            finalizeConstruction();
         }
         
         public override void StreamUpdate(BinaryReader reader)

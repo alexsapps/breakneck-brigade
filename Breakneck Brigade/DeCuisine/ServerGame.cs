@@ -249,6 +249,9 @@ namespace DeCuisine
                                     case ClientEventType.Test:
                                         break;
                                     case ClientEventType.ChangeOrientation:
+                                        ClientChangeOrientationEvent orientationEv = (ClientChangeOrientationEvent)input.Event;
+                                        input.Client.Player.Orientation = orientationEv.Orientation;
+                                        input.Client.Player.Incline = orientationEv.Incline;
                                         break;
                                     case ClientEventType.BeginMove:
                                         ClientBeginMoveEvent moveEv = (ClientBeginMoveEvent)input.Event;

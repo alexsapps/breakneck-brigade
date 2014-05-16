@@ -79,7 +79,7 @@ namespace Breakneck_Brigade
             _position = reader.ReadCoordinate();
         }
 
-        protected void finilizeConstruction()
+        protected void finalizeConstruction()
         {
             initGeom();
             Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bread"];

@@ -33,7 +33,7 @@ namespace Breakneck_Brigade
             this.Type = game.Config.Cookers[cookerType];
             this.Contents = new List<ClientIngredient>();
             processIngredients(reader);
-            base.finilizeConstruction(); //set the model based on the type of object
+            base.finalizeConstruction(); //set the model based on the type of object
         }
 
         /// <summary>

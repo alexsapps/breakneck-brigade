@@ -58,7 +58,7 @@ namespace Breakneck_Brigade
             //If there was a change in player facing orientation, send an orientation update to the server
             if(roty != 0.0f)
             {
-                NetworkEvents.Add(new ClientChangeOrientationEvent() { Roty = roty });
+                NetworkEvents.Add(new ClientChangeOrientationEvent() { Orientation = Orientation, Incline = Incline });
             }
 
 

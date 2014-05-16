@@ -19,11 +19,13 @@ namespace DeCuisine
         private Vector3 lastVelocity { get; set; }
         private const float JUMPSPEED = 100;
         private const float THROWSPEED = 300;
+        private const float HOLDDISTANCE = 2.0f;
 
 
         public struct HandInventory
         {
             public ServerGameObject Held;
+           
             public Point2PointConstraint Joint;
             public HandInventory(ServerGameObject toHold, Point2PointConstraint joint) //, Joint joint)
             {
@@ -133,7 +135,7 @@ namespace DeCuisine
             //this.Game.World.RemoveConstraint(this.Hands[hand].Joint);
             this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
             this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z);
-            this.Hands[hand].Held.Position = new Vector3(this.Position.X, this.Hands[hand].Held.Position.Y + 30, this.Position.Z);
+            //this.Hands[hand].Held.Position = new Vector3(this.Position.X, this.Hands[hand].Held.Position.Y + 30, this.Position.Z);
 
             this.Hands[hand] = new HandInventory(null, null); //clear the hands
         }
@@ -166,7 +168,7 @@ namespace DeCuisine
             if (this.Hands["left"].Held != null)
             {
                 // move the object in front of you
-                this.Hands["left"].Held.Position = new Vector3(this.Position.X + 15, this.Position.Y + 15, this.Position.Z);
+                this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, this.Position.Y + 15, this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
             }
         }
 
@@ -176,5 +178,7 @@ namespace DeCuisine
 
             Client.Disconnect();
         }
+
+        
     }
 }

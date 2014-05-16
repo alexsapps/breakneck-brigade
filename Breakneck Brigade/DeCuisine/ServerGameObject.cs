@@ -22,6 +22,8 @@ namespace DeCuisine
         protected abstract GeometryInfo getGeomInfo();
 
         public virtual Vector3 Position { get { return getPosition(); } set { setPosition(value); } }
+        public virtual float Orientation { get { return _orientation; } set { setOrientation(value); } }
+        public virtual float Incline { get { return _incline; } set { setIncline(value); } }
         protected SousChef.Matrix4 _rotation;
         /// <summary>
         /// ODE Matrix (X = left right, Y = in out, Z = up down)
@@ -269,6 +271,23 @@ namespace DeCuisine
             Debug.Assert(value.X == this.Body.WorldTransform.Origin.X); 
             Debug.Assert(value.Y == this.Body.WorldTransform.Origin.Y);
             Debug.Assert(value.Z == this.Body.WorldTransform.Origin.Z);
+        }
+
+        private float _orientation;
+        private void setOrientation(float value)
+        {
+            this.Game.Lock.AssertHeld();
+            this.MarkDirty();
+            //MAKE THIS WORK
+            //this.Body.ProceedToTransform(Matrix.Identity + Matrix.RotationY(value));
+            _orientation = value;
+        }
+        private float _incline;
+        private void setIncline(float value)
+        {
+            this.Game.Lock.AssertHeld();
+            this.MarkDirty();
+            _incline = value;
         }
 
         private SousChef.Matrix4 getRotation()

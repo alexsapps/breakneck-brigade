@@ -19,7 +19,7 @@ namespace Breakneck_Brigade
             //propertyB = parameterB;
             //propertyC = parameterC;
             //propertyD = parameterD;
-            base.finilizeConstruction();
+            base.finalizeConstruction();
         }
 
         public ClientPlayer(int id, BinaryReader reader, ClientGame game)
@@ -29,7 +29,7 @@ namespace Breakneck_Brigade
             //propertyB = reader.readString()
             //propertyC = reader.readString()
             //propertyD = reader.readString()
-            base.finilizeConstruction();
+            base.finalizeConstruction();
         }
 
         public void Update(Vector4 position)

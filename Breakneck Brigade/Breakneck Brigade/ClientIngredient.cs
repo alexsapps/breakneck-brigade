@@ -30,7 +30,7 @@ namespace Breakneck_Brigade
         {
             this.Type = type;
             this.Cleanliness = cleanliness;
-            base.finilizeConstruction();
+            base.finalizeConstruction();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Breakneck_Brigade
             string ingrname = reader.ReadString();
             this.Type = game.Config.Ingredients[ingrname];
             this.Cleanliness = reader.ReadInt32();
-            base.finilizeConstruction(); //set the model based on the type of object
+            base.finalizeConstruction(); //set the model based on the type of object
         }
 
 
