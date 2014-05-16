@@ -45,7 +45,7 @@ namespace ObjLoader.Loader.TypeParsers
 
             if(fields.Length > 1)
             {
-                var textureIndex = fields[1].Length == 0 ? 0 : fields[1].ParseInvariantInt();
+                var textureIndex = fields[1].Length == 0 ? 1 : fields[1].ParseInvariantInt();
                 faceVertex.TextureIndex = textureIndex;
             }
 

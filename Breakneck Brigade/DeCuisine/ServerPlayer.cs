@@ -127,13 +127,13 @@ namespace DeCuisine
                 return; //nothing in your hands
 
             SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -ServerPlayer.THROWSPEED);
-            Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(incline);
+            Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(-incline);
             imp = rotate * imp;
 
             //this.Game.World.RemoveConstraint(this.Hands[hand].Joint);
             this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
-            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, 80, imp.Z);
-            this.Hands[hand].Held.Position = new Vector3(this.Hands[hand].Held.Position.X, this.Hands[hand].Held.Position.Y + 20, this.Hands[hand].Held.Position.Z);
+            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z);
+            this.Hands[hand].Held.Position = new Vector3(this.Position.X, this.Hands[hand].Held.Position.Y + 30, this.Position.Z);
 
             this.Hands[hand] = new HandInventory(null, null); //clear the hands
         }
