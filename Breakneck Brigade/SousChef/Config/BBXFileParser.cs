@@ -16,6 +16,10 @@ namespace SousChef
         public string GetFileName() { return getRootNodeName() + ".xml"; }
         protected abstract string getRootNodeName();
         protected abstract string getListItemNodeName();
+
+        protected Dictionary<string, string> attributes;
+        public string attrib(string name) { return BBXItemParser<T>.attrib(attributes, name); }
+
         public List<T> LoadFile()
         {
             string filename;
@@ -39,6 +43,8 @@ namespace SousChef
             if (reader.MoveToContent() == XmlNodeType.Element
                 && reader.Name == getRootNodeName())
             {
+                attributes = BBXItemParser<T>.getAttributes(reader);
+                handleAttributes();
                 return parseRoot(reader);
             }
             else
@@ -47,9 +53,11 @@ namespace SousChef
             }
         }
 
+        protected virtual void handleAttributes() { }
+
         protected virtual List<T> parseRoot(XmlReader reader)
         {
-            return BBXItemParser<T>.ParseList(reader.ReadSubtree(), getItemParser());
+            return BBXItemParser<T>.ParseListItems(reader, getItemParser());
         }
     }
 }

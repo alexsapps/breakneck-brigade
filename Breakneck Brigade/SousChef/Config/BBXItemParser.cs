@@ -14,6 +14,12 @@ namespace SousChef
         public BBXItemParser(GameObjectConfig config) { this.config = config; }
 
         protected Dictionary<string, string> attributes;
+        public string attrib(string name) { return attrib(attributes, name); }
+        public static string attrib(Dictionary<string,string>attribs, string name)
+        {
+            string val;
+            return attribs.TryGetValue(name, out val) ? val : null;
+        }
 
         bool _needsReset = false;
         public T Parse(XmlReader reader)
@@ -96,7 +102,7 @@ namespace SousChef
         }
 
         //reads <... att1="val1" att2="val2" /> ... into a dictionary
-        protected Dictionary<string, string> getAttributes(XmlReader reader)
+        public static Dictionary<string, string> getAttributes(XmlReader reader)
         {
             var attributes = new Dictionary<string, string>();
             if (reader.MoveToFirstAttribute())
@@ -112,30 +118,51 @@ namespace SousChef
         //reads <item ...>...</item><item ...>...</item>... into a list of items
         public static List<T> ParseList(XmlReader reader, BBXItemParser<T> itemParser)
         {
-            var items = new List<T>();
             reader.MoveToContent(); //read to main element
+            return ParseListItems(reader, itemParser);
+        }
+        public static List<T> ParseListItems(XmlReader reader, BBXItemParser<T> itemParser)
+        {
+            var items = new List<T>();
             while (reader.Read()) //and read over it to get to descendents.  then just read to get to the next element.
                 if (reader.NodeType == XmlNodeType.Element)
                     items.Add(itemParser.Parse(reader.ReadSubtree()));
             return items;
         }
 
-        protected GeometryInfo getGeomInfo(Dictionary<string, string> attributes)
+        protected GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRestitution)
         {
-            var shape = BB.ParseGeomShape(attributes["shape"]);
-            string sidesstr = attributes["sides"];
-            
+            var shape = BB.ParseGeomShape(attrib("shape"), GeomShape.Box);
+            float[] sides = parseFloats(attrib("sides"), defaultSides);
+            float mass = parseFloat(attrib("mass"), defaultMass);
+            float friction = parseFloat(attrib("friction"), defaultFriction);
+            float restitution = parseFloat(attrib("restitution"), defaultRestitution);
+
             GeometryInfo info = new GeometryInfo()
             {
                 Shape = shape,
-                Mass = float.Parse(attributes["mass"]),
-                Sides = getFloats(sidesstr)
+                Mass = mass,
+                Sides = sides,
+                Friction = friction,
+                Restitution = restitution
             };
             
             return info;
         }
 
-        protected float[] getFloats(string str)
+        public static float parseFloat(string str, float @default)
+        {
+            return str == null ? @default : float.Parse(str);
+        }
+
+        public static float[] parseFloats(string str, float[] @default)
+        {
+            if (str == null)
+                return @default;
+            else
+                return parseFloats(str);
+        }
+        public static float[] parseFloats(string str)
         {
             string[] sidesstrarr = str.Split(',');
             float[] sides = new float[sidesstrarr.Length];

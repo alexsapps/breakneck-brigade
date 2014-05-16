@@ -80,7 +80,7 @@ namespace DeCuisine
             serverGame.Broadphase = new DbvtBroadphase();
             this.world = new DiscreteDynamicsWorld(serverGame.Dispatcher, serverGame.Broadphase, null, serverGame.CollisionConf);
 
-            var gravity = getFloats(attributes["gravity"]);
+            var gravity = parseFloats(attributes["gravity"]);
             Debug.Assert(gravity.Length == 3);
             this.world.Gravity = new Vector3(gravity[0], gravity[1], gravity[2]);
 
@@ -265,7 +265,7 @@ namespace DeCuisine
         }
         protected Vector3 getCoordinate(string str)
         {
-            var floats = getFloats(str);
+            var floats = parseFloats(str);
             Debug.Assert(floats.Length == 3);
             return new Vector3(floats[0], floats[1], floats[2]);
         }

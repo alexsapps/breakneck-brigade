@@ -123,7 +123,7 @@ namespace DeCuisine
             {
                 CollisionShape geom = this.MakeGeom(this.GeomInfo, coordinate);
                 this.Geom = geom;
-                this.Body = this.MakeBody(this.GeomInfo);
+                this.Body = this.MakeBody(geom, this.GeomInfo);
                 this.Game.World.AddRigidBody(this.Body);
                 this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(coordinate));
                 return geom;
@@ -162,13 +162,18 @@ namespace DeCuisine
             return geom;
         }
 
-        private RigidBody MakeBody(GeometryInfo info)
+        private RigidBody MakeBody(CollisionShape geom, GeometryInfo info)
         {
-            Vector3 localInertia = this.Geom.CalculateLocalInertia(info.Mass);
-            DefaultMotionState myMotionState = new DefaultMotionState(Matrix.Identity);
-            RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(info.Mass, myMotionState, this.Geom, localInertia);
-            RigidBody body = new RigidBody(rbInfo);
-            rbInfo.Dispose();
+            RigidBody body;
+            Vector3 localInertia = geom.CalculateLocalInertia(info.Mass);
+            var myMotionState = new DefaultMotionState(Matrix.Identity);
+
+            using(var rbInfo = new RigidBodyConstructionInfo(info.Mass, myMotionState, geom, localInertia))
+            {
+                rbInfo.Friction = info.Friction; //1 to 2
+                rbInfo.Restitution = info.Restitution; // between 0 and 1
+                body = new RigidBody(rbInfo);
+            }
             return body;
         }
 

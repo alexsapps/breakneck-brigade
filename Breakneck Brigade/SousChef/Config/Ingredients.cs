@@ -12,11 +12,32 @@ namespace SousChef
         public BBXIngredientsFileParser(GameObjectConfig config) : base(config) { }
         protected override string getRootNodeName() { return "ingredients"; }
         protected override string getListItemNodeName() { return "ingredient"; }
-        public override BBXItemParser<IngredientType> getItemParser() { return new IngredientParser(config); }
+
+        public float[] defaultSides;
+        public float defaultMass;
+        public float defaultFriction;
+        public float defaultRestitution;
+
+        protected override void handleAttributes()
+        {
+            base.handleAttributes();
+
+            defaultSides = BBXItemParser<IngredientType>.parseFloats(attrib("defaultSides"));
+            defaultMass = float.Parse(attrib("defaultMass"));
+            defaultFriction = float.Parse(attrib("defaultFriction"));
+            defaultRestitution = float.Parse(attrib("defaultRestitution"));
+        }
+        
+        public override BBXItemParser<IngredientType> getItemParser() { return new IngredientParser(config, this); }
     }
     public class IngredientParser : BBXItemParser<IngredientType>
     {
-        public IngredientParser(GameObjectConfig config) : base(config) { }
+        BBXIngredientsFileParser fileParser;
+        public IngredientParser(GameObjectConfig config, BBXIngredientsFileParser fileParser) : base(config) 
+        { 
+            this.fileParser = fileParser; 
+        }
+
         protected override void handleSubtree(XmlReader reader)
         {
             throw new Exception("content not allowed in ingredient tag");
@@ -26,7 +47,9 @@ namespace SousChef
             string name = attributes["name"];
             int points = int.Parse(attributes["points"]);
 
-            var geomInfo = getGeomInfo(attributes);
+            var geomInfo = getGeomInfo(attributes,
+                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRestitution
+                );
 
             return new IngredientType(name, geomInfo, points);
         }

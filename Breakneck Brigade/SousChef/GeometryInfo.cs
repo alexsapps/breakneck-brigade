@@ -7,28 +7,37 @@ using System.Threading.Tasks;
 namespace SousChef
 {
     /// <summary>
-    /// Holds all the information necessary for physics interaction.
+    /// Holds all the information necessary for creating a game object's physical properites.
     /// </summary>
     public class GeometryInfo
     {
-        /// <summary>
-        /// Gets or sets the mass of the object
-        /// </summary>
         public float Mass { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shpae of the object
-        /// </summary>
         public GeomShape Shape { get; set; }
-
-        /// <summary>
-        /// Gets the list of sides of the object
-        /// </summary>
         public float[] Sides { get; set; }
-
-        public GeometryInfo()
-        {
-            
-        }
+        public float Friction { get; set; }
+        public float Restitution { get; set; }
     }
+
+    //public class RigidBodyGeometryInfo : GeometryInfo
+    //{
+    //    public float Mass { get; set; }
+    //    public float Friction { get; set; }
+    //    public float Restitution { get; set; }
+    //}
+    //public class BoxGeometryInfo : RigidBodyGeometryInfo
+    //{
+    //    public float Side1 { get; set; }
+    //    public float Side2 { get; set; }
+    //    public float Side3 { get; set; }
+    //}
+    //public class SphereGeometryInfo : RigidBodyGeometryInfo
+    //{
+    //    public float Side1 { get; set; }
+    //    public float Side2 { get; set; }
+    //}
+    //public class PlaneGeometryInfo : GeometryInfo
+    //{
+
+    //}
+    
 }

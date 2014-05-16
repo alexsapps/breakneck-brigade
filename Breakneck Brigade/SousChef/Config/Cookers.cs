@@ -12,14 +12,33 @@ namespace SousChef
         public BBXCookersFileParser(GameObjectConfig config) : base(config) { }
         protected override string getRootNodeName() { return "cookers"; }
         protected override string getListItemNodeName() { return "cooker"; }
-        public override BBXItemParser<CookerType> getItemParser() { return new CookerParser(config); }
+        public override BBXItemParser<CookerType> getItemParser() { return new CookerParser(config, this); }
+
+        public float[] defaultSides;
+        public float defaultMass;
+        public float defaultFriction;
+        public float defaultRestitution;
+
+        protected override void handleAttributes()
+        {
+            base.handleAttributes();
+
+            defaultSides = BBXItemParser<IngredientType>.parseFloats(attributes["defaultSides"]);
+            defaultMass = float.Parse(attrib("defaultMass"));
+            defaultFriction = float.Parse(attrib("defaultFriction"));
+            defaultRestitution = float.Parse(attrib("defaultRestitution"));
+        }
     }
     public class CookerParser : BBXItemParser<CookerType>
     {
-        public CookerParser(GameObjectConfig config) : base(config) { }
+        BBXCookersFileParser fileParser;
+        public CookerParser(GameObjectConfig config, BBXCookersFileParser fileParser) : base(config) 
+        { 
+            this.fileParser = fileParser; 
+        }
 
         List<Recipe> recipes = new List<Recipe>();
-        
+
         public override void ParseContents(XmlReader reader)
         {
             var recipes = this.parseStringList(reader, "recipe", false);
@@ -34,11 +53,14 @@ namespace SousChef
             throw new NotImplementedException();
         }
 
+        static readonly float[] defaultDefaultSides = new float[] { 6f, 6f, 6f };
         protected override CookerType returnItem()
         {
             string name = attributes["name"];
-            
-            var geomInfo = getGeomInfo(attributes);
+
+            var geomInfo = getGeomInfo(attributes,
+                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRestitution
+                );
 
             return new CookerType(name, geomInfo, recipes);
         }
