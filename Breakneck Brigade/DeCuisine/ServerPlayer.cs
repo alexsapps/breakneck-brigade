@@ -19,7 +19,7 @@ namespace DeCuisine
         private Vector3 lastVelocity { get; set; }
         private const float JUMPSPEED = 100;
         private const float THROWSPEED = 300;
-        private const float HOLDDISTANCE = 2.0f;
+        private const float HOLDDISTANCE = 40.0f;
 
 
         public struct HandInventory
@@ -168,7 +168,9 @@ namespace DeCuisine
             if (this.Hands["left"].Held != null)
             {
                 // move the object in front of you
-                this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, this.Position.Y + 15, this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
+                this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(   this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, 
+                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1, 
+                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
             }
         }
 
