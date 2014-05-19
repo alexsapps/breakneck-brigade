@@ -8,7 +8,28 @@
   <cooker name="blender">
     <recipe>milkshake</recipe>
   </cooker>
-  <cooker name="stove">
+
+  <cooker name="oven">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="pot">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="pan">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="juicer">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="toaster">
+    <recipe>milkshake</recipe>
+  </cooker>
+  
+  <cooker name="bowl">
     <recipe>milkshake</recipe>
   </cooker>
 </cookers>
