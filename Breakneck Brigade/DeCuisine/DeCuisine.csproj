@@ -141,6 +141,7 @@
     <PostBuildEvent>echo "Copying in dependancies"
 pushd $(ProjectDir)
 robocopy lib\deps $(OutDir) /s
+robocopy ..\res $(OutDir)\res /s
 popd
 exit 0</PostBuildEvent>
   </PropertyGroup>
