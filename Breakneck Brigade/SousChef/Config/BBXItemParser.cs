@@ -111,13 +111,15 @@ namespace SousChef
             return items;
         }
 
-        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRestitution)
+        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping)
         {
             var shape = BB.ParseGeomShape(attributes.get("shape"), GeomShape.Box);
             float[] sides = parseFloats(attributes.get("sides"), defaultSides);
             float mass = parseFloat(attributes.get("mass"), defaultMass);
             float friction = parseFloat(attributes.get("friction"), defaultFriction);
+            float rollingFriction = parseFloat(attributes.get("rollingFriction"), defaultRollingFriction);
             float restitution = parseFloat(attributes.get("restitution"), defaultRestitution);
+            float angularDamping = parseFloat(attributes.get("angularDamping"), defaultAngularDamping);
 
             GeometryInfo info = new GeometryInfo()
             {
@@ -125,7 +127,9 @@ namespace SousChef
                 Mass = mass,
                 Sides = sides,
                 Friction = friction,
-                Restitution = restitution
+                RollingFriction = rollingFriction,
+                Restitution = restitution,
+                AngularDamping = angularDamping
             };
             
             return info;

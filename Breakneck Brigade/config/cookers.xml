@@ -1,4 +1,4 @@
-<cookers defaultSides="8,12,8" defaultMass="30.0" defaultFriction="2.0" defaultRestitution="0.1">
+<cookers defaultSides="8,12,8" defaultMass="30.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.1" defaultAngularDamping=".999">
 
   <!--  default shape is box -->
 

@@ -188,6 +188,8 @@ namespace DeCuisine
             {
                 rbInfo.Friction = info.Friction; //1 to 2
                 rbInfo.Restitution = info.Restitution; // between 0 and 1
+                rbInfo.RollingFriction = info.RollingFriction;
+                rbInfo.AngularDamping = info.AngularDamping;
                 body = new RigidBody(rbInfo);
             }
             return body;

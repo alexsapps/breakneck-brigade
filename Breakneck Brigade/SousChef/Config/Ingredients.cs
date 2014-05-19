@@ -16,7 +16,9 @@ namespace SousChef
         public float[] defaultSides;
         public float defaultMass;
         public float defaultFriction;
+        public float defaultRollingFriction;
         public float defaultRestitution;
+        public float defaultAngularDamping;
 
         protected override void handleAttributes()
         {
@@ -25,7 +27,9 @@ namespace SousChef
             defaultSides = BBXItemParser<IngredientType>.parseFloats(attrib("defaultSides"));
             defaultMass = float.Parse(attrib("defaultMass"));
             defaultFriction = float.Parse(attrib("defaultFriction"));
+            defaultRollingFriction = float.Parse(attrib("defaultRollingFriction"));
             defaultRestitution = float.Parse(attrib("defaultRestitution"));
+            defaultAngularDamping = float.Parse(attrib("defaultAngularDamping"));
         }
         
         public override BBXItemParser<IngredientType> getItemParser() { return new IngredientParser(config, this); }
@@ -48,7 +52,7 @@ namespace SousChef
             int points = int.Parse(attributes["points"]);
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRestitution
+                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping
                 );
 
             return new IngredientType(name, geomInfo, points);

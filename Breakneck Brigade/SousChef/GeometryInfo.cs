@@ -16,7 +16,9 @@ namespace SousChef
         public GeomShape Shape { get; set; }
         public float[] Sides { get; set; }
         public float Friction { get; set; }
+        public float RollingFriction { get; set; }
         public float Restitution { get; set; }
+        public float AngularDamping { get; set; }
 
         /// <summary>
         /// Gets or set the lsit of euler angles to rotate this object.
