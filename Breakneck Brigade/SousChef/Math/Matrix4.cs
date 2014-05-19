@@ -441,26 +441,8 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateXDeg(float angle)
         {
-	        angle = (angle/180.0f) * (float) Math.PI;
-
-	        this[0,0] = 1;
-	        this[0,1] = 0;
-	        this[0,2] = 0;
-	        this[0,3] = 0;
-	        this[1,0] = 0;
-	        this[1,1] = (float) Math.Cos(angle);
-	        this[1,2] = (float) Math.Sin(angle);
-	        this[1,3] = 0;
-	        this[2,0] = 0;
-	        this[2,1] = (float) - Math.Sin(angle);
-	        this[2,2] = (float) Math.Cos(angle);
-	        this[2,3] = 0;
-	        this[3,0] = 0;
-	        this[3,1] = 0;
-	        this[3,2] = 0;
-	        this[3,3] = 1;
-
-            return this;
+	        angle *= MathConstants.DEG2RAD;
+            return RotateX(angle);
         }
 
         /// <summary>
@@ -470,26 +452,8 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateYDeg(float angle)
         {
-            angle = (angle / 180.0f) * (float)Math.PI;
-
-	        this[0,0] = (float) Math.Cos(angle);
-	        this[0,1] = 0;
-	        this[0,2] = (float) -Math.Sin(angle);
-	        this[0,3] = 0;
-	        this[1,0] = 0;
-	        this[1,1] = 1;
-	        this[1,2] = 0;
-	        this[1,3] = 0;
-	        this[2,0] = (float) Math.Sin(angle);
-	        this[2,1] = 0;
-	        this[2,2] = (float) Math.Cos(angle);
-	        this[2,3] = 0;
-	        this[3,0] = 0;
-	        this[3,1] = 0;
-	        this[3,2] = 0;
-	        this[3,3] = 1;
-
-            return this;
+            angle *= MathConstants.DEG2RAD;
+            return RotateY(angle);
         }
 
         /// <summary>
@@ -499,26 +463,8 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateZDeg(float angle)
         {
-            angle = (float) (angle/180.0) * (float) Math.PI;
-
-	        this[0,0] = (float) Math.Cos(angle);
-	        this[0,1] = (float) Math.Sin(angle);
-	        this[0,2] = 0;
-	        this[0,3] = 0;
-	        this[1,0] = (float) -Math.Sin(angle);
-	        this[1,1] = (float) Math.Cos(angle);
-	        this[1,2] = 0;
-	        this[1,3] = 0;
-	        this[2,0] = 0;
-	        this[2,1] = 0;
-	        this[2,2] = 1;
-	        this[2,3] = 0;
-	        this[3,0] = 0;
-	        this[3,1] = 0;
-	        this[3,2] = 0;
-	        this[3,3] = 1;
-
-            return this;
+            angle *= MathConstants.DEG2RAD;
+            return RotateZ(angle);
         }
 
 
@@ -564,33 +510,8 @@ namespace SousChef
         /// <returns>A reference to this matrix</returns>
         public Matrix4 RotateDeg(Vector4 axis, float angle)
         {
-	        angle = (float) (angle/180.0) * MathConstants.INVERSE_PI;
-	        float cTheta = (float) Math.Cos(angle);
-	        float sTheta = (float) Math.Sin(angle);
-	        float ax = axis.X;
-	        float ay = axis.Y;
-	        float az = axis.Z;
-
-            float[,] t = new float[4,4];
-
-            this[0, 0] = (float)(Math.Pow(ax, 2) + cTheta*(1-Math.Pow(ax, 2)));
-            this[0, 1] = ax*ay*(1-cTheta) + az*sTheta;
-            this[0, 2] = ax*az*(1-cTheta) - ay*sTheta;
-            this[0, 3] = 0;
-            this[1, 0] = ax*ay*(1-cTheta) - az * sTheta;
-            this[1, 1] = (float)(Math.Pow(ay, 2) + cTheta * (1 - Math.Pow(ay, 2)));
-            this[1, 2] = ay*az*(1-cTheta) + ax*sTheta;
-            this[1, 3] = 0;
-            this[2, 0] = ax*az*(1-cTheta) + ay*sTheta;
-            this[2, 1] = ay*az*(1-cTheta)-ax*sTheta;
-            this[2, 2] = (float)(Math.Pow(az, 2) + cTheta*(1-Math.Pow(az, 2)));
-            this[2, 3] = 0;
-            this[3, 0] = 0;
-            this[3, 1] = 0;
-            this[3, 2] = 0;
-            this[3, 3] = 1;
-    
-            return this;
+            angle = MathConstants.DEG2RAD * MathConstants.INVERSE_PI;
+	        return Rotate(axis, angle);
         }
 
         /// <summary>

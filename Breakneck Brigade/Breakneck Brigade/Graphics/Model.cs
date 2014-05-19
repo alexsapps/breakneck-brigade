@@ -14,21 +14,30 @@ namespace Breakneck_Brigade.Graphics
      */
     class Model
     {
+        public Matrix4          ModelMatrix { get; set;}
         public List<AObject3D>  Meshes { get; private set; }
-        public Vector4          InitialScale { get; set;}
 
         public Model()
         {
             Meshes = new List<AObject3D>();
-            InitialScale = new Vector4();
+            ModelMatrix = new Matrix4();
+        }
+
+        public Model(Matrix4 mm)
+        {
+            Meshes = new List<AObject3D>();
+            ModelMatrix = mm;
         }
 
         public void Render()
         {
+            Gl.glPushMatrix();
+            Gl.glMultMatrixf(ModelMatrix.glArray);
             foreach(AObject3D m in Meshes)
             {
                 m.Render();
             }
+            Gl.glPopMatrix();
         }
     }
 }

@@ -144,6 +144,15 @@ namespace Breakneck_Brigade.Graphics
                         modelSubtree.ReadToDescendant("filename");
                         string filename = modelSubtree.ReadElementContentAsString();
 
+                        modelSubtree.ReadToNextSibling("posX");
+                        float posX = modelSubtree.ReadElementContentAsFloat();
+
+                        modelSubtree.ReadToNextSibling("posY");
+                        float posY = modelSubtree.ReadElementContentAsFloat();
+
+                        modelSubtree.ReadToNextSibling("posZ");
+                        float posZ = modelSubtree.ReadElementContentAsFloat();
+
                         modelSubtree.ReadToNextSibling("scaleX");
                         float scaleX = modelSubtree.ReadElementContentAsFloat();
 
@@ -152,13 +161,25 @@ namespace Breakneck_Brigade.Graphics
 
                         modelSubtree.ReadToNextSibling("scaleZ");
                         float scaleZ = modelSubtree.ReadElementContentAsFloat();
-                        
+
+                        modelSubtree.ReadToNextSibling("rotX");
+                        float rotX = modelSubtree.ReadElementContentAsFloat();
+
+                        modelSubtree.ReadToNextSibling("rotY");
+                        float rotY = modelSubtree.ReadElementContentAsFloat();
+
+                        modelSubtree.ReadToNextSibling("rotZ");
+                        float rotZ = modelSubtree.ReadElementContentAsFloat();
+
+                        Matrix4 modelMat = Matrix4.MakeTranslationMat(posX, posY, posZ);
+                        modelMat *= Matrix4.MakeRotateZDeg(rotZ);
+                        modelMat *= Matrix4.MakeRotateYDeg(rotY);
+                        modelMat *= Matrix4.MakeRotateXDeg(rotX);
+                        modelMat *= Matrix4.MakeScalingMat(scaleX, scaleY, scaleZ);
+
                         Model model = parser.ParseFile(filename);
-                        
-                        model.InitialScale.X = scaleX;
-                        model.InitialScale.Y = scaleY;
-                        model.InitialScale.Z = scaleZ;
-                        
+                        model.ModelMatrix = modelMat;
+
                         Models.Add(filename, model);
 
                         if(ii != numberOfModels - 1)

@@ -1,136 +1,281 @@
 <?xml version="1.0"?>
 
+<!-- 
+Resources file specification:
+
+MODELS:
+
+Note: nodes must have children in this order. The parser is one-pass
+and having them in any other order will mess it up!
+
+filename:	the name of the model. Note: all files associated 
+		with a model should have the same name (i.e.:
+		"orange" should have orange.obj, orange.mtl, and
+		orange.tga)
+
+posX/Y/Z:	the initial position in each dimension. By default,
+		the model should be centered at the origin. Change
+		these values if this is not the case
+
+scaleX/Y/Z:  	the initial scaling of the model in each dimension
+
+rotX/Y/Z:	the initial rotation in each dimension. By default,
+		the model should face down the negative Z axis. If
+		this is not the case, use this value to make rotate
+		the model so it is facing in tha direction.
+-->
+
 <models>
   <model>
     <filename>orange</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>twoballplate</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>twocyl</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>bottle</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>teapotPillar</filename>
-    <scaleX>1</scaleX>
-    <scaleY>1</scaleY>
-    <scaleZ>1</scaleZ>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
+    <scaleX>0.5</scaleX>
+    <scaleY>0.5</scaleY>
+    <scaleZ>0.5</scaleZ>
+    <rotX>0</rotX>
+    <rotY>90</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>blender</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.4</scaleX>
     <scaleY>.4</scaleY>
     <scaleZ>.4</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>sauce</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>     
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
-
   <model>
     <filename>iceCream</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>     
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
-
   <model>
     <filename>egg</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
-    <scaleZ>.1</scaleZ>     
+    <scaleZ>.1</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
-
   <model>
     <filename>steak</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.1</scaleX>
     <scaleY>.1</scaleY>
     <scaleZ>.1</scaleZ>     
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
-
   <model>
     <filename>floor</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>10.0</scaleX>
     <scaleY>1.0</scaleY>
     <scaleZ>10.0</scaleZ>     
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
-
   <model>
     <filename>shelf</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>1.0</scaleX>
     <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>     
+    <scaleZ>1.0</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
-
   <model>
     <filename>table</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>1.0</scaleX>
     <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>     
+    <scaleZ>1.0</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>bread</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>1.0</scaleX>
     <scaleY>1.0</scaleY>
     <scaleZ>1.0</scaleZ>     
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>lettuce</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>    
     <scaleX>1.0</scaleX>
     <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>     
+    <scaleZ>1.0</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>salt</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>  
     <scaleX>1.0</scaleX>
     <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>     
+    <scaleZ>1.0</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>stove</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.4</scaleX>
     <scaleY>.4</scaleY>
     <scaleZ>.4</scaleZ>     
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>milk</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>  
     <scaleX>.4</scaleX>
     <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>     
+    <scaleZ>.4</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>woodenCounter</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.4</scaleX>
     <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>     
+    <scaleZ>.4</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>deliveryWindow</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>   
     <scaleX>.4</scaleX>
     <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>     
+    <scaleZ>.4</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>  
   </model>
   <model>
     <filename>carrot</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
     <scaleX>.4</scaleX>
     <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>     
+    <scaleZ>.4</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
   </model>
 </models>

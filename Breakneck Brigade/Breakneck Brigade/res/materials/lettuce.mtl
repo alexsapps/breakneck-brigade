@@ -12,5 +12,5 @@ newmtl Material__31
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka C:\LocalUsers\rageorge\Desktop\lettuce.tga
-	map_Kd C:\LocalUsers\rageorge\Desktop\lettuce.tga
+	map_Ka lettuce.tga
+	map_Kd lettuce.tga

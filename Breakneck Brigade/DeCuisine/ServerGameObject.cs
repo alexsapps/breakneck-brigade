@@ -75,6 +75,16 @@ namespace DeCuisine
             stream.Write(this.Position.X);
             stream.Write(this.Position.Y);
             stream.Write(this.Position.Z);
+            Matrix4 rot = this.getRotation();
+            stream.Write(rot[0, 0]);
+            stream.Write(rot[1, 0]);
+            stream.Write(rot[2, 0]);
+            stream.Write(rot[0, 1]);
+            stream.Write(rot[1, 1]);
+            stream.Write(rot[2, 1]);
+            stream.Write(rot[0, 2]);
+            stream.Write(rot[1, 2]);
+            stream.Write(rot[2, 2]);
         }
 
         protected virtual void serializeEssential(BinaryWriter stream)
@@ -237,6 +247,16 @@ namespace DeCuisine
             stream.Write(this.Position.X);
             stream.Write(this.Position.Y);
             stream.Write(this.Position.Z);
+            Matrix4 rot = this.getRotation();
+            stream.Write(rot[0, 0]);
+            stream.Write(rot[1, 0]);
+            stream.Write(rot[2, 0]);
+            stream.Write(rot[0, 1]);
+            stream.Write(rot[1, 1]);
+            stream.Write(rot[2, 1]);
+            stream.Write(rot[0, 2]);
+            stream.Write(rot[1, 2]);
+            stream.Write(rot[2, 2]);
         }
 
         public virtual void OnCollide(ServerGameObject obj)
@@ -280,8 +300,11 @@ namespace DeCuisine
         {
             this.Game.Lock.AssertHeld();
             this.MarkDirty();
-            //MAKE THIS WORK
-            //this.Body.ProceedToTransform(Matrix.Identity + Matrix.RotationY(value));
+            Matrix transformWithoutRot = Matrix.Identity;
+            transformWithoutRot.M41 = this.Body.WorldTransform.M41;
+            transformWithoutRot.M42 = this.Body.WorldTransform.M42;
+            transformWithoutRot.M43 = this.Body.WorldTransform.M43;
+            this.Body.ProceedToTransform(Matrix.RotationY(value * MathConstants.DEG2RAD) * transformWithoutRot);
             _orientation = value;
         }
         private float _incline;

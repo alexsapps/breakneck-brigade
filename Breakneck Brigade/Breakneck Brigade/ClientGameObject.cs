@@ -16,8 +16,8 @@ namespace Breakneck_Brigade
         public Vector4 Position { get { return this._position; } set { this._position = value; updateMatrix(); } }
         private Vector4 _scale;
         public Vector4 Scale { get { return this._scale; } set { this._scale = value; updateMatrix(); } }
-        private Vector4 _rotation;
-        public Vector4 Rotation { get { return this._rotation; } set { this._rotation = value; updateMatrix(); } }
+        private Matrix4 _rotation;
+        public Matrix4 Rotation { get { return this._rotation; } set { this._rotation = value; updateMatrix(); } }
         public bool ToRender { get; set; }
 
         public Matrix4 Transformation { get; set; }
@@ -77,13 +77,14 @@ namespace Breakneck_Brigade
         protected virtual void readGeom(BinaryReader reader)
         {
             _position = reader.ReadCoordinate();
+            _rotation = reader.ReadRotation();
         }
 
         protected void finalizeConstruction()
         {
             initGeom();
             Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bread"];
-            Scale = Model.InitialScale;
+            Scale = new Vector4(1.0, 1.0, 1.0);
         }
 
         protected virtual void initGeom()
@@ -91,7 +92,7 @@ namespace Breakneck_Brigade
             Transformation = new Matrix4();
             _position = _position ?? new Vector4();
             _scale = _scale ?? new Vector4(1.0f, 1.0f, 1.0f);
-            _rotation = _rotation ?? new Vector4();
+            _rotation = _rotation ?? new Matrix4();
             updateMatrix();
         }
 
@@ -163,9 +164,7 @@ namespace Breakneck_Brigade
             finalMat.TranslationMat(Position.X, Position.Y, Position.Z);
 
             //Rotate to proper orientation: 
-            finalMat = finalMat*Matrix4.MakeRotateZ(Rotation.Z);
-            finalMat = finalMat*Matrix4.MakeRotateY(Rotation.Y);
-            finalMat = finalMat*Matrix4.MakeRotateX(Rotation.X);
+            finalMat = finalMat*Rotation;
             
             //Scale
             finalMat = finalMat*Matrix4.MakeScalingMat(Scale.X, Scale.Y, Scale.Z);

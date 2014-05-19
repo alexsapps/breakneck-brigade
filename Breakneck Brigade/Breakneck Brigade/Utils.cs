@@ -34,6 +34,14 @@ namespace Breakneck_Brigade
             return new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
         }
 
+        public static Matrix4 ReadRotation(this BinaryReader stream)
+        {
+            return new Matrix4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), 0,
+                               stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), 0,
+                               stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), 0,
+                               0,                   0,                   0,                   1);
+        }
+
         public static void Write(this BinaryWriter writer, Vector4 vector)
         {
             writer.Write(vector.X);

@@ -116,24 +116,23 @@ namespace Breakneck_Brigade.Graphics
 
         public void anglesToAxis()
         {
-            const float DEG2RAD = (float)Math.PI / 180.0f;
             float sx, sy, sz, cx, cy, cz, theta;
 
             //Vector4 side = new Vector4();
             //Vector4 up = new Vector4();
 
             // X-axis rotation
-            theta = Incline * DEG2RAD;
+            theta = Incline * MathConstants.DEG2RAD;
             sx = (float)Math.Sin(theta);
             cx = (float)Math.Cos(theta);
 
             // Y-axis rotation
-            theta = Azimuth * DEG2RAD;
+            theta = Azimuth * MathConstants.DEG2RAD;
             sy = (float)Math.Sin(theta);
             cy = (float)Math.Cos(theta);
 
             // Z-axis rotation
-            theta = 0.0f * DEG2RAD;
+            theta = 0.0f * MathConstants.DEG2RAD;
             sz = (float)Math.Sin(theta);
             cz = (float)Math.Cos(theta);
 
