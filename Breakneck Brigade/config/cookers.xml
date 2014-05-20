@@ -1,14 +1,35 @@
-<cookers defaultSides="8,12,8" defaultMass="30.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.1" defaultAngularDamping=".999">
+<cookers defaultSides="8,8,8" defaultMass="30.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.1" defaultAngularDamping=".999">
 
   <!--  default shape is box -->
 
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
 
-  <cooker name="blender">
+  <cooker name="blender" mass="3000.0">
     <recipe>milkshake</recipe>
   </cooker>
-  <cooker name="stove">
+
+  <cooker name="oven">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="pot">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="pan">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="juicer">
+    <recipe>milkshake</recipe>
+  </cooker>
+
+  <cooker name="toaster">
+    <recipe>milkshake</recipe>
+  </cooker>
+  
+  <cooker name="bowl">
     <recipe>milkshake</recipe>
   </cooker>
 </cookers>

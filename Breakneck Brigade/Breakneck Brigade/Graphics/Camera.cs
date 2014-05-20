@@ -86,7 +86,7 @@ namespace Breakneck_Brigade.Graphics
 			FOV=75.0f;
 			Aspect=1.33f;
 			NearClip=0.1f;
-			FarClip=1000.0f;
+			FarClip=3000.0f;
 
 			Distance=50.0f;
 			Azimuth=0.0f;

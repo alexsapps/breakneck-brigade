@@ -103,7 +103,7 @@ namespace DeCuisine
                     ingredeint.Remove();
                 }
                 this.Contents = new Dictionary<int, ServerIngredient>(); // clear contents
-                Vector3 ingSpawn = new Vector3(this.Position.X, this.Position.Y + 20, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                Vector3 ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
                 ServerIngredient newIng = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
                 newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
                 return newIng;

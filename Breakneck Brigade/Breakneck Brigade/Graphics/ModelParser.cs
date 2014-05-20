@@ -9,7 +9,7 @@ using OL_Vertex     = ObjLoader.Loader.Data.VertexData.Vertex;
 using OL_Normal     = ObjLoader.Loader.Data.VertexData.Normal;
 using OL_Texture    = ObjLoader.Loader.Data.VertexData.Texture;
 using ObjLoader.Loader.Data.Elements;
-using SousChef;
+//using SousChef;
 using Tao.OpenGl;
 
 namespace Breakneck_Brigade.Graphics

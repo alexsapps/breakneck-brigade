@@ -15,6 +15,7 @@ namespace SousChef
 
         protected Dictionary<string, string> attributes;
         public string attrib(string name) { return attributes.get(name); }
+        public static Dictionary<string, Vector4[]> scaleVector = new ModelParser().ScaleVector;
 
         bool _needsReset = false;
         public T Parse(XmlReader reader)
@@ -79,6 +80,7 @@ namespace SousChef
         }
         protected List<string> parseStringList(XmlReader reader, string tagName, bool readParent)
         {
+           
             List<string> items = new List<string>();
             if (readParent)
             {
@@ -113,13 +115,20 @@ namespace SousChef
 
         public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping)
         {
+
+            // this model code is a little fucked up
+            var key = attributes.ContainsKey("name") ? "name": "model";
+            var scale = scaleVector.ContainsKey(attributes[key]) ? scaleVector[attributes[key]] : scaleVector["bread"];
+            float[] sides = new float[] { scale[1].X - scale[0].X, (scale[1].Y - scale[0].Y)/2, scale[1].Z - scale[0].Z };
+
             var shape = BB.ParseGeomShape(attributes.get("shape"), GeomShape.Box);
-            float[] sides = parseFloats(attributes.get("sides"), defaultSides);
             float mass = parseFloat(attributes.get("mass"), defaultMass);
             float friction = parseFloat(attributes.get("friction"), defaultFriction);
             float rollingFriction = parseFloat(attributes.get("rollingFriction"), defaultRollingFriction);
             float restitution = parseFloat(attributes.get("restitution"), defaultRestitution);
             float angularDamping = parseFloat(attributes.get("angularDamping"), defaultAngularDamping);
+
+            
 
             GeometryInfo info = new GeometryInfo()
             {
