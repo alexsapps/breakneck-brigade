@@ -121,7 +121,7 @@ namespace DeCuisine
         public ServerTeam AssignTeam(ServerPlayer player)
         {
             // find the team with the lowest team number
-            int minCount = 0;
+            int minCount = int.MaxValue; 
             string tmpKey = "";
             foreach (var team in this.Teams)
             {
