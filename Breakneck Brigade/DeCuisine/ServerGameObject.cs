@@ -87,6 +87,15 @@ namespace DeCuisine
             stream.Write(rot[0, 2]);
             stream.Write(rot[1, 2]);
             stream.Write(rot[2, 2]);
+            //Send the bounding box data
+            Vector3 min, max;
+            this.Body.GetAabb(out min, out max);
+            stream.Write(min.X);
+            stream.Write(min.Y);
+            stream.Write(min.Z);
+            stream.Write(max.X);
+            stream.Write(max.Y);
+            stream.Write(max.Z);
         }
 
         protected virtual void serializeEssential(BinaryWriter stream)
@@ -264,6 +273,16 @@ namespace DeCuisine
             stream.Write(rot[0, 2]);
             stream.Write(rot[1, 2]);
             stream.Write(rot[2, 2]);
+
+            //Send the bounding box data
+            Vector3 min, max;
+            this.Body.GetAabb(out min, out max);
+            stream.Write(min.X);
+            stream.Write(min.Y);
+            stream.Write(min.Z);
+            stream.Write(max.X);
+            stream.Write(max.Y);
+            stream.Write(max.Z);
         }
 
         public virtual void OnCollide(ServerGameObject obj)

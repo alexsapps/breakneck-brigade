@@ -14,6 +14,7 @@ namespace Breakneck_Brigade
         public override string ModelName { get { return "teapotPillar"; } }
         public string TeamName { get; set; } // TODO: Make this control the texture used
 
+
         public override float[] Sides { get { return BB.GetPlayerSides(); } }
 
         public ClientPlayer(int id, Vector4 position, ClientGame game)
@@ -44,7 +45,7 @@ namespace Breakneck_Brigade
         /// </summary>
         public override void Render()
         {
-            if (this.ToRender )//&& this.Id != )
+            if (this.ToRender && Game.PlayerObjId != this.Id)//&& this.Id != )
             {
                 Gl.glPushMatrix();
                 Gl.glMultMatrixf(Transformation.glArray);
