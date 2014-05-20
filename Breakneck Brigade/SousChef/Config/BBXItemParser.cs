@@ -118,7 +118,6 @@ namespace SousChef
 
             // this model code is a little fucked up
             var key = attributes.ContainsKey("name") ? "name": "model";
-            scaleVector = new ModelParser().ScaleVector;
             var scale = scaleVector.ContainsKey(attributes[key]) ? scaleVector[attributes[key]] : scaleVector["bread"];
             float[] sides = new float[] { scale[1].X - scale[0].X, (scale[1].Y - scale[0].Y)/2, scale[1].Z - scale[0].Z };
 
