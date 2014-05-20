@@ -12,6 +12,7 @@ namespace Breakneck_Brigade
         
     enum GlfwKeys
     {
+        None = -2,
         GLFW_KEY_UNKNOWN       = -1,
         GLFW_KEY_SPACE         = 32,
         //GLFW_KEY_APOSTROPHE    = 39, // ' 
@@ -124,11 +125,11 @@ namespace Breakneck_Brigade
         //GLFW_KEY_KP_ADD        = 334,
         //GLFW_KEY_KP_ENTER      = 335,
         //GLFW_KEY_KP_EQUAL      = 336,
-        //GLFW_KEY_LEFT_SHIFT    = 340,
+        GLFW_KEY_LEFT_SHIFT    = 287,
         //GLFW_KEY_LEFT_CONTROL  = 341,
         //GLFW_KEY_LEFT_ALT      = 342,
         //GLFW_KEY_LEFT_SUPER    = 343,
-        //GLFW_KEY_RIGHT_SHIFT   = 344,
+        GLFW_KEY_RIGHT_SHIFT   = 288,
         //GLFW_KEY_RIGHT_CONTROL = 345,
         //GLFW_KEY_RIGHT_ALT     = 346,
         //GLFW_KEY_RIGHT_SUPER   = 347,

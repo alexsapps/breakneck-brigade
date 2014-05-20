@@ -23,7 +23,8 @@ namespace Breakneck_Brigade
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public Vector4 Velocity;
-        public float MoveSpeed = 140f; 
+        public float WalkSpeed = 140f;
+        public float RunSpeed = 380f;
         public List<ClientEvent> NetworkEvents;
 
         private bool _stopped = false;
@@ -35,7 +36,10 @@ namespace Breakneck_Brigade
         }
 
         protected HashSet<GlfwKeys> keys;
-        static float lastx, lastz;
+        float lastx, lastz;
+        bool running;
+        DateTime lastDown;
+        GlfwKeys lastDownKey;
         public void Update(InputManager IM, ClientGame game, Graphics.Camera cam)
         {
             game.Lock.AssertHeld();
@@ -59,6 +63,19 @@ namespace Breakneck_Brigade
                 NetworkEvents.Add(new ClientChangeOrientationEvent() { Orientation = Orientation, Incline = Incline });
             }
 
+            {
+                GlfwKeys downKey = GlfwKeys.None;
+                
+                if (checkKey(GlfwKeys.GLFW_KEY_A, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_D, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_S, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_W, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_LEFT, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_RIGHT, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_DOWN, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_UP, ref downKey))
+                {
+                    if ((DateTime.Now.Subtract(lastDown).TotalMilliseconds < 600) && lastDownKey == downKey)
+                        running = true;
+
+                    lastDown = DateTime.Now;
+                    lastDownKey = downKey;
+                }
+            }
+            float MoveSpeed = running || IM[GlfwKeys.GLFW_KEY_LEFT_SHIFT] || IM[GlfwKeys.GLFW_KEY_RIGHT_SHIFT] ? RunSpeed : WalkSpeed;
 
             // Velocity update
             Velocity.X = -((IM[GlfwKeys.GLFW_KEY_A] || IM[GlfwKeys.GLFW_KEY_LEFT]) ? -1 * MoveSpeed : (IM[GlfwKeys.GLFW_KEY_D] || IM[GlfwKeys.GLFW_KEY_RIGHT]) ? 1 * MoveSpeed : 0.0f);
@@ -78,6 +95,7 @@ namespace Breakneck_Brigade
             else if(!_stopped)
             {
                 _stopped = true;
+                running = false;
                 NetworkEvents.Add(new ClientBeginMoveEvent() { Delta = diff });
                 var pos = GetPosition();
                 lastx = pos.X;
@@ -155,6 +173,14 @@ namespace Breakneck_Brigade
             {
 
             }
+        }
+
+        private bool checkKey(GlfwKeys key, ref GlfwKeys def)
+        {
+            bool result = downKeys.Contains(key);
+            if (result)
+                def = key;
+            return result;
         }
 
         HashSet<GlfwKeys> downKeys = new HashSet<GlfwKeys>();
