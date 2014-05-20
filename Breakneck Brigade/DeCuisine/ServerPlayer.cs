@@ -23,6 +23,7 @@ namespace DeCuisine
         private const float SHOOTSCALER = 10; // A boy can dream right?
         private const float HOLDDISTANCE = 40.0f;
 
+        public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
 
         public class HandInventory
         {

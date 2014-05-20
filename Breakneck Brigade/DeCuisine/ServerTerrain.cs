@@ -23,6 +23,8 @@ namespace DeCuisine
         protected override GeometryInfo getGeomInfo() { return _initialInfo; }
         public override Vector3 Position { get; set; }
 
+        public override int SortOrder { get { return 0; } }
+
         /// <summary>
         /// Create intial terrtain
         /// </summary>

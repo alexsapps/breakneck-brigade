@@ -17,6 +17,8 @@ namespace DeCuisine
         public int Cleanliness { get; set; }
         protected override GeometryInfo getGeomInfo() { return this.Game.Config.Ingredients[Type.Name].GeomInfo; }
 
+        public override int SortOrder { get { return 0; } }
+
         /// <summary>
         /// Create the object and add it to the game world at vector4. Also added it to the 
         /// serial stream passed in.

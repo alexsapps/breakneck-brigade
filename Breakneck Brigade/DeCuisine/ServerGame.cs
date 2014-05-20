@@ -317,7 +317,7 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        _world.StepSimulation(0.1f);
+                        _world.StepSimulation(FrameRateMilliseconds);
 
                         Controller.Update();
 
@@ -449,9 +449,14 @@ namespace DeCuisine
             return msg;
         }
 
+        protected void gameObjSendOrderSort(List<ServerGameObject> objects)
+        {
+            objects.Sort(GameObjSendOrderComparison);
+        }
         protected void CalculateGameStateDifference(BinaryWriter writer)
         {
             writer.Write(HasAdded.Count);
+            gameObjSendOrderSort(HasAdded);
             foreach (var obj in HasAdded)
             {
                 obj.Serialize(writer);
@@ -470,7 +475,9 @@ namespace DeCuisine
         protected void CalculateGameStateFull(BinaryWriter writer)
         {
             writer.Write(GameObjects.Count);
-            foreach (var obj in GameObjects.Values)
+            var sortedObjets = GameObjects.Values.ToList();
+            gameObjSendOrderSort(sortedObjets);
+            foreach (var obj in sortedObjets)
             {
                 obj.Serialize(writer);
             }
@@ -478,6 +485,10 @@ namespace DeCuisine
             writer.Write(0); //0 "deleted"
         }
 
+        public int GameObjSendOrderComparison(ServerGameObject o1, ServerGameObject o2)
+        {
+            return o1.SortOrder - o2.SortOrder;
+        }
 
         private void CollisionCallback(DynamicsWorld world, float timeStep)
         {

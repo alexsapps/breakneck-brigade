@@ -15,6 +15,8 @@ namespace DeCuisine
         private GeometryInfo _geomInfo;
         protected override GeometryInfo getGeomInfo() { return _geomInfo; }
 
+        public override int SortOrder { get { return 0; } }
+
         public ServerStaticObject(ServerGame game, GeometryInfo geomInfo, string model, Vector3 position)
             : base(game)
         {
