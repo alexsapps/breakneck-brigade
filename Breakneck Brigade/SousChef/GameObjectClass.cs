@@ -18,7 +18,7 @@ namespace SousChef
         Player,
         Ingredient,
         Cooker,
-        Plane,
+        Terrain,
         StaticObject
     }
 }

@@ -207,6 +207,33 @@ namespace DeCuisine
                 // collision configuration contains default setup for memory, collision setup
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
+
+                /*
+                GeometryInfo info = new GeometryInfo();
+                info.Sides = new float[]{500, 500, 1};
+                info.Position = new Vector3(-250, 250, 0);
+                info.Shape = GeomShape.Box;
+                ServerTerrain wall = new ServerTerrain(this, "blank", info);
+
+                info = new GeometryInfo();
+                info.Sides = new float[] { 500, 500, 1 };
+                info.Position = new Vector3(250, 250, 0);
+                info.Shape = GeomShape.Box;
+                wall = new ServerTerrain(this, "blank", info);
+
+                info = new GeometryInfo();
+                info.Sides = new float[] { 1, 500, 500 };
+                info.Position = new Vector3(0, 250, -250);
+                info.Shape = GeomShape.Box;
+                wall = new ServerTerrain(this, "blank", info);
+
+                info = new GeometryInfo();
+                info.Sides = new float[] { 500, 500, 1 };
+                info.Position = new Vector3(0, 250, 250);
+                info.Shape = GeomShape.Box;
+                wall = new ServerTerrain(this, "blank", info);
+                */
+
                 _world.SetInternalTickCallback(CollisionCallback);
             }
 

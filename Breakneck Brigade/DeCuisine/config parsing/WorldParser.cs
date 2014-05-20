@@ -152,9 +152,10 @@ namespace DeCuisine
         private ServerGameObject parseGameObject(XmlReader reader)
         {
             ServerGameObject obj;
+            // Enum.Parse(GameObjectClass, reader.Name, true);
             switch (reader.Name)
             {
-                case "plane":
+                case "terrain":
                     obj = parseSubItem<ServerTerrain>(reader, new PlaneParser(config, serverGame)); 
                     break;
                 case "static":
@@ -208,8 +209,15 @@ namespace DeCuisine
         }
         protected override void HandleAttributes()
         {
-            float height = float.Parse(attributes["height"]);
-            serverPlane = new ServerTerrain(serverGame, attributes["texture"], height);
+            GeometryInfo info = new GeometryInfo();
+            // float height = float.Parse(attributes["height"]);
+            info.Friction = float.Parse(attributes.ContainsKey("friction") ? attributes["friction"] : "0");
+            info.Position = this.getCoordinateAttrib("postion");
+            info.Euler = this.getCoordinateAttrib("euler");
+            Vector3 sides = this.getCoordinateAttrib("sides");
+            info.Sides = new float[] { sides.X, sides.Y, sides.Z };
+            info.Shape = attributes.ContainsKey("shape") ? ((GeomShape) Enum.Parse(typeof(GeomShape), attributes["shape"], true)) : GeomShape.None;
+            serverPlane = new ServerTerrain(serverGame, attributes.ContainsKey("texture") ? attributes["texture"] : "blank", info);
         }
         protected override void reset()
         {
@@ -261,7 +269,7 @@ namespace DeCuisine
         }
         protected Vector3 getCoordinateAttrib(string attrib)
         {
-            return getCoordinate(attributes[attrib]);
+            return attributes.ContainsKey(attrib) ? getCoordinate(attributes[attrib]) : new Vector3();
         }
         protected Vector3 getCoordinate(string str)
         {

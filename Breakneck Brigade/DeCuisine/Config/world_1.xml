@@ -12,6 +12,6 @@
     <static type="shelf" coordinate="200,40,100" model="shelf"/>
     <static type="woodenCounter" coordinate="300,40,100" model="woodenCounter"/>
     <static type="deliveryWindow" coordinate="-200,40,100" model="deliveryWindow"/>
-		<plane height="1" texture="blank" />
+		<terrain texture="blank" shape="box" sides="200,1,200"/>
 	</space>
 </world>

@@ -10,14 +10,29 @@ namespace DeCuisine
 {
     class ServerTerrain : ServerGameObject
     {
-        public override GameObjectClass ObjectClass { get { return GameObjectClass.Plane; } }
-        public string Texture { get; set; }
+        private GeometryInfo _initialInfo;
+
+        public override GameObjectClass ObjectClass { get { return GameObjectClass.Terrain; } }
+        
+        public string Texture 
+        { 
+            get; set; 
+        }
+
         public override bool HasBody { get  { return false; } }
-        protected override GeometryInfo getGeomInfo() { return new GeometryInfo(); }
+        protected override GeometryInfo getGeomInfo() { return _initialInfo; }
         public override Vector3 Position { get; set; }
-        public ServerTerrain(ServerGame game, string texture, float height) 
+
+        /// <summary>
+        /// Create intial terrtain
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="texture"></param>
+        /// <param name="info"></param>
+        public ServerTerrain(ServerGame game, string texture, GeometryInfo info) 
             : base(game)
         {
+            this._initialInfo = info;
             this.Texture = texture;
             this.Position = this.GeomInfo.Position;
             AddToWorld(() =>

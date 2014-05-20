@@ -18,7 +18,7 @@ namespace Breakneck_Brigade
                     return typeof(ClientIngredient);
                 case GameObjectClass.Cooker:
                     return typeof(ClientCooker);
-                case GameObjectClass.Plane:
+                case GameObjectClass.Terrain:
                     return typeof(ClientPlane);
                 case GameObjectClass.StaticObject:
                     return typeof(ClientStaticObject);

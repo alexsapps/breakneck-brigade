@@ -264,7 +264,7 @@ namespace DeCuisine
             foreach (var x in gameObj)
             {
                 if (x.Value.ObjectClass != GameObjectClass.Player &&
-                    x.Value.ObjectClass != GameObjectClass.Plane)
+                    x.Value.ObjectClass != GameObjectClass.Terrain)
                 {
                     x.Value.Body.LinearVelocity = new Vector3(0, 5000, 5000);
                     numCleared++;

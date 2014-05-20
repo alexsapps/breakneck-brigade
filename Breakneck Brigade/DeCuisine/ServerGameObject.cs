@@ -171,6 +171,9 @@ namespace DeCuisine
                     //geom = this.Game.Space.CreateSphere(info.Sides[0]); 
                     geom = new SphereShape(info.Sides[0]);
                     break;
+                case GeomShape.Cylinder:
+                    geom = new CylinderShape(info.Sides[0], info.Sides[1], info.Sides[2]);
+                    break;
                 default: throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
             }
 
