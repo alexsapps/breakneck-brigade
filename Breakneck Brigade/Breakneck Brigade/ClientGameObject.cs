@@ -146,7 +146,6 @@ namespace Breakneck_Brigade
                     Model.Render();
                 Gl.glPopMatrix();
             }
-
         }
 
         /// <summary>

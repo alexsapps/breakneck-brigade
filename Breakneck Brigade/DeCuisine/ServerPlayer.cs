@@ -15,12 +15,14 @@ namespace DeCuisine
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
         protected override GeometryInfo getGeomInfo() { return BB.GetPlayerGeomInfo(); }
         public Client Client { get; private set; }
+        public ServerTeam Team;
         private bool isFalling { get; set; }
         private bool canJump { get; set; }
         private Vector3 lastVelocity { get; set; }
         private const float JUMPSPEED = 100;
-        private const float THROWSPEED = 300;
-        private const float SHOOTSCALER = 10; // A boy can dream right?
+        private const float THROWSCALER = 500;
+        private const float SHOOTSCALER = 1000; // A boy can dream right?
+        private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
 
         public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
@@ -50,11 +52,9 @@ namespace DeCuisine
                 Held = null;
             }
            
-            public Point2PointConstraint Joint;
-            public HandInventory(ServerGameObject toHold, Point2PointConstraint joint) //, Joint joint)
+            public HandInventory(ServerGameObject toHold) 
             {
                 this.Held = toHold;
-                this.Joint = joint;
             }
         }
         public Dictionary<string,HandInventory> Hands;
@@ -65,16 +65,16 @@ namespace DeCuisine
             base.AddToWorld(position);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
-            HandInventory tmp = new HandInventory(null, null);
+            HandInventory tmp = new HandInventory(null);
             this.Hands.Add("left", tmp);
             this.Hands.Add("right", tmp);
+            this.Team = game.Controller.AssignTeam(this); // assign random team
         }
 
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            //stream.Write(a,b);
-            //stream.Write(c,d);
+            stream.Write(this.Team.Name);
         }
 
 
@@ -86,8 +86,6 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
-
-            //stream.Write(c,d);
         }
 
         /// <summary>
@@ -116,7 +114,7 @@ namespace DeCuisine
                 && this.Hands["left"].Held == null)
             {
                 obj.Body.Gravity = Vector3.Zero;
-                this.Hands["left"] = new HandInventory(obj, null); // book keeping to keep track
+                this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
             }
 
         }
@@ -124,11 +122,11 @@ namespace DeCuisine
 
         public void Dash()
         {
-            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -ServerPlayer.THROWSPEED);
+            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
             Matrix4 rotate = Matrix4.MakeRotateYDeg(-this.Orientation) * Matrix4.MakeRotateXDeg(-this.Incline);
             imp = rotate * imp;
 
-            this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * 3;
+            this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.DASHSCALER;
         }
         /// <summary>
         /// Throw an object from the passed in hand
@@ -136,9 +134,9 @@ namespace DeCuisine
         /// <param name="hand"></param>
         public void Throw(string hand, float orientation, float incline)
         {
-            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -ServerPlayer.THROWSPEED);
+            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
             Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(-incline);
-            imp = rotate * imp;
+            imp = rotate * imp; 
 
             // Cause you can shoot oranges now. Why the fuck not? 
             if (this.Hands[hand].Held == null)
@@ -152,8 +150,8 @@ namespace DeCuisine
             }
 
             this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
-            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z);
-            this.Hands[hand] = new HandInventory(null, null); //clear the hands
+            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
+            this.Hands[hand] = new HandInventory(null); //clear the hands
         }
         public void Jump()
         {
@@ -163,11 +161,6 @@ namespace DeCuisine
                 this.canJump = false;
                 this.isFalling = false;
             }
-        }
-
-        private void makeJoint(string hand, ServerGameObject obj)
-        {
-            
         }
 
         protected override void updateHook()
