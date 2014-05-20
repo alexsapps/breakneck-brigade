@@ -65,6 +65,7 @@ namespace Breakneck_Brigade
             
             this.ToRender = reader.ReadBoolean();
             readGeom(reader);
+
         }
 
         protected void constructEssential(int id, ClientGame game)
@@ -84,7 +85,6 @@ namespace Breakneck_Brigade
         {
             initGeom();
             Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bread"];
-            Scale = new Vector4(1.0, 1.0, 1.0);
         }
 
         protected virtual void initGeom()

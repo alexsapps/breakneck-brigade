@@ -430,7 +430,14 @@ namespace Breakneck_Brigade.Graphics
 
         private void render2D()
         {
+            Gl.glBegin(Gl.GL_LINES);
+                Gl.glColor3f(0.0f, 0.0f, 0.0f);
+                Gl.glVertex2d(0.5, 0.4);
+                Gl.glVertex2d(0.5, 0.6);
 
+                Gl.glVertex2d(0.4, 0.5);
+                Gl.glVertex2d(0.6, 0.5);
+            Gl.glEnd();
         }
 
         private void render3D()
