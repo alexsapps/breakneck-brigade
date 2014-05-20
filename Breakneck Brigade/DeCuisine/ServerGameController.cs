@@ -12,10 +12,11 @@ namespace DeCuisine
     {
         protected ServerGame Game { get; set; }
         
-        public List<ServerTeam> Teams { get; set; }
+        public Dictionary<string, ServerTeam> Teams { get; set; }
 
         public List<IngredientType> Goals { get; set; }
 
+        private string[] teamNames = new string[]{"red", "blue"}; //Add more team names for more teams
         private int _numGoals = 0;
         public int NumGoals
         {
@@ -40,7 +41,11 @@ namespace DeCuisine
         public ServerGameController(ServerGame game)
         {
             this.Game = game;
-            this.Teams = new List<ServerTeam>();
+            this.Teams = new Dictionary<string, ServerTeam>();
+            foreach (string teamName in this.teamNames)
+            {
+                this.Teams.Add(teamName, new ServerTeam(teamName));
+            }
             this.Goals = new List<IngredientType>();
         }
 
@@ -108,6 +113,46 @@ namespace DeCuisine
                 (float)Math.Pow(DC.random.Next(10, 100), 2),
                 (float)Math.Pow(DC.random.Next(-800, 800), 1));
         }
+
+        /// <summary>
+        /// Find the team with the min number of players and assign the player to the team.
+        /// Should be called at player creation. 
+        /// </summary>
+        public ServerTeam AssignTeam(ServerPlayer player)
+        {
+            // find the team with the lowest team number
+            int minCount = 0;
+            string tmpKey = "";
+            foreach (var team in this.Teams)
+            {
+                if (team.Value.Players.Count <= minCount)
+                {
+                    tmpKey = team.Key;
+                    minCount = team.Value.Players.Count;
+                }
+            }
+
+            this.Teams[tmpKey].Players.Add(player);
+            return this.Teams[tmpKey];
+        }
+
+        /// <summary>
+        /// Assign the player to the passed in team name. Currently not called by anything
+        /// but somwhere we may want to have the ability to let players pick. 
+        /// </summary>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               /// <param name="player"></param> 
+        /// <param name="teamName"></param>
+        /// <returns></returns>
+        public ServerTeam AssignTeam(ServerPlayer player, string teamName)
+        {
+            if (this.Teams.Keys.Contains(teamName))
+            {
+                this.Teams[teamName].Players.Add(player);
+                return this.Teams[teamName];
+            }
+            throw new Exception("How the hell did we allow them to pick a team that doesn't exist?");
+        }
+
 
         /// <summary>
         /// Class which facilitates choosing items randomly based on their weights.

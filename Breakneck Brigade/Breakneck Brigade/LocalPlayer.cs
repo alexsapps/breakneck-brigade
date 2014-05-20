@@ -18,6 +18,7 @@ namespace Breakneck_Brigade
     {
         ClientPlayer _player;
         public ClientPlayer Player { get { return _getPlayer(); } }
+        public static int localId;
 
         public ClientGame Game { get; set; }
 
