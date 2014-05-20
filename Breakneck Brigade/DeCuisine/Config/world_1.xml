@@ -1,7 +1,7 @@
 <world gravity="0,-190,0">
 	<space>
     <!-- Floor + Walls -->
-    <plane height="1" texture="blank" />
+    <terrain height="1" texture="blank" />
     
     <!-- Red team side -->
     <static type="woodenCounter"  coordinate="-150, 40, -200" model="woodenCounter"></static>

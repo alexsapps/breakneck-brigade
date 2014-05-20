@@ -219,7 +219,7 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     <rotZ>0</rotZ>
   </model>
   <model>
-    <filename>stove</filename>
+    <filename>oven</filename>
     <posX>0</posX>
     <posY>0</posY>
     <posZ>0</posZ>
