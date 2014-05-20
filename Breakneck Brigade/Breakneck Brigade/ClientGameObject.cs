@@ -24,6 +24,7 @@ namespace Breakneck_Brigade
 
         protected ClientGame Game { get; set; }
         public int Id { get; set; }
+        public abstract float[] Sides { get; }
         public Model Model { get; protected set; }
         public abstract string ModelName { get; }
 

@@ -15,6 +15,8 @@ namespace DeCuisine
         private GeometryInfo _geomInfo;
         protected override GeometryInfo getGeomInfo() { return _geomInfo; }
 
+        public override int SortOrder { get { return 0; } }
+
         public ServerStaticObject(ServerGame game, GeometryInfo geomInfo, string model, Vector3 position)
             : base(game)
         {
@@ -32,6 +34,12 @@ namespace DeCuisine
         {
             base.Serialize(stream);
             stream.Write(this.Model);
+            
+            stream.Write(GeomInfo.Sides.Length);
+            for (int i = 0; i < GeomInfo.Sides.Length; i++)
+            {
+                stream.Write(GeomInfo.Sides[i]);
+            }
         }
 
         public override void UpdateStream(System.IO.BinaryWriter stream)

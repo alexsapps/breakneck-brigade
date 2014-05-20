@@ -12,6 +12,8 @@ namespace Breakneck_Brigade
     {
         public override string ModelName { get { return "teapotPillar"; } }
 
+        public override float[] Sides { get { return BB.GetPlayerSides(); } }
+
         public ClientPlayer(int id, Vector4 position, ClientGame game)
             : base(id, game, position)
         {

@@ -73,40 +73,7 @@ namespace Breakneck_Brigade.Graphics
             InitGL();
             InitGlu();
 
-            LoadResources();          
-
-            if (DEBUG_MODE == DebugMode.ORANGE || DEBUG_MODE == DebugMode.BOTH)
-            { 
-#pragma warning disable 0162 //Disables the "unreachable code" warning only
-                var orange1 = new TestClientGameObject(Models["orange"]) { Id = 50000000 };
-                orange1.Position = new Vector4(0, 100, 0);
-                GameObjects = new List<ClientGameObject>();
-                GameObjects.Add(orange1);
-
-                var orange2 = new TestClientGameObject(Models["orange"]) { Id = 50000001 };
-                orange2.Position = new Vector4(0, 50, 0);
-                GameObjects.Add(orange2);
-
-                var orange3 = new TestClientGameObject(Models["orange"]) { Id = 50000002 };
-                orange3.Position = new Vector4(50, 50, 0);
-                GameObjects.Add(orange3);
-
-                var orange4 = new TestClientGameObject(Models["orange"]) { Id = 50000003 };
-                orange4.Position = new Vector4(-50, 50, 0);
-                GameObjects.Add(orange4);
-
-                var orange5 = new TestClientGameObject(Models["orange"]) { Id = 50000004 };
-                orange4.Position = new Vector4(-50, -50, 0);
-                GameObjects.Add(orange5);
-#pragma warning restore 0162
-            }
-            if (DEBUG_MODE == DebugMode.SNOWMAN || DEBUG_MODE == DebugMode.BOTH)
-            {
-#pragma warning disable 0162 //Disables the "unreachable code" warning only
-                makeAnnaHappy();
-#pragma warning restore 0162
-            }
-
+            LoadResources();
         }
 
         public void LoadResources()
@@ -306,69 +273,6 @@ namespace Breakneck_Brigade.Graphics
         {
             Glfw.glfwCloseWindow();
             Glfw.glfwTerminate();
-        }
-
-        /// <summary>
-        /// Builds a snowman and adds it to the list of things to be rendered.
-        /// </summary>
-        private void makeAnnaHappy()
-        {
-            TexturedGluSphere snowmanBase    = new TexturedGluSphere(3, 10, 10);
-            TexturedGluSphere snowmanBody    = new TexturedGluSphere(2.5, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.0f, 4.0f, 0.0f));
-            TexturedGluSphere snowmanHead    = new TexturedGluSphere(2, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.0f, 3.0f, 0.0f));
-
-            //Buttons
-            TexturedGluSphere button0        = new TexturedGluSphere(0.5, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.0f, 0.0f, -2.25f));
-            TexturedGluSphere button1        = new TexturedGluSphere(0.5, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.0f, 1.0f, -2.0f));
-            TexturedGluSphere button2        = new TexturedGluSphere(0.5, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.0f, -1.0f, -2.0f));
-
-            //Face
-            TexturedGluSphere eyeL           = new TexturedGluSphere(0.3, 10, 10,
-                                                (new Matrix4()).TranslationMat(-0.75f, 1.0f, -1.75f));
-            TexturedGluSphere eyeR           = new TexturedGluSphere(0.3, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.75f, 1.0f, -1.75f));
-            TexturedGluSphere nose           = new TexturedGluSphere(0.3, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.0f, 0.5f, -2.0f));
-            TexturedGluSphere mouth0         = new TexturedGluSphere(0.3, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.95f, 0.2f, -1.75f));
-            TexturedGluSphere mouth1         = new TexturedGluSphere(0.3, 10, 10,
-                                                (new Matrix4()).TranslationMat(0.35f, -0.1f, -2.0f));
-            TexturedGluSphere mouth2         = new TexturedGluSphere(0.3, 10, 10,
-                                                (new Matrix4()).TranslationMat(-0.35f, -0.1f, -2.0f));
-            TexturedGluSphere mouth3         = new TexturedGluSphere(0.3, 10, 10,
-                                                (new Matrix4()).TranslationMat(-0.95f, 0.2f, -1.75f));
-
-            snowmanHead.Children.Add(eyeL);
-            snowmanHead.Children.Add(eyeR);
-            snowmanHead.Children.Add(nose);
-            snowmanHead.Children.Add(mouth0);
-            snowmanHead.Children.Add(mouth1);
-            snowmanHead.Children.Add(mouth2);
-            snowmanHead.Children.Add(mouth3);
-
-            snowmanBody.Children.Add(snowmanHead);
-            snowmanBody.Children.Add(button0);
-            snowmanBody.Children.Add(button1);
-            snowmanBody.Children.Add(button2);
-
-            snowmanBase.Children.Add(snowmanBody);
-
-            Model snowman = new Model();
-            snowman.Meshes.Add(snowmanBase);
-
-            TestClientGameObject snowmanGO = new TestClientGameObject(snowman);
-            GameObjects.Add(snowmanGO);
-        }
-
-        TestClientGameObject testParser(string filename)
-        {
-            Model model = parser.ParseFile(filename);
-            return new TestClientGameObject(model);
         }
 
         public Camera getCamera()

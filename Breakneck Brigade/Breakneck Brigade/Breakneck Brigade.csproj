@@ -120,7 +120,7 @@
     <Compile Include="ClientGameObject.cs" />
     <Compile Include="ClientIngredient.cs" />
     <Compile Include="ClientGame.cs" />
-    <Compile Include="ClientPlane.cs" />
+    <Compile Include="ClientTerrain.cs" />
     <Compile Include="ClientPlayer.cs" />
     <Compile Include="frmConnect.cs">
       <SubType>Form</SubType>
@@ -152,7 +152,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TestGameObject.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,18 +10,17 @@ namespace DeCuisine
 {
     class ServerTerrain : ServerGameObject
     {
-        private GeometryInfo _initialInfo;
+        private GeometryInfo _geomInfo;
 
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Terrain; } }
         
-        public string Texture 
-        { 
-            get; set; 
-        }
+        public string Texture { get; set; }
 
         public override bool HasBody { get  { return false; } }
-        protected override GeometryInfo getGeomInfo() { return _initialInfo; }
+        protected override GeometryInfo getGeomInfo() { return _geomInfo; }
         public override Vector3 Position { get; set; }
+
+        public override int SortOrder { get { return 0; } }
 
         /// <summary>
         /// Create intial terrtain
@@ -32,7 +31,7 @@ namespace DeCuisine
         public ServerTerrain(ServerGame game, string texture, GeometryInfo info) 
             : base(game)
         {
-            this._initialInfo = info;
+            this._geomInfo = info;
             this.Texture = texture;
             this.Position = this.GeomInfo.Position;
             AddToWorld(() =>
@@ -69,6 +68,9 @@ namespace DeCuisine
         {
             base.Serialize(stream);
             stream.Write(Texture);
+            stream.Write(GeomInfo.Sides[0]);
+            stream.Write(GeomInfo.Sides[1]);
+            stream.Write(GeomInfo.Sides[2]);
         }
 
         public override void Update()

@@ -7,6 +7,7 @@ using System.IO;
 using SousChef;
 
 using BulletSharp;
+using System.Diagnostics;
 
 namespace DeCuisine
 {
@@ -22,6 +23,8 @@ namespace DeCuisine
 
         private string HashCache { get; set; }
         private int ParticleEffect { get; set; }
+
+        public override int SortOrder { get { return 5000; } } /* must be sent after ingredients, because cookers contain ingredients */
 
         /// <summary>
         /// Makes a servercooker object on the server
@@ -73,11 +76,18 @@ namespace DeCuisine
                 HashCache = null;
                 Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
-                
+
+                ingredient.Removed += ingredient_Removed;
+
                 this.Cook(); // check if you can cook. 
                 return true;
             }
             return false;
+        }
+
+        void ingredient_Removed(object sender, EventArgs e)
+        {
+            Contents.Remove(((ServerIngredient)sender).Id);
         }
 
         /*
@@ -97,14 +107,14 @@ namespace DeCuisine
 
             if (Type.Recipes.ContainsKey(this.HashCache))
             {
-                foreach(var ingredeint in this.Contents.Values)
+                foreach(var ingredeint in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
                 {
                     //remove all the ingredients from the game world
                     ingredeint.Remove();
                 }
-                this.Contents = new Dictionary<int, ServerIngredient>(); // clear contents
-                Vector3 ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-                ServerIngredient newIng = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
+                Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
+                var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                var newIng = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
                 newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
                 return newIng;
             }

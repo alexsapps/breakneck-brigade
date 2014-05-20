@@ -38,6 +38,8 @@ namespace DeCuisine
         public bool ToRender { get{return _toRender;} set{_toRender = value; this.MarkDirty();} }
         public bool OnFloor { get; set; }
 
+        public abstract int SortOrder { get; } /* order sent to client -- e.g. ingredients must be sent to client before cookers because cookers contain ingredients */
+
         public event EventHandler Removed;
         public event EventHandler Collided;
 
