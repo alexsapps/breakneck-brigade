@@ -212,7 +212,7 @@ namespace DeCuisine
             GeometryInfo info = new GeometryInfo();
             // float height = float.Parse(attributes["height"]);
             info.Friction = float.Parse(attributes.ContainsKey("friction") ? attributes["friction"] : "0");
-            info.Position = this.getCoordinateAttrib("postion");
+            info.Position = this.getCoordinateAttrib("coordinate");
             info.Euler = this.getCoordinateAttrib("euler");
             Vector3 sides = this.getCoordinateAttrib("sides");
             info.Sides = new float[] { sides.X, sides.Y, sides.Z };

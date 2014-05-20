@@ -1,8 +1,9 @@
 <world gravity="0,-190,0">
 	<space>
     <!-- Floor + Walls -->
-    <terrain height="1" texture="blank" />
-    
+    <terrain texture="floor" shape="box" coordinate="0, 0, 0" sides="500,1,500"/> 
+    <terrain texture="floor" shape="box" coordinate="0, 1000, 0" sides="500,1,500"/>
+
     <!-- Red team side -->
     <static type="woodenCounter"  coordinate="-150, 40, -200" model="woodenCounter"></static>
     <cooker type="blender"        coordinate="-150, 80, -200"></cooker>
