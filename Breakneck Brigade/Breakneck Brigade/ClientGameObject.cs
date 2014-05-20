@@ -19,6 +19,7 @@ namespace Breakneck_Brigade
         private Matrix4 _rotation;
         public Matrix4 Rotation { get { return this._rotation; } set { this._rotation = value; updateMatrix(); } }
         public bool ToRender { get; set; }
+        public Vector4 minBound, maxBound;
 
         public Matrix4 Transformation { get; set; }
 
@@ -79,6 +80,8 @@ namespace Breakneck_Brigade
         {
             _position = reader.ReadCoordinate();
             _rotation = reader.ReadRotation();
+            minBound = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            maxBound = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
 
         protected void finalizeConstruction()
