@@ -34,6 +34,12 @@ namespace DeCuisine
         {
             base.Serialize(stream);
             stream.Write(this.Model);
+            
+            stream.Write(GeomInfo.Sides.Length);
+            for (int i = 0; i < GeomInfo.Sides.Length; i++)
+            {
+                stream.Write(GeomInfo.Sides[i]);
+            }
         }
 
         public override void UpdateStream(System.IO.BinaryWriter stream)

@@ -14,6 +14,7 @@ namespace Breakneck_Brigade
         public CookerType Type { get; set; }
         public List<ClientIngredient> Contents { get; set; }
 
+        public override float[] Sides { get { return Type.GeomInfo.Sides; } }
         public override string ModelName { get { return Type.Name; } }
 
         /// <summary>

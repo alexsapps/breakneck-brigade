@@ -13,7 +13,7 @@ namespace DeCuisine
     class ServerPlayer : ServerGameObject
     {
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
-        protected override GeometryInfo getGeomInfo() { return new GeometryInfo() { Mass = 40, Shape = GeomShape.Box, Sides = new float[] { 6.0f, 6.0f, 6.0f }, Friction = 1.0f, Restitution = 0.2f }; }
+        protected override GeometryInfo getGeomInfo() { return BB.GetPlayerGeomInfo(); }
         public Client Client { get; private set; }
         private bool isFalling { get; set; }
         private bool canJump { get; set; }

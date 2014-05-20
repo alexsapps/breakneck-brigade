@@ -152,7 +152,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TestGameObject.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
