@@ -25,6 +25,7 @@ namespace DeCuisine
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
 
+        public float LineOfSight { get; set; }
         public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
 
         public class HandInventory
@@ -63,6 +64,8 @@ namespace DeCuisine
             : base(game)
         {
             base.AddToWorld(position);
+            this.LineOfSight = 10;
+            this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
             HandInventory tmp = new HandInventory(null);
@@ -181,7 +184,60 @@ namespace DeCuisine
                                                                                                     this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1, 
                                                                                                     this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
             }
+
+            // Check what the player is looking at
+            // Get player position and angle and then where it should end
+            Vector3 start = new Vector3
+                (
+                    this.Position.X + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Sin(this.Incline) * Math.Sin(this.Orientation)),
+                    this.Position.Y + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Cos(this.Incline)),
+                    this.Position.Z + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Sin(this.Incline) * Math.Cos(this.Orientation))
+                );
+            Vector3 end = new Vector3
+                (
+                    start.X + (float)(this.LineOfSight * Math.Sin(this.Incline) * Math.Sin(this.Orientation)),
+                    start.Y + (float)(this.LineOfSight * Math.Cos(this.Incline)),
+                    start.Z + (float)(this.LineOfSight * Math.Sin(this.Incline) * Math.Cos(this.Orientation))
+                );
+            CollisionWorld.ClosestRayResultCallback collisionCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
+            this.Game.World.RayTest(start, end, collisionCallback);
+            if (collisionCallback.HasHit)
+            {
+                bool seenSomething = false;
+                ServerGameObject collidedGameObject = (ServerGameObject)collisionCallback.CollisionObject.CollisionShape.UserObject;
+                if (collidedGameObject.ObjectClass == GameObjectClass.Ingredient)
+                {
+                    Console.WriteLine(((ServerIngredient)collidedGameObject).Type.Name);
+                    seenSomething = true;
+                }
+                else if (collidedGameObject.ObjectClass == GameObjectClass.Cooker)
+                {
+                    Console.WriteLine(((ServerCooker)collidedGameObject).Type.Name);
+                    seenSomething = true;
+                }
+
+                if (seenSomething)
+                {
+                    Console.WriteLine("I SEE SOMETHING!!!!!!");
+                }
+            }
+
         }
+
+        /*
+         * 
+btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
+
+// Perform raycast
+World->rayTest(Start, End, RayCallback);
+ if (collisionCallback.hasHit())
+            {
+                End = collisionCallback.m_hitPointWorld;
+                Normal = collisionCallback.m_hitNormalWorld;
+
+                // Do some clever stuff here
+            }
+         */
 
         public override void Remove()
         {
