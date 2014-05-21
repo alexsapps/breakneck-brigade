@@ -76,7 +76,6 @@ namespace DeCuisine
                 HashCache = null;
                 Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
-
                 ingredient.Removed += ingredient_Removed;
 
                 this.Cook(); // check if you can cook. 
@@ -85,9 +84,12 @@ namespace DeCuisine
             return false;
         }
 
+        // happens when an ingredient is removed from the world
         void ingredient_Removed(object sender, EventArgs e)
         {
-            Contents.Remove(((ServerIngredient)sender).Id);
+            var ingredient = ((ServerIngredient)sender);
+            Contents.Remove(ingredient.Id);
+            ingredient.Removed -= ingredient_Removed;
         }
 
         /*

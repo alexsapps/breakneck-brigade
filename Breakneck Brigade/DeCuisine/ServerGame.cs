@@ -254,6 +254,7 @@ namespace DeCuisine
             try
             {
                 long next;
+                long fallBehind = 0;
                 while (true)
                 {
                     next = DateTime.UtcNow.Ticks + FrameRateTicks; //not next+= FrameRateTicks because we don't want the server to ever wait less than the tick time
@@ -317,7 +318,8 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        _world.StepSimulation(FrameRateMilliseconds);
+                        var timeStep = (FrameRateMilliseconds - (float)fallBehind);
+                        _world.StepSimulation(timeStep, 0, timeStep);
 
                         Controller.Update();
 
@@ -341,10 +343,14 @@ namespace DeCuisine
                      * wait until end of tick
                      */
                     long waitTime = next - DateTime.UtcNow.Ticks;
+                    fallBehind = 0;
                     if (waitTime > 0)
                         Thread.Sleep(new TimeSpan(waitTime));
                     else
-                        Program.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
+                    {
+                        fallBehind = -waitTime / millisecond_ticks;
+                        Program.WriteLine("error:  tick rate too fast by " + fallBehind + "ms.");
+                    }
                 }
             }
             finally

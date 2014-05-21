@@ -1,4 +1,4 @@
-<world gravity="0,-190,0">
+<world gravity="0,-10,0">
 	<space>
     <!-- Floor + Walls -->
     <terrain texture="floor" shape="box" coordinate="0, 0, 0" sides="2000,1,2000"/> 
