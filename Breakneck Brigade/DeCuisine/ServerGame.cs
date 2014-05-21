@@ -28,7 +28,7 @@ namespace DeCuisine
 
         public ConfigSalad Config { get; private set; }
 
-        public List<ServerGameObject> HasAdded = new List<ServerGameObject>();  // TODO: Change this to a HashSet safetly
+        public HashSet<ServerGameObject> HasAdded = new HashSet<ServerGameObject>();  // TODO: Change this to a HashSet
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
@@ -291,7 +291,7 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        var timeStep = (FrameRateMilliseconds - (float)fallBehind);
+                        var timeStep = (FrameRateMilliseconds - (float)fallBehind) / 1000;
                         _world.StepSimulation(timeStep, 0, timeStep);
 
                         Controller.Update();
@@ -434,8 +434,9 @@ namespace DeCuisine
         }
         protected void CalculateGameStateDifference(BinaryWriter writer)
         {
-            writer.Write(HasAdded.Count);
-            gameObjSendOrderSort(HasAdded);
+            var added = HasAdded.ToList();
+            writer.Write(added.Count);
+            gameObjSendOrderSort(added);
             foreach (var obj in HasAdded)
             {
                 obj.Serialize(writer);
@@ -549,6 +550,7 @@ namespace DeCuisine
         public void ObjectRemoved(ServerGameObject obj)
         {
             Lock.AssertHeld();
+            this.HasAdded.Remove(obj); //may actually be deleted on same tick added, e.g. if added below delete-y-threshdold.
             this.HasRemoved.Add(obj.Id);
             this.HasChanged.Remove(obj);
             GameObjects.Remove(obj.Id); // 
