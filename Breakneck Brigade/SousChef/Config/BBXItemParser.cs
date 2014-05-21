@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using SousChef.MPNamespace;
 
 namespace SousChef
 {
@@ -119,7 +120,8 @@ namespace SousChef
             // this model code is a little fucked up
             var key = attributes.ContainsKey("name") ? "name": "model";
             var scale = scaleVector.ContainsKey(attributes[key]) ? scaleVector[attributes[key]] : scaleVector["bread"];
-            float[] sides = new float[] { scale[1].X - scale[0].X, (scale[1].Y - scale[0].Y)/2, scale[1].Z - scale[0].Z };
+            float[] sides = new float[] { (scale[1].X - scale[0].X)/2, (scale[1].Y - scale[0].Y)/2, (scale[1].Z - scale[0].Z)/2 };
+            //float[] sides = parseFloats(attributes.get("sides"), defaultSides);
 
             var shape = BB.ParseGeomShape(attributes.get("shape"), GeomShape.Box);
             float mass = parseFloat(attributes.get("mass"), defaultMass);

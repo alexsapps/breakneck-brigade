@@ -12,7 +12,7 @@ using OL_Texture = ObjLoader.Loader.Data.VertexData.Texture;
 using ObjLoader.Loader.Data.Elements;
 //using Tao.OpenGl;
 
-namespace SousChef
+namespace SousChef.MPNamespace
 {
     class ParserMaterialStreamProvider : IMaterialStreamProvider
     {
@@ -141,11 +141,18 @@ namespace SousChef
                     else if (vert.Z > maxVerts.Z)
                         maxVerts.Z = vert.Z;
                 }
+                Vector4 width = maxVerts - minVerts;
+                width.Scale(.5f);
+                Vector4 trans = minVerts + width;
+                trans.Negate();
+
+                
                 Matrix4 transMat = Matrix4.MakeTranslationMat(pos.X, pos.Y, pos.Z);
                 transMat *= Matrix4.MakeRotateZ(rot.Z);
                 transMat *= Matrix4.MakeRotateY(rot.Y);
                 transMat *= Matrix4.MakeRotateX(rot.X);
                 transMat *= Matrix4.MakeScalingMat(scale.X, scale.Y, scale.Z);
+                transMat *= Matrix4.MakeTranslationMat(trans.X, trans.Y, trans.Z);
 
                 return new Vector4[] { transMat * minVerts, transMat * maxVerts };
             }

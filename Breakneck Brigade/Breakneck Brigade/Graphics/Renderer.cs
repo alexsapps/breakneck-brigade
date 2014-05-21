@@ -145,6 +145,7 @@ namespace Breakneck_Brigade.Graphics
                         modelMat *= Matrix4.MakeScalingMat(scaleX, scaleY, scaleZ);
 
                         Model model = parser.ParseFile(filename);
+                        modelMat *= model.ModelMatrix;
                         model.ModelMatrix = modelMat;
 
                         Models.Add(filename, model);
@@ -334,6 +335,7 @@ namespace Breakneck_Brigade.Graphics
 
         private void render2D()
         {
+            /*
             Gl.glBegin(Gl.GL_LINES);
                 Gl.glColor3f(0.0f, 0.0f, 0.0f);
                 Gl.glVertex2d(0.5, 0.4);
@@ -342,6 +344,7 @@ namespace Breakneck_Brigade.Graphics
                 Gl.glVertex2d(0.4, 0.5);
                 Gl.glVertex2d(0.6, 0.5);
             Gl.glEnd();
+             * */
         }
 
         private void render3D()
