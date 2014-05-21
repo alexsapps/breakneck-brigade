@@ -179,8 +179,8 @@ namespace DeCuisine
             {
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(   this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, 
-                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE, 
-                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE);
+                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, 
+                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE);
             }
 
             // Check what the player is looking at
