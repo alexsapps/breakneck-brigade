@@ -131,6 +131,7 @@ namespace DeCuisine
                 case ClientEventType.ThrowItem: return typeof(ClientThrowEvent);
                 case ClientEventType.Command: return typeof(ClientCommandEvent);
                 case ClientEventType.Dash: return typeof(ClientDashEvent);
+                case ClientEventType.Eject: return typeof(ClientEjectEvent);
                 default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
         }

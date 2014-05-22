@@ -49,6 +49,11 @@ namespace SousChef
         /// Run a server command
         /// </summary>
         Command,
-        Dash
+        Dash,
+
+        /// <summary>
+        /// Eject the cooker that the player is looking at.
+        /// </summary>
+        Eject
     }
 }

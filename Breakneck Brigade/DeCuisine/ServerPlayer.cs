@@ -11,20 +11,24 @@ using System.Threading.Tasks;
 namespace DeCuisine
 {
     class ServerPlayer : ServerGameObject
-    {
-        public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
-        protected override GeometryInfo getGeomInfo() { return BB.GetPlayerGeomInfo(); }
-        public Client Client { get; private set; }
-        public ServerTeam Team;
-        private bool isFalling { get; set; }
-        private bool canJump { get; set; }
-        private Vector3 lastVelocity { get; set; }
+    {        
         private const float JUMPSPEED = 100;
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
         private const float LINEOFSIGHTSCALAR = 50;
+
+        private bool isFalling { get; set; }
+        private bool canJump { get; set; }
+        private Vector3 lastVelocity { get; set; }
+        private ServerCooker lookingAtCooker;
+
+        protected override GeometryInfo getGeomInfo() { return BB.GetPlayerGeomInfo(); }
+
+        public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
+        public Client Client { get; private set; }
+        public ServerTeam Team;
         public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
 
         public class HandInventory
@@ -129,6 +133,7 @@ namespace DeCuisine
 
             this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.DASHSCALER;
         }
+
         /// <summary>
         /// Throw an object from the passed in hand
         /// </summary>
@@ -154,6 +159,18 @@ namespace DeCuisine
             this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
             this.Hands[hand] = new HandInventory(null); //clear the hands
         }
+
+        /// <summary>
+        /// Attempts to eject a cooker it is looking at.
+        /// </summary>
+        public void AttemptToEjectCooker()
+        {
+            if(this.lookingAtCooker != null)
+            {
+                this.lookingAtCooker.Eject();
+            }
+        }
+
         public void Jump()
         {
             if (this.canJump || Game.MultiJump)
@@ -217,10 +234,16 @@ namespace DeCuisine
                 if (collidedGameObject.ObjectClass == GameObjectClass.Ingredient)
                 {
                     Console.WriteLine("I SEE " + ((ServerIngredient)collidedGameObject).Type.Name);
+                    this.lookingAtCooker = null;
                 }
                 else if (collidedGameObject.ObjectClass == GameObjectClass.Cooker)
                 {
-                    Console.WriteLine("I SEE " + ((ServerCooker)collidedGameObject).Type.Name);
+                    this.lookingAtCooker = (ServerCooker)collidedGameObject;
+                    Console.WriteLine("I SEE " + this.lookingAtCooker.Type.Name);
+                }
+                else
+                {
+                    this.lookingAtCooker = null;
                 }
             }
 

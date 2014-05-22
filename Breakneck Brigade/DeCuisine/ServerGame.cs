@@ -277,6 +277,9 @@ namespace DeCuisine
                                     case ClientEventType.Dash:
                                         input.Client.Player.Dash();
                                         break;
+                                    case ClientEventType.Eject:
+                                        input.Client.Player.AttemptToEjectCooker();
+                                        break;
                                     case ClientEventType.Command:
                                         throw new InvalidOperationException(); //this is handled elsewhere
                                     default:

@@ -120,6 +120,12 @@ namespace Breakneck_Brigade
                 NetworkEvents.Add(new ClientDashEvent() { isDashing = true});
             }
 
+            // Handle cooker eject
+            if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_ENTER))
+            {
+                this.NetworkEvents.Add(new ClientEjectEvent());
+            }
+
             IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;
             
             if (IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])
