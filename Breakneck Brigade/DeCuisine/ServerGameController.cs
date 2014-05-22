@@ -17,6 +17,8 @@ namespace DeCuisine
         public List<IngredientType> Goals { get; set; }
 
         private string[] teamNames = new string[]{"red", "blue"}; //Add more team names for more teams
+        public int SpawnTick;
+        private int SECONDSTOSPAWN = 5;
         private int _numGoals = 0;
         public int NumGoals
         {
@@ -40,7 +42,9 @@ namespace DeCuisine
 
         public ServerGameController(ServerGame game)
         {
+            
             this.Game = game;
+            this.SpawnTick = 30 * SECONDSTOSPAWN;//game.FrameRateMilliseconds * SECONDSTOSPAWN; FrameRate not set, TODO:
             this.Teams = new Dictionary<string, ServerTeam>();
             foreach (string teamName in this.teamNames)
             {
@@ -78,7 +82,7 @@ namespace DeCuisine
                 obj.Update();
             }
 
-            if (ticks % 30 == 0)
+            if (ticks % this.SpawnTick == 0)
                 spawnIngredient(getWeightedRandomGoal(), RandomLocation());
 
             ticks++;
@@ -151,6 +155,14 @@ namespace DeCuisine
                 return this.Teams[teamName];
             }
             throw new Exception("How the hell did we allow them to pick a team that doesn't exist?");
+        }
+
+        public void ScoreAdd(ServerPlayer player, ServerIngredient ing)
+        {
+            int points = ing.Type.DefaultPoints * ing.Cleanliness;
+            player.Team.Points += points;
+            // TODO: Replace with call to gui or something
+            Program.WriteLine("Player " + player.Id + " Scored " + points + " For " + player.Team + " Team");
         }
 
 

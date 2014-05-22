@@ -46,5 +46,18 @@ namespace DeCuisine
         {
             base.UpdateStream(stream);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        public override void OnCollide(ServerGameObject obj)
+        {
+            base.OnCollide(obj);
+            if (Model == "deleveryWindow")
+            {
+
+            }
+        }
     }
 }

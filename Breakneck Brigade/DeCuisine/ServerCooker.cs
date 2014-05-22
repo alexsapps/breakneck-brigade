@@ -77,7 +77,7 @@ namespace DeCuisine
                 Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
-
+                this.Game.Controller.ScoreAdd(ingredient.LastPlayerHolding, ingredient); 
                 this.Cook(); // check if you can cook. 
                 return true;
             }
@@ -172,7 +172,9 @@ namespace DeCuisine
         public override void OnCollide(ServerGameObject obj)
         {
             base.OnCollide(obj);
-            if (obj.ObjectClass == GameObjectClass.Ingredient && !this.Contents.ContainsKey(obj.Id))
+            if (obj.ObjectClass == GameObjectClass.Ingredient && 
+                !this.Contents.ContainsKey(obj.Id) && 
+                ((ServerIngredient)obj).LastPlayerHolding != null)
             {
                 this.AddIngredient((ServerIngredient)obj);
             }

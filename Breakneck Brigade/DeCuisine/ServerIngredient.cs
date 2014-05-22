@@ -17,6 +17,8 @@ namespace DeCuisine
         public int Cleanliness { get; set; }
         protected override GeometryInfo getGeomInfo() { return this.Game.Config.Ingredients[Type.Name].GeomInfo; }
 
+        public ServerPlayer LastPlayerHolding { get; set; }
+
         public override int SortOrder { get { return 0; } }
 
         /// <summary>
@@ -28,6 +30,8 @@ namespace DeCuisine
         {
             this.Type = type;
             base.AddToWorld(position);
+            LastPlayerHolding = null;
+            Cleanliness = 100;
         }
 
         /// <summary>
@@ -49,6 +53,7 @@ namespace DeCuisine
             base.Serialize(stream);
             stream.Write(this.Type.Name);
             stream.Write((Int32)this.Cleanliness);
+            LastPlayerHolding = null; // no player is holding it. 
         }
 
         /// <summary>
@@ -74,7 +79,10 @@ namespace DeCuisine
         {
             var lastPos = this.Position;
         }
-
+        public override void OnCollide(ServerGameObject obj)
+        {
+            base.OnCollide(obj);
+        }
         
     }
 }

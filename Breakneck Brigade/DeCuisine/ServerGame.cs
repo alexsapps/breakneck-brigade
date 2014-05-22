@@ -28,7 +28,7 @@ namespace DeCuisine
 
         public ConfigSalad Config { get; private set; }
 
-        public HashSet<ServerGameObject> HasAdded = new HashSet<ServerGameObject>();  // TODO: Change this to a HashSet
+        public HashSet<ServerGameObject> HasAdded = new HashSet<ServerGameObject>();  
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
@@ -295,7 +295,8 @@ namespace DeCuisine
                          * Physics happens here.
                          */
                         var timeStep = (FrameRateMilliseconds - (float)fallBehind) / 1000;
-                        _world.StepSimulation(timeStep, 0, timeStep);
+                        _world.StepSimulation(FrameRateMilliseconds);
+                        //_world.StepSimulation(timeStep, 0, timeStep);
 
                         Controller.Update();
 

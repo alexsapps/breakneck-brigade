@@ -1,4 +1,4 @@
-<world gravity="0,-10,0">
+<world gravity="0,-190,0">
 	<space>
     <!-- Floor + Walls -->
     <terrain texture="floor" shape="box" coordinate="0, 0, 0" sides="2000,1,2000"/> 
@@ -14,7 +14,7 @@
     <static type="woodenCounter"  coordinate="-200, 40, -150" model="woodenCounter"></static>
     <cooker type="pot"            coordinate="-200, 80, -150"></cooker>
 
-    <static type="woodenCounter"  coordinate="-200, 40, -125" model="woodenCounter"></static>
+    <static type="woodenCounter"  coordinate="-200, 40, -125" model="woodenCounter"></static>`
     <cooker type="pan"            coordinate="-200, 80, -125"></cooker>
     
     <cooker type="oven"           coordinate="-200, 80, -100"></cooker>
@@ -47,5 +47,13 @@
     <cooker type="bowl"           coordinate="150, 80, -50"></cooker>
 
     <static type="deliveryWindow" coordinate="0,40,-250" model="deliveryWindow"/>
+    
+    <!--Some initial ingredients for testing-->
+    <ingredient type="iceCream" coordinate="0,12,0" />
+    <ingredient type="banana" coordinate="0,12,0" />
+    <ingredient type="iceCream" coordinate="0,12,0" />
+    <ingredient type="banana" coordinate="0,12,0" />
+    <ingredient type="iceCream" coordinate="0,12,0" />
+    <ingredient type="banana" coordinate="0,12,0" />
 	</space>
 </world>

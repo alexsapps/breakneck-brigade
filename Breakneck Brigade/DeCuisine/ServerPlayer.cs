@@ -120,6 +120,7 @@ namespace DeCuisine
             {
                 obj.Body.Gravity = Vector3.Zero;
                 this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
+                ((ServerIngredient)obj).LastPlayerHolding = this;
             }
 
         }
@@ -233,13 +234,13 @@ namespace DeCuisine
                 ServerGameObject collidedGameObject = (ServerGameObject)collisionCallback.CollisionObject.CollisionShape.UserObject;
                 if (collidedGameObject.ObjectClass == GameObjectClass.Ingredient)
                 {
-                    Console.WriteLine("I SEE " + ((ServerIngredient)collidedGameObject).Type.Name);
+                    //Console.WriteLine("I SEE " + ((ServerIngredient)collidedGameObject).Type.Name);
                     this.lookingAtCooker = null;
                 }
                 else if (collidedGameObject.ObjectClass == GameObjectClass.Cooker)
                 {
                     this.lookingAtCooker = (ServerCooker)collidedGameObject;
-                    Console.WriteLine("I SEE " + this.lookingAtCooker.Type.Name);
+                    //Console.WriteLine("I SEE " + this.lookingAtCooker.Type.Name);
                 }
                 else
                 {
