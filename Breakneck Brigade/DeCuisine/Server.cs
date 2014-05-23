@@ -243,10 +243,18 @@ namespace DeCuisine
 
         void client_Disconnected(object sender, EventArgs e)
         {
-            lock (Lock)
+            try
             {
-                clients.Remove((Client)sender);
-                ClientLeave(this, new ClientEventArgs((Client)sender));
+                lock (Lock)
+                {
+                    clients.Remove((Client)sender);
+                    ClientLeave(this, new ClientEventArgs((Client)sender));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debugger.Break();
+                throw ex;
             }
         }
 
