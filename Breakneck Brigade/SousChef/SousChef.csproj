@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Config\BBXFileParser.cs" />
     <Compile Include="Config\BBXml.cs" />
+    <Compile Include="Config\Terrains.cs" />
     <Compile Include="Config\ConfigSalad.cs" />
     <Compile Include="Config\Cookers.cs" />
     <Compile Include="Config\GlobalsConfigFile.cs" />
