@@ -12,7 +12,7 @@ using OL_Texture = ObjLoader.Loader.Data.VertexData.Texture;
 using ObjLoader.Loader.Data.Elements;
 //using Tao.OpenGl;
 
-namespace SousChef
+namespace SousChef.MPNamespace
 {
     class ParserMaterialStreamProvider : IMaterialStreamProvider
     {
@@ -126,26 +126,41 @@ namespace SousChef
                 Vector4 maxVerts = new Vector4();
                 Vector4 minVerts = new Vector4();
 
+                maxVerts.X = parsedFile.Vertices[0].X;
+                maxVerts.Y = parsedFile.Vertices[0].Y;
+                maxVerts.Z = parsedFile.Vertices[0].Z;
+
+                minVerts.X = parsedFile.Vertices[0].X;
+                minVerts.Y = parsedFile.Vertices[0].Y;
+                minVerts.Z = parsedFile.Vertices[0].Z;
+
                 foreach(var vert in parsedFile.Vertices)
                 {
                     if (vert.X < minVerts.X) 
                         minVerts.X = vert.X;
-                    else if (vert.X > maxVerts.X)
+                    if (vert.X > maxVerts.X)
                         maxVerts.X = vert.X;
                     if (vert.Y < minVerts.Y)
                         minVerts.Y = vert.Y;
-                    else if (vert.Y > maxVerts.Y)
+                    if (vert.Y > maxVerts.Y)
                         maxVerts.Y = vert.Y;
                     if (vert.Z < minVerts.Z)
                         minVerts.Z = vert.Z;
-                    else if (vert.Z > maxVerts.Z)
+                    if (vert.Z > maxVerts.Z)
                         maxVerts.Z = vert.Z;
                 }
+                Vector4 width = maxVerts + minVerts;
+                width.Scale(.5f);
+                Vector4 trans = minVerts + width;
+                trans.Negate();
+
+                
                 Matrix4 transMat = Matrix4.MakeTranslationMat(pos.X, pos.Y, pos.Z);
                 transMat *= Matrix4.MakeRotateZ(rot.Z);
                 transMat *= Matrix4.MakeRotateY(rot.Y);
                 transMat *= Matrix4.MakeRotateX(rot.X);
                 transMat *= Matrix4.MakeScalingMat(scale.X, scale.Y, scale.Z);
+                transMat *= Matrix4.MakeTranslationMat(trans.X, trans.Y, trans.Z);
 
                 return new Vector4[] { transMat * minVerts, transMat * maxVerts };
             }

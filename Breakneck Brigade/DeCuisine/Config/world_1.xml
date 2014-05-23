@@ -1,8 +1,8 @@
 <world gravity="0,-10,0">
 	<space>
     <!-- Floor + Walls -->
-    <terrain texture="floor" shape="box" coordinate="0, 0, 0" sides="2000,1,2000"/> 
-    <terrain texture="floor" shape="box" coordinate="0, 1000, 0" sides="2000,1,2000"/>
+    <terrain type="floor" shape="box" coordinate="0, 0, 0" sides="2000,1,2000"/> 
+    <terrain type="floor" shape="box" coordinate="0, 1000, 0" sides="2000,1,2000"/>
 
     <!-- Red team side -->
     <static type="woodenCounter"  coordinate="-150, 40, -200" model="woodenCounter"></static>

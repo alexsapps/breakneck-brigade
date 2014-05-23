@@ -10,15 +10,12 @@ namespace DeCuisine
 {
     class ServerTerrain : ServerGameObject
     {
-        private GeometryInfo _geomInfo;
-
+        public TerrainType Type;
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Terrain; } }
         
-        public string Texture { get; set; }
-
         public override bool HasBody { get  { return false; } }
-        protected override GeometryInfo getGeomInfo() { return _geomInfo; }
-        public override Vector3 Position { get; set; }
+        protected override GeometryInfo getGeomInfo() { return Type.GeomInfo; }
+        public override Vector3 Position { get { return this.Type.GeomInfo.Position; } set { this.Type.GeomInfo.Position = value; } }
 
         public override int SortOrder { get { return 0; } }
 
@@ -28,11 +25,10 @@ namespace DeCuisine
         /// <param name="game"></param>
         /// <param name="texture"></param>
         /// <param name="info"></param>
-        public ServerTerrain(ServerGame game, string texture, GeometryInfo info) 
+        public ServerTerrain(ServerGame game, TerrainType type) 
             : base(game)
         {
-            this._geomInfo = info;
-            this.Texture = texture;
+            this.Type = type;
             this.Position = this.GeomInfo.Position;
             AddToWorld(() =>
             {
@@ -67,7 +63,7 @@ namespace DeCuisine
         public override void Serialize(System.IO.BinaryWriter stream)
         {
             base.Serialize(stream);
-            stream.Write(Texture);
+            stream.Write(Type.Name);
             stream.Write(GeomInfo.Sides[0]);
             stream.Write(GeomInfo.Sides[1]);
             stream.Write(GeomInfo.Sides[2]);

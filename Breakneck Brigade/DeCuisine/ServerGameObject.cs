@@ -302,7 +302,7 @@ namespace DeCuisine
             if (this.Geom != null)
             {
                 Vector3 m3 = this.Body.CenterOfMassPosition;
-                m3.Y -= this.GeomInfo.Sides[1];
+                //m3.Y -= this.GeomInfo.Sides[1];
                 return m3;
             }
             else

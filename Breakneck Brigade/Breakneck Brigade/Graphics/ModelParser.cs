@@ -9,7 +9,7 @@ using OL_Vertex     = ObjLoader.Loader.Data.VertexData.Vertex;
 using OL_Normal     = ObjLoader.Loader.Data.VertexData.Normal;
 using OL_Texture    = ObjLoader.Loader.Data.VertexData.Texture;
 using ObjLoader.Loader.Data.Elements;
-//using SousChef;
+using SousChef;
 using Tao.OpenGl;
 
 namespace Breakneck_Brigade.Graphics
@@ -55,6 +55,33 @@ namespace Breakneck_Brigade.Graphics
                 IList<OL_Normal> normals    = parsedFile.Normals;
                 IList<OL_Texture> texCords  = parsedFile.Textures;
 
+
+                //Center model at origin on all axes
+                Vector4 maxVerts = new Vector4();
+                Vector4 minVerts = new Vector4();
+
+                foreach (var vert in parsedFile.Vertices)
+                {
+                    if (vert.X < minVerts.X)
+                        minVerts.X = vert.X;
+                    else if (vert.X > maxVerts.X)
+                        maxVerts.X = vert.X;
+                    if (vert.Y < minVerts.Y)
+                        minVerts.Y = vert.Y;
+                    else if (vert.Y > maxVerts.Y)
+                        maxVerts.Y = vert.Y;
+                    if (vert.Z < minVerts.Z)
+                        minVerts.Z = vert.Z;
+                    else if (vert.Z > maxVerts.Z)
+                        maxVerts.Z = vert.Z;
+                }
+
+                Vector4 width = maxVerts - minVerts;
+                width.Scale(.5f);
+                Vector4 trans = minVerts + width;
+                trans.Negate();
+                result.ModelMatrix = Matrix4.MakeTranslationMat(trans.X, trans.Y, trans.Z);
+                
                 foreach(Group g in parsedFile.Groups)
                 {
                     TexturedMesh mesh = new TexturedMesh();
