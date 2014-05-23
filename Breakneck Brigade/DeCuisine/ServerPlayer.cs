@@ -82,7 +82,11 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            stream.Write(this.Client.Team.Name);
+
+            int lookingAtId = -1;
+            if(this.ObjectBeingLookedAt != null)
+                lookingAtId = this.ObjectBeingLookedAt.Id;
+            stream.Write(lookingAtId);
         }
 
 

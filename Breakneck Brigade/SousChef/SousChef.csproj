@@ -74,6 +74,7 @@
     <Compile Include="GeometryInfo.cs" />
     <Compile Include="IGameObject.cs" />
     <Compile Include="IIngredient.cs" />
+    <Compile Include="Network\BinaryServerMessage.cs" />
     <Compile Include="TerrainType.cs" />
     <Compile Include="IngredientType.cs" />
     <Compile Include="Math\Coordinate.cs" />

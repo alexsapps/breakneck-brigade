@@ -9,20 +9,9 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    public class ServerGameStateUpdateMessage : ServerMessage
+    public class ServerGameStateUpdateMessage : BinaryServerMessage
     {
         public override ServerMessageType Type { get { return ServerMessageType.GameStateUpdate; } }
-        public byte[] Binary;
         public ServerGameStateUpdateMessage() { }
-        public override void Write(BinaryWriter writer)
-        {
-            writer.Write(Binary.Length);
-            writer.Write(Binary);
-        }
-        public override void Read(BinaryReader reader)
-        {
-            int len = reader.ReadInt32();
-            Binary = reader.ReadBytes(len);
-        }
     }
 }
