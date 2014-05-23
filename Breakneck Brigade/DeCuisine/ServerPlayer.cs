@@ -18,7 +18,8 @@ namespace DeCuisine
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
         private const float LINEOFSIGHTSCALAR = 50;
-
+        private const int DASHTIME = 120; // seconds * 30. 
+        private int dashTicks { get; set; }
         public string Name { get; set; }
 
         private bool isFalling { get; set; }
@@ -97,6 +98,7 @@ namespace DeCuisine
             HandInventory tmp = new HandInventory(null);
             this.Hands.Add("left", tmp);
             this.Hands.Add("right", tmp);
+            this.dashTicks = 0; // don't start dashing
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -125,6 +127,7 @@ namespace DeCuisine
         /// </summary>
         public void Move(Vector3 vel)
         {
+            this.dashTicks = 0;
             this.Body.LinearVelocity = new Vector3(vel.X, this.Body.LinearVelocity.Y + vel.Y, vel.Z);
             this.Body.ActivationState = ActivationState.ActiveTag;
         }
@@ -153,11 +156,7 @@ namespace DeCuisine
 
         public void Dash()
         {
-            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
-            Matrix4 rotate = Matrix4.MakeRotateYDeg(-this.Orientation) * Matrix4.MakeRotateXDeg(-this.Incline);
-            imp = rotate * imp;
-
-            this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.DASHSCALER;
+            this.dashTicks = DASHTIME;
         }
 
         /// <summary>
@@ -240,22 +239,6 @@ namespace DeCuisine
             }
 
             // Check what the player is looking at
-            // Get player position and angle and then where it should end
-            /*
-            Vector3 start = new Vector3
-                (
-                    this.Position.X + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Sin(this.Orientation * Math.PI / 180.0f)),
-                    this.Position.Y + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Cos(this.Incline * Math.PI / 180.0f)),
-                    this.Position.Z + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Cos(this.Orientation * Math.PI / 180.0f))
-                );
-
-            Vector3 end = new Vector3
-                (
-                    start.X + (float)(LINEOFSIGHTSCALAR * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Sin(this.Orientation * Math.PI / 180.0f)),
-                    start.Y + (float)(LINEOFSIGHTSCALAR * Math.Cos(this.Incline * Math.PI / 180.0f)),
-                    start.Z + (float)(LINEOFSIGHTSCALAR * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Cos(this.Orientation * Math.PI / 180.0f) * -1)
-                );
-             */
             Vector3 start = new Vector3
                 (
                     this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * 2,
@@ -275,6 +258,16 @@ namespace DeCuisine
             {
                 this.LookingAt = null;
             }
+            if (dashTicks > 0)
+            {
+                SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
+                Matrix4 rotate = Matrix4.MakeRotateYDeg(-this.Orientation) * Matrix4.MakeRotateXDeg(-this.Incline);
+                imp = rotate * imp;
+
+                this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.DASHSCALER;
+                dashTicks--;
+            }
+
         }
 
         public override void Remove()

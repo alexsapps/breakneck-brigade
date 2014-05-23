@@ -111,7 +111,6 @@ namespace DeCuisine
         }
         private void finishCook(Recipe recipe)
         {
-            Program.WriteLine("YOU DIDNT FUCK IT UP ");
             int cookScore = 0;
             List<ServerIngredient> toEject = new List<ServerIngredient>();
             // Final scan of the recipe to add up all the points
