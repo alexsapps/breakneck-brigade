@@ -35,11 +35,12 @@ namespace SousChef
             {
                 Ingredients = new Dictionary<string, IngredientType>(),
                 Recipies = new Dictionary<string, Recipe>(),
-                Cookers = new Dictionary<string, CookerType>()
+                Cookers = new Dictionary<string, CookerType>(),
+                Terrains = new Dictionary<string,TerrainType>()
             };
             this.CurrentSalad = salad;
 
-            const int nfiles = 3;
+            const int nfiles = 4;
             string[] filenames = new string[nfiles];
 
             /*
@@ -52,6 +53,8 @@ namespace SousChef
                 salad.Recipies.Add(recipe.Name, recipe);
             foreach (var cooker in new BBXCookersFileParser(this).LoadFile(out filenames[2]))
                 salad.Cookers.Add(cooker.Name, cooker);
+            foreach (var terrain in new BBXTerrainsFileParser(this).LoadFile(out filenames[3]))
+                salad.Terrains.Add(terrain.Name, terrain);
 
             byte[][] hashes = new byte[nfiles][];
             for(int i = 0; i < nfiles; i++){

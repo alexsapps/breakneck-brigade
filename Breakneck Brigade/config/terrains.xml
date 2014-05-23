@@ -1,0 +1,11 @@
+<terrains defaultSides="50,50,50" defaultMass="1000.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.5">
+
+  <!--  default shape is box -->
+
+  <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
+  <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
+
+  <terrain name="wall" />
+  <terrain name="floor" />
+  <terrain name="ceiling" />
+</terrains>

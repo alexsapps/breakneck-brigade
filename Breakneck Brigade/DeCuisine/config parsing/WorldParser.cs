@@ -156,7 +156,7 @@ namespace DeCuisine
             switch (reader.Name)
             {
                 case "terrain":
-                    obj = parseSubItem<ServerTerrain>(reader, new PlaneParser(config, serverGame)); 
+                    obj = parseSubItem<ServerTerrain>(reader, new TerrainParser(config, serverGame)); 
                     break;
                 case "static":
                     obj = parseSubItem<ServerStaticObject>(reader, new StaticParser(config, serverGame)); 
@@ -198,30 +198,18 @@ namespace DeCuisine
         }
     }
 
-    class PlaneParser : GameObjectParser<ServerTerrain>
+    class TerrainParser : GameObjectParser<ServerTerrain>
     {
-
         ServerTerrain serverPlane;
 
-        public PlaneParser(GameObjectConfig config, ServerGame serverGame) : base (config, serverGame) 
+        public TerrainParser(GameObjectConfig config, ServerGame serverGame) : base (config, serverGame) 
         {
-            //this.space = space;
+            
         }
         protected override void HandleAttributes()
         {
-            //TODO: fix
-            serverPlane = new ServerTerrain(serverGame, new TerrainType(TerrainName.FLOOR, new GeometryInfo()));
-            /*
-            GeometryInfo info = new GeometryInfo();
-            // float height = float.Parse(attributes["height"]);
-            info.Friction = float.Parse(attributes.ContainsKey("friction") ? attributes["friction"] : "0");
-            info.Position = this.getCoordinateAttrib("coordinate");
-            info.Euler = this.getCoordinateAttrib("euler");
-            Vector3 sides = this.getCoordinateAttrib("sides");
-            info.Sides = new float[] { sides.X, sides.Y, sides.Z };
-            info.Shape = attributes.ContainsKey("shape") ? ((GeomShape) Enum.Parse(typeof(GeomShape), attributes["shape"], true)) : GeomShape.None;
-            serverPlane = new ServerTerrain(serverGame, attributes.ContainsKey("texture") ? attributes["texture"] : "blank", info);
-             * */
+            var name = attributes["type"];
+            serverPlane = new ServerTerrain(serverGame, serverGame.Config.Terrains[name]);
         }
         protected override void reset()
         {
@@ -235,14 +223,12 @@ namespace DeCuisine
 
     class StaticParser : GameObjectParser<ServerStaticObject>
     {
-        // Space space;
-
         ServerStaticObject serverStatic;
 
         public StaticParser(GameObjectConfig config, ServerGame serverGame)
             : base(config, serverGame)
         {
-            // this.space = space;
+
         }
         protected override void HandleAttributes()
         {
