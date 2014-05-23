@@ -77,7 +77,7 @@ namespace DeCuisine
                     IsConnected = true;
                     new Thread(() => { Connected(this, EventArgs.Empty); }).Start();
 
-                    senderThread = new Thread(() => send());
+                    senderThread = new Thread(() => { send(); });
                     senderThread.Start();
 
                     while (true)
