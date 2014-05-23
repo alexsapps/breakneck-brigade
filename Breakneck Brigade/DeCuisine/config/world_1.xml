@@ -2,7 +2,9 @@
 	<space>
 			<!-- Floor + Walls -->
 			<terrain type="floor" shape="box" coordinate="0, 0, 0" sides="2000,1,2000" />
-			<terrain type="floor" shape="box" coordinate="0, 1000, 0" sides="2000,1,2000" />
+
+			<terrain type="floor" shape="box" coordinate="0, 1000, 0" sides="500,1,500" />
+			<terrain type="floor" shape="box" coordinate="0, 300, 0" sides="5,1,5" />
 
 			<!-- Red team side -->
 			<static type="woodenCounter"  coordinate="-150, 40, -200" model="woodenCounter"></static>

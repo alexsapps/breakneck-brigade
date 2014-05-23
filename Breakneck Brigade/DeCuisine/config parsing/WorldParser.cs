@@ -209,7 +209,11 @@ namespace DeCuisine
         protected override void HandleAttributes()
         {
             var name = attributes["type"];
-            serverPlane = new ServerTerrain(serverGame, serverGame.Config.Terrains[name]);
+            var type = serverGame.Config.Terrains[name];
+
+            var position = getCoordinateAttrib();
+            var geomInfo = getGeomInfo(attributes, type.GeomInfo.Sides, type.GeomInfo.Mass, type.GeomInfo.Friction, type.GeomInfo.RollingFriction, type.GeomInfo.Restitution, type.GeomInfo.AngularDamping);
+            serverPlane = new ServerTerrain(serverGame, type, position, geomInfo);
         }
         protected override void reset()
         {
@@ -233,7 +237,6 @@ namespace DeCuisine
         protected override void HandleAttributes()
         {
             var position = getCoordinateAttrib("coordinate");
-            var x = this.serverGame.Config;
             var geomInfo = getGeomInfo(attributes, new float[] {5, 5, 5}, 1000, 5, 5, 0, .999f);
             serverStatic = new ServerStaticObject(serverGame, geomInfo, attributes["model"], position);
         }

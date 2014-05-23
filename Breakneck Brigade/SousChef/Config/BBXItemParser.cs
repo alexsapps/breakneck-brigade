@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using SousChef.MPNamespace;
+using System.Diagnostics;
 
 namespace SousChef
 {
@@ -116,10 +117,10 @@ namespace SousChef
 
         public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping)
         {
-
             // this model code is a little fucked up
-            var key = attributes.ContainsKey("name") ? "name": "model";
-            var scale = scaleVector.ContainsKey(attributes[key]) ? scaleVector[attributes[key]] : scaleVector["bread"];
+
+            Debug.Assert(attributes.ContainsKey("name"));
+            var scale = scaleVector[attributes["name"]];
             float[] sides = new float[] { (scale[1].X - scale[0].X)/2, (scale[1].Y - scale[0].Y)/2, (scale[1].Z - scale[0].Z)/2 };
             //float[] sides = parseFloats(attributes.get("sides"), defaultSides);
 
@@ -129,8 +130,6 @@ namespace SousChef
             float rollingFriction = parseFloat(attributes.get("rollingFriction"), defaultRollingFriction);
             float restitution = parseFloat(attributes.get("restitution"), defaultRestitution);
             float angularDamping = parseFloat(attributes.get("angularDamping"), defaultAngularDamping);
-
-            
 
             GeometryInfo info = new GeometryInfo()
             {

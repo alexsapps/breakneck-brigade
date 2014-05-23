@@ -14,8 +14,9 @@ namespace DeCuisine
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Terrain; } }
         
         public override bool HasBody { get  { return false; } }
-        protected override GeometryInfo getGeomInfo() { return Type.GeomInfo; }
-        public override Vector3 Position { get { return this.Type.GeomInfo.Position; } set { this.Type.GeomInfo.Position = value; } }
+
+        protected GeometryInfo _geomInfo;
+        protected override GeometryInfo getGeomInfo() { return _geomInfo; }
 
         public override int SortOrder { get { return 0; } }
 
@@ -25,37 +26,41 @@ namespace DeCuisine
         /// <param name="game"></param>
         /// <param name="texture"></param>
         /// <param name="info"></param>
-        public ServerTerrain(ServerGame game, TerrainType type) 
+        public ServerTerrain(ServerGame game, TerrainType type, Vector3 position, GeometryInfo info) 
             : base(game)
         {
             this.Type = type;
-            this.Position = this.GeomInfo.Position;
+            this._geomInfo = info;
+
             AddToWorld(() =>
             {
                 CollisionShape groundShape;
+                var sides = GeomInfo.Sides;
                 switch (this.GeomInfo.Shape)
                 {
                     case GeomShape.Box:
-                        groundShape = new BoxShape(this.GeomInfo.Sides[0], this.GeomInfo.Sides[1], this.GeomInfo.Sides[2]);
+                        groundShape = new BoxShape(sides[0], sides[1], sides[2]);
                         break;
                     case GeomShape.Cylinder:
-                        groundShape = new CylinderShape(this.GeomInfo.Sides[0], this.GeomInfo.Sides[1], this.GeomInfo.Sides[2]);
+                        groundShape = new CylinderShape(sides[0], sides[1], sides[2]);
                         break;
                     default:
-                        groundShape = new BoxShape(500, 10, 500);
-                        break;
+                        throw new Exception("bad shape for ServerTerrain");
                 }
 
                 //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
                 DefaultMotionState myMotionState = new DefaultMotionState
                     (
-                        Matrix.RotationYawPitchRoll(this.GeomInfo.Euler.X, this.GeomInfo.Euler.Y, this.GeomInfo.Euler.Z) * Matrix.Translation(this.GeomInfo.Position)
+                        Matrix.RotationYawPitchRoll(this.GeomInfo.Euler.X, this.GeomInfo.Euler.Y, this.GeomInfo.Euler.Z) * Matrix.Translation(position)
                     );
-                RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(0, myMotionState, groundShape, Vector3.Zero);
-                this.Body = new RigidBody(rbInfo);
-                rbInfo.Dispose();
+
+                using (var rbInfo = new RigidBodyConstructionInfo(0, myMotionState, groundShape, Vector3.Zero))
+                {
+                    this.Body = new RigidBody(rbInfo);
+                }
 
                 this.Game.World.AddRigidBody(this.Body);
+                
                 return groundShape;
             });
         }

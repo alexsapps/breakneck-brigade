@@ -26,18 +26,12 @@ namespace SousChef
         public Vector3 Euler { get; set; }
 
         /// <summary>
-        /// Get or set the initial position of the object.
-        /// </summary>
-        public Vector3 Position { get; set; }
-
-        /// <summary>
         /// Creates a new initial geometry info class.
         /// </summary>
         public GeometryInfo()
         {
             this.Shape = GeomShape.Box;
             this.Euler = new Vector3(0, 0, 0);
-            this.Position = new Vector3(0, 0, 0);
             this.Sides = new float[] { 500, 10, 500 };
         }
     }
