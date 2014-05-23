@@ -19,6 +19,8 @@ namespace DeCuisine
         private const float HOLDDISTANCE = 40.0f;
         private const float LINEOFSIGHTSCALAR = 50;
 
+        public string Name { get; set; }
+
         private bool isFalling { get; set; }
         private bool canJump { get; set; }
         private Vector3 lastVelocity { get; set; }
@@ -28,7 +30,6 @@ namespace DeCuisine
 
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
         public Client Client { get; private set; }
-        public ServerTeam Team;
         public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
 
         public class HandInventory
@@ -73,13 +74,12 @@ namespace DeCuisine
             HandInventory tmp = new HandInventory(null);
             this.Hands.Add("left", tmp);
             this.Hands.Add("right", tmp);
-            this.Team = game.Controller.AssignTeam(this); // assign random team
         }
 
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            stream.Write(this.Team.Name);
+            stream.Write(this.Client.Team.Name);
         }
 
 
@@ -256,6 +256,9 @@ namespace DeCuisine
             Client.Disconnect();
         }
 
-        
+        public override string ToString()
+        {
+            return Name ?? "Player" + Id;
+        }
     }
 }

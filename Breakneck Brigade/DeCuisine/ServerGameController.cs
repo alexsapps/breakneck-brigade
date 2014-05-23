@@ -2,6 +2,7 @@
 using SousChef;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,8 @@ namespace DeCuisine
 
         public List<IngredientType> Goals { get; set; }
 
-        private string[] teamNames = new string[]{"red", "blue"}; //Add more team names for more teams
+        private string[] defaultTeams = new string[]{"red", "blue"}; //Add more team names for more teams
+
         private int _numGoals = 0;
         public int NumGoals
         {
@@ -42,7 +44,7 @@ namespace DeCuisine
         {
             this.Game = game;
             this.Teams = new Dictionary<string, ServerTeam>();
-            foreach (string teamName in this.teamNames)
+            foreach (string teamName in this.defaultTeams)
             {
                 this.Teams.Add(teamName, new ServerTeam(teamName));
             }
@@ -118,22 +120,24 @@ namespace DeCuisine
         /// Find the team with the min number of players and assign the player to the team.
         /// Should be called at player creation. 
         /// </summary>
-        public ServerTeam AssignTeam(ServerPlayer player)
+        public void AssignTeam(Client client)
         {
+            Debug.Assert(Teams.Count > 0);
+
             // find the team with the lowest team number
             int minCount = int.MaxValue; 
-            string tmpKey = "";
-            foreach (var team in this.Teams)
+            ServerTeam minTeam = null;
+
+            foreach (var team in Teams.Values)
             {
-                if (team.Value.Players.Count <= minCount)
+                if (team.Members.Count < minCount)
                 {
-                    tmpKey = team.Key;
-                    minCount = team.Value.Players.Count;
+                    minCount = team.Members.Count;
+                    minTeam = team;
                 }
             }
 
-            this.Teams[tmpKey].Players.Add(player);
-            return this.Teams[tmpKey];
+            AssignTeam(client, minTeam);
         }
 
         /// <summary>
@@ -143,14 +147,25 @@ namespace DeCuisine
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                /// <param name="player"></param> 
         /// <param name="teamName"></param>
         /// <returns></returns>
-        public ServerTeam AssignTeam(ServerPlayer player, string teamName)
+        public void AssignTeam(Client client, string teamName)
         {
-            if (this.Teams.Keys.Contains(teamName))
+            ServerTeam team;
+            if (Teams.TryGetValue(teamName, out team))
             {
-                this.Teams[teamName].Players.Add(player);
-                return this.Teams[teamName];
+                AssignTeam(client, team);
             }
-            throw new Exception("How the hell did we allow them to pick a team that doesn't exist?");
+            else
+            {
+                throw new Exception("How the hell did we allow them to pick a team that doesn't exist?");
+            }
+        }
+
+        public void AssignTeam(Client client, ServerTeam team)
+        {
+            if (client.Team != null)
+                client.Team.Members.Remove(client);
+            team.Members.Add(client);
+            client.Team = team;
         }
 
 

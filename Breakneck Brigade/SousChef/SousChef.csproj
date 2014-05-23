@@ -79,6 +79,7 @@
     <Compile Include="Math\GeomShape.cs" />
     <Compile Include="ModelParser.cs" />
     <Compile Include="Network\ClientChangeOrientationEvent.cs" />
+    <Compile Include="Network\ClientChangeTeamEvent.cs" />
     <Compile Include="Network\ClientCommandEvent.cs" />
     <Compile Include="Network\ClientDashEvent.cs" />
     <Compile Include="Network\ClientEjectEvent.cs" />

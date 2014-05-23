@@ -204,6 +204,7 @@ namespace DeCuisine
                         {
                             Client client = new Client(this);
                             clients.Add(client);
+                            Game.Controller.AssignTeam(client); // assign random team
                             client.Connected += client_Connected;
                             client.Disconnected += client_Disconnected;
                             Thread client_thread = new Thread(() => { client.Receive(connection); });
