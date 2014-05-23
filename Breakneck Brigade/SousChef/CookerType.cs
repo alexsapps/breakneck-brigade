@@ -24,7 +24,7 @@ namespace SousChef
             {
                 foreach (var ing in recipe.Ingredients)
                 {
-                    ValidIngredients.Add(ing.Name);
+                    ValidIngredients.Add(ing.Ingredient.Name);
                 }
                 Recipes.Add(recipe.hash(), recipe);
             }

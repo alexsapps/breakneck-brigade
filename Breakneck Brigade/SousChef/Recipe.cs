@@ -9,10 +9,10 @@ namespace SousChef
     public class Recipe 
     {
         public string Name { get; private set; } //in case FinalProduct does not uniquely determine Recipe
-        public List<IngredientType> Ingredients { get; private set; } //if this ever changes, make sure to set _hash=null
+        public List<RecipeIngredient> Ingredients { get; private set; } //if this ever changes, make sure to set _hash=null
         public IngredientType FinalProduct;
         
-        public Recipe(string name, List<IngredientType> ingredients, IngredientType finalProduct)
+        public Recipe(string name, List<RecipeIngredient> ingredients, IngredientType finalProduct)
         {
             this.Name = name;
             this.Ingredients = ingredients;
@@ -20,7 +20,7 @@ namespace SousChef
 
             int sum = 0;
             foreach (var ingredient in ingredients)
-                sum += ingredient.DefaultPoints;
+                sum += ingredient.Ingredient.DefaultPoints;
             if (finalProduct.DefaultPoints < sum)
                 throw new Exception("recipe " + Name + " must not be worth less than sum of it's parts");
 
@@ -37,12 +37,12 @@ namespace SousChef
             return _hash;
         }
 
-        public static string Hash(List<IngredientType> list)
+        public static string Hash(List<RecipeIngredient> list)
         {
             StringBuilder names = new StringBuilder();
-            foreach (IngredientType ingredient in list)
+            foreach (var recipeIngredient in list)
             {
-                names.Append(ingredient.Name);
+                names.Append(recipeIngredient.Ingredient.Name);
                 names.Append("|");
             }
             return names.ToString();

@@ -1,10 +1,7 @@
 <recipes>
-  <recipe product="iceCream">
-    <ingredient>sugar</ingredient>
-    <ingredient>ice</ingredient>
-  </recipe>
   <recipe product="milkshake">
     <ingredient>banana</ingredient>
     <ingredient>iceCream</ingredient>
   </recipe>
+
 </recipes>

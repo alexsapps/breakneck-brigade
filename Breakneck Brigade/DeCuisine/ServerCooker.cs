@@ -78,7 +78,7 @@ namespace DeCuisine
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
                 this.Game.Controller.ScoreAdd(ingredient.LastPlayerHolding, ingredient); 
-                this.Cook(); // check if you can cook. 
+                //this.Cook(); // check if you can cook. 
                 return true;
             }
             return false;
@@ -99,28 +99,50 @@ namespace DeCuisine
          */
         public ServerIngredient Cook()
         {
-            if (HashCache == null)
+            var copyContents = this.Contents;
+            //find if there is a valid recipe
+            foreach (var recipe in this.Type.Recipes)
             {
-                //recompute hash since an item was added since last cook
-                List<ServerIngredient> ingList = Contents.Values.ToList();
-                ingList = ingList.OrderBy(o => o.Type.Name).ToList();//put in sorted order before hashing
-                this.HashCache = Recipe.Hash(ingList.ConvertAll<IngredientType>(x => x.Type));
-            }
-
-            if (Type.Recipes.ContainsKey(this.HashCache))
-            {
-                foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
+                bool allMan = true;
+                foreach (var content in this.Contents.Values)
                 {
-                    //remove all the ingredients from the game world
-                    ingredient.Remove();
+                    bool found = false;
+                    foreach (var recIng in recipe.Value.Ingredients)
+                    {
+                        if (recIng.Ingredient == content.Type)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        allMan = false;
+                        break;
+                    }
                 }
-                Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
-                var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-                var newIng = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
-                newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
-                return newIng;
+                if (allMan == true)
+                {
+                    //found the objects
+                }
+
             }
             return null;
+
+            //if (Type.Recipes.ContainsKey(this.HashCache))
+            //{
+            //    foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
+            //    {
+            //        //remove all the ingredients from the game world
+            //        ingredient.Remove();
+            //    }
+            //    Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
+            //    var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+            //    var newIng = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
+            //    newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
+            //    return newIng;
+            //}
+            //return null;
         }
 
         /// <summary>
