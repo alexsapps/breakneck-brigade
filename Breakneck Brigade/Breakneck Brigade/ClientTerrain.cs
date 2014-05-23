@@ -12,7 +12,8 @@ namespace Breakneck_Brigade
     class ClientTerrain : ClientGameObject
     {
         public string Texture { get; set; }
-        public override string ModelName { get { return "floor"; } }
+        private string _modelName;
+        public override string ModelName { get { return _modelName; } }
 
         private float[] _sides;
         public override float[] Sides { get { return _sides; } }
@@ -25,7 +26,7 @@ namespace Breakneck_Brigade
 
         public ClientTerrain(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
-            string typename = reader.ReadString();
+            _modelName = reader.ReadString();
             //TODO:  this.Type = game.Config.Terrain[ingrname];
             _sides = new float[] { reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() };
             finalizeConstruction();

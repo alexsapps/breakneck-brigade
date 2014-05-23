@@ -59,6 +59,8 @@ namespace DeCuisine
                     this.Body = new RigidBody(rbInfo);
                 }
 
+                this.Body.ProceedToTransform(this.Body.WorldTransform * Matrix.RotationY(this.GeomInfo.Orientation));
+
                 this.Game.World.AddRigidBody(this.Body);
 
                 this._modelScale = Matrix4.MakeScalingMat(this.GeomInfo.Size[0] / this.GeomInfo.ModelScale[0],

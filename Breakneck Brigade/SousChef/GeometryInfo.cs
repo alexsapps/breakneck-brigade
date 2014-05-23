@@ -20,6 +20,7 @@ namespace SousChef
         public float RollingFriction { get; set; }
         public float Restitution { get; set; }
         public float AngularDamping { get; set; }
+        public float Orientation { get; set; }
 
         /// <summary>
         /// Gets or set the lsit of euler angles to rotate this object.

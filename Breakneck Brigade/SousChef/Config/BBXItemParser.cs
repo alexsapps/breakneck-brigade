@@ -134,6 +134,7 @@ namespace SousChef
             float rollingFriction = parseFloat(attributes.get("rollingFriction"), defaultRollingFriction);
             float restitution = parseFloat(attributes.get("restitution"), defaultRestitution);
             float angularDamping = parseFloat(attributes.get("angularDamping"), defaultAngularDamping);
+            float orientation = parseFloat(attributes.get("orientation"), 0.0f);
 
             GeometryInfo info = new GeometryInfo()
             {
@@ -144,7 +145,8 @@ namespace SousChef
                 Friction = friction,
                 RollingFriction = rollingFriction,
                 Restitution = restitution,
-                AngularDamping = angularDamping
+                AngularDamping = angularDamping,
+                Orientation = orientation * MathConstants.DEG2RAD
             };
             
             return info;

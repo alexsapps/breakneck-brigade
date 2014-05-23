@@ -1,7 +1,24 @@
 <world gravity="0,-190,0">
 	<space>
 			<!-- Floor + Walls -->
-			<terrain type="floor" shape="box" coordinate="0, 0, 0" size="2000,1,2000" />
+			<terrain type="floor" shape="box" coordinate="0, 0, 0"          size="2000,1,2000" />
+    
+      <terrain type="wall" shape="box" coordinate="-300, 100, -1500"  size="10,100,500" />
+			<terrain type="wall" shape="box" coordinate="-300, 100, -500"   size="10,100,500" />
+      <terrain type="wall" shape="box" coordinate="-300, 100,  500"    size="10,100,500" />
+      <terrain type="wall" shape="box" coordinate="-300, 100,  1500"   size="10,100,500" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100, -1500"   size="10,100,500" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100, -500"    size="10,100,500" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100,  500"     size="10,100,500" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100,  1500"    size="10,100,500" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100, -1500"   size="10,100,500" orientation="90" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100, -500"    size="10,100,500" orientation="90" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100,  500"     size="10,100,500" orientation="90" />
+      <terrain type="wall" shape="box" coordinate=" 300, 100,  1500"    size="10,100,500" orientation="90" />
+      <terrain type="wall" shape="box" coordinate="-300, 100, -1500"  size="10,100,500" orientation="90"/>
+      <terrain type="wall" shape="box" coordinate="-300, 100, -500"   size="10,100,500" orientation="90"/>
+      <terrain type="wall" shape="box" coordinate="-300, 100,  500"    size="10,100,500" orientation="90"/>
+      <terrain type="wall" shape="box" coordinate="-300, 100,  1500"   size="10,100,500" orientation="90"/>
 
 			<terrain type="floor" shape="box" coordinate="0, 1000, 0" size="500,1,500" />
 			<terrain type="floor" shape="box" coordinate="0, 300, 0" sides="5,1,5" />

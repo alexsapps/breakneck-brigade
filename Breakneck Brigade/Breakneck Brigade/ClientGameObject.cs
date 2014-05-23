@@ -88,7 +88,8 @@ namespace Breakneck_Brigade
         protected void finalizeConstruction()
         {
             initGeom();
-            Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bread"];
+            //Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bread"];
+            Model = Renderer.Models["sugar"];
         }
 
         protected virtual void initGeom()
