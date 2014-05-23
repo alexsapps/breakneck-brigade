@@ -52,7 +52,7 @@ namespace SousChef
             int points = int.Parse(attributes["points"]);
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping
+                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
                 );
 
             return new IngredientType(name, geomInfo, points);

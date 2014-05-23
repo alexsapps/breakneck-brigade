@@ -10,6 +10,7 @@ using OL_Vertex = ObjLoader.Loader.Data.VertexData.Vertex;
 using OL_Normal = ObjLoader.Loader.Data.VertexData.Normal;
 using OL_Texture = ObjLoader.Loader.Data.VertexData.Texture;
 using ObjLoader.Loader.Data.Elements;
+using System.Diagnostics;
 //using Tao.OpenGl;
 
 namespace SousChef.MPNamespace
@@ -104,6 +105,7 @@ namespace SousChef.MPNamespace
                         Vector4 scale = new Vector4(scaleX, scaleY, scaleZ);
                         Vector4 rot   = new Vector4(rotX, rotY, rotZ);
 
+                        Debug.Assert(filename != null);
                         ScaleVector.Add(filename, this.ParseFile(filename, pos, scale, rot));
                         if (ii != numberOfModels - 1)
                             reader.ReadEndElement();

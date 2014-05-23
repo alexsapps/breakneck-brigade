@@ -63,7 +63,7 @@ namespace SousChef
             string name = attributes["name"];
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping
+                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
                 );
 
             return new CookerType(name, geomInfo, recipes);

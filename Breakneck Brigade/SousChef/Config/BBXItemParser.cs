@@ -115,12 +115,14 @@ namespace SousChef
             return items;
         }
 
-        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping)
+        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping, string temp)
         {
             // this model code is a little fucked up
 
-            Debug.Assert(attributes.ContainsKey("name"));
-            var scale = scaleVector[attributes["name"]];
+            //Debug.Assert(attributes.ContainsKey("name")); //should not need name field
+            if (temp == null && attributes.ContainsKey("name"))
+                temp = attributes["name"];
+            var scale = temp != null && scaleVector.ContainsKey(temp) ? scaleVector[temp] : scaleVector["bread"];
             float[] sides = new float[] { (scale[1].X - scale[0].X)/2, (scale[1].Y - scale[0].Y)/2, (scale[1].Z - scale[0].Z)/2 };
             //float[] sides = parseFloats(attributes.get("sides"), defaultSides);
 
