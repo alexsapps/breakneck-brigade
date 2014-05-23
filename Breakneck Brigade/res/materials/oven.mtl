@@ -12,8 +12,8 @@ newmtl Material__4
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka C:\Users\abw004\Desktop\bs.tga
-	map_Kd C:\Users\abw004\Desktop\bs.tga
+	map_Ka bs.tga
+	map_Kd bs.tga
 
 newmtl Material__5
 	Ns 10.0000
@@ -26,8 +26,8 @@ newmtl Material__5
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka C:\Users\abw004\Desktop\rd.tga
-	map_Kd C:\Users\abw004\Desktop\rd.tga
+	map_Ka rd.tga
+	map_Kd rd.tga
 
 newmtl Material__3
 	Ns 10.0000
@@ -40,5 +40,5 @@ newmtl Material__3
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka C:\Users\abw004\Desktop\mm.tga
-	map_Kd C:\Users\abw004\Desktop\mm.tga
+	map_Ka mm.tga
+	map_Kd mm.tga
