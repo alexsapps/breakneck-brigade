@@ -6,10 +6,15 @@
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
 
   <ingredient name="banana" points="15" />
+  <ingredient name=“bottle points="15" />
+  <ingredient name=“butter” points=“15” />
+  <ingredient name=“cheese” points="15" />
+  <ingredient name=“carrot” points=“15” />
   <ingredient name="sugar" points="10" />
   <ingredient name="ice" points="5" />
   <ingredient name="milk" points="30" />
   <ingredient name="iceCream" points="40" />
+  <ingredient name=“flour” points="40" />
   <ingredient name="bread" points="15" />
   <ingredient name="lettuce" points="10" />
   <ingredient name="milkshake" points="70" />
