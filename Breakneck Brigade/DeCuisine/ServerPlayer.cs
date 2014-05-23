@@ -188,36 +188,7 @@ namespace DeCuisine
             }
         }
 
-        /// <summary>
-        /// Queries for UI purposes.
-        /// TODO: Probably need to move all these queries to their respective objects ToString().
-        /// </summary>
-        /// <returns>Information about what this player is looking at.</returns>
-        /*
-        public string Query()
-        {
-            string result = string.Empty;
-            if (this.ObjectBeingLookedAt != null)
-            {
-                if (this.ObjectBeingLookedAt.ObjectClass == GameObjectClass.Cooker)
-                {
-                    ServerCooker cookerLookedAt = (ServerCooker)this.ObjectBeingLookedAt;
-                    result += cookerLookedAt.Type.Name + " which currently has: ";
-                    foreach (ServerIngredient ingredient in cookerLookedAt.Contents.Values.ToList())
-                    {
-                        result += ingredient.Type.Name + " ";
-                    }
-                }
-                else if (this.ObjectBeingLookedAt.ObjectClass == GameObjectClass.Ingredient)
-                {
-                    ServerIngredient ingredientLookedAt = (ServerIngredient)this.ObjectBeingLookedAt;
-                    result += ingredientLookedAt.Type.Name;
-                }
-            }
-
-            return result;
-        }
-         */
+        
 
         protected override void updateHook()
         {
