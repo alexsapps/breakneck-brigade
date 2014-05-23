@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 09.05.2014 01:35:09
+# File Created: 22.05.2014 18:45:01
 
-mtllib delivery window.mtl
+mtllib delivery window v2.mtl
 
 #
 # object Box002
@@ -389,7 +389,7 @@ vt 0.0825 1.0000 0.0000
 # 164 texture coords
 
 g Box002
-usemtl Material__25
+usemtl Material__28
 s 2
 f 1/1/1 2/2/1 3/3/1 4/4/1 
 s 4
@@ -648,7 +648,7 @@ vt 1.0000 1.0000 0.0000
 # 25 texture coords
 
 g Plane001
-usemtl Material__26
+usemtl Material__27
 s 1
 f 170/165/43 171/166/43 172/167/43 173/168/43 
 f 173/168/43 172/167/43 174/169/43 175/170/43 
