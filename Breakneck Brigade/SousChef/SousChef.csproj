@@ -73,11 +73,13 @@
     <Compile Include="GeometryInfo.cs" />
     <Compile Include="IGameObject.cs" />
     <Compile Include="IIngredient.cs" />
+    <Compile Include="TerrainType.cs" />
     <Compile Include="IngredientType.cs" />
     <Compile Include="Math\Coordinate.cs" />
     <Compile Include="Math\GeomShape.cs" />
     <Compile Include="ModelParser.cs" />
     <Compile Include="Network\ClientChangeOrientationEvent.cs" />
+    <Compile Include="Network\ClientChangeTeamEvent.cs" />
     <Compile Include="Network\ClientCommandEvent.cs" />
     <Compile Include="Network\ClientDashEvent.cs" />
     <Compile Include="Network\ClientEjectEvent.cs" />

@@ -206,6 +206,18 @@ namespace DeCuisine
                         ret = server.PrintStatus();
                     }
                     break;
+                case "teams":
+                    StringBuilder b = new StringBuilder();
+                    lock (server.Lock)
+                        lock (server.Game.Lock)
+                            foreach (var team in server.Game.Controller.Teams.Values)
+                            {
+                                b.AppendLine(team.Name);
+                                foreach (var ServerPlayer in team.Members)
+                                    b.AppendLine("\t" + ServerPlayer.ToString());
+                            }
+                    ret = b.ToString();
+                    break;
                 default:
                     if (!CommandLinePlayer.ReadArgs(parts, server, out ret))
                         ret = String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]);

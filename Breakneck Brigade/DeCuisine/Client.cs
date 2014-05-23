@@ -20,6 +20,7 @@ namespace DeCuisine
         public bool IsConnected { get; private set; }
 
         public ServerPlayer Player { get; set; }
+        public ServerTeam Team { get; set; }
 
         public Server Server { get; set; }
         public ServerGame Game { get { return Server.Game; } }
@@ -91,14 +92,22 @@ namespace DeCuisine
 
                                 lock (Game.ClientInput)
                                 {
-                                    if (!(clientEvent.Event is ClientCommandEvent))
-                                        Game.ClientInput.Add(clientEvent);
-                                    else
+                                    if ((clientEvent.Event is ClientCommandEvent))
                                     {
                                         //this should technically be handled in a separate thread like everything else, but this won't hold up the network much, and it'll be working in a new thread soon.
                                         //do not add to ClientInput because this only gets read when the game has started.
                                         var input = (ClientCommandEvent)clientEvent.Event;
                                         ServerGame.DoServerCommandAsync(((ClientCommandEvent)input).args, clientEvent.Client, ServerGame.AsyncCommandCallback);
+                                    }
+                                    else if((clientEvent.Event is ClientChangeTeamEvent))
+                                    {
+                                        var teamEvt = (ClientChangeTeamEvent)clientEvent.Event;
+                                        Server.Game.Invoke(() => { Server.Game.Controller.AssignTeam(this, teamEvt.TeamName); });
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Game.ClientInput.Add(clientEvent);
                                     }
                                 }
 
@@ -132,6 +141,7 @@ namespace DeCuisine
                 case ClientEventType.Command: return typeof(ClientCommandEvent);
                 case ClientEventType.Dash: return typeof(ClientDashEvent);
                 case ClientEventType.Eject: return typeof(ClientEjectEvent);
+                case ClientEventType.ChangeTeam: return typeof(ClientChangeTeamEvent);
                 default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
         }
@@ -231,6 +241,14 @@ namespace DeCuisine
             catch { }
 
             new Thread(() => { Disconnected(this, EventArgs.Empty); }).Start();
+        }
+
+        public override string ToString()
+        {
+            if (Player != null)
+                return Player.ToString();
+            else
+                return connection.Client.RemoteEndPoint.ToString();
         }
     }
 }

@@ -67,6 +67,7 @@ namespace Breakneck_Brigade
             
             this.ToRender = reader.ReadBoolean();
             readGeom(reader);
+
         }
 
         protected void constructEssential(int id, ClientGame game)
@@ -88,7 +89,6 @@ namespace Breakneck_Brigade
         {
             initGeom();
             Model = Renderer.Models[Renderer.Models.ContainsKey(ModelName) ? ModelName : "bread"];
-            Scale = new Vector4(1.0, 1.0, 1.0);
         }
 
         protected virtual void initGeom()
@@ -148,6 +148,56 @@ namespace Breakneck_Brigade
                 Gl.glMultMatrixf(Transformation.glArray);
                     Model.Render();
                 Gl.glPopMatrix();
+                
+                //Wire collision box
+                
+                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE);
+                Gl.glDisable(Gl.GL_TEXTURE);
+                Gl.glDisable(Gl.GL_CULL_FACE);
+                if(Sides.Length == 1) //Sphere
+                {
+                    Glu.gluSphere(Renderer.gluQuadric, (maxBound - minBound).Magnitude() / 2, 10, 10);
+                }
+                else if(Sides.Length == 3) //Cube
+                {
+                    Vector4 F0, F1, F2, F3, B0, B1, B2, B3;
+                    F0 = maxBound;
+                    F1 = new Vector4(minBound.X, maxBound.Y, maxBound.Z);
+                    F2 = new Vector4(minBound.X, minBound.Y, maxBound.Z);
+                    F3 = new Vector4(maxBound.X, minBound.Y, maxBound.Z);
+
+                    B0 = minBound;
+                    B1 = new Vector4(maxBound.X, minBound.Y, minBound.Z);
+                    B2 = new Vector4(maxBound.X, maxBound.Y, minBound.Z);
+                    B3 = new Vector4(minBound.X, maxBound.Y, minBound.Z);
+
+                    Gl.glBegin(Gl.GL_QUADS);
+                        //Front
+                        Gl.glVertex3f(F0.X, F0.Y, F0.Z);
+                        Gl.glVertex3f(F3.X, F3.Y, F3.Z);
+                        Gl.glVertex3f(F2.X, F2.Y, F2.Z);
+                        Gl.glVertex3f(F1.X, F1.Y, F1.Z);
+                        //Back
+                        Gl.glVertex3f(B0.X, B0.Y, B0.Z);
+                        Gl.glVertex3f(B3.X, B3.Y, B3.Z);
+                        Gl.glVertex3f(B2.X, B2.Y, B2.Z);
+                        Gl.glVertex3f(B1.X, B1.Y, B1.Z);                      
+                        //Left
+                        Gl.glVertex3f(B0.X, B0.Y, B0.Z);
+                        Gl.glVertex3f(B3.X, B3.Y, B3.Z);
+                        Gl.glVertex3f(F1.X, F1.Y, F1.Z);
+                        Gl.glVertex3f(F2.X, F2.Y, F2.Z);
+                        //Right
+                        Gl.glVertex3f(F0.X, F0.Y, F0.Z);
+                        Gl.glVertex3f(B2.X, B2.Y, B2.Z);
+                        Gl.glVertex3f(B1.X, B1.Y, B1.Z);
+                        Gl.glVertex3f(F3.X, F3.Y, F3.Z);
+                        //Don't need to render top or bottom - lines already drawn
+                    Gl.glEnd();
+                }
+                Gl.glEnable(Gl.GL_TEXTURE);
+                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL);
+                Gl.glEnable(Gl.GL_CULL_FACE);
             }
         }
 

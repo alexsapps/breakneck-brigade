@@ -99,6 +99,8 @@ namespace Breakneck_Brigade
                     var line = Console.ReadLine();
                     if (line == null)
                         return; //thread asked to abort
+
+                processLine:
                     string[] parts = line.Split(new string[] { " " }, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length > 0)
                     {
@@ -169,6 +171,37 @@ namespace Breakneck_Brigade
                                     Program.WriteLine("you didn't specify a command to send to the server.");
                                 }
                                 break;
+                            case "team":
+                                {
+                                    if(parts.Length >= 2)
+                                    {
+                                        switch (parts[1])
+                                        {
+                                            case "list":
+                                                line = "s teams";
+                                                goto processLine;
+                                            case "join":
+                                                if (parts.Length == 3)
+                                                {
+                                                    sendEvent(new ClientChangeTeamEvent() { TeamName = parts[2] });
+                                                    System.Threading.Thread.Sleep(300); //wait for this to go through
+                                                    line = "team list";
+                                                    goto processLine;
+                                                }
+                                                else
+                                                    Console.WriteLine("wrong # of args to team join");
+                                                break;
+                                            default:
+                                                Console.WriteLine("team doesn't understand " + parts[1]);
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Program.WriteLine("team expects more args");
+                                    }
+                                    break;
+                                }
                             default:
                                 Program.WriteLine("Command not recognized.");
                                 break;
@@ -640,12 +673,21 @@ namespace Breakneck_Brigade
             }
         }
 
-        static void sendEvents(List<ClientEvent> @events)
+        static void sendEvents(List<ClientEvent> events)
         {
             clientLock.AssertHeld();
             lock (client.ClientEvents)
             {
-                client.ClientEvents.AddRange(@events);
+                client.ClientEvents.AddRange(events);
+                Monitor.PulseAll(client.ClientEvents);
+            }
+        }
+        static void sendEvent(ClientEvent @event)
+        {
+            clientLock.AssertHeld();
+            lock (client.ClientEvents)
+            {
+                client.ClientEvents.Add(@event);
                 Monitor.PulseAll(client.ClientEvents);
             }
         }

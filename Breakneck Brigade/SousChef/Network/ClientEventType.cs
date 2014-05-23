@@ -54,6 +54,8 @@ namespace SousChef
         /// <summary>
         /// Eject the cooker that the player is looking at.
         /// </summary>
-        Eject
+        Eject,
+
+        ChangeTeam
     }
 }

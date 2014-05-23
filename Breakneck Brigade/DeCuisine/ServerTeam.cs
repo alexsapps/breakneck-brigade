@@ -8,13 +8,13 @@ namespace DeCuisine
 {
     class ServerTeam
     {
-        public List<ServerPlayer> Players { get; private set; }
+        public List<Client> Members { get; private set; }
         public int Points { get; set; }
-        public string Name;
+        public string Name { get; set; }
 
         public ServerTeam(string name)
         {
-            Players = new List<ServerPlayer>();
+            Members = new List<Client>();
             this.Name = name;
         }
     }

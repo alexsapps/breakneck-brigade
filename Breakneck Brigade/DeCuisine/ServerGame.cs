@@ -247,41 +247,43 @@ namespace DeCuisine
                         }
                         foreach (DCClientEvent input in inputs)
                         {
-                            lock (input.Client.Lock)
+                            var client = input.Client;
+                            lock (client.Lock)
                             {
-                                if (!input.Client.IsConnected)
+                                if (!client.IsConnected)
                                     break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
-
+                                var player = client.Player;
                                 switch (input.Event.Type)
                                 {
                                     case ClientEventType.Test:
                                         break;
                                     case ClientEventType.ChangeOrientation:
-                                        ClientChangeOrientationEvent orientationEv = (ClientChangeOrientationEvent)input.Event;
-                                        input.Client.Player.Orientation = orientationEv.Orientation;
-                                        input.Client.Player.Incline = orientationEv.Incline;
+                                        var orientationEv = (ClientChangeOrientationEvent)input.Event;
+                                        player.Orientation = orientationEv.Orientation;
+                                        player.Incline = orientationEv.Incline;
                                         break;
                                     case ClientEventType.BeginMove:
-                                        ClientBeginMoveEvent moveEv = (ClientBeginMoveEvent)input.Event;
-                                        input.Client.Player.Move(moveEv.Delta.x, moveEv.Delta.y, moveEv.Delta.z);
+                                        var moveEv = (ClientBeginMoveEvent)input.Event;
+                                        player.Move(moveEv.Delta.x, moveEv.Delta.y, moveEv.Delta.z);
                                         break;
                                     case ClientEventType.EndMove:
                                         break;
                                     case ClientEventType.Jump:
-                                        input.Client.Player.Jump();
+                                        player.Jump();
                                         break;
                                     case ClientEventType.ThrowItem:
-                                        ClientThrowEvent thrEv = (ClientThrowEvent)input.Event;
-                                        input.Client.Player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline);
+                                        var thrEv = (ClientThrowEvent)input.Event;
+                                        player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline);
                                         break;
                                     case ClientEventType.Dash:
-                                        input.Client.Player.Dash();
+                                        player.Dash();
                                         break;
                                     case ClientEventType.Eject:
-                                        input.Client.Player.AttemptToEjectCooker();
+                                        player.AttemptToEjectCooker();
                                         break;
+                                    case ClientEventType.ChangeTeam:
                                     case ClientEventType.Command:
-                                        throw new InvalidOperationException(); //this is handled elsewhere
+                                        throw new InvalidOperationException(); //these handled elsewhere
                                     default:
                                         Debugger.Break();
                                         throw new Exception("server does not understand client event " + input.Event.Type.ToString());
@@ -376,6 +378,23 @@ namespace DeCuisine
                 {
                     CollisionConf.Dispose();
                 }
+            }
+        }
+
+        /// <summary>
+        /// runs a function in a new thread that has the game's lock
+        /// </summary>
+        /// <param name="start"></param>
+        public void Invoke(ServerInvokable start)
+        {
+            new Thread(() => { runInLock(this, start); }).Start();
+        }
+        public delegate void ServerInvokable();
+        private void runInLock(ServerGame game, ServerInvokable invokable)
+        {
+            lock(game.Lock)
+            {
+                invokable();
             }
         }
 
