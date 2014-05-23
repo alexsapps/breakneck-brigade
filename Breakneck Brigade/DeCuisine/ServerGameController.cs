@@ -14,11 +14,12 @@ namespace DeCuisine
         
         public Dictionary<string, ServerTeam> Teams { get; set; }
 
-        public List<IngredientType> Goals { get; set; }
+        public List<Goal> Goals { get; set; }
+
 
         private string[] teamNames = new string[]{"red", "blue"}; //Add more team names for more teams
         public int SpawnTick;
-        private int SECONDSTOSPAWN = 5;
+        private int SECONDSTOSPAWN = 1;
         private int _numGoals = 0;
         public int NumGoals
         {
@@ -29,7 +30,7 @@ namespace DeCuisine
             protected set
             {
                 _numGoals = value;
-
+                
                 //remove or add goals until we have NumGoals goals
                 while (value < Goals.Count)
                     Goals.RemoveAt(DC.random.Next(Goals.Count));
@@ -37,12 +38,14 @@ namespace DeCuisine
             }
         }
 
+        private int ScoreToWin = 2000;
+
         WeightedRandomChooser<IngredientType> randomIngredientChooser;
         WeightedRandomChooser<IngredientType> randomGoalChooser;
 
         public ServerGameController(ServerGame game)
         {
-            
+               
             this.Game = game;
             this.SpawnTick = 30 * SECONDSTOSPAWN;//game.FrameRateMilliseconds * SECONDSTOSPAWN; FrameRate not set, TODO:
             this.Teams = new Dictionary<string, ServerTeam>();
@@ -50,7 +53,7 @@ namespace DeCuisine
             {
                 this.Teams.Add(teamName, new ServerTeam(teamName));
             }
-            this.Goals = new List<IngredientType>();
+            this.Goals = new List<Goal>();
         }
 
         public void UpdateConfig(ConfigSalad salad, int numGoals) //must be called once before Update gets called
@@ -67,7 +70,10 @@ namespace DeCuisine
         private void FillGoals()
         {
             while (NumGoals > Goals.Count)
-                Goals.Add(getWeightedRandomIngredient());
+            {
+                IngredientType tmpIng = getWeightedRandomIngredient();
+                Goals.Add(new Goal(100, tmpIng));
+            }
         }
 
         int ticks = 1; //server ticks, not time ticks
@@ -163,9 +169,45 @@ namespace DeCuisine
             player.Team.Points += points;
             // TODO: Replace with call to gui or something
             Program.WriteLine("Player " + player.Id + " Scored " + points + " For " + player.Team + " Team");
+            this.DisplayScore();
+            CheckWin(ing.LastPlayerHolding.Team);
         }
 
+        public void ScoreDeliver(ServerIngredient ing)
+        {
+            foreach (var goal in Goals)
+            {
+                if (goal.GoalIng.Name == ing.Type.Name)
+                {
+                    if (ing.LastPlayerHolding != null)
+                    {
+                        ing.LastPlayerHolding.Team.Points += ((Goal)goal).Points;
+                        ing.Remove();
+                        Program.WriteLine("Scored " + ((Goal)goal).Points + " for team " + ing.LastPlayerHolding.Team.Name);
+                        this.DisplayScore();
+                        CheckWin(ing.LastPlayerHolding.Team);
+                    }
+                }
+            }
 
+        }
+        public void CheckWin(ServerTeam team)
+        {
+            if (team.Points >= this.ScoreToWin)
+            {
+                Program.WriteLine("Team " + team.Name + " Wins!");
+            }
+        }
+
+        public void DisplayScore()
+        {
+            foreach (var team in this.Teams)
+            {
+                Program.WriteLine(team.Value.Name + " Has " + team.Value.Points);
+                //add individual scores as well.
+            }
+                
+        }
         /// <summary>
         /// Class which facilitates choosing items randomly based on their weights.
         /// </summary>

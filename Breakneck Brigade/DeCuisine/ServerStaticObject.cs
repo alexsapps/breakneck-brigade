@@ -15,6 +15,7 @@ namespace DeCuisine
         private GeometryInfo _geomInfo;
         protected override GeometryInfo getGeomInfo() { return _geomInfo; }
 
+
         public override int SortOrder { get { return 0; } }
 
         public ServerStaticObject(ServerGame game, GeometryInfo geomInfo, string model, Vector3 position)
@@ -54,9 +55,10 @@ namespace DeCuisine
         public override void OnCollide(ServerGameObject obj)
         {
             base.OnCollide(obj);
-            if (Model == "deleveryWindow")
+            if (Model == "deliveryWindow" && obj.ObjectClass == GameObjectClass.Ingredient)
             {
-
+                // trying to score, pass to the controller
+                this.Game.Controller.ScoreDeliver((ServerIngredient)obj);
             }
         }
     }
