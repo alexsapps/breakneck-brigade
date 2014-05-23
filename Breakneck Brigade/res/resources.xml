@@ -387,6 +387,18 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     <rotZ>0</rotZ>
   </model>
   <model>
+    <filename>milkshake</filename>
+    <posX>0</posX>
+    <posY>0</posY>
+    <posZ>0</posZ>
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>
+    <rotX>0</rotX>
+    <rotY>0</rotY>
+    <rotZ>0</rotZ>
+  </model>
+  <model>
     <filename>coconut</filename>
     <posX>0</posX>
     <posY>0</posY>
