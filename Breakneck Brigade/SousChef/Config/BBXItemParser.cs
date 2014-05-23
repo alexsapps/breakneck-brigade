@@ -17,7 +17,7 @@ namespace SousChef
 
         protected Dictionary<string, string> attributes;
         public string attrib(string name) { return attributes.get(name); }
-        public static Dictionary<string, Vector4[]> scaleVector = new ModelParser().ScaleVector;
+        public static Dictionary<string, Vector4[]> scaleVector = BB.modelParser.ScaleVector;
 
         bool _needsReset = false;
         public T Parse(XmlReader reader)
@@ -116,16 +116,19 @@ namespace SousChef
             return items;
         }
 
-        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSides, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping, string temp)
+        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSize, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping, string temp)
         {
             //Debug.Assert(attributes.ContainsKey("name")); //should not need name field
             if (temp == null && attributes.ContainsKey("name"))
                 temp = attributes["name"];
-            var scale = temp != null && scaleVector.ContainsKey(temp) ? scaleVector[temp] : scaleVector["bread"];
-            float[] sides = new float[] { (scale[1].X - scale[0].X)/2, (scale[1].Y - scale[0].Y)/2, (scale[1].Z - scale[0].Z)/2 };
-            //float[] sides = parseFloats(attributes.get("sides"), defaultSides);
+            else if (temp == null && attributes.ContainsKey("model"))
+                temp = attributes["model"];
+                
+            var vertMinMax = temp != null && scaleVector.ContainsKey(temp) ? scaleVector[temp] : scaleVector["bread"];
+            float[] modelScale = new float[] { (vertMinMax[1].X - vertMinMax[0].X)/2, (vertMinMax[1].Y - vertMinMax[0].Y)/2, (vertMinMax[1].Z - vertMinMax[0].Z)/2 };
 
             var shape = BB.ParseGeomShape(attributes.get("shape"), GeomShape.Box);
+            float[] size = parseFloats(attributes.get("size"), defaultSize);
             float mass = parseFloat(attributes.get("mass"), defaultMass);
             float friction = parseFloat(attributes.get("friction"), defaultFriction);
             float rollingFriction = parseFloat(attributes.get("rollingFriction"), defaultRollingFriction);
@@ -136,7 +139,8 @@ namespace SousChef
             {
                 Shape = shape,
                 Mass = mass,
-                Sides = sides,
+                Size = size,
+                ModelScale = modelScale,
                 Friction = friction,
                 RollingFriction = rollingFriction,
                 Restitution = restitution,

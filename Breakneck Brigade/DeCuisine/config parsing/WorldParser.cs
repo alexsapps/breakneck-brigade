@@ -212,7 +212,7 @@ namespace DeCuisine
             var type = serverGame.Config.Terrains[name];
 
             var position = getCoordinateAttrib();
-            var geomInfo = getGeomInfo(attributes, type.GeomInfo.Sides, type.GeomInfo.Mass, type.GeomInfo.Friction, type.GeomInfo.RollingFriction, type.GeomInfo.Restitution, type.GeomInfo.AngularDamping, type.Name);
+            var geomInfo = getGeomInfo(attributes, type.GeomInfo.Size, type.GeomInfo.Mass, type.GeomInfo.Friction, type.GeomInfo.RollingFriction, type.GeomInfo.Restitution, type.GeomInfo.AngularDamping, type.Name);
             serverPlane = new ServerTerrain(serverGame, type, position, geomInfo);
         }
         protected override void reset()

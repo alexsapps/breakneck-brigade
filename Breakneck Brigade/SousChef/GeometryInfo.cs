@@ -14,7 +14,8 @@ namespace SousChef
     {
         public float Mass { get; set; }
         public GeomShape Shape { get; set; }
-        public float[] Sides { get; set; }
+        public float[] Size { get; set; }
+        public float[] ModelScale { get; set; }
         public float Friction { get; set; }
         public float RollingFriction { get; set; }
         public float Restitution { get; set; }
@@ -32,7 +33,7 @@ namespace SousChef
         {
             this.Shape = GeomShape.Box;
             this.Euler = new Vector3(0, 0, 0);
-            this.Sides = new float[] { 500, 10, 500 };
+            this.Size = new float[] { 500, 10, 500 };
         }
     }
 

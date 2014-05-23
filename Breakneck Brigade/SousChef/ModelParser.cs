@@ -31,7 +31,7 @@ namespace SousChef.MPNamespace
         }
     }
 
-    class ModelParser
+    public class ModelParser
     {
         public Dictionary<string, Vector4[]> ScaleVector;
         

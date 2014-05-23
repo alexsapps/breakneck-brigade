@@ -14,7 +14,7 @@ namespace Breakneck_Brigade
         public IngredientType Type { get; set; }
         public int Cleanliness { get; set; }
 
-        public override float[] Sides { get { return Type.GeomInfo.Sides; } }
+        public override float[] Sides { get { return Type.GeomInfo.Size; } }
         public override string ModelName { get { return Type.Name; } }
 
         /// <summary>

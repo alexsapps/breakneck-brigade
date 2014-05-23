@@ -43,7 +43,7 @@ namespace Breakneck_Brigade.Graphics
 
         public Model ParseFile(string modelName)
         {
-            Model result = new Model();
+            Model result = new Model(modelName);
             using(var objFileStream = new FileStream(MODEL_DIRECTORY + modelName + ".obj", FileMode.Open))
             {
                 IMaterialStreamProvider msp = new ParserMaterialStreamProvider(MTL_DIRECTORY + modelName + ".mtl");
