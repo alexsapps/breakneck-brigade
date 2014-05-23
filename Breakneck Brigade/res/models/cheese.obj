@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 09.05.2014 02:44:23
+# File Created: 21.05.2014 00:37:43
 
-mtllib shitty cheese.mtl
+mtllib shitty cheese v2.mtl
 
 #
 # object Cylinder001
@@ -296,7 +296,7 @@ vt 0.9293 1.0116 0.0864
 # 152 texture coords
 
 g Cylinder001
-usemtl Material__25
+usemtl Material__26
 s 1
 f 1/1/1 2/2/1 3/3/1 4/4/1 
 f 1/1/1 5/5/1 6/6/1 2/2/1 
