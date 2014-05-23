@@ -11,20 +11,24 @@ using System.Threading.Tasks;
 namespace DeCuisine
 {
     class ServerPlayer : ServerGameObject
-    {
-        public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
-        protected override GeometryInfo getGeomInfo() { return BB.GetPlayerGeomInfo(); }
-        public Client Client { get; private set; }
-        public ServerTeam Team;
-        private bool isFalling { get; set; }
-        private bool canJump { get; set; }
-        private Vector3 lastVelocity { get; set; }
+    {        
         private const float JUMPSPEED = 100;
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
+        private const float LINEOFSIGHTSCALAR = 50;
 
+        private bool isFalling { get; set; }
+        private bool canJump { get; set; }
+        private Vector3 lastVelocity { get; set; }
+        private ServerCooker lookingAtCooker;
+
+        protected override GeometryInfo getGeomInfo() { return BB.GetPlayerGeomInfo(); }
+
+        public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
+        public Client Client { get; private set; }
+        public ServerTeam Team;
         public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
 
         public class HandInventory
@@ -63,6 +67,7 @@ namespace DeCuisine
             : base(game)
         {
             base.AddToWorld(position);
+            this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
             HandInventory tmp = new HandInventory(null);
@@ -128,6 +133,7 @@ namespace DeCuisine
 
             this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.DASHSCALER;
         }
+
         /// <summary>
         /// Throw an object from the passed in hand
         /// </summary>
@@ -153,6 +159,18 @@ namespace DeCuisine
             this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
             this.Hands[hand] = new HandInventory(null); //clear the hands
         }
+
+        /// <summary>
+        /// Attempts to eject a cooker it is looking at.
+        /// </summary>
+        public void AttemptToEjectCooker()
+        {
+            if(this.lookingAtCooker != null)
+            {
+                this.lookingAtCooker.Eject();
+            }
+        }
+
         public void Jump()
         {
             if (this.canJump || Game.MultiJump)
@@ -178,9 +196,57 @@ namespace DeCuisine
             {
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(   this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, 
-                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1, 
-                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
+                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, 
+                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE);
             }
+
+            // Check what the player is looking at
+            // Get player position and angle and then where it should end
+            /*
+            Vector3 start = new Vector3
+                (
+                    this.Position.X + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Sin(this.Orientation * Math.PI / 180.0f)),
+                    this.Position.Y + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Cos(this.Incline * Math.PI / 180.0f)),
+                    this.Position.Z + (float)(this.GeomInfo.Sides[0] * Math.Sqrt(2) * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Cos(this.Orientation * Math.PI / 180.0f))
+                );
+
+            Vector3 end = new Vector3
+                (
+                    start.X + (float)(LINEOFSIGHTSCALAR * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Sin(this.Orientation * Math.PI / 180.0f)),
+                    start.Y + (float)(LINEOFSIGHTSCALAR * Math.Cos(this.Incline * Math.PI / 180.0f)),
+                    start.Z + (float)(LINEOFSIGHTSCALAR * Math.Sin(this.Incline * Math.PI / 180.0f) * Math.Cos(this.Orientation * Math.PI / 180.0f) * -1)
+                );
+             */
+            Vector3 start = new Vector3
+                (
+                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * 2,
+                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -2,
+                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -2
+               );
+
+            Vector3 end = new Vector3(start.X, start.Y, start.Z) * ServerPlayer.LINEOFSIGHTSCALAR;
+
+            CollisionWorld.ClosestRayResultCallback collisionCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
+            this.Game.World.RayTest(start, end, collisionCallback);
+            if (collisionCallback.HasHit)
+            {
+                ServerGameObject collidedGameObject = (ServerGameObject)collisionCallback.CollisionObject.CollisionShape.UserObject;
+                if (collidedGameObject.ObjectClass == GameObjectClass.Ingredient)
+                {
+                    Console.WriteLine("I SEE " + ((ServerIngredient)collidedGameObject).Type.Name);
+                    this.lookingAtCooker = null;
+                }
+                else if (collidedGameObject.ObjectClass == GameObjectClass.Cooker)
+                {
+                    this.lookingAtCooker = (ServerCooker)collidedGameObject;
+                    Console.WriteLine("I SEE " + this.lookingAtCooker.Type.Name);
+                }
+                else
+                {
+                    this.lookingAtCooker = null;
+                }
+            }
+
         }
 
         public override void Remove()

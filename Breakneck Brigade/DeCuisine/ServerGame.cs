@@ -28,7 +28,7 @@ namespace DeCuisine
 
         public ConfigSalad Config { get; private set; }
 
-        public List<ServerGameObject> HasAdded = new List<ServerGameObject>();  // TODO: Change this to a HashSet safetly
+        public HashSet<ServerGameObject> HasAdded = new HashSet<ServerGameObject>();  // TODO: Change this to a HashSet
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
@@ -207,33 +207,6 @@ namespace DeCuisine
                 // collision configuration contains default setup for memory, collision setup
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
-
-                /*
-                GeometryInfo info = new GeometryInfo();
-                info.Sides = new float[]{500, 500, 1};
-                info.Position = new Vector3(-250, 250, 0);
-                info.Shape = GeomShape.Box;
-                ServerTerrain wall = new ServerTerrain(this, "blank", info);
-
-                info = new GeometryInfo();
-                info.Sides = new float[] { 500, 500, 1 };
-                info.Position = new Vector3(250, 250, 0);
-                info.Shape = GeomShape.Box;
-                wall = new ServerTerrain(this, "blank", info);
-
-                info = new GeometryInfo();
-                info.Sides = new float[] { 1, 500, 500 };
-                info.Position = new Vector3(0, 250, -250);
-                info.Shape = GeomShape.Box;
-                wall = new ServerTerrain(this, "blank", info);
-
-                info = new GeometryInfo();
-                info.Sides = new float[] { 500, 500, 1 };
-                info.Position = new Vector3(0, 250, 250);
-                info.Shape = GeomShape.Box;
-                wall = new ServerTerrain(this, "blank", info);
-                */
-
                 _world.SetInternalTickCallback(CollisionCallback);
             }
 
@@ -254,6 +227,7 @@ namespace DeCuisine
             try
             {
                 long next;
+                long fallBehind = 0;
                 while (true)
                 {
                     next = DateTime.UtcNow.Ticks + FrameRateTicks; //not next+= FrameRateTicks because we don't want the server to ever wait less than the tick time
@@ -303,6 +277,9 @@ namespace DeCuisine
                                     case ClientEventType.Dash:
                                         input.Client.Player.Dash();
                                         break;
+                                    case ClientEventType.Eject:
+                                        input.Client.Player.AttemptToEjectCooker();
+                                        break;
                                     case ClientEventType.Command:
                                         throw new InvalidOperationException(); //this is handled elsewhere
                                     default:
@@ -317,7 +294,8 @@ namespace DeCuisine
                         /*
                          * Physics happens here.
                          */
-                        _world.StepSimulation(FrameRateMilliseconds);
+                        var timeStep = (FrameRateMilliseconds - (float)fallBehind) / 1000;
+                        _world.StepSimulation(timeStep, 0, timeStep);
 
                         Controller.Update();
 
@@ -341,10 +319,14 @@ namespace DeCuisine
                      * wait until end of tick
                      */
                     long waitTime = next - DateTime.UtcNow.Ticks;
+                    fallBehind = 0;
                     if (waitTime > 0)
                         Thread.Sleep(new TimeSpan(waitTime));
                     else
-                        Program.WriteLine("error:  tick rate too fast by " + (-waitTime / millisecond_ticks) + "ms.");
+                    {
+                        fallBehind = -waitTime / millisecond_ticks;
+                        Program.WriteLine("error:  tick rate too fast by " + fallBehind + "ms.");
+                    }
                 }
             }
             finally
@@ -455,8 +437,9 @@ namespace DeCuisine
         }
         protected void CalculateGameStateDifference(BinaryWriter writer)
         {
-            writer.Write(HasAdded.Count);
-            gameObjSendOrderSort(HasAdded);
+            var added = HasAdded.ToList();
+            writer.Write(added.Count);
+            gameObjSendOrderSort(added);
             foreach (var obj in HasAdded)
             {
                 obj.Serialize(writer);
@@ -570,6 +553,7 @@ namespace DeCuisine
         public void ObjectRemoved(ServerGameObject obj)
         {
             Lock.AssertHeld();
+            this.HasAdded.Remove(obj); //may actually be deleted on same tick added, e.g. if added below delete-y-threshdold.
             this.HasRemoved.Add(obj.Id);
             this.HasChanged.Remove(obj);
             GameObjects.Remove(obj.Id); // 

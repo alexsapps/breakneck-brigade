@@ -76,7 +76,6 @@ namespace DeCuisine
                 HashCache = null;
                 Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
-
                 ingredient.Removed += ingredient_Removed;
 
                 this.Cook(); // check if you can cook. 
@@ -85,9 +84,12 @@ namespace DeCuisine
             return false;
         }
 
-        void ingredient_Removed(object sender, EventArgs e)
+        // happens when an ingredient is removed from the world
+        private void ingredient_Removed(object sender, EventArgs e)
         {
-            Contents.Remove(((ServerIngredient)sender).Id);
+            var ingredient = ((ServerIngredient)sender);
+            Contents.Remove(ingredient.Id);
+            ingredient.Removed -= ingredient_Removed;
         }
 
         /*
@@ -107,10 +109,10 @@ namespace DeCuisine
 
             if (Type.Recipes.ContainsKey(this.HashCache))
             {
-                foreach(var ingredeint in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
+                foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
                 {
                     //remove all the ingredients from the game world
-                    ingredeint.Remove();
+                    ingredient.Remove();
                 }
                 Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
                 var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
@@ -119,6 +121,21 @@ namespace DeCuisine
                 return newIng;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Ejects ingredients from this cooker.
+        /// </summary>
+        public void Eject()
+        {
+            foreach (ServerIngredient containedIngredient in this.Contents.Values.ToList())
+            {
+                Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                ServerIngredient newIng = new ServerIngredient(containedIngredient.Type, this.Game, ingredientSpawningPoint);
+            }
+
+            this.Contents.Clear();
+
         }
 
         /// <summary>
