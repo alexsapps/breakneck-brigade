@@ -35,7 +35,7 @@ namespace DeCuisine
             AddToWorld(() =>
             {
                 CollisionShape groundShape;
-                var sides = GeomInfo.Sides;
+                var sides = GeomInfo.Size;
                 switch (this.GeomInfo.Shape)
                 {
                     case GeomShape.Box:
@@ -60,7 +60,11 @@ namespace DeCuisine
                 }
 
                 this.Game.World.AddRigidBody(this.Body);
-                
+
+                this._modelScale = Matrix4.MakeScalingMat(this.GeomInfo.Size[0] / this.GeomInfo.ModelScale[0],
+                              this.GeomInfo.Size[1] / this.GeomInfo.ModelScale[1],
+                              this.GeomInfo.Size[2] / this.GeomInfo.ModelScale[2]);
+
                 return groundShape;
             });
         }
@@ -69,9 +73,9 @@ namespace DeCuisine
         {
             base.Serialize(stream);
             stream.Write(Type.Name);
-            stream.Write(GeomInfo.Sides[0]);
-            stream.Write(GeomInfo.Sides[1]);
-            stream.Write(GeomInfo.Sides[2]);
+            stream.Write(GeomInfo.Size[0]);
+            stream.Write(GeomInfo.Size[1]);
+            stream.Write(GeomInfo.Size[2]);
         }
 
         public override void Update()

@@ -11,7 +11,7 @@ namespace Breakneck_Brigade
 {
     class ClientPlayer : ClientGameObject
     {
-        public override string ModelName { get { return "teapotPillar"; } }
+        public override string ModelName { get { return BB.DefaultPlayerModel; } }
         public string TeamName { get; set; } // TODO: Make this control the texture used
 
 

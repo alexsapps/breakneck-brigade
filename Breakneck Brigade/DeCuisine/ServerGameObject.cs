@@ -26,6 +26,8 @@ namespace DeCuisine
         public virtual float Orientation { get { return _orientation; } set { setOrientation(value); } }
         public virtual float Incline { get { return _incline; } set { setIncline(value); } }
         protected SousChef.Matrix4 _rotation;
+
+        public Matrix4 _modelScale;
         /// <summary>
         /// ODE Matrix (X = left right, Y = in out, Z = up down)
         /// </summary>
@@ -77,16 +79,17 @@ namespace DeCuisine
             stream.Write(this.Position.X);
             stream.Write(this.Position.Y);
             stream.Write(this.Position.Z);
-            Matrix4 rot = this.getRotation();
-            stream.Write(rot[0, 0]);
-            stream.Write(rot[1, 0]);
-            stream.Write(rot[2, 0]);
-            stream.Write(rot[0, 1]);
-            stream.Write(rot[1, 1]);
-            stream.Write(rot[2, 1]);
-            stream.Write(rot[0, 2]);
-            stream.Write(rot[1, 2]);
-            stream.Write(rot[2, 2]);
+            Matrix4 rotScale = _modelScale;
+            rotScale *= this.getRotation();
+            stream.Write(rotScale[0, 0]);
+            stream.Write(rotScale[1, 0]);
+            stream.Write(rotScale[2, 0]);
+            stream.Write(rotScale[0, 1]);
+            stream.Write(rotScale[1, 1]);
+            stream.Write(rotScale[2, 1]);
+            stream.Write(rotScale[0, 2]);
+            stream.Write(rotScale[1, 2]);
+            stream.Write(rotScale[2, 2]);
             //Send the bounding box data
             Vector3 min, max;
             this.Body.GetAabb(out min, out max);
@@ -176,14 +179,14 @@ namespace DeCuisine
             {
                 case GeomShape.Box: 
                     //geom = this.Game.Space.CreateBox(info.Sides[0], info.Sides[1], info.Sides[2]);
-                    geom = new BoxShape(info.Sides[0], info.Sides[1], info.Sides[2]);
+                    geom = new BoxShape(info.Size[0], info.Size[1], info.Size[2]);
                     break;
                 case GeomShape.Sphere: 
                     //geom = this.Game.Space.CreateSphere(info.Sides[0]); 
-                    geom = new SphereShape(info.Sides[0]);
+                    geom = new SphereShape(info.Size[0]);
                     break;
                 case GeomShape.Cylinder:
-                    geom = new CylinderShape(info.Sides[0], info.Sides[1], info.Sides[2]);
+                    geom = new CylinderShape(info.Size[0], info.Size[1], info.Size[2]);
                     break;
                 default: throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
             }
@@ -206,6 +209,11 @@ namespace DeCuisine
                 rbInfo.AngularDamping = info.AngularDamping;
                 body = new RigidBody(rbInfo);
             }
+
+            this._modelScale = Matrix4.MakeScalingMat(this.GeomInfo.Size[0] / this.GeomInfo.ModelScale[0],
+                              this.GeomInfo.Size[1] / this.GeomInfo.ModelScale[1],
+                              this.GeomInfo.Size[2] / this.GeomInfo.ModelScale[2]);
+
             return body;
         }
 
@@ -263,16 +271,17 @@ namespace DeCuisine
             stream.Write(this.Position.X);
             stream.Write(this.Position.Y);
             stream.Write(this.Position.Z);
-            Matrix4 rot = this.getRotation();
-            stream.Write(rot[0, 0]);
-            stream.Write(rot[1, 0]);
-            stream.Write(rot[2, 0]);
-            stream.Write(rot[0, 1]);
-            stream.Write(rot[1, 1]);
-            stream.Write(rot[2, 1]);
-            stream.Write(rot[0, 2]);
-            stream.Write(rot[1, 2]);
-            stream.Write(rot[2, 2]);
+            Matrix4 rotScale = _modelScale;
+            rotScale *= this.getRotation();
+            stream.Write(rotScale[0, 0]);
+            stream.Write(rotScale[1, 0]);
+            stream.Write(rotScale[2, 0]);
+            stream.Write(rotScale[0, 1]);
+            stream.Write(rotScale[1, 1]);
+            stream.Write(rotScale[2, 1]);
+            stream.Write(rotScale[0, 2]);
+            stream.Write(rotScale[1, 2]);
+            stream.Write(rotScale[2, 2]);
 
             //Send the bounding box data
             Vector3 min, max;

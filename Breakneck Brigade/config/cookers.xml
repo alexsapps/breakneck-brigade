@@ -5,31 +5,31 @@
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
 
-  <cooker name="blender" mass="3000.0">
+  <cooker name="blender" mass="0.0">
     <recipe>milkshake</recipe>
   </cooker>
 
-  <cooker name="oven">
+  <cooker name="oven" mass="0.0">
     <recipe>milkshake</recipe>
   </cooker>
 
-  <cooker name="pot">
+  <cooker name="pot" mass="0.0">
     <recipe>milkshake</recipe>
   </cooker>
 
-  <cooker name="pan">
+  <cooker name="pan" mass="0.0">
     <recipe>milkshake</recipe>
   </cooker>
 
-  <cooker name="juicer">
+  <cooker name="juicer" mass="0.0">
     <recipe>milkshake</recipe>
   </cooker>
 
-  <cooker name="toaster">
+  <cooker name="toaster" mass="0.0">
     <recipe>milkshake</recipe>
   </cooker>
   
-  <cooker name="bowl">
+  <cooker name="bowl" mass="0.0">
     <recipe>milkshake</recipe>
   </cooker>
 </cookers>

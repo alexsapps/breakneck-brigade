@@ -170,7 +170,6 @@ namespace Breakneck_Brigade
                     B1 = new Vector4(maxBound.X, minBound.Y, minBound.Z);
                     B2 = new Vector4(maxBound.X, maxBound.Y, minBound.Z);
                     B3 = new Vector4(minBound.X, maxBound.Y, minBound.Z);
-
                     Gl.glBegin(Gl.GL_QUADS);
                         //Front
                         Gl.glVertex3f(F0.X, F0.Y, F0.Z);

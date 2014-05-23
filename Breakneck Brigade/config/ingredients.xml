@@ -1,11 +1,11 @@
-<ingredients defaultSides="4,4,4" defaultMass="5.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.5" defaultAngularDamping=".999">
+<ingredients defaultSides="4,4,4" defaultMass="5.0" defaultFriction="5.0" defaultRollingFriction="0.9" defaultRestitution="0.5" defaultAngularDamping=".4">
 
   <!--  default shape is box -->
 
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
 
-  <ingredient name="banana" points="15" />
+  <ingredient name="banana" points="15" size="10,10,10"/>
   <ingredient name="sugar" points="10" />
   <ingredient name="ice" points="5" />
   <ingredient name="milk" points="30" />
