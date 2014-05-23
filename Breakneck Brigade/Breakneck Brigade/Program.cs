@@ -149,6 +149,23 @@ namespace Breakneck_Brigade
                             case "rate":
                                 new Thread(() => { rateThread(); }).Start();
                                 break;
+                            case "modeltime":
+                                lock (gameLock)
+                                {
+                                    if (renderer != null)
+                                    {
+                                        if (parts.Length == 2 && parts[1] == "reset")
+                                        {
+                                            renderer.ResetModelStatus();
+                                            Program.WriteLine("ok");
+                                        }
+                                        else
+                                            Program.WriteLine(renderer.GetModelTimerStatus());
+                                    }
+                                    else
+                                        Program.WriteLine("renderer not loaded yet.");
+                                }
+                                break;
                             case "s":
                             case "server":
                                 if (parts.Length > 1)

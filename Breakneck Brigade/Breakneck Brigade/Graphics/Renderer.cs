@@ -347,14 +347,79 @@ namespace Breakneck_Brigade.Graphics
              * */
         }
 
+        ModelTimer modelTimer = null;
+
         private void render3D()
         {
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
                 {
+                    if(modelTimer != null)
+                        modelTimer.start(cgo.Model);
+                    
                     cgo.Render();
+
+                    if(modelTimer != null)
+                        modelTimer.stop();
                 }
             CurrentDrawMode = -1;
         }
-    }   
+
+        public string GetModelTimerStatus()
+        {
+            if (modelTimer != null)
+                return modelTimer.ToString();
+            else
+                return null;
+        }
+
+        public void ResetModelStatus()
+        {
+            modelTimer = new ModelTimer();
+        }
+    }
+
+    class ModelTimer
+    {
+        public Dictionary<Model, TimedModel> timedModels = new Dictionary<Model, TimedModel>();
+        public Stopwatch sw = new Stopwatch();
+
+        Model current;
+
+        public void start(Model model)
+        {
+            current = model;
+            if (!timedModels.ContainsKey(model))
+                timedModels.Add(current, new TimedModel() { model = current, ticks = 0, count = 0 });
+            sw.Restart();
+        }
+        public void stop()
+        {
+            sw.Stop();
+            var ticks = sw.ElapsedTicks;
+            var timedModel = timedModels[current];
+            timedModel.count++;
+            timedModel.ticks += ticks;
+            current = null;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder b = new StringBuilder();
+            foreach (var timedModel in timedModels.Values)
+            {
+                b.Append(timedModel.model.Name.PadRight(30));
+                var timePerModel = timedModel.ticks / timedModel.count;
+                b.Append(timePerModel.ToString().PadLeft(6));
+                b.AppendLine();
+            }
+            return b.ToString();
+        }
+    }
+    class TimedModel
+    {
+        public Model model;
+        public int count;
+        public long ticks;
+    }
 }

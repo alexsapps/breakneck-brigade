@@ -14,19 +14,16 @@ namespace Breakneck_Brigade.Graphics
      */
     class Model
     {
+        public string           Name { get; set; }
         public Matrix4          ModelMatrix { get; set;}
         public List<AObject3D>  Meshes { get; private set; }
 
-        public Model()
-        {
-            Meshes = new List<AObject3D>();
-            ModelMatrix = new Matrix4();
-        }
-
-        public Model(Matrix4 mm)
+        public Model(string name) : this(new Matrix4(), name) { }
+        public Model(Matrix4 mm, string name)
         {
             Meshes = new List<AObject3D>();
             ModelMatrix = mm;
+            this.Name = name;
         }
 
         public void Render()
