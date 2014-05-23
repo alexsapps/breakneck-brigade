@@ -108,33 +108,30 @@ namespace DeCuisine
             }
             
             return null;
-
-            //if (Type.Recipes.ContainsKey(this.HashCache))
-            //{
-            //    foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
-            //    {
-            //        //remove all the ingredients from the game world
-            //        ingredient.Remove();
-            //    }
-            //    Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
-            //    var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-            //    var newIng = new ServerIngredient(Type.Recipes[this.HashCache].FinalProduct, Game, ingSpawn);
-            //    newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
-            //    return newIng;
-            //}
-            //return null;
         }
         private void finishCook(Recipe recipe)
         {
             Program.WriteLine("YOU DIDNT FUCK IT UP ");
-            foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
+            int cookScore = 0;
+            List<ServerIngredient> toEject = new List<ServerIngredient>();
+            // Final scan of the recipe to add up all the points
+            foreach (var recIng in recipe.Ingredients)
+            {
+                var content = ReturnContents(recIng.Ingredient);
+                if (content != null)
+                {
+                    toEject.Add(content);
+                    cookScore += recIng.Ingredient.DefaultPoints;
+                }
+            }
+            
+            foreach(var ingredient in toEject) //toList because collection gets modified during enumeration
             {
                 //remove all the ingredients from the game world
                 ingredient.Remove();
             }
-            Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
-            var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-            var newIng = new ServerIngredient(ingType, Game, ingSpawn);
+            var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 100, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+            var newIng = new ServerIngredient(recipe.FinalProduct, Game, ingSpawn);
             newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
         }
 
@@ -150,6 +147,7 @@ namespace DeCuisine
             }
             return true;
         }
+
         public bool CheckContents(IngredientType ingType)
         {
             foreach (var content in this.Contents.Values)
@@ -159,6 +157,17 @@ namespace DeCuisine
             }
             return false;
         }
+
+        public ServerIngredient ReturnContents(IngredientType ingType)
+        {
+            foreach (var content in this.Contents.Values)
+            {
+                if (ingType == content.Type)
+                    return content;
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Ejects ingredients from this cooker.
