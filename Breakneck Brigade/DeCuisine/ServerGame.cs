@@ -26,6 +26,9 @@ namespace DeCuisine
 
         private Server server;
 
+        public DateTime StartTime { get; set; }
+        public TimeSpan GameTime { get { return DateTime.Now.Subtract(StartTime); } }
+
         public ConfigSalad Config { get; private set; }
 
         public HashSet<ServerGameObject> HasAdded = new HashSet<ServerGameObject>();  
@@ -149,6 +152,7 @@ namespace DeCuisine
             runThread.Start();
 
             Mode = GameMode.Started;
+            StartTime = DateTime.Now;
             SendModeChangeUpdate();
         }
 
@@ -431,23 +435,8 @@ namespace DeCuisine
         protected delegate void GameStateWriter(BinaryWriter writer);
         protected ServerGameStateUpdateMessage CalculateGameStateMessage(GameStateWriter calculator)
         {
-            byte[] bin;
-            int binlen;
-
-            using (MemoryStream membin = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(membin))
-                {
-                    calculator(writer);
-                }
-                bin = membin.ToArray();
-                binlen = bin.Length;
-            }
-            var msg = new ServerGameStateUpdateMessage()
-            {
-                Binary = bin,
-                Created = DateTime.Now
-            };
+            var msg = new ServerGameStateUpdateMessage() { Created = DateTime.Now };
+            msg.Write((writer) => { calculator(writer); });
             return msg;
         }
 
@@ -455,8 +444,10 @@ namespace DeCuisine
         {
             objects.Sort(GameObjSendOrderComparison);
         }
+
         protected void CalculateGameStateDifference(BinaryWriter writer)
         {
+            CalculateGameStateHeader(writer);
             var added = HasAdded.ToList();
             writer.Write(added.Count);
             gameObjSendOrderSort(added);
@@ -477,6 +468,7 @@ namespace DeCuisine
         }
         protected void CalculateGameStateFull(BinaryWriter writer)
         {
+            CalculateGameStateHeader(writer);
             writer.Write(GameObjects.Count);
             var sortedObjets = GameObjects.Values.ToList();
             gameObjSendOrderSort(sortedObjets);
@@ -486,6 +478,13 @@ namespace DeCuisine
             }
             writer.Write(0); //0 "changed"
             writer.Write(0); //0 "deleted"
+        }
+
+        protected void CalculateGameStateHeader(BinaryWriter writer)
+        {
+            //game state information that only applies while connected, but isn't associated with game objects
+
+            writer.Write(GameTime.Ticks);
         }
 
         public int GameObjSendOrderComparison(ServerGameObject o1, ServerGameObject o2)

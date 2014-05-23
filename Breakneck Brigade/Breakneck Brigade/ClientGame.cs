@@ -13,6 +13,8 @@ namespace Breakneck_Brigade
 
         public int? PlayerObjId { get; set; }
 
+        public TimeSpan GameTime { get; set; }
+
         //locking directly on gameObjects before accessing
         public Dictionary<int, ClientGameObject> LiveGameObjects { get; set; }
         public Dictionary<int, ClientGameObject> GameObjectsCache { get; set; }
@@ -28,6 +30,7 @@ namespace Breakneck_Brigade
 
             Config = new GameObjectConfig().GetConfigSalad();
         }
-   
+
+
     }
 }

@@ -80,6 +80,7 @@ namespace SousChef
         {
             return parseStringList(reader, tagName, true);
         }
+
         protected List<string> parseStringList(XmlReader reader, string tagName, bool readParent)
         {
            
@@ -117,8 +118,6 @@ namespace SousChef
 
         public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSize, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping, string temp)
         {
-            // this model code is a little fucked up
-
             //Debug.Assert(attributes.ContainsKey("name")); //should not need name field
             if (temp == null && attributes.ContainsKey("name"))
                 temp = attributes["name"];

@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 06.05.2014 13:09:54
+# File Created: 22.05.2014 22:07:20
 
-mtllib wooden counter.mtl
+mtllib woodenCounter.mtl
 
 #
 # object Box001
@@ -32,7 +32,7 @@ vt 0.0000 0.0000 0.0000
 # 4 texture coords
 
 g Box001
-usemtl Material__25
+usemtl Material__27
 s 2
 f 1/1/1 2/2/1 3/3/1 4/4/1 
 s 4
@@ -76,7 +76,7 @@ vt 0.0000 0.0000 0.0000
 # 4 texture coords
 
 g Box002
-usemtl Material__25
+usemtl Material__27
 s 2
 f 9/5/7 10/6/7 11/7/7 12/8/7 
 s 4

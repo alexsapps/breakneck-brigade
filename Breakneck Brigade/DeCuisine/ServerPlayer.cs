@@ -30,7 +30,27 @@ namespace DeCuisine
         /// <summary>
         /// Gets the ServerObject this player is currently looking at.
         /// </summary>
-        public ServerGameObject ObjectBeingLookedAt { get; private set; }
+
+
+        ServerGameObject _lookingAt;
+        public ServerGameObject LookingAt
+        {
+            get { return _lookingAt; }
+            set
+            {
+                if(_lookingAt != null)
+                    _lookingAt.Removed -= _lookingAt_Removed;
+                _lookingAt = value;
+                if(_lookingAt != null)
+                    _lookingAt.Removed += _lookingAt_Removed;
+            }
+        }
+        void _lookingAt_Removed(object sender, EventArgs e)
+        {
+            Debug.Assert(sender == LookingAt);
+            LookingAt = null;
+        }
+
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
         public Client Client { get; private set; }
         public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
@@ -82,7 +102,11 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            stream.Write(this.Client.Team.Name);
+
+            int lookingAtId = -1;
+            if(this.LookingAt != null)
+                lookingAtId = this.LookingAt.Id;
+            stream.Write(lookingAtId);
         }
 
 
@@ -125,9 +149,7 @@ namespace DeCuisine
                 this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
                 ((ServerIngredient)obj).LastPlayerHolding = this;
             }
-
         }
-
 
         public void Dash()
         {
@@ -151,9 +173,10 @@ namespace DeCuisine
             // Cause you can shoot oranges now. Why the fuck not? 
             if (this.Hands[hand].Held == null)
             {
-                var ingSpawn = new Vector3(this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
-                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
-                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
+                var ingSpawn = new Vector3(
+                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
+                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
+                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
                 var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, ingSpawn);
                 tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
                 return;
@@ -169,9 +192,9 @@ namespace DeCuisine
         /// </summary>
         public void AttemptToEjectCooker()
         {
-            if(this.ObjectBeingLookedAt != null && this.ObjectBeingLookedAt.ObjectClass == GameObjectClass.Cooker)
+            if(this.LookingAt != null && this.LookingAt.ObjectClass == GameObjectClass.Cooker)
             {
-                ((ServerCooker)this.ObjectBeingLookedAt).Eject();
+                ((ServerCooker)this.LookingAt).Eject();
             }
         }
 
@@ -188,37 +211,6 @@ namespace DeCuisine
             }
         }
 
-        /// <summary>
-        /// Queries for UI purposes.
-        /// TODO: Probably need to move all these queries to their respective objects ToString().
-        /// </summary>
-        /// <returns>Information about what this player is looking at.</returns>
-        /*
-        public string Query()
-        {
-            string result = string.Empty;
-            if (this.ObjectBeingLookedAt != null)
-            {
-                if (this.ObjectBeingLookedAt.ObjectClass == GameObjectClass.Cooker)
-                {
-                    ServerCooker cookerLookedAt = (ServerCooker)this.ObjectBeingLookedAt;
-                    result += cookerLookedAt.Type.Name + " which currently has: ";
-                    foreach (ServerIngredient ingredient in cookerLookedAt.Contents.Values.ToList())
-                    {
-                        result += ingredient.Type.Name + " ";
-                    }
-                }
-                else if (this.ObjectBeingLookedAt.ObjectClass == GameObjectClass.Ingredient)
-                {
-                    ServerIngredient ingredientLookedAt = (ServerIngredient)this.ObjectBeingLookedAt;
-                    result += ingredientLookedAt.Type.Name;
-                }
-            }
-
-            return result;
-        }
-         */
-
         protected override void updateHook()
         {
             if (this.Body.LinearVelocity.Y < 0)
@@ -233,9 +225,10 @@ namespace DeCuisine
             if (this.Hands["left"].Held != null)
             {
                 // move the object in front of you
-                this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(   this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, 
-                                                                                                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, 
-                                                                                                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE);
+                this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(
+                    this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, 
+                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, 
+                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE);
             }
 
             // Check what the player is looking at
@@ -272,7 +265,7 @@ namespace DeCuisine
             }
             else
             {
-                this.ObjectBeingLookedAt = null;
+                this.LookingAt = null;
             }
         }
 

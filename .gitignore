@@ -151,5 +151,7 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-# Mac desktop service store files
+# OSX Generated Files
 .DS_Store
+.Spotlight-V100
+.DS_Store?

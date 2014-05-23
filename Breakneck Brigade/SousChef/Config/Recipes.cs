@@ -18,14 +18,14 @@ namespace SousChef
     {
         public RecipeParser(GameObjectConfig config) : base(config) { }
 
-        List<IngredientType> ingredients = new List<IngredientType>();
+        List<RecipeIngredient> ingredients = new List<RecipeIngredient>();
 
         public override void ParseContents(XmlReader reader)
         {
-            var ingredients = this.parseStringList(reader, "ingredient", false);
+            var ingredients = this.parseIngredient(reader, "ingredient");
             foreach (var i in ingredients)
             {
-                this.ingredients.Add(config.CurrentSalad.Ingredients[i]);
+                this.ingredients.Add(i);
             }
         }
 
@@ -48,7 +48,29 @@ namespace SousChef
 
         protected override void reset()
         {
-            ingredients = new List<IngredientType>();
+            ingredients = new List<RecipeIngredient>();
+        }
+
+        protected List<RecipeIngredient> parseIngredient(XmlReader reader, string tagName)
+        {
+
+            List<RecipeIngredient> items = new List<RecipeIngredient>();
+            while (reader.Read())
+            {
+                while (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (reader.Name != tagName)
+                        throw new Exception();
+                    string optional = reader.GetAttribute("optional");
+                    IngredientType ing = config.CurrentSalad.Ingredients[reader.ReadElementContentAsString()];
+                    if(optional == "yes")
+                        items.Add(new RecipeIngredient(ing, true));
+                    else
+                        items.Add(new RecipeIngredient(ing, false));
+
+                }
+            }
+            return items;
         }
     }
 }

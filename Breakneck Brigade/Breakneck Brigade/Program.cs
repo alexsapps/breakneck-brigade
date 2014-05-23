@@ -138,6 +138,7 @@ namespace Breakneck_Brigade
                                             Program.WriteLine("GameMode: " + gameMode.ToString());
                                             if (gameMode == GameMode.Started || gameMode == GameMode.Paused)
                                             {
+                                                Program.WriteLine(game.GameTime.ToString("g"));
                                                 Program.WriteLine(game.LiveGameObjects.Count + " game objects.");
                                             }
                                         }
@@ -621,31 +622,31 @@ namespace Breakneck_Brigade
 
                         lock (gameLock)
                         {
-                            using (MemoryStream mem = new MemoryStream(msg.Binary))
+                            msg.Read((reader) =>
                             {
-                                using (BinaryReader reader = new BinaryReader(mem))
+                                game.GameTime = new TimeSpan((long)reader.ReadInt64());
+
+                                int len = reader.ReadInt32();
+                                for (int i = 0; i < len; i++)
                                 {
-                                    int len = reader.ReadInt32();
-                                    for (int i = 0; i < len; i++)
-                                    {
-                                        int id = reader.ReadInt32();
-                                        ClientGameObject obj = ClientGameObject.Deserialize(id, reader, game);
-                                        game.LiveGameObjects.Add(obj.Id, obj);
-                                    }
-                                    len = reader.ReadInt32();
-                                    for (int i = 0; i < len; i++)
-                                    {
-                                        int id = reader.ReadInt32();
-                                        game.LiveGameObjects[id].StreamUpdate(reader);
-                                    }
-                                    len = reader.ReadInt32();
-                                    for (int i = 0; i < len; i++)
-                                    {
-                                        int id = reader.ReadInt32();
-                                        game.LiveGameObjects.Remove(id);
-                                    }
+                                    int id = reader.ReadInt32();
+                                    ClientGameObject obj = ClientGameObject.Deserialize(id, reader, game);
+                                    game.LiveGameObjects.Add(obj.Id, obj);
                                 }
-                            }
+                                len = reader.ReadInt32();
+                                for (int i = 0; i < len; i++)
+                                {
+                                    int id = reader.ReadInt32();
+                                    game.LiveGameObjects[id].StreamUpdate(reader);
+                                }
+                                len = reader.ReadInt32();
+                                for (int i = 0; i < len; i++)
+                                {
+                                    int id = reader.ReadInt32();
+                                    game.LiveGameObjects.Remove(id);
+                                }
+                            });
+                            
                             game.GameObjectsCache = new Dictionary<int,ClientGameObject>(game.LiveGameObjects);
                         }
                     }

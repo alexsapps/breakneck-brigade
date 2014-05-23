@@ -12,5 +12,5 @@ newmtl Material__47
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka C:\Users\tzhu\Desktop\flour.tga
-	map_Kd C:\Users\tzhu\Desktop\flour.tga
+	map_Ka flour.tga
+	map_Kd flour.tga
