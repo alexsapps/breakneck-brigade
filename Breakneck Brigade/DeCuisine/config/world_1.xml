@@ -35,11 +35,15 @@
 
 			<static type="woodenCounter"  coordinate="-200, 40, -125" model="woodenCounter"></static>
 			<cooker type="pan" coordinate="-200, 80, -125"></cooker>
+			<cooker type="pan" coordinate="200, 80, -125"></cooker>
+			<cooker type="pan" coordinate="-236, 83, -125"></cooker>
 
 			<cooker type="oven" coordinate="-200, 80, -100"></cooker>
 
 			<static type="woodenCounter"  coordinate="-175, 40, -75" model="woodenCounter"></static>
 			<cooker type="toaster" coordinate="-175, 80, -75"></cooker>
+			<cooker type="toaster" coordinate="-256, 70, -75"></cooker>
+			<cooker type="toaster" coordinate="256, 70, -75"></cooker>
 
 			<static type="table" coordinate="-150, 40, -50" model="table"></static>
 			<cooker type="bowl" coordinate="-150, 80, -50"></cooker>
@@ -58,6 +62,9 @@
 			<cooker type="pan" coordinate="200, 80, -125"></cooker>
 
 			<cooker type="oven" coordinate="200, 80, -100"></cooker>
+			<cooker type="pot" coordinate="250, 90, -100"></cooker>
+			<cooker type="pot" coordinate="225, 90, -100"></cooker>
+			<cooker type="pot" coordinate="275, 90, -100"></cooker>
 
 			<static type="woodenCounter"  coordinate="175, 40, -75" model="woodenCounter"></static>
 			<cooker type="toaster" coordinate="175, 80, -75"></cooker>

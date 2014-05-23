@@ -77,7 +77,7 @@ namespace DeCuisine
                     IsConnected = true;
                     new Thread(() => { Connected(this, EventArgs.Empty); }).Start();
 
-                    senderThread = new Thread(() => send());
+                    senderThread = new Thread(() => { send(); });
                     senderThread.Start();
 
                     while (true)
@@ -142,6 +142,7 @@ namespace DeCuisine
                 case ClientEventType.Dash: return typeof(ClientDashEvent);
                 case ClientEventType.Eject: return typeof(ClientEjectEvent);
                 case ClientEventType.ChangeTeam: return typeof(ClientChangeTeamEvent);
+                case ClientEventType.Cook: return typeof(ClientCookEvent);
                 default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
         }

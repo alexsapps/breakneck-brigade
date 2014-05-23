@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using SousChef;
+using System.Diagnostics;
 
 namespace DeCuisine
 {
@@ -243,10 +244,18 @@ namespace DeCuisine
 
         void client_Disconnected(object sender, EventArgs e)
         {
-            lock (Lock)
+            try
             {
-                clients.Remove((Client)sender);
-                ClientLeave(this, new ClientEventArgs((Client)sender));
+                lock (Lock)
+                {
+                    clients.Remove((Client)sender);
+                    ClientLeave(this, new ClientEventArgs((Client)sender));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debugger.Break();
+                throw ex;
             }
         }
 

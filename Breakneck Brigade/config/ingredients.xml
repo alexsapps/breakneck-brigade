@@ -19,6 +19,7 @@
   <ingredient name="bread" points="15" />
   <ingredient name="lettuce" points="10" />
   <ingredient name="milkshake" points="70" />
+  <ingredient name="watermelon" points="70" />
   <ingredient name="egg" points="110" />
   <ingredient name="orange" points="110" shape="sphere" sides="8" />
   <ingredient name="sauce" points="110" shape="sphere" sides="8" />
