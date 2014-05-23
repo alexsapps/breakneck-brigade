@@ -38,8 +38,12 @@ namespace Breakneck_Brigade
         protected HashSet<GlfwKeys> keys;
         float lastx, lastz;
         bool running;
-        DateTime lastDown;
-        GlfwKeys lastDownKey;
+        DateTime lastDownRun;
+        GlfwKeys lastDownRunKey;
+
+        bool throwing;
+        DateTime lastDownThrow;
+        DateTime lastThrow;
         public void Update(InputManager IM, ClientGame game, Graphics.Camera cam)
         {
             game.Lock.AssertHeld();
@@ -68,11 +72,11 @@ namespace Breakneck_Brigade
                 
                 if (checkKey(GlfwKeys.GLFW_KEY_A, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_D, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_S, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_W, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_LEFT, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_RIGHT, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_DOWN, ref downKey) || checkKey(GlfwKeys.GLFW_KEY_UP, ref downKey))
                 {
-                    if ((DateTime.Now.Subtract(lastDown).TotalMilliseconds < 600) && lastDownKey == downKey)
+                    if ((DateTime.Now.Subtract(lastDownRun).TotalMilliseconds < 600) && lastDownRunKey == downKey)
                         running = true;
 
-                    lastDown = DateTime.Now;
-                    lastDownKey = downKey;
+                    lastDownRun = DateTime.Now;
+                    lastDownRunKey = downKey;
                 }
             }
             float MoveSpeed = running || IM[GlfwKeys.GLFW_KEY_LEFT_SHIFT] || IM[GlfwKeys.GLFW_KEY_RIGHT_SHIFT] ? RunSpeed : WalkSpeed;
@@ -112,6 +116,24 @@ namespace Breakneck_Brigade
             if (this.downKeys.Contains(GlfwKeys.GLFW_MOUSE_BUTTON_LEFT))
             {
                 NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline });
+                lastDownThrow = DateTime.Now;
+                throwing = true;
+                lastThrow = DateTime.Now;
+            }
+            if(IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])
+            {
+                if (throwing && DateTime.Now.Subtract(lastDownThrow).TotalMilliseconds > 1000) //user holds mouse down for one second
+                {
+                    if (DateTime.Now.Subtract(lastThrow).TotalMilliseconds > 60) //spawn oranges every other server tick
+                    {
+                        lastThrow = DateTime.Now;
+                        NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline });
+                    }
+                }
+            }
+            if(this.upKeys.Contains(GlfwKeys.GLFW_MOUSE_BUTTON_LEFT))
+            {
+                throwing = false;
             }
 
             // handle dashing key
