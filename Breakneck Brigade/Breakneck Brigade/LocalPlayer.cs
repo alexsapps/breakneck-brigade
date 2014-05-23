@@ -129,7 +129,7 @@ namespace Breakneck_Brigade
             // Handle cook event
             if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_E))
             {
-
+                this.NetworkEvents.Add(new ClientCookEvent());
             }
 
             IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;

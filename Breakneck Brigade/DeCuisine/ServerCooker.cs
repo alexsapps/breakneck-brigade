@@ -127,15 +127,15 @@ namespace DeCuisine
         private void finishCook(Recipe recipe)
         {
             Program.WriteLine("YOU DIDNT FUCK IT UP ");
-            //foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
-            //{
-            //    //remove all the ingredients from the game world
-            //    ingredient.Remove();
-            //}
-            //Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
-            //var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-            //var newIng = new ServerIngredient(ingType, Game, ingSpawn);
-            //newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
+            foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
+            {
+                //remove all the ingredients from the game world
+                ingredient.Remove();
+            }
+            Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
+            var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+            var newIng = new ServerIngredient(ingType, Game, ingSpawn);
+            newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
         }
 
 

@@ -7,9 +7,9 @@ using System.IO;
 using SousChef;
 namespace SousChef
 {
-    public class ClientCooktEvent : ClientEvent
+    public class ClientCookEvent : ClientEvent
     {
-        public override ClientEventType Type { get { return ClientEventType.Eject; } }
+        public override ClientEventType Type { get { return ClientEventType.Cook; } }
 
         public ClientCookEvent() { }
 

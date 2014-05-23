@@ -56,6 +56,7 @@ namespace SousChef
         /// </summary>
         Eject,
 
-        ChangeTeam
+        ChangeTeam,
+        Cook
     }
 }

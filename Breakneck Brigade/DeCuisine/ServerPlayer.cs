@@ -198,6 +198,14 @@ namespace DeCuisine
             }
         }
 
+        public void AttemptToCook()
+        {
+            if (this.LookingAt != null && this.LookingAt.ObjectClass == GameObjectClass.Cooker)
+            {
+                ((ServerCooker)this.LookingAt).Cook();
+            }
+        }
+
         /// <summary>
         /// Causes player to jump into the air.
         /// </summary>
@@ -261,7 +269,7 @@ namespace DeCuisine
             this.Game.World.RayTest(start, end, collisionCallback);
             if (collisionCallback.HasHit)
             {
-                ServerGameObject collidedGameObject = (ServerGameObject)collisionCallback.CollisionObject.CollisionShape.UserObject;
+                this.LookingAt = (ServerGameObject)collisionCallback.CollisionObject.CollisionShape.UserObject;
             }
             else
             {

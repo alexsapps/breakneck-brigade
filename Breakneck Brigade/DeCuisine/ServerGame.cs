@@ -286,6 +286,9 @@ namespace DeCuisine
                                         player.AttemptToEjectCooker();
                                         break;
                                     case ClientEventType.ChangeTeam:
+                                    case ClientEventType.Cook:
+                                        player.AttemptToCook();
+                                        break;
                                     case ClientEventType.Command:
                                         throw new InvalidOperationException(); //these handled elsewhere
                                     default:
