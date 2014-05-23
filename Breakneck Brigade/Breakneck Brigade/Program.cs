@@ -248,7 +248,9 @@ namespace Breakneck_Brigade
                     //do not use Program.WriteLine for this
                     Console.Write("\r                                             \rRate: ");
                     if (renderer.secondsPerFrame > 0)
-                        Console.Write(1 / renderer.secondsPerFrame);
+                        Console.Write((1 / renderer.secondsPerFrame).ToString("f2").PadLeft(12));
+                    if (renderer.secondsPerFrame2 > 0)
+                        Console.Write((1 / renderer.secondsPerFrame2).ToString("f2").PadLeft(12));
                     System.Threading.Thread.Sleep(200);
                 }
             }

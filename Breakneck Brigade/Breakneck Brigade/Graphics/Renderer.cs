@@ -25,8 +25,11 @@ namespace Breakneck_Brigade.Graphics
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
 
-        private Stopwatch   _stopwatch;
+        private Stopwatch  _stopwatch = new Stopwatch();
+        private Stopwatch  _stopwatch2 = new Stopwatch();
+        private BBStopwatch _stopwatch3 = new BBStopwatch(Program.clientConsole);
         public float       secondsPerFrame = 0.0f;
+        public float       secondsPerFrame2 = 0.0f;
 
         public static int                           CurrentDrawMode = -1;
         /// <summary>
@@ -65,7 +68,6 @@ namespace Breakneck_Brigade.Graphics
 
         public Renderer()
         {
-            _stopwatch      = new Stopwatch();
             parser          = new ModelParser();
             WorldTransform  = new Matrix4();
 
@@ -163,18 +165,23 @@ namespace Breakneck_Brigade.Graphics
             setViewport();
             
             //Always clear both color and depth
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_STENCIL_BUFFER_BIT);
             
             prep2D();
             render2D();
             prep3D(lp);
             render3D();
 
+            _stopwatch3.Start();
             Glfw.glfwSwapBuffers();
+            _stopwatch3.Stop(30, "slow swap buffers {0}");
 
             _stopwatch.Stop();
-            secondsPerFrame += _stopwatch.ElapsedTicks/MathConstants.TICKS_PER_SECOND;
+            _stopwatch2.Stop();
+            secondsPerFrame += _stopwatch.ElapsedTicks / MathConstants.TICKS_PER_SECOND;
             secondsPerFrame /= 2;
+            secondsPerFrame2 += _stopwatch2.ElapsedTicks / MathConstants.TICKS_PER_SECOND;
+            secondsPerFrame2 /= 2;
             _stopwatch.Restart();
             // glfwSwapBuffers should implicitly call glfwPollEvents() by default
             //Glfw.glfwPollEvents();
