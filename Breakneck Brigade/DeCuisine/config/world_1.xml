@@ -24,7 +24,7 @@
 			<static type="woodenCounter"  coordinate="-175, 40, -75" model="woodenCounter"></static>
 			<cooker type="toaster" coordinate="-175, 80, -75"></cooker>
 
-			<static type=“table” coordinate="-150, 40, -50" model=“table”></static>
+			<static type="table" coordinate="-150, 40, -50" model="table"></static>
 			<cooker type="bowl" coordinate="-150, 80, -50"></cooker>
 
 			<!-- Blue team side -->
@@ -45,7 +45,7 @@
 			<static type="woodenCounter"  coordinate="175, 40, -75" model="woodenCounter"></static>
 			<cooker type="toaster" coordinate="175, 80, -75"></cooker>
 
-			<static type=“table”  coordinate="150, 40, -50" model=“table></static>
+			<static type="table"  coordinate="150, 40, -50" model="table"></static>
 			<cooker type="bowl" coordinate="150, 80, -50"></cooker>
 
 			<static type="deliveryWindow" coordinate="0,40,-250" model="deliveryWindow"/>
