@@ -103,30 +103,10 @@ namespace DeCuisine
             //find if there is a valid recipe
             foreach (var recipe in this.Type.Recipes)
             {
-                bool allMan = true;
-                foreach (var content in this.Contents.Values)
-                {
-                    bool found = false;
-                    foreach (var recIng in recipe.Value.Ingredients)
-                    {
-                        if (recIng.Ingredient == content.Type)
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found)
-                    {
-                        allMan = false;
-                        break;
-                    }
-                }
-                if (allMan == true)
-                {
-                    //found the objects
-                }
-
+                if (CheckRecipe(recipe.Value))
+                    finishCook(recipe.Value);
             }
+            
             return null;
 
             //if (Type.Recipes.ContainsKey(this.HashCache))
@@ -143,6 +123,41 @@ namespace DeCuisine
             //    return newIng;
             //}
             //return null;
+        }
+        private void finishCook(Recipe recipe)
+        {
+            Program.WriteLine("YOU DIDNT FUCK IT UP ");
+            //foreach(var ingredient in this.Contents.Values.ToList()) //toList because collection gets modified during enumeration
+            //{
+            //    //remove all the ingredients from the game world
+            //    ingredient.Remove();
+            //}
+            //Debug.Assert(this.Contents.Count == 0); // ingredient.Remove fires ingredients Removed event, which we listen on and remove from the server when this happens
+            //var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+            //var newIng = new ServerIngredient(ingType, Game, ingSpawn);
+            //newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
+        }
+
+
+        public bool CheckRecipe(Recipe recipe)
+        {
+            foreach (var recIng in recipe.Ingredients)
+            {
+                if (recIng.Optional)
+                    continue; // pass over optional ingredients
+                if (!CheckContents(recIng.Ingredient))
+                    return false;
+            }
+            return true;
+        }
+        public bool CheckContents(IngredientType ingType)
+        {
+            foreach (var content in this.Contents.Values)
+            {
+                if (ingType == content.Type)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>

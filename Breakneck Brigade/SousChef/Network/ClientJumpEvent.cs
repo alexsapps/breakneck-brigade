@@ -15,11 +15,9 @@ namespace SousChef
         public ClientJumpEvent() { }
         public ClientJumpEvent(BinaryReader reader)
         {
-            this.isJumping = reader.ReadBoolean();
         }
         public override void Write(BinaryWriter writer)
         {
-            writer.Write(isJumping);
         }
     }
 }

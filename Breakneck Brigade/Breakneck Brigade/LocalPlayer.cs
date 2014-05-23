@@ -126,6 +126,12 @@ namespace Breakneck_Brigade
                 this.NetworkEvents.Add(new ClientEjectEvent());
             }
 
+            // Handle cook event
+            if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_E))
+            {
+
+            }
+
             IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;
             
             if (IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])
