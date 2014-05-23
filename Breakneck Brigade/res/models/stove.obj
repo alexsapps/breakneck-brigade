@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 21.05.2014 00:22:40
+# File Created: 22.05.2014 22:29:57
 
-mtllib stove v2.mtl
+mtllib stove.mtl
 
 #
 # object Box002
