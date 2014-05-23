@@ -25,7 +25,8 @@ namespace Breakneck_Brigade
 
         public ClientTerrain(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
-            Texture = reader.ReadString();
+            string typename = reader.ReadString();
+            //TODO:  this.Type = game.Config.Terrain[ingrname];
             _sides = new float[] { reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() };
             finalizeConstruction();
         }

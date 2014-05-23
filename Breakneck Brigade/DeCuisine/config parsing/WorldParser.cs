@@ -209,6 +209,9 @@ namespace DeCuisine
         }
         protected override void HandleAttributes()
         {
+            //TODO: fix
+            serverPlane = new ServerTerrain(serverGame, new TerrainType(TerrainName.FLOOR, new GeometryInfo()));
+            /*
             GeometryInfo info = new GeometryInfo();
             // float height = float.Parse(attributes["height"]);
             info.Friction = float.Parse(attributes.ContainsKey("friction") ? attributes["friction"] : "0");
@@ -218,6 +221,7 @@ namespace DeCuisine
             info.Sides = new float[] { sides.X, sides.Y, sides.Z };
             info.Shape = attributes.ContainsKey("shape") ? ((GeomShape) Enum.Parse(typeof(GeomShape), attributes["shape"], true)) : GeomShape.None;
             serverPlane = new ServerTerrain(serverGame, attributes.ContainsKey("texture") ? attributes["texture"] : "blank", info);
+             * */
         }
         protected override void reset()
         {
