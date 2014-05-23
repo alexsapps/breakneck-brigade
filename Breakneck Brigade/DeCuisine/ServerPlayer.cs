@@ -24,7 +24,7 @@ namespace DeCuisine
         private bool isFalling { get; set; }
         private bool canJump { get; set; }
         private Vector3 lastVelocity { get; set; }
-        private ServerCooker lookingAtCooker;
+        private ServerGameObject objectBeingLookedAt;
 
         protected override GeometryInfo getGeomInfo() { return BB.GetPlayerGeomInfo(); }
 
@@ -166,12 +166,15 @@ namespace DeCuisine
         /// </summary>
         public void AttemptToEjectCooker()
         {
-            if(this.lookingAtCooker != null)
+            if(this.objectBeingLookedAt != null && this.objectBeingLookedAt.ObjectClass == GameObjectClass.Cooker)
             {
-                this.lookingAtCooker.Eject();
+                ((ServerCooker)this.objectBeingLookedAt).Eject();
             }
         }
 
+        /// <summary>
+        /// Causes player to jump into the air.
+        /// </summary>
         public void Jump()
         {
             if (this.canJump || Game.MultiJump)
@@ -180,6 +183,35 @@ namespace DeCuisine
                 this.canJump = false;
                 this.isFalling = false;
             }
+        }
+
+        /// <summary>
+        /// Queries for UI purposes.
+        /// TODO: Probably need to move all these queries to their respective objects ToString().
+        /// </summary>
+        /// <returns>Information about what this player is looking at.</returns>
+        public string Query()
+        {
+            string result = string.Empty;
+            if (this.objectBeingLookedAt != null)
+            {
+                if (this.objectBeingLookedAt.ObjectClass == GameObjectClass.Cooker)
+                {
+                    ServerCooker cookerLookedAt = (ServerCooker)this.objectBeingLookedAt;
+                    result += cookerLookedAt.Type.Name + " which currently has: ";
+                    foreach (ServerIngredient ingredient in cookerLookedAt.Contents.Values.ToList())
+                    {
+                        result += ingredient.Type.Name + " ";
+                    }
+                }
+                else if (this.objectBeingLookedAt.ObjectClass == GameObjectClass.Ingredient)
+                {
+                    ServerIngredient ingredientLookedAt = (ServerIngredient)this.objectBeingLookedAt;
+                    result += ingredientLookedAt.Type.Name;
+                }
+            }
+
+            return result;
         }
 
         protected override void updateHook()
@@ -232,22 +264,11 @@ namespace DeCuisine
             if (collisionCallback.HasHit)
             {
                 ServerGameObject collidedGameObject = (ServerGameObject)collisionCallback.CollisionObject.CollisionShape.UserObject;
-                if (collidedGameObject.ObjectClass == GameObjectClass.Ingredient)
-                {
-                    //Console.WriteLine("I SEE " + ((ServerIngredient)collidedGameObject).Type.Name);
-                    this.lookingAtCooker = null;
-                }
-                else if (collidedGameObject.ObjectClass == GameObjectClass.Cooker)
-                {
-                    this.lookingAtCooker = (ServerCooker)collidedGameObject;
-                    //Console.WriteLine("I SEE " + this.lookingAtCooker.Type.Name);
-                }
-                else
-                {
-                    this.lookingAtCooker = null;
-                }
             }
-
+            else
+            {
+                this.objectBeingLookedAt = null;
+            }
         }
 
         public override void Remove()
