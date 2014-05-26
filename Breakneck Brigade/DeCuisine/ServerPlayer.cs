@@ -137,6 +137,7 @@ namespace DeCuisine
         /// </summary>
         public void Move(float x, float y, float z)
         {
+            this.dashTicks = 0;
             this.Body.LinearVelocity = new Vector3(x, this.Body.LinearVelocity.Y + y, z);
             this.Body.ActivationState = ActivationState.ActiveTag;
         }
