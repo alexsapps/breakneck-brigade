@@ -1,87 +1,76 @@
 <world gravity="0,-190,0">
-	<space>
-			<!-- Floor + Walls -->
-			<terrain type="floor" shape="box" coordinate="0, 0, 0"          size="2000,1,2000" />
+  <space>
+    <!-- Floor + Walls -->
+    <terrain type="floor" shape="box" coordinate="0, 0, 0"          size="2000,100,2000" />
+    <terrain type="wall" shape="box" coordinate="-2000, 100,  0"   size="10,2000,2000" orientation="90"/>
+    <terrain type="wall" shape="box" coordinate="2000, 100,  0"   size="10,2000,2000" orientation="90"/>
+    <terrain type="wall" shape="box" coordinate="-2000, 100,  0"   size="10,2000,2000"/>
+    <terrain type="wall" shape="box" coordinate="2000, 100,  0"   size="10,2000,2000" />
+
+    <!--Ceiling-->
+    <terrain type="floor" shape="box" coordinate="0, 2000, 0" size="2000,1,2000" />
     
-      <terrain type="wall" shape="box" coordinate="-300, 100, -1500"  size="10,100,500" />
-			<terrain type="wall" shape="box" coordinate="-300, 100, -500"   size="10,100,500" />
-      <terrain type="wall" shape="box" coordinate="-300, 100,  500"    size="10,100,500" />
-      <terrain type="wall" shape="box" coordinate="-300, 100,  1500"   size="10,100,500" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100, -1500"   size="10,100,500" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100, -500"    size="10,100,500" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100,  500"     size="10,100,500" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100,  1500"    size="10,100,500" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100, -1500"   size="10,100,500" orientation="90" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100, -500"    size="10,100,500" orientation="90" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100,  500"     size="10,100,500" orientation="90" />
-      <terrain type="wall" shape="box" coordinate=" 300, 100,  1500"    size="10,100,500" orientation="90" />
-      <terrain type="wall" shape="box" coordinate="-300, 100, -1500"  size="10,100,500" orientation="90"/>
-      <terrain type="wall" shape="box" coordinate="-300, 100, -500"   size="10,100,500" orientation="90"/>
-      <terrain type="wall" shape="box" coordinate="-300, 100,  500"    size="10,100,500" orientation="90"/>
-      <terrain type="wall" shape="box" coordinate="-300, 100,  1500"   size="10,100,500" orientation="90"/>
-
-			<terrain type="floor" shape="box" coordinate="0, 1000, 0" size="500,1,500" />
-			<terrain type="floor" shape="box" coordinate="0, 300, 0" sides="5,1,5" />
-
-			<!-- Red team side -->
-			<static type="woodenCounter" size="10,10,10" coordinate="-150, 40, -200" model="woodenCounter"></static>
-			<cooker type="blender" coordinate="-150, 80, -200"></cooker>
-
-			<static type="woodenCounter"  coordinate="-175, 40, -175" model="woodenCounter"></static>
-			<cooker type="juicer" coordinate="-175, 80, -175"></cooker>
-
-			<static type="woodenCounter"  coordinate="-200, 40, -150" model="woodenCounter"></static>
-			<cooker type="pot" coordinate="-200, 80, -150"></cooker>
-
-			<static type="woodenCounter"  coordinate="-200, 40, -125" model="woodenCounter"></static>
-			<cooker type="pan" coordinate="-200, 80, -125"></cooker>
-			<cooker type="pan" coordinate="200, 80, -125"></cooker>
-			<cooker type="pan" coordinate="-236, 83, -125"></cooker>
-
-			<cooker type="oven" coordinate="-200, 80, -100"></cooker>
-
-			<static type="woodenCounter"  coordinate="-175, 40, -75" model="woodenCounter"></static>
-			<cooker type="toaster" coordinate="-175, 80, -75"></cooker>
-			<cooker type="toaster" coordinate="-256, 70, -75"></cooker>
-			<cooker type="toaster" coordinate="256, 70, -75"></cooker>
-
-			<static type="table" coordinate="-150, 40, -50" model="table"></static>
-			<cooker type="bowl" coordinate="-150, 80, -50"></cooker>
-
-			<!-- Blue team side -->
-			<static type="woodenCounter"  coordinate="150, 40, -200" model="woodenCounter"></static>
-			<cooker type="blender" coordinate="150, 80, -200"></cooker>
-
-			<static type="woodenCounter"  coordinate="175, 40, -175" model="woodenCounter"></static>
-			<cooker type="juicer" coordinate="175, 80, -175"></cooker>
-
-			<static type="woodenCounter"  coordinate="200, 40, -150" model="woodenCounter"></static>
-			<cooker type="pot" coordinate="200, 80, -150"></cooker>
-
-			<static type="woodenCounter" coordinate="200, 40, -125" model="woodenCounter"></static>
-			<cooker type="pan" coordinate="200, 80, -125"></cooker>
-
-			<cooker type="oven" coordinate="200, 80, -100"></cooker>
-			<cooker type="pot" coordinate="250, 90, -100"></cooker>
-			<cooker type="pot" coordinate="225, 90, -100"></cooker>
-			<cooker type="pot" coordinate="275, 90, -100"></cooker>
-
-			<static type="woodenCounter"  coordinate="175, 40, -75" model="woodenCounter"></static>
-			<cooker type="toaster" coordinate="175, 80, -75"></cooker>
-
-			<static type="table"  coordinate="150, 40, -50" model="table"></static>
-			<cooker type="bowl" coordinate="150, 80, -50"></cooker>
-
-			<static type="deliveryWindow" coordinate="0,40,-250" model="deliveryWindow"/>
 
 
 
-  <!--Some initial ingredients for testing-->
-    <ingredient type="iceCream" coordinate="0,12,0" />
-    <ingredient type="banana" coordinate="0,12,0" />
-    <ingredient type="iceCream" coordinate="0,12,0" />
-    <ingredient type="banana" coordinate="0,12,0" />
-    <ingredient type="iceCream" coordinate="0,12,0" />
-    <ingredient type="banana" coordinate="0,12,0" />
-	</space>
+
+
+
+
+    <!-- Red team side -->
+    <static type="woodenCounter"  coordinate="-1800, 40, -1600"  size="20,10,20" model="woodenCounter"></static>
+    <cooker type="blender" coordinate="-1800, 120, -1600" ></cooker>
+
+    <static type="woodenCounter"  coordinate="-1800, 40, -1700" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="juicer" coordinate="-1800, 80, -1700"></cooker>
+
+    <static type="woodenCounter"  coordinate="-1800, 40, -1800" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="pot" coordinate="-1800, 80, -1800"></cooker>
+
+    <static type="woodenCounter" coordinate="-1300, 40, -1600" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="pan" coordinate="-1300, 80, -1600"></cooker>
+
+    <static type="table"  coordinate="-1300, 40, -1900" model="table" size="20,10,20"></static>
+    <cooker type="bowl" coordinate="-1300, 80, -1900"></cooker>
+
+    <cooker type="oven" coordinate="-1300, 80, -1700"></cooker>
+
+    <static type="woodenCounter"  coordinate="-1300, 40, -1800" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="toaster" coordinate="-1300, 80, -1800"></cooker>
+
+    <!-- Blue team side -->
+    <static type="woodenCounter"  coordinate="1800, 40, 1600"  size="20,10,20" model="woodenCounter"></static>
+    <cooker type="blender" coordinate="1800, 120, 1600" ></cooker>
+
+    <static type="woodenCounter"  coordinate="1800, 40, 1700" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="juicer" coordinate="1800, 80, 1700"></cooker>
+
+    <static type="woodenCounter"  coordinate="1800, 40, 1800" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="pot" coordinate="1800, 80, 1800"></cooker>
+
+    <static type="woodenCounter" coordinate="1300, 40, 1600" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="pan" coordinate="1300, 80, 1600"></cooker>
+
+    <static type="table"  coordinate="1300, 40, 1900" model="table" size="20,10,20"></static>
+    <cooker type="bowl" coordinate="1300, 80, 1900"></cooker>
+
+    <cooker type="oven" coordinate="1300, 80, 1700"></cooker>
+
+    <static type="woodenCounter"  coordinate="1300, 40, 1800" size="20,10,20" model="woodenCounter"></static>
+    <cooker type="toaster" coordinate="1300, 80, 1800"></cooker>
+
+
+
+    <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" model="deliveryWindow"/>
+
+
+
+    <!--Some initial ingredients for testing-->
+    <ingredient type="iceCream" coordinate="10,12,0" />
+    <ingredient type="banana" coordinate="10,12,0" />
+    <ingredient type="iceCream" coordinate="10,12,0" />
+    <ingredient type="banana" coordinate="10,12,0" />
+    <ingredient type="iceCream" coordinate="10,12,0" />
+    <ingredient type="banana" coordinate="10,12,0" />
+  </space>
 </world>

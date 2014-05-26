@@ -63,18 +63,6 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     <rotZ>0</rotZ>
   </model>
   <model>
-    <filename>bottle</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.1</scaleX>
-    <scaleY>.1</scaleY>
-    <scaleZ>.1</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
     <filename>teapotPillar</filename>
     <posX>0</posX>
     <posY>0</posY>
@@ -87,55 +75,7 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     <rotZ>0</rotZ>
   </model>
   <model>
-    <filename>blender</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>sauce</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.1</scaleX>
-    <scaleY>.1</scaleY>
-    <scaleZ>.1</scaleZ>     
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
     <filename>iceCream</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.1</scaleX>
-    <scaleY>.1</scaleY>
-    <scaleZ>.1</scaleZ>     
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>egg</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.1</scaleX>
-    <scaleY>.1</scaleY>
-    <scaleZ>.1</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>steak</filename>
     <posX>0</posX>
     <posY>0</posY>
     <posZ>0</posZ>
@@ -195,49 +135,25 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     <rotZ>0</rotZ>
   </model>
   <model>
-    <filename>lettuce</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>    
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>salt</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>  
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
     <filename>oven</filename>
     <posX>0</posX>
     <posY>0</posY>
     <posZ>0</posZ>
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>     
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>     
     <rotX>0</rotX>
     <rotY>0</rotY>
     <rotZ>0</rotZ>
   </model>
   <model>
-    <filename>milk</filename>
+    <filename>blender</filename>
     <posX>0</posX>
     <posY>0</posY>
-    <posZ>0</posZ>  
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>
+    <posZ>0</posZ>
+    <scaleX>.6</scaleX>
+    <scaleY>.6</scaleY>
+    <scaleZ>.6</scaleZ>
     <rotX>0</rotX>
     <rotY>0</rotY>
     <rotZ>0</rotZ>
@@ -247,9 +163,9 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     <posX>0</posX>
     <posY>0</posY>
     <posZ>0</posZ>
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>
+    <scaleX>1.0</scaleX>
+    <scaleY>1.0</scaleY>
+    <scaleZ>1.0</scaleZ>
     <rotX>0</rotX>
     <rotY>0</rotY>
     <rotZ>0</rotZ>
@@ -265,78 +181,6 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     <rotX>0</rotX>
     <rotY>0</rotY>
     <rotZ>0</rotZ>  
-  </model>
-  <model>
-    <filename>carrot</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>flour</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>butter</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>cheese</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>.4</scaleX>
-    <scaleY>.4</scaleY>
-    <scaleZ>.4</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>sugar</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>tomato</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
   </model>
   <model>
     <filename>wall</filename>
@@ -388,30 +232,6 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
   </model>
   <model>
     <filename>pan</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>watermelon</filename>
-    <posX>0</posX>
-    <posY>0</posY>
-    <posZ>0</posZ>
-    <scaleX>1.0</scaleX>
-    <scaleY>1.0</scaleY>
-    <scaleZ>1.0</scaleZ>
-    <rotX>0</rotX>
-    <rotY>0</rotY>
-    <rotZ>0</rotZ>
-  </model>
-  <model>
-    <filename>coconut</filename>
     <posX>0</posX>
     <posY>0</posY>
     <posZ>0</posZ>

@@ -212,15 +212,21 @@ namespace Breakneck_Brigade.Graphics
             /* LIGHTING */
             Gl.glEnable(Gl.GL_LIGHTING);
 
-            float[] position        = { 0, 1000, 1000 };
-            float[] ambientColor    = { 0, 0, 0, 1 };
-            float[] diffuseColor    = { 1, 1, 1, 1 };
-            float[] specularColor   = { 1, 1, 1, 1 };
-            Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position);
+            float[] position1 = { 1000, 2000, 0 };
+            float[] position2 = { 0, 2000, 0 };
+            float[] ambientColor = { 0, 0, 0, 1 };
+            float[] diffuseColor = { 1, 1, 1, 1 };
+            float[] specularColor = { 1, 1, 1, 1 };
+            Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position1);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_AMBIENT, ambientColor);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_DIFFUSE, diffuseColor);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, specularColor);
+            Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_POSITION, position2);
+            Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_AMBIENT, ambientColor);
+            Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_DIFFUSE, diffuseColor);
+            Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_SPECULAR, specularColor);
             Gl.glEnable(Gl.GL_LIGHT0);
+            Gl.glEnable(Gl.GL_LIGHT1);
 
             /* RENDERING SETTINGS */
             //Enables manual setting of colors and materials of primatives (through glColor__, etc)
@@ -249,6 +255,7 @@ namespace Breakneck_Brigade.Graphics
             Camera.Distance = 50.0f;
             Camera.Incline  = 0.0f;
             //MainCamera.Transform.TranslationMat(0, -25, 0);
+
         }
 
         /// <summary>
