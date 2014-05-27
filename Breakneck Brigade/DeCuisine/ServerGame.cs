@@ -364,7 +364,7 @@ namespace DeCuisine
                             break;
                         case ClientEventType.ThrowItem:
                             var thrEv = (ClientThrowEvent)input.Event;
-                            player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline);
+                            player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline, thrEv.Force);
                             break;
                         case ClientEventType.Dash:
                             player.Dash();

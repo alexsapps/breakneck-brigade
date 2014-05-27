@@ -13,6 +13,7 @@ namespace SousChef
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public string Hand { get; set; }
+        public float Force { get; set; }
 
         public ClientThrowEvent() { }
         public ClientThrowEvent(BinaryReader reader) 
@@ -20,12 +21,14 @@ namespace SousChef
             this.Hand = reader.ReadString();
             this.Orientation = reader.ReadSingle();
             this.Incline = reader.ReadSingle();
+            this.Force = reader.ReadSingle();
         }
         public override void Write(BinaryWriter writer) 
         {
             writer.Write(this.Hand);
             writer.Write(this.Orientation);
             writer.Write(this.Incline);
+            writer.Write(this.Force);
         }
     }
 }

@@ -171,11 +171,12 @@ namespace DeCuisine
         /// Throw an object from the passed in hand
         /// </summary>
         /// <param name="hand"></param>
-        public void Throw(string hand, float orientation, float incline)
+        public void Throw(string hand, float orientation, float incline, float scalar)
         {
             SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
             Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(-incline);
             imp = rotate * imp; 
+            imp *= scalar;
 
             // Cause you can shoot oranges now. Why the fuck not? 
             if (this.Hands[hand].Held == null)

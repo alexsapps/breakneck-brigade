@@ -115,7 +115,7 @@ namespace Breakneck_Brigade
             // handle throwing key
             if (this.downKeys.Contains(GlfwKeys.GLFW_MOUSE_BUTTON_LEFT))
             {
-                NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline });
+                NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 1.0f });
                 lastDownThrow = DateTime.Now;
                 throwing = true;
                 lastThrow = DateTime.Now;
@@ -152,6 +152,11 @@ namespace Breakneck_Brigade
             if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_E))
             {
                 this.NetworkEvents.Add(new ClientCookEvent());
+            }
+            // Handle drop event
+            if(this.downKeys.Contains(GlfwKeys.GLFW_KEY_F))
+            {
+                NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 0.0f });
             }
 
             IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;
