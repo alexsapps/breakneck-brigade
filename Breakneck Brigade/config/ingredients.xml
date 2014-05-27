@@ -1,10 +1,9 @@
-<ingredients defaultSides="4,4,4" defaultMass="5.0" defaultFriction="5.0" defaultRollingFriction="0.9" defaultRestitution="0.5" defaultAngularDamping=".4">
+<ingredients defaultSize="4,4,4" defaultMass="5.0" defaultFriction="5.0" defaultRollingFriction="0.9" defaultRestitution="0.5" defaultAngularDamping=".4">
 
   <!--  default shape is box -->
 
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
-
   <ingredient name="banana" points="15" size=".7, .7, .7"/>
   <ingredient name="tomato" points="15" size=".7, .7, .7"/>
   <ingredient name="bottle" points="15" size=".7, .7, .7"/>
