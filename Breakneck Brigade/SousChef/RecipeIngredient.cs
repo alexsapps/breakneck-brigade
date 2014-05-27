@@ -9,11 +9,13 @@ namespace SousChef
     public class RecipeIngredient
     {
         public IngredientType Ingredient;
-        public bool Optional;
-        public RecipeIngredient(IngredientType ing, bool optional)
+        public int nCount; //number of instances of ingredient needed for this recipe
+        public int nOptional; //number of optional/extra instances that can count for extra points in this recipe
+        public RecipeIngredient(IngredientType ing, int count, int optional)
         {
             this.Ingredient = ing;
-            this.Optional = optional;
+            this.nCount = count;
+            this.nOptional = optional;
         }
     }
 }

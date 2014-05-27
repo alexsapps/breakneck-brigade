@@ -61,13 +61,21 @@ namespace SousChef
                 {
                     if (reader.Name != tagName)
                         throw new Exception();
-                    string optional = reader.GetAttribute("optional");
-                    IngredientType ing = config.CurrentSalad.Ingredients[reader.ReadElementContentAsString()];
-                    if(optional == "yes")
-                        items.Add(new RecipeIngredient(ing, true));
-                    else
-                        items.Add(new RecipeIngredient(ing, false));
+                    
+                    int optional = parseInt(reader.GetAttribute("optional"), -1);
+                    int count = parseInt(reader.GetAttribute("count"), -1);
 
+                    if (count < 0)
+                        if (optional >= 0)
+                            count = 0; //if optional specified, but not count, then it's an optional ingredient, 0 required
+                        else
+                            count = 1; //if neither count nor optional specified, it means it's required and just 1 is needed
+
+                    if (optional < 0)
+                        optional = 0; //if optional not specified, this means 0 optional
+                    
+                    IngredientType ing = config.CurrentSalad.Ingredients[reader.ReadElementContentAsString()];
+                    items.Add(new RecipeIngredient(ing, count, optional));
                 }
             }
             return items;

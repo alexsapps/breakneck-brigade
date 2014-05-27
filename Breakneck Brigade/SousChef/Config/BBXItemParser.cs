@@ -152,6 +152,11 @@ namespace SousChef
             return info;
         }
 
+        public static int parseInt(string str, int @default)
+        {
+            return str == null ? @default : int.Parse(str);
+        }
+
         public static float parseFloat(string str, float @default)
         {
             return str == null ? @default : float.Parse(str);
