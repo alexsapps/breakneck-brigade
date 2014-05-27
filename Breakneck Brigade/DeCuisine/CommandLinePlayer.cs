@@ -121,6 +121,11 @@ namespace DeCuisine
                                 }
                         break;
                     }
+                case "wingame":
+                    {
+                        server.Game.Mode = GameMode.None;
+                        break;
+                    }
                 default:
                     success = false;
                     break;

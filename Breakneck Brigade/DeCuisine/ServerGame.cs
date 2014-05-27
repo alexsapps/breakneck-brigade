@@ -16,7 +16,7 @@ namespace DeCuisine
     {
         public BBLock Lock = new BBLock();
 
-        public GameMode Mode { get; private set; }
+        public GameMode Mode { get; set; }
 
         public Dictionary<int, ServerGameObject> GameObjects = new Dictionary<int, ServerGameObject>();
 
@@ -34,8 +34,6 @@ namespace DeCuisine
         public HashSet<ServerGameObject> HasAdded = new HashSet<ServerGameObject>();  
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
-
-
 
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
@@ -55,7 +53,7 @@ namespace DeCuisine
         private float _frameRateSeconds;
         float FrameRateSeconds { get { return _frameRateSeconds; } }
 
-        public bool MultiJump { get; set; } 
+        public bool MultiJump { get; set; }
 
         // Physics
         DynamicsWorld _world;
@@ -68,12 +66,11 @@ namespace DeCuisine
         public CollisionConfiguration CollisionConf;
         public CollisionDispatcher Dispatcher;
         public BroadphaseInterface Broadphase;
-        //public ConstraintSolver Solver;
         public AlignedCollisionShapeArray CollisionShapes { get; private set; }
 
         public ServerGame(Server server)
         {
-            Mode = GameMode.Init; //start in init mode
+            this.Mode = GameMode.Init; //start in init mode
             this.server = server;
             server.ClientEnter += server_ClientEnter;
             server.ClientLeave += server_ClientLeave;
@@ -237,77 +234,17 @@ namespace DeCuisine
                     next = DateTime.UtcNow.Ticks + FrameRateTicks; //not next+= FrameRateTicks because we don't want the server to ever wait less than the tick time
                     lock (Lock)
                     {
-                        if (Mode != GameMode.Started)
-                            return;
-
-                        /*
-                         * handle client input, e.g. move
-                         */
-                        List<DCClientEvent> inputs;
-                        lock (ClientInput)
+                        switch(this.Mode)
                         {
-                            inputs = new List<DCClientEvent>(ClientInput);
-                            ClientInput.Clear();
+                            case GameMode.Started:
+                                this.UpdateGame(fallBehind);
+                                break;
+                            case GameMode.Paused:
+                                break;
+                            default:
+                                return;
                         }
-                        foreach (DCClientEvent input in inputs)
-                        {
-                            var client = input.Client;
-                            lock (client.Lock)
-                            {
-                                if (!client.IsConnected)
-                                    break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
-                                var player = client.Player;
-                                switch (input.Event.Type)
-                                {
-                                    case ClientEventType.Test:
-                                        break;
-                                    case ClientEventType.ChangeOrientation:
-                                        var orientationEv = (ClientChangeOrientationEvent)input.Event;
-                                        player.Orientation = orientationEv.Orientation;
-                                        player.Incline = orientationEv.Incline;
-                                        break;
-                                    case ClientEventType.BeginMove:
-                                        var moveEv = (ClientBeginMoveEvent)input.Event;
-                                        player.Move(moveEv.Delta.x, moveEv.Delta.y, moveEv.Delta.z);
-                                        break;
-                                    case ClientEventType.EndMove:
-                                        break;
-                                    case ClientEventType.Jump:
-                                        player.Jump();
-                                        break;
-                                    case ClientEventType.ThrowItem:
-                                        var thrEv = (ClientThrowEvent)input.Event;
-                                        player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline);
-                                        break;
-                                    case ClientEventType.Dash:
-                                        player.Dash();
-                                        break;
-                                    case ClientEventType.Eject:
-                                        player.AttemptToEjectCooker();
-                                        break;
-                                    case ClientEventType.ChangeTeam:
-                                    case ClientEventType.Cook:
-                                        player.AttemptToCook();
-                                        break;
-                                    case ClientEventType.Command:
-                                        throw new InvalidOperationException(); //these handled elsewhere
-                                    default:
-                                        Debugger.Break();
-                                        throw new Exception("server does not understand client event " + input.Event.Type.ToString());
-                                }
-                            }
-                        }
-                            
-                        
 
-                        /*
-                         * Physics happens here.
-                         */
-                        var timeStep = (FrameRateMilliseconds - (float)fallBehind) / 1000;
-                        _world.StepSimulation(FrameRateMilliseconds);
-                        //_world.StepSimulation(timeStep, 0, timeStep);
-
-                        Controller.Update();
 
                         /*
                          * send updates to clients
@@ -386,6 +323,78 @@ namespace DeCuisine
                     CollisionConf.Dispose();
                 }
             }
+        }
+
+        private void UpdateGame(long fallBehind)
+        {
+            /*
+             * handle client input, e.g. move
+             */
+            List<DCClientEvent> inputs;
+            lock (ClientInput)
+            {
+                inputs = new List<DCClientEvent>(ClientInput);
+                ClientInput.Clear();
+            }
+            foreach (DCClientEvent input in inputs)
+            {
+                var client = input.Client;
+                lock (client.Lock)
+                {
+                    if (!client.IsConnected)
+                        break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
+                    var player = client.Player;
+                    switch (input.Event.Type)
+                    {
+                        case ClientEventType.Test:
+                            break;
+                        case ClientEventType.ChangeOrientation:
+                            var orientationEv = (ClientChangeOrientationEvent)input.Event;
+                            player.Orientation = orientationEv.Orientation;
+                            player.Incline = orientationEv.Incline;
+                            break;
+                        case ClientEventType.BeginMove:
+                            var moveEv = (ClientBeginMoveEvent)input.Event;
+                            player.Move(moveEv.Delta.x, moveEv.Delta.y, moveEv.Delta.z);
+                            break;
+                        case ClientEventType.EndMove:
+                            break;
+                        case ClientEventType.Jump:
+                            player.Jump();
+                            break;
+                        case ClientEventType.ThrowItem:
+                            var thrEv = (ClientThrowEvent)input.Event;
+                            player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline);
+                            break;
+                        case ClientEventType.Dash:
+                            player.Dash();
+                            break;
+                        case ClientEventType.Eject:
+                            player.AttemptToEjectCooker();
+                            break;
+                        case ClientEventType.ChangeTeam:
+                        case ClientEventType.Cook:
+                            player.AttemptToCook();
+                            break;
+                        case ClientEventType.Command:
+                            throw new InvalidOperationException(); //these handled elsewhere
+                        default:
+                            Debugger.Break();
+                            throw new Exception("server does not understand client event " + input.Event.Type.ToString());
+                    }
+                }
+            }
+
+
+
+            /*
+             * Physics happens here.
+             */
+            var timeStep = (FrameRateMilliseconds - (float)fallBehind) / 1000;
+            _world.StepSimulation(FrameRateMilliseconds);
+            //_world.StepSimulation(timeStep, 0, timeStep);
+
+            this.Controller.Update();
         }
 
         /// <summary>

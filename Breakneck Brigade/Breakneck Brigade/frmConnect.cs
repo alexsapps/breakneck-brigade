@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -93,6 +96,16 @@ namespace Breakneck_Brigade
                     lstHosts.SelectedIndex = 0;
                 lstHosts.Focus();
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Create a new server.
+            Process newServer = new Process();
+            newServer.StartInfo.FileName = "DeCuisine.exe";
+            newServer.Start();
+
+            this.doConnect();
         }
     }
 }
