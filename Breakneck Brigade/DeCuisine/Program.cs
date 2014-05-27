@@ -213,7 +213,7 @@ namespace DeCuisine
                             foreach (var team in server.Game.Controller.Teams.Values)
                             {
                                 b.AppendLine(team.Name);
-                                foreach (var ServerPlayer in team.Members)
+                                foreach (var ServerPlayer in team.GetMembers())
                                     b.AppendLine("\t" + ServerPlayer.ToString());
                             }
                     ret = b.ToString();

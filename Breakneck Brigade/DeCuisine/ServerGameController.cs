@@ -141,9 +141,9 @@ namespace DeCuisine
 
             foreach (var team in Teams.Values)
             {
-                if (team.Members.Count < minCount)
+                if (team.GetMembers().Count < minCount)
                 {
-                    minCount = team.Members.Count;
+                    minCount = team.GetMembers().Count;
                     minTeam = team;
                 }
             }
@@ -174,8 +174,8 @@ namespace DeCuisine
         public void AssignTeam(Client client, ServerTeam team)
         {
             if (client.Team != null)
-                client.Team.Members.Remove(client);
-            team.Members.Add(client);
+                client.Team.RemoveMember(client);
+            team.AddMember(client);
             client.Team = team;
         }
 
