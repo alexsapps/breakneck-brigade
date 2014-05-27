@@ -20,6 +20,9 @@ namespace DeCuisine
         public Dictionary<int, ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
         protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
+        public List<string> TintIng;
+        public ServerTeam Team { get; set; }
+        
 
         private string HashCache { get; set; }
         private int ParticleEffect { get; set; }
@@ -34,11 +37,12 @@ namespace DeCuisine
         /// <param name="transform">Initial location</param>
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
-        public ServerCooker(CookerType type, ServerGame game, Vector3 transform)
+        public ServerCooker(CookerType type, ServerTeam team, ServerGame game, Vector3 transform)
             : base(game)
         {
             this.Type = type;
-            this.Contents = new Dictionary<int, ServerIngredient>(); 
+            this.Contents = new Dictionary<int, ServerIngredient>();
+            this.TintIng = new List<string>();
             AddToWorld(transform);
         }
 
@@ -77,7 +81,8 @@ namespace DeCuisine
                 Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
-                this.Game.Controller.ScoreAdd(ingredient.LastPlayerHolding, ingredient); 
+                this.Game.Controller.ScoreAdd(ingredient.LastPlayerHolding, ingredient);
+                this.Team.TintList = this.recomputeTintList(); 
                 //this.Cook(); // check if you can cook. 
                 return true;
             }
@@ -178,9 +183,7 @@ namespace DeCuisine
                 Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
                 ServerIngredient newIng = new ServerIngredient(containedIngredient.Type, this.Game, ingredientSpawningPoint);
             }
-
             this.Contents.Clear();
-
         }
 
         /// <summary>
@@ -223,6 +226,21 @@ namespace DeCuisine
             {
                 this.AddIngredient((ServerIngredient)obj);
             }
+        }
+
+        
+        private List<string> recomputeTintList()
+        {
+            var tintHash = new HashSet<string>(); // keeps only distinct objects
+            foreach (var ing in this.Contents.Values)
+            {
+                foreach (var potentialRec in this.Type.RecipeHash[ing.Type.Name].ToList()) 
+                {
+                    foreach(var potentialIng in potentialRec.Ingredients)
+                        tintHash.Add(potentialIng.Ingredient.Name);
+                }
+            }
+            return tintHash.ToList();
         }
 
     }

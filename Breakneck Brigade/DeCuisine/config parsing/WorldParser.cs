@@ -194,7 +194,7 @@ namespace DeCuisine
 
         protected override ServerCooker returnItem()
         {
-            return new ServerCooker(serverGame.Config.Cookers[attributes["type"]], serverGame, getCoordinateAttrib());
+            return new ServerCooker(serverGame.Config.Cookers[attributes["type"]], serverGame.Controller.Teams[attributes["team"]],  serverGame, getCoordinateAttrib());
         }
     }
 

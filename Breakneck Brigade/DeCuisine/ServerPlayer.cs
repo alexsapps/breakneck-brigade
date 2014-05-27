@@ -208,9 +208,14 @@ namespace DeCuisine
 
         public void AttemptToCook()
         {
+            //DEV
+            Program.WriteLine("Attempting to cook");
             if (this.LookingAt != null && this.LookingAt.ObjectClass == GameObjectClass.Cooker)
             {
-                ((ServerCooker)this.LookingAt).Cook();
+                Program.WriteLine("raycast worked, but can it cook?");
+                var tmp = ((ServerCooker)this.LookingAt).Cook();
+                if (tmp != null)
+                    Program.WriteLine("Cook was successful, cooked a " + tmp.Type.Name);
             }
         }
 

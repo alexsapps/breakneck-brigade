@@ -11,11 +11,13 @@ namespace DeCuisine
         public List<Client> Members { get; private set; }
         public int Points { get; set; }
         public string Name { get; set; }
+        public List<string> TintList{ get; set; }
 
         public ServerTeam(string name)
         {
-            Members = new List<Client>();
+            this.Members = new List<Client>();
             this.Name = name;
+            this.TintList = new List<string>();
         }
     }
 }
