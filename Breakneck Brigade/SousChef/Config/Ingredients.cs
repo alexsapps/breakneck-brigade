@@ -13,7 +13,7 @@ namespace SousChef
         protected override string getRootNodeName() { return "ingredients"; }
         protected override string getListItemNodeName() { return "ingredient"; }
 
-        public float[] defaultSides;
+        public float[] defaultSize;
         public float defaultMass;
         public float defaultFriction;
         public float defaultRollingFriction;
@@ -24,7 +24,7 @@ namespace SousChef
         {
             base.handleAttributes();
 
-            defaultSides = BBXItemParser<IngredientType>.parseFloats(attrib("defaultSides"));
+            defaultSize = BBXItemParser<IngredientType>.parseFloats(attrib("defaultSize"));
             defaultMass = float.Parse(attrib("defaultMass"));
             defaultFriction = float.Parse(attrib("defaultFriction"));
             defaultRollingFriction = float.Parse(attrib("defaultRollingFriction"));
@@ -52,7 +52,7 @@ namespace SousChef
             int points = int.Parse(attributes["points"]);
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
+                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
                 );
 
             return new IngredientType(name, geomInfo, points);

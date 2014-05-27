@@ -1,4 +1,4 @@
-<terrains defaultSides="50,50,50" defaultMass="1000.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.5">
+<terrains defaultSize="50,50,50" defaultMass="1000.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.5">
 
   <!--  default shape is box -->
 
