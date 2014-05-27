@@ -1,7 +1,38 @@
 <recipes>
   <recipe product="milkshake">
-    <ingredient>banana</ingredient>
+    <ingredient>milk</ingredient>
     <ingredient>iceCream</ingredient>
+    <ingredient optional="yes">iceCream</ingredient>
+    <ingredient optional="yes">iceCream</ingredient>
+    <ingredient optional="yes">iceCream</ingredient>
   </recipe>
-
+  <recipe product="caesarSalad">
+    <ingredient>lettuce</ingredient>
+    <ingredient>sauce</ingredient>
+    <ingredient optional ="yes">bread</ingredient>
+  </recipe>
+  <recipe product="hamburger">
+    <ingredient>bread</ingredient>
+    <ingredient>steak</ingredient>
+    <ingredient optional ="yes">lettuce</ingredient>
+    <ingredient optional ="yes">tomato</ingredient>
+    <ingredient optional ="yes">onion</ingredient>
+    <ingredient optional ="yes">sauce</ingredient>
+  </recipe>
+  <recipe product="steak">
+    <ingredient>meat</ingredient>
+    <ingredient optional ="yes">salt</ingredient>
+    <ingredient optional ="yes">sauce</ingredient>
+    <ingredient optional ="yes">butter</ingredient>
+  </recipe>
+  <recipe product="cake">
+    <ingredient>flour</ingredient>
+    <ingredient>milk</ingredient>
+    <ingredient>egg</ingredient>
+    <ingredient>egg</ingredient>
+    <ingredient>butter</ingredient>
+    <ingredient>butter</ingredient>
+    <ingredient>sugar</ingredient>
+    <ingredient optional ="yes">cake</ingredient>
+  </recipe>
 </recipes>

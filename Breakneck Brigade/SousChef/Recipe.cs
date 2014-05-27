@@ -21,8 +21,6 @@ namespace SousChef
             int sum = 0;
             foreach (var ingredient in ingredients)
                 sum += ingredient.Ingredient.DefaultPoints;
-            if (finalProduct.DefaultPoints < sum)
-                throw new Exception("recipe " + Name + " must not be worth less than sum of it's parts");
 
             hash(); //compute now
         }
