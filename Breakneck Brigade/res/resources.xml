@@ -1,8 +1,22 @@
 <?xml version="1.0"?>
 
-<!-- 
-Resources file specification:
+<!--
+TEXTURES:
 
+Additional textures not directly associated with a 3D model
+
+filename: 	the name of the texture. Note: all files associated 
+		with a model should have the same name (i.e.:
+		"orange" should have orange.obj, orange.mtl, and
+		orange.tga)
+-->
+<textures>
+  <texture>
+    <filename>crosshair</filename>
+  </texture>
+</textures>
+
+<!-- 
 MODELS:
 
 Note: nodes must have children in this order. The parser is one-pass

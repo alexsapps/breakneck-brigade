@@ -90,8 +90,19 @@ namespace Breakneck_Brigade.Graphics
             using (FileStream resFile = new FileStream(RESOURCES_XML_PATH, FileMode.Open))
             {
                 int numberOfModels = 0;
+                int numberOfTextures = 0;
                 using (XmlReader firstPass = XmlReader.Create(resFile))
                 {
+                    firstPass.ReadToFollowing("textures");
+                    if (firstPass.ReadToDescendant("texture"))
+                    {
+                        numberOfTextures++;
+                    }
+                    while (firstPass.ReadToNextSibling("textures"))
+                    {
+                        numberOfTextures++;
+                    }
+
                     firstPass.ReadToFollowing("models");
                     if (firstPass.ReadToDescendant("model"))
                     {
@@ -105,6 +116,28 @@ namespace Breakneck_Brigade.Graphics
                 resFile.Seek(0, SeekOrigin.Begin);
                 using (XmlReader reader = XmlReader.Create(resFile))
                 {
+                    //Extra textures
+                    reader.ReadToFollowing("textures");
+                    reader.ReadToDescendant("texture");
+                    for (int ii = 0; ii < numberOfTextures; ii++)
+                    {
+                        XmlReader modelSubtree = reader.ReadSubtree();
+
+                        modelSubtree.ReadToDescendant("filename");
+                        string filename = modelSubtree.ReadElementContentAsString();
+
+                        Texture texture;
+                        if (Renderer.Textures.ContainsKey(filename))
+                        {
+                            texture = Renderer.Textures[filename];
+                        }
+                        else
+                        {
+                            texture = new Texture(filename);
+                            Renderer.Textures[filename] = texture;
+                        }
+                    }
+                    //Models + mtls + associated textures
                     reader.ReadToFollowing("models");
                     reader.ReadToDescendant("model");
                     for(int ii = 0; ii < numberOfModels; ii++)
