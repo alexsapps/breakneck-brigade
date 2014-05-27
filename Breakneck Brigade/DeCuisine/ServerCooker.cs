@@ -144,7 +144,7 @@ namespace DeCuisine
         {
             foreach (var recIng in recipe.Ingredients)
             {
-                if (recIng.Optional)
+                if (recIng.nOptional > 0) //todo: wrong
                     continue; // pass over optional ingredients
                 if (!CheckContents(recIng.Ingredient))
                     return false;

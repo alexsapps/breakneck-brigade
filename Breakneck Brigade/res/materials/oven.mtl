@@ -26,8 +26,8 @@ newmtl Material__5
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka rd.tga
-	map_Kd rd.tga
+	map_Ka red.tga
+	map_Kd red.tga
 
 newmtl Material__3
 	Ns 10.0000

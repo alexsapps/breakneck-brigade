@@ -115,7 +115,7 @@ namespace Breakneck_Brigade
             // handle throwing key
             if (this.downKeys.Contains(GlfwKeys.GLFW_MOUSE_BUTTON_LEFT))
             {
-                NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 1.0f });
+                throwSomething();
                 lastDownThrow = DateTime.Now;
                 throwing = true;
                 lastThrow = DateTime.Now;
@@ -127,7 +127,7 @@ namespace Breakneck_Brigade
                     if (DateTime.Now.Subtract(lastThrow).TotalMilliseconds > 60) //spawn oranges every other server tick
                     {
                         lastThrow = DateTime.Now;
-                        NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline });
+                        throwSomething();
                     }
                 }
             }
@@ -212,6 +212,11 @@ namespace Breakneck_Brigade
             {
 
             }
+        }
+
+        protected void throwSomething()
+        {
+            NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 1.0f });
         }
 
         private bool checkKey(GlfwKeys key, ref GlfwKeys def)

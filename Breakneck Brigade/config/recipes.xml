@@ -2,28 +2,28 @@
   <recipe product="milkshake">
     <ingredient>milk</ingredient>
     <ingredient>iceCream</ingredient>
-    <ingredient optional="yes">iceCream</ingredient>
-    <ingredient optional="yes">iceCream</ingredient>
-    <ingredient optional="yes">iceCream</ingredient>
+    <ingredient optional="1">iceCream</ingredient>
+    <ingredient optional="1">iceCream</ingredient>
+    <ingredient optional="1">iceCream</ingredient>
   </recipe>
   <recipe product="caesarSalad">
     <ingredient>lettuce</ingredient>
     <ingredient>sauce</ingredient>
-    <ingredient optional ="yes">bread</ingredient>
+    <ingredient optional="1">bread</ingredient>
   </recipe>
   <recipe product="hamburger">
     <ingredient>bread</ingredient>
     <ingredient>steak</ingredient>
-    <ingredient optional ="yes">lettuce</ingredient>
-    <ingredient optional ="yes">tomato</ingredient>
-    <ingredient optional ="yes">onion</ingredient>
-    <ingredient optional ="yes">sauce</ingredient>
+    <ingredient optional="1">lettuce</ingredient>
+    <ingredient optional="1">tomato</ingredient>
+    <ingredient optional="1">onion</ingredient>
+    <ingredient optional="1">sauce</ingredient>
   </recipe>
   <recipe product="steak">
     <ingredient>meat</ingredient>
-    <ingredient optional ="yes">salt</ingredient>
-    <ingredient optional ="yes">sauce</ingredient>
-    <ingredient optional ="yes">butter</ingredient>
+    <ingredient optional="1">salt</ingredient>
+    <ingredient optional="1">sauce</ingredient>
+    <ingredient optional="1">butter</ingredient>
   </recipe>
   <recipe product="cake">
     <ingredient>flour</ingredient>
@@ -33,6 +33,6 @@
     <ingredient>butter</ingredient>
     <ingredient>butter</ingredient>
     <ingredient>sugar</ingredient>
-    <ingredient optional ="yes">cake</ingredient>
+    <ingredient optional="1">cake</ingredient>
   </recipe>
 </recipes>

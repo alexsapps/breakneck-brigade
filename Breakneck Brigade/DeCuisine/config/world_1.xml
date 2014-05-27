@@ -18,7 +18,7 @@
     <cooker team="red" type="blender" coordinate="-800, 120, -600" ></cooker>
 
     <static type="woodenCounter"  coordinate="-800, 40, -700" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker type="juicer" coordinate="-800, 80, -700"></cooker>
+    <cooker team="red" type="juicer" coordinate="-800, 80, -700"></cooker>
 
     <static type="woodenCounter"  coordinate="-800, 40, -800" size="7,2.7,7" model="woodenCounter"></static>
     <cooker team="red" type="pot" coordinate="-800, 80, -800"></cooker>

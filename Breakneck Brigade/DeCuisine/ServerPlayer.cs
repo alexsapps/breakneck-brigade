@@ -285,7 +285,12 @@ namespace DeCuisine
             if (dashTicks == 0)
             {
                 // stop dashing
-                this.Body.LinearVelocity = -lastDashVelocity;
+                var stopForce = new Vector3(-lastDashVelocity.X, 0, -lastDashVelocity.Z);
+                // Can't modify indivdual force velocity vectors, workaround
+                var newVel = this.Body.LinearVelocity + stopForce;
+                if(newVel.Y > 0)
+                    newVel.Y = 0; // stop upward momentum. 
+                this.Body.LinearVelocity = newVel;
             }
         }
 
