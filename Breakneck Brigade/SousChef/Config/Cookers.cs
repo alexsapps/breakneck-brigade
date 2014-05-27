@@ -14,7 +14,7 @@ namespace SousChef
         protected override string getListItemNodeName() { return "cooker"; }
         public override BBXItemParser<CookerType> getItemParser() { return new CookerParser(config, this); }
 
-        public float[] defaultSides;
+        public float[] defaultSize;
         public float defaultMass;
         public float defaultFriction;
         public float defaultRollingFriction;
@@ -25,7 +25,7 @@ namespace SousChef
         {
             base.handleAttributes();
 
-            defaultSides = BBXItemParser<IngredientType>.parseFloats(attributes["defaultSides"]);
+            defaultSize = BBXItemParser<IngredientType>.parseFloats(attributes["defaultSize"]);
             defaultMass = float.Parse(attrib("defaultMass"));
             defaultFriction = float.Parse(attrib("defaultFriction"));
             defaultRollingFriction = float.Parse(attrib("defaultFriction"));
@@ -63,7 +63,7 @@ namespace SousChef
             string name = attributes["name"];
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSides, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
+                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
                 );
 
             return new CookerType(name, geomInfo, recipes);

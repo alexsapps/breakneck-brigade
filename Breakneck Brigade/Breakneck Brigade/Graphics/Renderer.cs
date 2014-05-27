@@ -31,6 +31,7 @@ namespace Breakneck_Brigade.Graphics
         public float       secondsPerFrame = 0.0f;
         public float       secondsPerFrame2 = 0.0f;
 
+        public static int                           CurrentBoundTexture = -1;
         public static int                           CurrentDrawMode = -1;
         /// <summary>
         /// A mapping of filename to Model
@@ -165,7 +166,7 @@ namespace Breakneck_Brigade.Graphics
             setViewport();
             
             //Always clear both color and depth
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_STENCIL_BUFFER_BIT);
+            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
             
             prep2D();
             render2D();
@@ -277,7 +278,8 @@ namespace Breakneck_Brigade.Graphics
                 Console.Error.WriteLine("ERROR: GLFW Initialization failed!");
                 Environment.Exit(1);
             }
-            Glfw.glfwOpenWindow(1280, 1024, 0, 0, 0, 8, 32, 32, Glfw.GLFW_WINDOW);
+            Glfw.glfwOpenWindow(1280, 1024, 0, 0, 0, 8, 16, 0, Glfw.GLFW_WINDOW);
+            Glfw.glfwSwapInterval(0);
 
         }
 

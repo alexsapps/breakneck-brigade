@@ -40,13 +40,18 @@ namespace Breakneck_Brigade.Graphics
             //Billinear Filtering for decreases and increases in size
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
         }
 
         public void Bind()
         {
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, TextureID);
+            if(Renderer.CurrentBoundTexture != TextureID)
+            {
+                Renderer.CurrentBoundTexture = TextureID;
+                Gl.glBindTexture(Gl.GL_TEXTURE_2D, TextureID);
+            }
         }
     }
 }
