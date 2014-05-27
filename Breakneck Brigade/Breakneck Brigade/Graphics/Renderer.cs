@@ -212,9 +212,10 @@ namespace Breakneck_Brigade.Graphics
             /* LIGHTING */
             Gl.glEnable(Gl.GL_LIGHTING);
 
-            float[] position1 = { 1000, 2000, 0 };
-            float[] position2 = { 0, 2000, 0 };
-            float[] ambientColor = { 0, 0, 0, 1 };
+            float[] position1 = { 1000, 2000, 0, 1 };
+            float[] position2 = { 1000, 2000, 0, 1};
+            float[] ambientColor = { .2f, .2f, .2f, 1 };
+            //float[] ambientColor = { 0, 0, 0, 1 };
             float[] diffuseColor = { 1, 1, 1, 1 };
             float[] specularColor = { 1, 1, 1, 1 };
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position1);

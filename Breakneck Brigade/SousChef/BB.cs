@@ -28,7 +28,7 @@ namespace SousChef
         }
         public static float[] GetPlayerSides()
         {
-            return new float[] { 6.0f, 6.0f, 6.0f };
+            return new float[] { 6.0f, 3.0f, 6.0f };
         }
     }
 }

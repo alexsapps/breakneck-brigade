@@ -1,63 +1,56 @@
 <world gravity="0,-190,0">
   <space>
     <!-- Floor + Walls -->
-    <terrain type="floor" shape="box" coordinate="0, 0, 0"          size="2000,100,2000" />
-    <terrain type="wall" shape="box" coordinate="-2000, 100,  0"   size="10,2000,2000" orientation="90"/>
-    <terrain type="wall" shape="box" coordinate="2000, 100,  0"   size="10,2000,2000" orientation="90"/>
-    <terrain type="wall" shape="box" coordinate="-2000, 100,  0"   size="10,2000,2000"/>
-    <terrain type="wall" shape="box" coordinate="2000, 100,  0"   size="10,2000,2000" />
+    <terrain type="floor" shape="box" coordinate="0, 0, 0"          size="1000,100,1000" />
+    <terrain type="wall" shape="box" coordinate="-1000, 100,  0"   size="10,1000,1000" orientation="90"/>
+    <terrain type="wall" shape="box" coordinate="1000, 100,  0"   size="10,1000,1000" orientation="90"/>
+    <terrain type="wall" shape="box" coordinate="-1000, 100,  0"   size="10,1000,1000"/>
+    <terrain type="wall" shape="box" coordinate="1000, 100,  0"   size="10,1000,1000" />
 
     <!--Ceiling-->
-    <terrain type="floor" shape="box" coordinate="0, 2000, 0" size="2000,1,2000" />
-    
-
-
-
-
-
-
+    <terrain type="floor" shape="box" coordinate="0, 1000, 0" size="1000,1,1000" />
 
     <!-- Red team side -->
-    <static type="woodenCounter"  coordinate="-1800, 40, -1600"  size="20,10,20" model="woodenCounter"></static>
-    <cooker type="blender" coordinate="-1800, 120, -1600" ></cooker>
+    <static type="woodenCounter"  coordinate="-800, 40, -600"  size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="blender" coordinate="-800, 120, -600" ></cooker>
 
-    <static type="woodenCounter"  coordinate="-1800, 40, -1700" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="juicer" coordinate="-1800, 80, -1700"></cooker>
+    <static type="woodenCounter"  coordinate="-800, 40, -700" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="juicer" coordinate="-800, 80, -700"></cooker>
 
-    <static type="woodenCounter"  coordinate="-1800, 40, -1800" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="pot" coordinate="-1800, 80, -1800"></cooker>
+    <static type="woodenCounter"  coordinate="-800, 40, -800" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="pot" coordinate="-800, 80, -800"></cooker>
 
-    <static type="woodenCounter" coordinate="-1300, 40, -1600" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="pan" coordinate="-1300, 80, -1600"></cooker>
+    <static type="woodenCounter" coordinate="-300, 40, -600" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="pan" coordinate="-300, 80, -600"></cooker>
 
-    <static type="table"  coordinate="-1300, 40, -1900" model="table" size="20,10,20"></static>
-    <cooker type="bowl" coordinate="-1300, 80, -1900"></cooker>
+    <static type="table"  coordinate="-300, 40, -900" model="table" size="7,2.7,7"></static>
+    <cooker type="bowl" coordinate="-300, 80, -900"></cooker>
 
-    <cooker type="oven" coordinate="-1300, 80, -1700"></cooker>
+    <cooker type="oven" coordinate="-300, 80, -700"></cooker>
 
-    <static type="woodenCounter"  coordinate="-1300, 40, -1800" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="toaster" coordinate="-1300, 80, -1800"></cooker>
+    <static type="woodenCounter"  coordinate="-300, 40, -800" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="toaster" coordinate="-300, 80, -800"></cooker>
 
     <!-- Blue team side -->
-    <static type="woodenCounter"  coordinate="1800, 40, 1600"  size="20,10,20" model="woodenCounter"></static>
-    <cooker type="blender" coordinate="1800, 120, 1600" ></cooker>
+    <static type="woodenCounter"  coordinate="800, 40, 600"  size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="blender" coordinate="800, 120, 600" ></cooker>
 
-    <static type="woodenCounter"  coordinate="1800, 40, 1700" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="juicer" coordinate="1800, 80, 1700"></cooker>
+    <static type="woodenCounter"  coordinate="800, 40, 700" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="juicer" coordinate="800, 80, 700"></cooker>
 
-    <static type="woodenCounter"  coordinate="1800, 40, 1800" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="pot" coordinate="1800, 80, 1800"></cooker>
+    <static type="woodenCounter"  coordinate="800, 40, 800" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="pot" coordinate="800, 80, 800"></cooker>
 
-    <static type="woodenCounter" coordinate="1300, 40, 1600" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="pan" coordinate="1300, 80, 1600"></cooker>
+    <static type="woodenCounter" coordinate="300, 40, 600" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="pan" coordinate="300, 80, 600"></cooker>
 
-    <static type="table"  coordinate="1300, 40, 1900" model="table" size="20,10,20"></static>
-    <cooker type="bowl" coordinate="1300, 80, 1900"></cooker>
+    <static type="table"  coordinate="300, 40, 900" model="table" size="7,2.7,7"></static>
+    <cooker type="bowl" coordinate="300, 80, 900"></cooker>
 
-    <cooker type="oven" coordinate="1300, 80, 1700"></cooker>
+    <cooker type="oven" coordinate="300, 80, 700"></cooker>
 
-    <static type="woodenCounter"  coordinate="1300, 40, 1800" size="20,10,20" model="woodenCounter"></static>
-    <cooker type="toaster" coordinate="1300, 80, 1800"></cooker>
+    <static type="woodenCounter"  coordinate="300, 40, 800" size="7,2.7,7" model="woodenCounter"></static>
+    <cooker type="toaster" coordinate="300, 80, 800"></cooker>
 
 
 
