@@ -17,6 +17,8 @@ namespace DeCuisine
 
         public List<Goal> Goals { get; set; }
 
+        public Dictionary<string,string> TintList { get; set; }
+
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
         private string[] defaultTeams = new string[]{"red", "blue"}; //Add more team names for more teams
@@ -226,7 +228,7 @@ namespace DeCuisine
             foreach(var team in Teams.Values)
             {
                 if(maxTeam == null || team.Points > maxTeam.Points)
-                {
+        {
                     maxTeam = team;
                 }
             }
@@ -238,7 +240,7 @@ namespace DeCuisine
             }
 
             return false;
-        }
+            }
 
         bool _lobbyStateDirty = false;
         void MarkLobbyStateDirty()

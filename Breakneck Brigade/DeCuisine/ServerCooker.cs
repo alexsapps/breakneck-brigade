@@ -20,7 +20,6 @@ namespace DeCuisine
         public Dictionary<int, ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
         protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
-        public List<string> TintIng;
         public ServerTeam Team { get; set; }
         
 
@@ -42,7 +41,7 @@ namespace DeCuisine
         {
             this.Type = type;
             this.Contents = new Dictionary<int, ServerIngredient>();
-            this.TintIng = new List<string>();
+            this.Team = team;
             AddToWorld(transform);
         }
 
@@ -82,8 +81,7 @@ namespace DeCuisine
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
                 this.Game.Controller.ScoreAdd(ingredient.LastPlayerHolding, ingredient);
-                this.Team.TintList = this.recomputeTintList(); 
-                //this.Cook(); // check if you can cook. 
+                this.recomputeTintList(); 
                 return true;
             }
             return false;
@@ -109,7 +107,11 @@ namespace DeCuisine
             foreach (var recipe in this.Type.Recipes)
             {
                 if (CheckRecipe(recipe.Value))
+                {
                     finishCook(recipe.Value);
+                    break;
+                }
+                   
             }
             
             return null;
@@ -121,11 +123,12 @@ namespace DeCuisine
             // Final scan of the recipe to add up all the points
             foreach (var recIng in recipe.Ingredients)
             {
-                var content = ReturnContents(recIng.Ingredient);
-                if (content != null)
+                List<ServerIngredient> matchingCont = new List<ServerIngredient>();
+                matchingCont = ReturnContents(recIng);
+                if (matchingCont != null)
                 {
-                    toEject.Add(content);
-                    cookScore += recIng.Ingredient.DefaultPoints;
+                    toEject.AddRange(matchingCont);
+                    cookScore += recIng.CalculateScore(matchingCont.Count);
                 }
             }
             
@@ -136,7 +139,7 @@ namespace DeCuisine
             }
             var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 100, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
             var newIng = new ServerIngredient(recipe.FinalProduct, Game, ingSpawn);
-            newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
+            //newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
         }
 
 
@@ -144,32 +147,32 @@ namespace DeCuisine
         {
             foreach (var recIng in recipe.Ingredients)
             {
-                if (recIng.nOptional > 0) //todo: wrong
-                    continue; // pass over optional ingredients
-                if (!CheckContents(recIng.Ingredient))
+                if (!CheckContents(recIng.Ingredient, recIng.nCount))
                     return false;
             }
             return true;
         }
 
-        public bool CheckContents(IngredientType ingType)
+        public bool CheckContents(IngredientType ingType, int numEssential)
         {
+            int found = 0;
             foreach (var content in this.Contents.Values)
             {
                 if (ingType == content.Type)
-                    return true;
+                    found++;
             }
-            return false;
+            return found >= numEssential;
         }
 
-        public ServerIngredient ReturnContents(IngredientType ingType)
+        public List<ServerIngredient> ReturnContents(RecipeIngredient ing)
         {
+            List<ServerIngredient> matchingIng = new List<ServerIngredient>();
             foreach (var content in this.Contents.Values)
             {
-                if (ingType == content.Type)
-                    return content;
+                if (ing.Ingredient == content.Type)
+                    matchingIng.Add(content);
             }
-            return null;
+            return matchingIng;
         }
 
 
@@ -228,19 +231,21 @@ namespace DeCuisine
             }
         }
 
-        
-        private List<string> recomputeTintList()
+        /// <summary>
+        /// recompute the tint list and add it to the teams tint list
+        /// </summary>
+        private void recomputeTintList()
         {
-            var tintHash = new HashSet<string>(); // keeps only distinct objects
             foreach (var ing in this.Contents.Values)
             {
                 foreach (var potentialRec in this.Type.RecipeHash[ing.Type.Name].ToList()) 
                 {
                     foreach(var potentialIng in potentialRec.Ingredients)
-                        tintHash.Add(potentialIng.Ingredient.Name);
+                        this.Team.TintList.Add(potentialIng.Ingredient.Name);
                 }
             }
-            return tintHash.ToList();
+            // add to the list of server events
+            this.Game.ServerEvents.Add(new ServerSendTintList(){Team = this.Team.Name, TintList = this.Team.TintList.ToList()});
         }
 
     }

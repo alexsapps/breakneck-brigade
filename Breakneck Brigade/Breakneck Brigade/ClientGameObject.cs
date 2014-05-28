@@ -143,10 +143,17 @@ namespace Breakneck_Brigade
         /// </summary>
         public virtual void Render()
         {
+            
             if (this.ToRender)
             {
                 Gl.glPushMatrix();
                 Gl.glMultMatrixf(Transformation.glArray);
+                if (this.Game.LookatId == this.Id)
+                {
+                    Gl.glColor3f(1.0f, 0f, 0f);
+                    Model.Render();
+                    Gl.glColor3f(1.0f, 1.0f, 1.0f);
+                }else
                     Model.Render();
                 Gl.glPopMatrix();
                 

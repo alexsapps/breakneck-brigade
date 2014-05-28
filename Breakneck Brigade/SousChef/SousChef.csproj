@@ -78,6 +78,7 @@
     <Compile Include="Network\ClientCookEvent.cs" />
     <Compile Include="Network\ServerLobbyStateUpdateMessage.cs" />
     <Compile Include="Network\ServerTeamScoreMessage.cs" />
+    <Compile Include="Network\ServerSendTintList.cs" />
     <Compile Include="RecipeIngredient.cs" />
     <Compile Include="TerrainType.cs" />
     <Compile Include="IngredientType.cs" />

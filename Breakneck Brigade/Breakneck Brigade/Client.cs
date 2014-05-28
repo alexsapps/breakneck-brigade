@@ -123,6 +123,8 @@ namespace Breakneck_Brigade
                     return typeof(ServerLobbyStateUpdateMessage);
                 case ServerMessageType.ServerTeamScoreMessage:
                     return typeof(ServerTeamScoreMessage);
+                case ServerMessageType.ServerTintList:
+                    return typeof(ServerSendTintList);
                 default:
                     throw new Exception("getServerMessageType not defined for " + type.ToString());
             }

@@ -63,10 +63,10 @@
 
     <!--Some initial ingredients for testing-->
     <ingredient type="iceCream" coordinate="10,12,0" />
-    <ingredient type="banana" coordinate="10,12,0" />
+    <ingredient type="milk" coordinate="10,12,0" />
     <ingredient type="iceCream" coordinate="10,12,0" />
-    <ingredient type="banana" coordinate="10,12,0" />
+    <ingredient type="milk" coordinate="10,12,0" />
     <ingredient type="iceCream" coordinate="10,12,0" />
-    <ingredient type="banana" coordinate="10,12,0" />
+    <ingredient type="milk" coordinate="10,12,0" />
   </space>
 </world>

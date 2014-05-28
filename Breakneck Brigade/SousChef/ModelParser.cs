@@ -51,6 +51,7 @@ namespace SousChef.MPNamespace
                 int numberOfModels = 0;
                 using (XmlReader firstPass = XmlReader.Create(resFile))
                 {
+                    firstPass.ReadToFollowing("resources");
                     firstPass.ReadToFollowing("models");
                     if (firstPass.ReadToDescendant("model"))
                     {
@@ -64,6 +65,7 @@ namespace SousChef.MPNamespace
                 resFile.Seek(0, SeekOrigin.Begin);
                 using (XmlReader reader = XmlReader.Create(resFile))
                 {
+                    reader.ReadToFollowing("resources");
                     reader.ReadToFollowing("models");
                     reader.ReadToDescendant("model");
                     for (int ii = 0; ii < numberOfModels; ii++)

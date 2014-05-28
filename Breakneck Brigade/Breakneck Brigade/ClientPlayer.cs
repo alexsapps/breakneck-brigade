@@ -14,6 +14,7 @@ namespace Breakneck_Brigade
         public override string ModelName { get { return BB.DefaultPlayerModel; } }
         public string TeamName { get; set; } // TODO: Make this control the texture used
         public ClientGameObject LookingAt { get; set; }
+        public int LookingAtId { get; set; }
 
         public override float[] Sides { get { return BB.GetPlayerSides(); } }
 
@@ -26,8 +27,9 @@ namespace Breakneck_Brigade
         public ClientPlayer(int id, BinaryReader reader, ClientGame game)
             : base(id, game, reader)
         {
-            int lookingAtId = reader.ReadInt32();
-            this.LookingAt = lookingAtId != -1 ? this.Game.LiveGameObjects[lookingAtId] : null;
+            this.TeamName = reader.ReadString();
+            LookingAtId = reader.ReadInt32();
+            this.LookingAt = LookingAtId != -1 ? this.Game.LiveGameObjects[LookingAtId] : null;
 
             base.finalizeConstruction();
         }
@@ -40,6 +42,7 @@ namespace Breakneck_Brigade
         public override void StreamUpdate(BinaryReader reader)
         {
             base.StreamUpdate(reader);
+            this.LookingAtId = reader.ReadInt32();
         }
 
         /// <summary>

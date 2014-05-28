@@ -693,6 +693,24 @@ namespace Breakneck_Brigade
                                     int id = reader.ReadInt32();
                                     game.LiveGameObjects.Remove(id);
                                 }
+                                // event reading
+                                len = reader.ReadInt32();
+                                for(int i = 0; i < len; i++)
+                                {
+                                    switch ((ServerMessageType)reader.ReadByte())
+                                    {
+                                        case ServerMessageType.ServerTintList:
+                                            var tmp = new ServerSendTintList();
+                                            tmp.Read(reader);
+                                            foreach(var tintIng in tmp.TintList)
+                                                game.TintedObjects[tmp.Team].Add(tintIng);
+                                            break;
+                                        default:
+                                            throw new Exception("No event like that.");
+                                    }
+                                    
+                                }
+
                             });
                             
                             game.GameObjectsCache = new Dictionary<int,ClientGameObject>(game.LiveGameObjects);

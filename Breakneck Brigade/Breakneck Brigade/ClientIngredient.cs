@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Breakneck_Brigade.Graphics;
 using SousChef;
 using System.IO;
+using Tao.OpenGl;
 
 namespace Breakneck_Brigade
 {
@@ -87,7 +88,16 @@ namespace Breakneck_Brigade
         /// </summary>
         public override void Render()
         {
-            base.Render();
+            var team = ((ClientPlayer)this.Game.GameObjectsCache[(int)this.Game.PlayerObjId]).TeamName;
+            if (this.Game.TintedObjects[team].Contains(this.Type.Name))
+            {
+                Gl.glColor3f(1.0f, 0f, 0f);
+                base.Render();
+                Gl.glColor3f(1.0f, 1.0f, 1.0f);
+            }
+            else
+                base.Render();
+
         }
 
     }
