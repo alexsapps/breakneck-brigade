@@ -37,6 +37,7 @@ namespace DeCuisine
 
         public List<ServerMessage> ServerEvents { get; set; }
 
+
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
         public int FrameRateMilliseconds // Tick time in milliseconds

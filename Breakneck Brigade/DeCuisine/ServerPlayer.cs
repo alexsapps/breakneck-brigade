@@ -121,6 +121,10 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
+            int lookingAtId = -1;
+            if (this.LookingAt != null)
+                lookingAtId = this.LookingAt.Id;
+            stream.Write(lookingAtId);
         }
 
         /// <summary>
