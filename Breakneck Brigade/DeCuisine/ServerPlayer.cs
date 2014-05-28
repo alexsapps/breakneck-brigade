@@ -17,7 +17,8 @@ namespace DeCuisine
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
-        private const float LINEOFSIGHTSCALAR = 50;
+        private const float LINEOFSIGHTSCALAR = 200;
+        private const float RAYSTARTDISTANCE = 10;
         private const int DASHTIME = 15; // seconds * 30. 
         private int dashTicks { get; set; }
         public string Name { get; set; }
@@ -259,9 +260,9 @@ namespace DeCuisine
             // Check what the player is looking at
             Vector3 start = new Vector3
                 (
-                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * 2,
-                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -2,
-                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -2
+                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * RAYSTARTDISTANCE,
+                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * RAYSTARTDISTANCE * -1,
+                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * RAYSTARTDISTANCE * -1
                );
 
             Vector3 end = new Vector3(start.X, start.Y, start.Z) * ServerPlayer.LINEOFSIGHTSCALAR;
