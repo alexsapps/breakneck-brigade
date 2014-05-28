@@ -18,7 +18,7 @@ namespace DeCuisine
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
         private const float LINEOFSIGHTSCALAR = 50;
-        private const int DASHTIME = 90; // seconds * 30. 
+        private const int DASHTIME = 15; // seconds * 30. 
         private int dashTicks { get; set; }
         public string Name { get; set; }
 
@@ -105,7 +105,7 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-
+            stream.Write(this.Client.Team.Name);
             int lookingAtId = -1;
             if(this.LookingAt != null)
                 lookingAtId = this.LookingAt.Id;
@@ -208,9 +208,14 @@ namespace DeCuisine
 
         public void AttemptToCook()
         {
+            //DEV
+            Program.WriteLine("Attempting to cook");
             if (this.LookingAt != null && this.LookingAt.ObjectClass == GameObjectClass.Cooker)
             {
-                ((ServerCooker)this.LookingAt).Cook();
+                Program.WriteLine("raycast worked, but can it cook?");
+                var tmp = ((ServerCooker)this.LookingAt).Cook();
+                if (tmp != null)
+                    Program.WriteLine("Cook was successful, cooked a " + tmp.Type.Name);
             }
         }
 
@@ -280,7 +285,12 @@ namespace DeCuisine
             if (dashTicks == 0)
             {
                 // stop dashing
-                this.Body.LinearVelocity = -lastDashVelocity;
+                var stopForce = new Vector3(-lastDashVelocity.X, 0, -lastDashVelocity.Z);
+                // Can't modify indivdual force velocity vectors, workaround
+                var newVel = this.Body.LinearVelocity + stopForce;
+                if(newVel.Y > 0)
+                    newVel.Y = 0; // stop upward momentum. 
+                this.Body.LinearVelocity = newVel;
             }
         }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net; 
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -119,6 +119,8 @@ namespace Breakneck_Brigade
                     return typeof(ServerPlayerIdUpdateMessage);
                 case ServerMessageType.ServerCommandResponse:
                     return typeof(ServerCommandResponseMessage);
+                case ServerMessageType.ServerTintList:
+                    return typeof(ServerSendTintList);
                 default:
                     throw new Exception("getServerMessageType not defined for " + type.ToString());
             }
