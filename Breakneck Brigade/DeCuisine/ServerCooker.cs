@@ -107,7 +107,11 @@ namespace DeCuisine
             foreach (var recipe in this.Type.Recipes)
             {
                 if (CheckRecipe(recipe.Value))
+                {
                     finishCook(recipe.Value);
+                    break;
+                }
+                   
             }
             
             return null;
@@ -119,11 +123,12 @@ namespace DeCuisine
             // Final scan of the recipe to add up all the points
             foreach (var recIng in recipe.Ingredients)
             {
-                var content = ReturnContents(recIng.Ingredient);
-                if (content != null)
+                List<ServerIngredient> matchingCont = new List<ServerIngredient>();
+                matchingCont = ReturnContents(recIng);
+                if (matchingCont != null)
                 {
-                    toEject.Add(content);
-                    cookScore += recIng.Ingredient.DefaultPoints;
+                    toEject.AddRange(matchingCont);
+                    cookScore += recIng.CalculateScore(matchingCont.Count);
                 }
             }
             
@@ -134,7 +139,7 @@ namespace DeCuisine
             }
             var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 100, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
             var newIng = new ServerIngredient(recipe.FinalProduct, Game, ingSpawn);
-            newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
+            //newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
         }
 
 
@@ -142,32 +147,32 @@ namespace DeCuisine
         {
             foreach (var recIng in recipe.Ingredients)
             {
-                if (recIng.nOptional > 0) //todo: wrong
-                    continue; // pass over optional ingredients
-                if (!CheckContents(recIng.Ingredient))
+                if (!CheckContents(recIng.Ingredient, recIng.nCount))
                     return false;
             }
             return true;
         }
 
-        public bool CheckContents(IngredientType ingType)
+        public bool CheckContents(IngredientType ingType, int numEssential)
         {
+            int found = 0;
             foreach (var content in this.Contents.Values)
             {
                 if (ingType == content.Type)
-                    return true;
+                    found++;
             }
-            return false;
+            return found >= numEssential;
         }
 
-        public ServerIngredient ReturnContents(IngredientType ingType)
+        public List<ServerIngredient> ReturnContents(RecipeIngredient ing)
         {
+            List<ServerIngredient> matchingIng = new List<ServerIngredient>();
             foreach (var content in this.Contents.Values)
             {
-                if (ingType == content.Type)
-                    return content;
+                if (ing.Ingredient == content.Type)
+                    matchingIng.Add(content);
             }
-            return null;
+            return matchingIng;
         }
 
 

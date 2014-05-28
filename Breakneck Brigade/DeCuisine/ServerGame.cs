@@ -499,7 +499,7 @@ namespace DeCuisine
             }
             writer.Write(0); //0 "changed"
             writer.Write(0); //0 "deleted"
-            writer.Write(0); //0 events
+            writer.Write(0); //0 "events"
         }
 
         protected void CalculateGameStateHeader(BinaryWriter writer)
