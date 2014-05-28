@@ -20,7 +20,6 @@ namespace DeCuisine
         public Dictionary<int, ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
         protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
-        public List<string> TintIng;
         public ServerTeam Team { get; set; }
         
 
@@ -42,7 +41,7 @@ namespace DeCuisine
         {
             this.Type = type;
             this.Contents = new Dictionary<int, ServerIngredient>();
-            this.TintIng = new List<string>();
+            this.Team = team;
             AddToWorld(transform);
         }
 
@@ -82,8 +81,7 @@ namespace DeCuisine
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
                 this.Game.Controller.ScoreAdd(ingredient.LastPlayerHolding, ingredient);
-                this.Team.TintList = this.recomputeTintList(); 
-                //this.Cook(); // check if you can cook. 
+                this.recomputeTintList(); 
                 return true;
             }
             return false;
@@ -228,19 +226,21 @@ namespace DeCuisine
             }
         }
 
-        
-        private List<string> recomputeTintList()
+        /// <summary>
+        /// recompute the tint list and add it to the teams tint list
+        /// </summary>
+        private void recomputeTintList()
         {
-            var tintHash = new HashSet<string>(); // keeps only distinct objects
             foreach (var ing in this.Contents.Values)
             {
                 foreach (var potentialRec in this.Type.RecipeHash[ing.Type.Name].ToList()) 
                 {
                     foreach(var potentialIng in potentialRec.Ingredients)
-                        tintHash.Add(potentialIng.Ingredient.Name);
+                        this.Team.TintList.Add(potentialIng.Ingredient.Name);
                 }
             }
-            return tintHash.ToList();
+            // add to the list of server events
+            this.Game.ServerEvents.Add(new ServerSendTintList(){Team = this.Team.Name, TintList = this.Team.TintList.ToList()});
         }
 
     }

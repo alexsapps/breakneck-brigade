@@ -35,6 +35,8 @@ namespace DeCuisine
         public HashSet<ServerGameObject> HasChanged = new HashSet<ServerGameObject>();
         public List<int> HasRemoved = new List<int>();
 
+        public List<ServerMessage> ServerEvents { get; set; }
+
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
         public int FrameRateMilliseconds // Tick time in milliseconds
@@ -80,6 +82,7 @@ namespace DeCuisine
                 Controller = new ServerGameController(this);
                 loadConfig();
             }
+            this.ServerEvents = new List<ServerMessage>();
         }
 
         public void ReloadConfig()
@@ -244,8 +247,6 @@ namespace DeCuisine
                             default:
                                 return;
                         }
-
-
                         /*
                          * send updates to clients
                          */
@@ -474,9 +475,17 @@ namespace DeCuisine
             writer.Write(HasRemoved.Count);
             foreach (var obj in HasRemoved)
                 writer.Write(obj);
+            writer.Write(ServerEvents.Count);
+            foreach(var m in this.ServerEvents)
+            {
+                writer.Write((byte)m.Type);
+                m.Write(writer);
+            }
             HasAdded.Clear();
             HasChanged.Clear();
             HasRemoved.Clear();
+            ServerEvents.Clear();
+
         }
         protected void CalculateGameStateFull(BinaryWriter writer)
         {
@@ -490,6 +499,7 @@ namespace DeCuisine
             }
             writer.Write(0); //0 "changed"
             writer.Write(0); //0 "deleted"
+            writer.Write(0); //0 events
         }
 
         protected void CalculateGameStateHeader(BinaryWriter writer)

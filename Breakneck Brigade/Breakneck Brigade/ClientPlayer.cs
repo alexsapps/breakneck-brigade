@@ -26,6 +26,7 @@ namespace Breakneck_Brigade
         public ClientPlayer(int id, BinaryReader reader, ClientGame game)
             : base(id, game, reader)
         {
+            this.TeamName = reader.ReadString();
             int lookingAtId = reader.ReadInt32();
             this.LookingAt = lookingAtId != -1 ? this.Game.LiveGameObjects[lookingAtId] : null;
 

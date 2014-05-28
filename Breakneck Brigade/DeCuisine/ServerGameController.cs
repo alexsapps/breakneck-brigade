@@ -17,6 +17,8 @@ namespace DeCuisine
 
         public List<Goal> Goals { get; set; }
 
+        public Dictionary<string,string> TintList { get; set; }
+
 
 
         public int SpawnTick;

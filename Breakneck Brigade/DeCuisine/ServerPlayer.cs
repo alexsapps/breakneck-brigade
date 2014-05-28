@@ -18,7 +18,7 @@ namespace DeCuisine
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 40.0f;
         private const float LINEOFSIGHTSCALAR = 50;
-        private const int DASHTIME = 90; // seconds * 30. 
+        private const int DASHTIME = 15; // seconds * 30. 
         private int dashTicks { get; set; }
         public string Name { get; set; }
 
@@ -105,7 +105,7 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-
+            stream.Write(this.Client.Team.Name);
             int lookingAtId = -1;
             if(this.LookingAt != null)
                 lookingAtId = this.LookingAt.Id;

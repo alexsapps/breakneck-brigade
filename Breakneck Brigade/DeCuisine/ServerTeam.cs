@@ -13,13 +13,13 @@ namespace DeCuisine
         
         public int Points { get; set; }
         public string Name { get; set; }
-        public List<string> TintList{ get; set; }
+        public HashSet<string> TintList{ get; set; }
 
         public ServerTeam(string name)
         {
             _members = new List<Client>();
             this.Name = name;
-            this.TintList = new List<string>();
+            this.TintList = new HashSet<string>();
         }
 
         public List<Client> GetMembers()
