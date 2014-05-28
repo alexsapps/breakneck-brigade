@@ -24,6 +24,7 @@ namespace Breakneck_Brigade.Graphics
         private ModelParser parser;
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
+        private const string CROSSHAIR_MODEL_NAME = "crosshair";
 
         private Stopwatch  _stopwatch = new Stopwatch();
         private Stopwatch  _stopwatch2 = new Stopwatch();
@@ -53,10 +54,9 @@ namespace Breakneck_Brigade.Graphics
         private     Camera          Camera;
         private     int             _windowWidth    = 0;
         private     int             _windowHeight   = 0;
-        private     int             _aspectX;
-        private     int             _aspectY;
-        private     float           _ratio = 1;
-        private     bool            _getAspect      = false; // = true   (why not use ratio 1?)
+        private     const float     _desiredWidth = 1024.0f;
+        private     const float     _desiredHeight = 768.0f;
+        private     const float     _desiredRatio = _desiredWidth/_desiredHeight;
 
         /// <summary>
         /// A singleton gluQuadric for use in Glu primative rendering functions
@@ -93,6 +93,7 @@ namespace Breakneck_Brigade.Graphics
                 int numberOfTextures = 0;
                 using (XmlReader firstPass = XmlReader.Create(resFile))
                 {
+                    firstPass.ReadToFollowing("resources");
                     firstPass.ReadToFollowing("textures");
                     if (firstPass.ReadToDescendant("texture"))
                     {
@@ -117,6 +118,7 @@ namespace Breakneck_Brigade.Graphics
                 using (XmlReader reader = XmlReader.Create(resFile))
                 {
                     //Extra textures
+                    reader.ReadToFollowing("resources");
                     reader.ReadToFollowing("textures");
                     reader.ReadToDescendant("texture");
                     for (int ii = 0; ii < numberOfTextures; ii++)
@@ -124,7 +126,7 @@ namespace Breakneck_Brigade.Graphics
                         XmlReader modelSubtree = reader.ReadSubtree();
 
                         modelSubtree.ReadToDescendant("filename");
-                        string filename = modelSubtree.ReadElementContentAsString();
+                        string filename = modelSubtree.ReadElementContentAsString() + ".tga";
 
                         Texture texture;
                         if (Renderer.Textures.ContainsKey(filename))
@@ -191,7 +193,66 @@ namespace Breakneck_Brigade.Graphics
                             reader.ReadToNextSibling("model");
                     }
                 }
+            
             }
+            //2D UI setup
+            VBO crosshairVBO = new VBO();
+            float[] indices = {
+                                  0, 1, 2, 3, 4, 5,
+                                  6, 7, 8, 9, 10, 11
+                              };
+            float[] data = {
+                               //Horiz
+                                -0.1f,  0.01f,  0,    //V0
+                                    0,     0, -1,    //N0
+                                    0,     1,        //T0
+                                 0.1f, -0.01f,  0,    //V2
+                                    0,     0, -1,    //N2
+                                    1,     0,        //T2
+                                 0.1f,  0.01f,  0,    //V1
+                                    0,     0, -1,    //N1
+                                    1,     1,        //T1
+                                -0.1f,  0.01f,  0,    //V0
+                                    0,     0, -1,    //N0
+                                    0,     1,        //T0
+                                -0.1f, -0.01f,  0,    //V3
+                                    0,     0, -1,    //N3
+                                    0,     1,        //T3
+                                 0.1f, -0.01f,  0,    //V2
+                                    0,     0, -1,    //N2
+                                    1,     0,        //T2
+                                //Vert
+                                -0.01f,  0.1f,  0,    //V0
+                                    0,     0, -1,    //N0
+                                    0,     1,        //T0
+                                 0.01f, -0.1f,  0,    //V2
+                                    0,     0, -1,    //N2
+                                    1,     0,        //T2
+                                 0.01f,  0.1f,  0,    //V1
+                                    0,     0, -1,    //N1
+                                    1,     1,        //T1
+                                -0.01f,  0.1f,  0,    //V0
+                                    0,     0, -1,    //N0
+                                    0,     1,        //T0
+                                -0.01f, -0.1f,  0,    //V3
+                                    0,     0, -1,    //N3
+                                    0,     1,        //T3
+                                 0.01f, -0.1f,  0,    //V2
+                                    0,     0, -1,    //N2
+                                    1,     0,        //T2
+
+                            };
+            crosshairVBO.Indices.AddRange(indices);
+            crosshairVBO.Data.AddRange(data);
+            crosshairVBO.LoadData();
+            TexturedMesh crosshairMesh = new TexturedMesh() { VBO = crosshairVBO, Texture = Renderer.Textures["white.tga"] };
+            Model crosshairModel = new Model(CROSSHAIR_MODEL_NAME);
+            crosshairModel.Meshes.Add(crosshairMesh);
+            crosshairModel.ModelMatrix = Matrix4.MakeTranslationMat(.5f, 0.5f, 0.0f) * Matrix4.MakeScalingMat(.10f, .10f*_desiredRatio, 1.0f);
+
+
+            Models.Add(crosshairModel.Name, crosshairModel);
+
         }
 
         public void Render(LocalPlayer lp)
@@ -201,10 +262,10 @@ namespace Breakneck_Brigade.Graphics
             //Always clear both color and depth
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
             
-            prep2D();
-            render2D();
             prep3D(lp);
             render3D();
+            prep2D();
+            render2D();
 
             _stopwatch3.Start();
             Glfw.glfwSwapBuffers();
@@ -276,6 +337,9 @@ namespace Breakneck_Brigade.Graphics
             //Gl.glShadeModel(Gl.GL_SMOOTH);
             //Turn on texturing
             Gl.glEnable(Gl.GL_TEXTURE_2D);
+            //Turn on depth test
+            Gl.glEnable(Gl.GL_DEPTH_TEST);
+            Gl.glDepthFunc(Gl.GL_LEQUAL);
 
             //Optimizations
             Gl.glDisable(Gl.GL_DITHER);
@@ -312,7 +376,8 @@ namespace Breakneck_Brigade.Graphics
                 Console.Error.WriteLine("ERROR: GLFW Initialization failed!");
                 Environment.Exit(1);
             }
-            Glfw.glfwOpenWindow(1280, 1024, 0, 0, 0, 8, 16, 0, Glfw.GLFW_WINDOW);
+            Glfw.glfwOpenWindowHint(Glfw.GLFW_WINDOW_NO_RESIZE, Gl.GL_TRUE);
+            Glfw.glfwOpenWindow((int) _desiredWidth, (int) _desiredHeight, 0, 0, 0, 8, 16, 0, Glfw.GLFW_WINDOW);
             Glfw.glfwSwapInterval(0);
 
         }
@@ -335,66 +400,57 @@ namespace Breakneck_Brigade.Graphics
         {
             
             Glfw.glfwGetWindowSize(out _windowWidth, out _windowHeight);
+            var actualRatio = (float) _windowWidth / (float) _windowHeight;
 
-            // force aspect ratio, use saved aspect ratio
-            if (_getAspect)
-            {
-                _aspectX = _windowWidth;
-                _aspectY = _windowHeight;
-                _ratio = (float)_aspectY / (float)_aspectX;
-                _getAspect = false;
-            }
-
-            // setting window viewport aspect to saved ratio
-            if ((float)_windowHeight / (float)_windowWidth > _ratio)
-            {
-                Gl.glViewport(0, 0, (int)((float)_windowHeight / _ratio), _windowHeight);
-            }
-            else if ((float)_windowHeight / (float)_windowWidth < _ratio)
-            {
-                Gl.glViewport(0, 0, _windowWidth, (int)((float)_windowWidth * _ratio));
-            }
-            else
-            {
-                Gl.glViewport(0, 0, _windowWidth, _windowHeight);
-            }
+            Gl.glViewport(0, 0, _windowWidth, _windowHeight);
         }
 
         private void prep2D()
         {
+            float aspect = (float)_windowWidth / (float)_windowHeight;
             Gl.glMatrixMode(Gl.GL_PROJECTION);
             Gl.glLoadIdentity();
-
-            Glu.gluOrtho2D(0.0f, _windowWidth, _windowHeight, 0.0f);
+            Glu.gluOrtho2D(0, 1, 0, 1);
 
             Gl.glMatrixMode(Gl.GL_MODELVIEW);
             Gl.glLoadIdentity();
-            Gl.glTranslatef(0.375f, 0.375f, 0.0f);
 
+
+            Gl.glColor3f(1, 1, 1);
+
+            Gl.glPushAttrib(Gl.GL_ENABLE_BIT | Gl.GL_DEPTH_BUFFER_BIT);
             Gl.glDisable(Gl.GL_DEPTH_TEST);
+            Gl.glDisable(Gl.GL_CULL_FACE);
+            //Gl.glDisable(Gl.GL_TEXTURE_2D);
+            Gl.glDisable(Gl.GL_LIGHTING);
+            //Gl.glTranslatef(0.375f, 0.375f, 0.0f);
+
+            //Gl.glDisable(Gl.GL_DEPTH_TEST);
         }
 
         private void prep3D(LocalPlayer lp)
         {
             Camera.Update(lp);
             Camera.Render();
-
-            Gl.glDepthFunc(Gl.GL_LEQUAL);
-            Gl.glEnable(Gl.GL_DEPTH_TEST);
         }
 
         private void render2D()
         {
             /*
-            Gl.glBegin(Gl.GL_LINES);
-                Gl.glColor3f(0.0f, 0.0f, 0.0f);
-                Gl.glVertex2d(0.5, 0.4);
-                Gl.glVertex2d(0.5, 0.6);
-
-                Gl.glVertex2d(0.4, 0.5);
-                Gl.glVertex2d(0.6, 0.5);
+            Gl.glPushMatrix();
+            Gl.glBegin(Gl.GL_QUADS);
+                Gl.glVertex3f(-.50f, .50f, 0.0f);
+                Gl.glVertex3f(-.50f, -.50f, 0.0f);
+                Gl.glVertex3f(.50f, -.50f, 0.0f);
+                Gl.glVertex3f(.50f, .50f, 0.0f);
             Gl.glEnd();
-             * */
+            Gl.glPopMatrix();
+             */
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
+            Models[CROSSHAIR_MODEL_NAME].Render();
+            //Models["iceCream"].Render();
+
+            Gl.glPopAttrib();
         }
 
         ModelTimer modelTimer = null;
