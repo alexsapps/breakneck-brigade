@@ -11,7 +11,6 @@ namespace SousChef
         public string Result { get; set; }
         public override ServerMessageType Type { get { return ServerMessageType.ServerCommandResponse; } }
 
-        public ServerCommandResponseMessage() { }
         public override void Write(System.IO.BinaryWriter writer)
         {
             writer.Write(Result);

@@ -41,19 +41,19 @@ namespace DeCuisine
         public event EventHandler Connected;
         public event EventHandler Disconnected;
 
-        public Client(Server server)
+        public Client(Server server, TcpClient c)
         {
             this.Server = server;
+            this.connection = c;
             ServerMessages = new List<ServerMessage>();
         }
 
-        public void Receive(TcpClient c)
+        public void Receive()
         {
-            this.connection = c;
-            c.NoDelay = true; //this is why we use a buffered stream, so every int doesn't get written at once.
+            connection.NoDelay = true; //this is why we use a buffered stream, so every int doesn't get written at once.
             try
             {
-                var w = new BinaryWriter(c.GetStream());
+                var w = new BinaryWriter(connection.GetStream());
                 w.Write(BB.ServerProtocolHandshakeStr);
                 string confighash;
                 lock (Server.Lock) {
@@ -64,7 +64,7 @@ namespace DeCuisine
                 w.Write(confighash);
                 w = null;
 
-                using (BinaryReader reader = new BinaryReader(c.GetStream()))
+                using (BinaryReader reader = new BinaryReader(connection.GetStream()))
                 {
                     connection.ReceiveTimeout = 10000;
                     if (!reader.ReadString().Equals(BB.ClientProtocolHandshakeStr))

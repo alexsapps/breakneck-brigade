@@ -17,8 +17,6 @@ namespace DeCuisine
 
         public List<Goal> Goals { get; set; }
 
-
-
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
         private string[] defaultTeams = new string[]{"red", "blue"}; //Add more team names for more teams
@@ -41,7 +39,8 @@ namespace DeCuisine
             }
         }
 
-        private int ScoreToWin = 2000;
+        public int ScoreToWin = 2000;
+        public long MaxTime = new TimeSpan(0,15,0).Ticks;
 
         WeightedRandomChooser<IngredientType> randomIngredientChooser;
         WeightedRandomChooser<IngredientType> randomGoalChooser;
@@ -81,7 +80,7 @@ namespace DeCuisine
 
         int ticks = 1; //server ticks, not time ticks
 
-        public void Update()
+        public bool Update()
         {
             /*
              * handle an instant in time, e.g. gravity, collisions
@@ -94,7 +93,18 @@ namespace DeCuisine
             if (ticks % this.SpawnTick == 0)
                 spawnIngredient(getWeightedRandomGoal(), RandomLocation());
 
+            if (_lobbyStateDirty)
+            {
+                _lobbyStateDirty = false;
+                Game.SendLobbyStateToAll();
+            }
+
+            if (CheckWin())
+                return false;
+
             ticks++;
+
+            return true;
         }
 
         /*
@@ -177,16 +187,18 @@ namespace DeCuisine
                 client.Team.RemoveMember(client);
             team.AddMember(client);
             client.Team = team;
+            MarkLobbyStateDirty();
         }
 
         public void ScoreAdd(ServerPlayer player, ServerIngredient ing)
         {
             int points = ing.Type.DefaultPoints * ing.Cleanliness;
             player.Client.Team.Points += points;
+            MarkLobbyStateDirty();
+
             // TODO: Replace with call to gui or something
             Program.WriteLine("Player " + player.Id + " Scored " + points + " For " + player.Client.Team + " Team");
             this.DisplayScore();
-            CheckWin(ing.LastPlayerHolding.Client.Team);
         }
 
         public void ScoreDeliver(ServerIngredient ing)
@@ -199,20 +211,39 @@ namespace DeCuisine
                     {
                         ing.LastPlayerHolding.Client.Team.Points += ((Goal)goal).Points;
                         ing.Remove();
+                        MarkLobbyStateDirty();
+
                         Program.WriteLine("Scored " + ((Goal)goal).Points + " for team " + ing.LastPlayerHolding.Client.Team.Name);
                         this.DisplayScore();
-                        CheckWin(ing.LastPlayerHolding.Client.Team);
                     }
                 }
             }
 
         }
-        public void CheckWin(ServerTeam team)
+        public bool CheckWin()
         {
-            if (team.Points >= this.ScoreToWin)
+            ServerTeam maxTeam = null;
+            foreach(var team in Teams.Values)
             {
-                Program.WriteLine("Team " + team.Name + " Wins!");
+                if(maxTeam == null || team.Points > maxTeam.Points)
+                {
+                    maxTeam = team;
+                }
             }
+
+            if (maxTeam.Points >= this.ScoreToWin || DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime)
+            {
+                Game.Winner = maxTeam;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool _lobbyStateDirty = false;
+        void MarkLobbyStateDirty()
+        {
+            _lobbyStateDirty = true;
         }
 
         public void DisplayScore()

@@ -43,7 +43,7 @@ namespace Breakneck_Brigade
         }
         static BBLock gameLock = new BBLock();
 
-        static GameMode gameMode;
+        static ClientLobbyState lobbyState = new ClientLobbyState();
         static Renderer renderer;
         static Camera camera;
 
@@ -135,10 +135,11 @@ namespace Breakneck_Brigade
                                         Program.WriteLine("Connected.");
                                         lock (gameLock)
                                         {
-                                            Program.WriteLine("GameMode: " + gameMode.ToString());
-                                            if (gameMode == GameMode.Started || gameMode == GameMode.Paused)
+                                            Program.WriteLine("GameMode: " + lobbyState.Mode.ToString());
+                                            if (lobbyState.Mode == GameMode.Started || lobbyState.Mode == GameMode.Paused)
                                             {
-                                                Program.WriteLine(game.GameTime.ToString("g"));
+                                                Program.WriteLine("game time: " + game.GameTime.ToString("g"));
+                                                Program.WriteLine("max time: " + lobbyState.MaxTime.ToString("g"));
                                                 Program.WriteLine(game.LiveGameObjects.Count + " game objects.");
                                             }
                                         }
@@ -196,8 +197,28 @@ namespace Breakneck_Brigade
                                         switch (parts[1])
                                         {
                                             case "list":
-                                                line = "s teams";
-                                                goto processLine;
+                                                lock (clientLock)
+                                                {
+                                                    if (client.IsConnected)
+                                                    {
+                                                        lock (gameLock)
+                                                        {
+                                                            foreach(var team in lobbyState.Teams.Values)
+                                                            {
+                                                                Program.WriteLine(team.Name + ":" + team.Score);
+                                                                foreach(var member in team.Clients)
+                                                                {
+                                                                    Program.WriteLine("\t" + member);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        Program.WriteLine("not connected.");
+                                                    }
+                                                }
+                                                break;
                                             case "join":
                                                 if (parts.Length == 3)
                                                 {
@@ -207,10 +228,10 @@ namespace Breakneck_Brigade
                                                     goto processLine;
                                                 }
                                                 else
-                                                    Console.WriteLine("wrong # of args to team join");
+                                                    Program.WriteLine("wrong # of args to team join");
                                                 break;
                                             default:
-                                                Console.WriteLine("team doesn't understand " + parts[1]);
+                                                Program.WriteLine("team doesn't understand " + parts[1]);
                                                 break;
                                         }
                                     }
@@ -287,7 +308,7 @@ namespace Breakneck_Brigade
 
                         lock (gameLock)
                         {
-                            gameMode = GameMode.Init;
+                            lobbyState.Mode = GameMode.Init;
                             serverMessageHandlerLoopThread = new Thread(new ThreadStart(serverMessageHandlerLoop));
                             serverMessageHandlerLoopThread.Start();
                         }
@@ -317,9 +338,9 @@ namespace Breakneck_Brigade
                             on_disconnected();
                             return playAgain1;
                         }
-                        if (gameMode != oldMode)
+                        if (lobbyState.Mode != oldMode)
                         {
-                            switch (gameMode)
+                            switch (lobbyState.Mode)
                             {
                                 case GameMode.Init:
                                     Program.WriteLine("Waiting for other players to join.");
@@ -327,13 +348,17 @@ namespace Breakneck_Brigade
                                 case GameMode.Started:
                                     Program.WriteLine("Game started.");
                                     break;
+                                case GameMode.Results:
+                                    Program.WriteLine("Game finished!");
+                                    Program.WriteLine("Winner: " + lobbyState.WinningTeam.Name);
+                                    break;
                                 case GameMode.Stopping:
                                     Program.WriteLine("Game ended.");
                                     return true; //reconnect
                             }
-                            oldMode = gameMode;
+                            oldMode = lobbyState.Mode;
                         }
-                        switch (gameMode)
+                        switch (lobbyState.Mode)
                         {
                             case GameMode.Started:
                             case GameMode.Paused:
@@ -376,7 +401,7 @@ namespace Breakneck_Brigade
 
             if (playing)
             {
-                if (!(gameMode == GameMode.Started || gameMode == GameMode.Paused))
+                if (!(lobbyState.Mode == GameMode.Started || lobbyState.Mode == GameMode.Paused))
                 {
                     _play_again = true; //play again
                     _game_ending = true;
@@ -439,7 +464,7 @@ namespace Breakneck_Brigade
 
             client = null;
             game = null;
-            gameMode = GameMode.None;
+            lobbyState.Mode = GameMode.None;
             renderer.GameObjects = null;
             Program.WriteLine("Disconnected.");
         }
@@ -619,19 +644,23 @@ namespace Breakneck_Brigade
 
                         lock (gameLock)
                         {
-                            gameMode = msg.Mode;
-                            switch (gameMode)
+                            lobbyState.Mode = msg.Mode;
+                            switch (lobbyState.Mode)
                             {
                                 case GameMode.Init:
                                     break;
                                 case GameMode.Started:
                                     game = new ClientGame(gameLock);
                                     break;
+                                case GameMode.Results:
+                                    MessageBox.Show(lobbyState.WinningTeam.Name + " wins!");
+                                    break;
                                 case GameMode.Stopping:
                                     break;
                                 default:
-                                    client.Disconnect();
-                                    return;
+                                    throw new Exception("client doesn't understand game mode: " + lobbyState.Mode.ToString());
+                                    //client.Disconnect();
+                                    //return;
                             }
                         }
                     }
@@ -667,6 +696,41 @@ namespace Breakneck_Brigade
                             });
                             
                             game.GameObjectsCache = new Dictionary<int,ClientGameObject>(game.LiveGameObjects);
+                        }
+                    }
+                    else if (m is ServerLobbyStateUpdateMessage)
+                    {
+                        var msg = (ServerLobbyStateUpdateMessage)m;
+                        lock(gameLock)
+                        {
+                            msg.Read((r) =>
+                            {
+                                int teamCount = r.ReadInt32();
+                                lobbyState.Teams.Clear();
+                                for(int i = 0; i < teamCount; i++)
+                                {
+                                    var name = r.ReadString();
+                                    var team = new ClientTeam()
+                                    {
+                                        Name = name,
+                                        Score = r.ReadInt32()
+                                    };
+                                    int memberCount = r.ReadInt32();
+                                    for (int j = 0; j < memberCount; j++)
+                                    {
+                                        team.Clients.Add(r.ReadString());
+                                    }
+                                    lobbyState.Teams.Add(name, team);
+                                }
+                                string myTeam = r.ReadString();
+                                lobbyState.MyTeam = lobbyState.Teams[myTeam];
+                                lobbyState.MaxScore = r.ReadInt32();
+                                lobbyState.MaxTime = new TimeSpan(r.ReadInt64());
+                                if (r.ReadBoolean())
+                                    lobbyState.WinningTeam = lobbyState.Teams[r.ReadString()];
+                                else
+                                    lobbyState.WinningTeam = null;
+                            });
                         }
                     }
                     else if (m is ServerPlayerIdUpdateMessage)

@@ -119,6 +119,10 @@ namespace Breakneck_Brigade
                     return typeof(ServerPlayerIdUpdateMessage);
                 case ServerMessageType.ServerCommandResponse:
                     return typeof(ServerCommandResponseMessage);
+                case ServerMessageType.ServerLobbyStateUpdateMessage:
+                    return typeof(ServerLobbyStateUpdateMessage);
+                case ServerMessageType.ServerTeamScoreMessage:
+                    return typeof(ServerTeamScoreMessage);
                 default:
                     throw new Exception("getServerMessageType not defined for " + type.ToString());
             }

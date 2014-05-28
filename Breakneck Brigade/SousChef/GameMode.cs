@@ -12,6 +12,7 @@ namespace SousChef
         Init, //wait for users to connect
         Started, //the game is playing
         Paused, //the game is paused (may not be implemented)
+        Results, //showing game results, winner/loser, final scores
         Stopping //the game is shutting down
     }
 }

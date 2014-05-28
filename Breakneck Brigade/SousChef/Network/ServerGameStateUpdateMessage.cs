@@ -12,6 +12,5 @@ namespace SousChef
     public class ServerGameStateUpdateMessage : BinaryServerMessage
     {
         public override ServerMessageType Type { get { return ServerMessageType.GameStateUpdate; } }
-        public ServerGameStateUpdateMessage() { }
     }
 }

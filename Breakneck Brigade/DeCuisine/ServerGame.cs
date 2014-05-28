@@ -109,6 +109,7 @@ namespace DeCuisine
                     clients.Add(e.Client);
 
                     SendMode(e.Client);
+                    SendLobbyState(e.Client);
 
                     if (Mode == GameMode.Started)
                     {
@@ -241,6 +242,8 @@ namespace DeCuisine
                                 break;
                             case GameMode.Paused:
                                 break;
+                            case GameMode.Results:
+                                break;
                             default:
                                 return;
                         }
@@ -249,6 +252,7 @@ namespace DeCuisine
                         /*
                          * send updates to clients
                          */
+                        if(this.Mode == GameMode.Started)
                         {
                             var msg = CalculateGameStateMessage(CalculateGameStateDifference);
                             foreach (Client client in clients)
@@ -325,7 +329,7 @@ namespace DeCuisine
             }
         }
 
-        private void UpdateGame(long fallBehind)
+        private bool UpdateGame(long fallBehind)
         {
             /*
              * handle client input, e.g. move
@@ -394,7 +398,16 @@ namespace DeCuisine
             _world.StepSimulation(FrameRateMilliseconds);
             //_world.StepSimulation(timeStep, 0, timeStep);
 
-            this.Controller.Update();
+            if(!this.Controller.Update())
+            {
+                SendLobbyStateToAll(); //Game.MarkLobbyStateDirty(); //TODO: what's the right way to do this?
+                Program.WriteLine("Team " + Winner.Name + " Wins!");
+                Mode = GameMode.Results;
+                SendModeChangeUpdate();
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -538,27 +551,78 @@ namespace DeCuisine
             }
         }
 
-
+        private ServerGameModeUpdateMessage getModeMessage()
+        {
+            return new ServerGameModeUpdateMessage() { Mode = Mode };
+        }
+        private void SendMode(Client client)
+        {
+            MessageClient(client, getModeMessage());
+        }
         private void SendModeChangeUpdate()
+        {
+            MessageAll(getModeMessage());
+        }
+
+        public void MessageClient(Client client, ServerMessage message)
+        {
+            client.Lock.AssertHeld();
+            client.SendMessage(message);
+        }
+        public void MessageClient(Client client, messageGenerator messageGen)
+        {
+            client.Lock.AssertHeld();
+            client.SendMessage(messageGen(client));
+        }
+        public void MessageAll(ServerMessage message)
+        {
+            MessageAll((c) => message);
+        }
+        public void MessageAll(messageGenerator messageGen)
         {
             foreach (Client client in clients)
             {
                 lock (client.Lock)
                 {
-                    SendMode(client);
+                    MessageClient(client, messageGen);
                 }
             }
         }
+        public delegate ServerMessage messageGenerator(Client client);
 
-        private void SendMode(Client client)
+        private ServerLobbyStateUpdateMessage calculateServerLobbyStateMessage(Client client)
         {
-            client.Lock.AssertHeld();
-            var update = new ServerGameModeUpdateMessage()
+            ServerLobbyStateUpdateMessage msg = new ServerLobbyStateUpdateMessage();
+            msg.Write((w) =>
             {
-                Mode = Mode
-            };
-            client.SendMessage(update);
+                w.Write(Controller.Teams.Count);
+                foreach(var team in Controller.Teams.Values)
+                {
+                    w.Write(team.Name);
+                    w.Write(team.Points);
+                    var members = team.GetMembers();
+                    w.Write(members.Count);
+                    foreach (var member in members)
+                        w.Write(member.ToString());
+                }
+                w.Write(client.Team.Name);
+                w.Write(Controller.ScoreToWin);
+                w.Write((long)Controller.MaxTime);
+                w.Write(Winner != null);
+                if (Winner != null)
+                    w.Write(Winner.Name);
+            });
+            return msg;
         }
+        public void SendLobbyState(Client client)
+        {
+            MessageClient(client, calculateServerLobbyStateMessage);
+        }
+        public void SendLobbyStateToAll()
+        {
+            MessageAll(calculateServerLobbyStateMessage);
+        }
+        
 
         public void Dispose()
         {
@@ -638,6 +702,6 @@ namespace DeCuisine
             this.GameObjects[id].Remove();
         }
 
-
+        public ServerTeam Winner { get; set; }
     }
 }

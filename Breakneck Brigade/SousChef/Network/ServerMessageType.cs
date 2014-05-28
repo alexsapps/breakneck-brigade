@@ -11,6 +11,8 @@ namespace SousChef
         GameModeUpdate,
         GameStateUpdate,
         PlayerIdUpdate,
-        ServerCommandResponse
+        ServerCommandResponse,
+        ServerLobbyStateUpdateMessage,
+        ServerTeamScoreMessage
     }
 }

@@ -12,7 +12,6 @@ namespace SousChef
     {
         public GameMode Mode { get; set; }
         public override ServerMessageType Type { get { return ServerMessageType.GameModeUpdate; } }
-        public ServerGameModeUpdateMessage() { }
         public override void Write(BinaryWriter writer)
         {
             writer.Write((byte)(Mode));

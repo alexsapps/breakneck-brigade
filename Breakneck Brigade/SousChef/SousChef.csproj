@@ -76,6 +76,8 @@
     <Compile Include="IIngredient.cs" />
     <Compile Include="Network\BinaryServerMessage.cs" />
     <Compile Include="Network\ClientCookEvent.cs" />
+    <Compile Include="Network\ServerLobbyStateUpdateMessage.cs" />
+    <Compile Include="Network\ServerTeamScoreMessage.cs" />
     <Compile Include="RecipeIngredient.cs" />
     <Compile Include="TerrainType.cs" />
     <Compile Include="IngredientType.cs" />

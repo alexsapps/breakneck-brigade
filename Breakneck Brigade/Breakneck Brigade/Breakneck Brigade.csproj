@@ -115,11 +115,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="ClientLobbyState.cs" />
     <Compile Include="ClientStaticObject.cs" />
     <Compile Include="ClientCooker.cs" />
     <Compile Include="ClientGameObject.cs" />
     <Compile Include="ClientIngredient.cs" />
     <Compile Include="ClientGame.cs" />
+    <Compile Include="ClientTeam.cs" />
     <Compile Include="ClientTerrain.cs" />
     <Compile Include="ClientPlayer.cs" />
     <Compile Include="frmConnect.cs">
