@@ -88,8 +88,12 @@ namespace Breakneck_Brigade
         /// </summary>
         public override void Render()
         {
-            var team = ((ClientPlayer)this.Game.GameObjectsCache[(int)this.Game.PlayerObjId]).TeamName;
-            if (this.Game.TintedObjects[team].Contains(this.Type.Name))
+            var player = Program.localPlayer.Player;
+            string team = null;
+            if(player != null)
+                team = player.TeamName;
+            
+            if (team != null && this.Game.TintedObjects[team].Contains(this.Type.Name))
             {
                 Gl.glColor3f(1.0f, 0f, 0f);
                 base.Render();
