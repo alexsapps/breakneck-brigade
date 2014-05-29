@@ -332,7 +332,7 @@ namespace Breakneck_Brigade.Graphics
             //Turns on backface culling (culls surfaces you cannot see)
             Gl.glEnable(Gl.GL_CULL_FACE);
             //For basic polygons. Only draws front faces
-            Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL);
+            Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
             //What shading model to use for rendering Gl prims
             //Gl.glShadeModel(Gl.GL_SMOOTH);
             //Turn on texturing
@@ -468,6 +468,27 @@ namespace Breakneck_Brigade.Graphics
                     if(modelTimer != null)
                         modelTimer.stop();
                 }
+
+            /*
+            // Debug triangles for picking
+            Gl.glDisable(Gl.GL_CULL_FACE);
+            Gl.glColor3f(1.0f, 0f, 0f);
+            Gl.glBegin(Gl.GL_TRIANGLES);
+            Gl.glVertex3f(ClientPlayer.start.X, ClientPlayer.start.Y, ClientPlayer.start.Z);
+            Gl.glVertex3f(ClientPlayer.start.X, ClientPlayer.start.Y + 5, ClientPlayer.start.Z);
+            Gl.glVertex3f(ClientPlayer.start.X, ClientPlayer.start.Y, ClientPlayer.start.Z + 5);
+            Gl.glEnd();
+
+            Gl.glColor3f(1.0f, 1.0f, 0f);
+            Gl.glBegin(Gl.GL_TRIANGLES);
+            Gl.glVertex3f(ClientPlayer.end.X, ClientPlayer.end.Y, ClientPlayer.end.Z);
+            Gl.glVertex3f(ClientPlayer.end.X, ClientPlayer.end.Y + 5, ClientPlayer.end.Z);
+            Gl.glVertex3f(ClientPlayer.end.X, ClientPlayer.end.Y, ClientPlayer.end.Z + 5);
+            Gl.glEnd();
+            Gl.glDisable(Gl.GL_CULL_FACE);
+            Gl.glColor3f(1.0f, 1.0f, 1.0f);
+            */
+
             CurrentDrawMode = -1;
         }
 

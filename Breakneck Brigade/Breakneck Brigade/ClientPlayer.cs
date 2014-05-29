@@ -1,4 +1,5 @@
-﻿using SousChef;
+﻿using Breakneck_Brigade.Graphics;
+using SousChef;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,8 @@ namespace Breakneck_Brigade
 
         public override float[] Sides { get { return BB.GetPlayerSides(); } }
 
+        public static float eyeHeight = 0;
+
         public ClientPlayer(int id, Vector4 position, ClientGame game)
             : base(id, game, position)
         {
@@ -30,6 +33,9 @@ namespace Breakneck_Brigade
             this.TeamName = reader.ReadString();
             LookingAtId = reader.ReadInt32();
             this.LookingAt = LookingAtId != -1 ? this.Game.LiveGameObjects[LookingAtId] : null;
+            start = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            end = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            eyeHeight = reader.ReadSingle();
 
             base.finalizeConstruction();
         }
@@ -42,8 +48,14 @@ namespace Breakneck_Brigade
         public override void StreamUpdate(BinaryReader reader)
         {
             base.StreamUpdate(reader);
+
             this.LookingAtId = reader.ReadInt32();
+            start = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            end = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            eyeHeight = reader.ReadSingle();
         }
+
+        public static Vector4 start = new Vector4(), end = new Vector4();
 
         /// <summary>
         /// Renders the game object in the world.
@@ -53,8 +65,8 @@ namespace Breakneck_Brigade
             if (this.ToRender && Game.PlayerObjId != this.Id)//&& this.Id != )
             {
                 Gl.glPushMatrix();
-                Gl.glMultMatrixf(Transformation.glArray);
-                    Model.Render();
+                Gl.glMultMatrixf(this.Transformation.glArray);
+                this.Model.Render();
                 Gl.glPopMatrix();
             }
         }

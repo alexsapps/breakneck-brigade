@@ -33,8 +33,6 @@ namespace DeCuisine
         /// <summary>
         /// Gets the ServerObject this player is currently looking at.
         /// </summary>
-
-
         ServerGameObject _lookingAt;
         public ServerGameObject LookingAt
         {
@@ -48,12 +46,14 @@ namespace DeCuisine
                     _lookingAt.Removed += _lookingAt_Removed;
             }
         }
+
         void _lookingAt_Removed(object sender, EventArgs e)
         {
             Debug.Assert(sender == LookingAt);
             LookingAt = null;
         }
 
+        public float EyeHeight { get; private set; }
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Player; } }
         public Client Client { get; private set; }
         public override int SortOrder { get { return 10000; } } /* must be sent after ingredients, because players can be holding ingredients */
@@ -94,6 +94,7 @@ namespace DeCuisine
             : base(game)
         {
             base.AddToWorld(position);
+            this.EyeHeight = 8.0f;
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
@@ -111,6 +112,9 @@ namespace DeCuisine
             if(this.LookingAt != null)
                 lookingAtId = this.LookingAt.Id;
             stream.Write(lookingAtId);
+            stream.Write(this.start);
+            stream.Write(this.end);
+            stream.Write(this.EyeHeight);
         }
 
 
@@ -126,6 +130,9 @@ namespace DeCuisine
             if (this.LookingAt != null)
                 lookingAtId = this.LookingAt.Id;
             stream.Write(lookingAtId);
+            stream.Write(this.start);
+            stream.Write(this.end);
+            stream.Write(this.EyeHeight);
         }
 
         /// <summary>
@@ -251,38 +258,49 @@ namespace DeCuisine
             if (this.Hands["left"].Held != null)
             {
                 // move the object in front of you
-                this.Hands["left"].Held.Position = new Vector3(this.Position.X + (float)Math.Sin(
-                    this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE, 
-                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, 
-                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE);
+                this.Hands["left"].Held.Position = new Vector3(
+                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE), 
+                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE,
+                    this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
 
             // Check what the player is looking at
             Vector3 start = new Vector3
                 (
-                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * RAYSTARTDISTANCE,
-                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * RAYSTARTDISTANCE * -1,
-                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * RAYSTARTDISTANCE * -1
+                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * RAYSTARTDISTANCE), //Math.Sin(this.Incline * Math.PI / 180.0f) *
+                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -RAYSTARTDISTANCE,
+                    this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -RAYSTARTDISTANCE) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
                );
 
-            Vector3 end = new Vector3(start.X, start.Y, start.Z) * ServerPlayer.LINEOFSIGHTSCALAR;
-
-            CollisionWorld.ClosestRayResultCallback collisionCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
-            this.Game.World.RayTest(start, end, collisionCallback);
-            if (collisionCallback.HasHit)
+            Vector3 end = new Vector3
+                (
+                    start.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * LINEOFSIGHTSCALAR), //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+                    start.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR,
+                    start.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+                );
+            CollisionWorld.ClosestRayResultCallback raycastCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
+            this.Game.World.RayTest(start, end, raycastCallback);
+            if (raycastCallback.HasHit)
             {
-                this.LookingAt = (ServerGameObject)collisionCallback.CollisionObject.CollisionShape.UserObject;
+                this.LookingAt = (ServerGameObject)raycastCallback.CollisionObject.CollisionShape.UserObject;
             }
             else
             {
                 this.LookingAt = null;
             }
+
+            this.start = start;
+            this.end = end;
+
+            // Check if player can dash
             if (dashTicks > 0)
             {
                 CheckDashing();
             }
 
         }
+
+        Vector3 start = new Vector3(), end = new Vector3();
 
         private void CheckDashing()
         {

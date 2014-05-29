@@ -203,7 +203,7 @@ namespace Breakneck_Brigade
                     Gl.glEnd();
                 }
                 Gl.glEnable(Gl.GL_TEXTURE);
-                Gl.glPolygonMode(Gl.GL_FRONT, Gl.GL_FILL);
+                Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
                 Gl.glEnable(Gl.GL_CULL_FACE);
             }
         }
