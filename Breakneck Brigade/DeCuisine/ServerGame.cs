@@ -127,7 +127,8 @@ namespace DeCuisine
         private void StartClient(Client client)
         {
             client.Lock.AssertHeld();
-            client.Player = new ServerPlayer(server.Game, new Vector3(10, 100, 10), client);
+            Vector3 spawnLoc = this.Controller.AssignSpawnPoint(client);
+            client.Player = new ServerPlayer(server.Game, spawnLoc, client);
             client.SendMessage(new ServerPlayerIdUpdateMessage() { PlayerId = client.Player.Id });
         }
 

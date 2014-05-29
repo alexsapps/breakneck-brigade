@@ -12,16 +12,23 @@ namespace DeCuisine
     class ServerGameController
     {
         protected ServerGame Game { get; set; }
-        
         public Dictionary<string, ServerTeam> Teams { get; set; }
-
         public List<Goal> Goals { get; set; }
-
         public Dictionary<string,string> TintList { get; set; }
+        
 
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
         private string[] defaultTeams = new string[]{"red", "blue"}; //Add more team names for more teams
+        private Vector3 teamSpawn = new Vector3(700, 20, 700);
+
+
+
+        private int pileSize = 200;
+        private int currentGameState { get; set; }
+        public string CurrentGameState { get { return gameStates[currentGameState]; } }
+        private string[] gameStates = { "start", "waiting", "stage1", "stage2", "stage3", "end" };
+        private int startTick = 30 * 5; // 5 seconds.
 
         private int _numGoals = 0;
         public int NumGoals
@@ -41,7 +48,7 @@ namespace DeCuisine
             }
         }
 
-        public int ScoreToWin = 2000;
+        public int ScoreToWin = 20000000;
         public long MaxTime = new TimeSpan(0,15,0).Ticks;
 
         WeightedRandomChooser<IngredientType> randomIngredientChooser;
@@ -49,13 +56,13 @@ namespace DeCuisine
 
         public ServerGameController(ServerGame game)
         {
-               
             this.Game = game;
             this.SpawnTick = 30 * SECONDSTOSPAWN;//game.FrameRateMilliseconds * SECONDSTOSPAWN; FrameRate not set, TODO:
             this.Teams = new Dictionary<string, ServerTeam>();
             foreach (string teamName in this.defaultTeams)
             {
-                this.Teams.Add(teamName, new ServerTeam(teamName));
+                this.Teams.Add(teamName, new ServerTeam(teamName,teamSpawn ));
+                teamSpawn *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams
             }
             this.Goals = new List<Goal>();
         }
@@ -84,31 +91,47 @@ namespace DeCuisine
 
         public bool Update()
         {
-            /*
-             * handle an instant in time, e.g. gravity, collisions
-             */
+            switch (gameStates[currentGameState])
+            {
+                case "start":
+                    spawnPile();
+                    currentGameState++;
+                    break;
+                case "waiting":
+                    if (ticks == startTick)
+                        currentGameState++;
+                    updateObj();
+                    scatterPile();
+                    break;
+                case "stage1":
+                    /*
+                     * handle an instant in time, e.g. gravity, collisions
+                     */
+                    this.updateObj();
+                    if (_lobbyStateDirty)
+                    {
+                        _lobbyStateDirty = false;
+                        Game.SendLobbyStateToAll();
+                    }
+
+                    if (CheckWin())
+                        return false;
+                    break;
+            }
+           
+            
+            ticks++;
+            return true;
+        }
+
+        private void updateObj()
+        {
             foreach (var obj in new List<ServerGameObject>(Game.GameObjects.Values)) //allow removing items while enumerating
             {
                 obj.Update();
             }
 
-            if (ticks % this.SpawnTick == 0)
-                spawnIngredient(getWeightedRandomGoal(), RandomLocation());
-
-            if (_lobbyStateDirty)
-            {
-                _lobbyStateDirty = false;
-                Game.SendLobbyStateToAll();
-            }
-
-            if (CheckWin())
-                return false;
-
-            ticks++;
-
-            return true;
         }
-
         /*
          * chooses an ingredient to be spawned based on what ingredients are needed to make the goal recipes (goals).
          * chooses random ingredients if no ingredients are needed to make goals.
@@ -134,9 +157,9 @@ namespace DeCuisine
         public static Vector3 RandomLocation()
         {
             return new Vector3(
-                (float)Math.Pow(DC.random.Next(-800, 800), 1),
-                (float)Math.Pow(DC.random.Next(10, 100), 2),
-                (float)Math.Pow(DC.random.Next(-800, 800), 1));
+                (float)Math.Pow(DC.random.Next(-20, 20), 1),
+                (float)Math.Pow(DC.random.Next(2, 20), 2),
+                (float)Math.Pow(DC.random.Next(-20, 20), 1));
         }
 
         /// <summary>
@@ -256,6 +279,52 @@ namespace DeCuisine
                 //add individual scores as well.
             }
                 
+        }
+
+        /// <summary>
+        /// Assign a spawn point to a random place
+        /// </summary>
+        public Vector3 AssignSpawnPoint(Client client)
+        {
+            Vector3 spawnLoc = client.Team.SpawnPoint;
+            spawnLoc.X += DC.random.Next(15);
+            spawnLoc.Z += DC.random.Next(15);
+            return spawnLoc;
+        }
+
+        /// <summary>
+        /// Spawn the cornicopia(sp)
+        /// </summary>
+        private void spawnPile()
+        {
+            for (int x = 0; x < pileSize; x++)
+            {
+                var tmp = spawnIngredient(getWeightedRandomGoal(), RandomLocation());
+                tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet
+            }
+        }
+
+        private void scatterPile()
+        {
+            foreach (var obj in this.Game.GameObjects.Values)
+            {
+                if (obj.ObjectClass == GameObjectClass.Ingredient)
+                {
+                    // scatter only ingredients. SHould be in the pile currently
+                    obj.Body.LinearVelocity = randomVelocity(300);
+                    obj.Body.Gravity = this.Game.World.Gravity;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Apply a randome velocity to an object. Y will be much less than all  the other
+        /// </summary>
+        private Vector3 randomVelocity(int max)
+        {
+            Vector3 vel = new Vector3(DC.random.Next(-max, max), DC.random.Next(100), DC.random.Next(-max, max));
+            return vel;
         }
         /// <summary>
         /// Class which facilitates choosing items randomly based on their weights.

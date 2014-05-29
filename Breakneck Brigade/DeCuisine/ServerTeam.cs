@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using BulletSharp;
 namespace DeCuisine
 {
     class ServerTeam
@@ -14,12 +14,14 @@ namespace DeCuisine
         public int Points { get; set; }
         public string Name { get; set; }
         public HashSet<string> TintList{ get; set; }
+        public Vector3 SpawnPoint;
 
-        public ServerTeam(string name)
+        public ServerTeam(string name, Vector3 spawnPoint)
         {
             _members = new List<Client>();
             this.Name = name;
             this.TintList = new HashSet<string>();
+            this.SpawnPoint = spawnPoint;
         }
 
         public List<Client> GetMembers()
