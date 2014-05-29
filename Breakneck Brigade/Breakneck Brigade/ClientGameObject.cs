@@ -143,30 +143,35 @@ namespace Breakneck_Brigade
         /// </summary>
         public virtual void Render()
         {
-            
+            render();
+        }
+
+        protected void RenderRed()
+        {
+            Gl.glColor3f(1.0f, 0f, 0f);
+            render();
+            Gl.glColor3f(1.0f, 1.0f, 1.0f);
+        }
+
+        protected void render() //need a way to call this directly, ignoring overridden version
+        {
             if (this.ToRender)
             {
                 Gl.glPushMatrix();
                 Gl.glMultMatrixf(Transformation.glArray);
-                if (this.Game.LookatId == this.Id)
-                {
-                    Gl.glColor3f(1.0f, 0f, 0f);
-                    Model.Render();
-                    Gl.glColor3f(1.0f, 1.0f, 1.0f);
-                }else
-                    Model.Render();
+                Model.Render();
                 Gl.glPopMatrix();
-                
+
                 //Wire collision box
-                
+
                 Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE);
                 Gl.glDisable(Gl.GL_TEXTURE);
                 Gl.glDisable(Gl.GL_CULL_FACE);
-                if(Sides.Length == 1) //Sphere
+                if (Sides.Length == 1) //Sphere
                 {
                     Glu.gluSphere(Renderer.gluQuadric, (maxBound - minBound).Magnitude() / 2, 10, 10);
                 }
-                else if(Sides.Length == 3) //Cube
+                else if (Sides.Length == 3) //Cube
                 {
                     Vector4 F0, F1, F2, F3, B0, B1, B2, B3;
                     F0 = maxBound;
@@ -188,7 +193,7 @@ namespace Breakneck_Brigade
                         Gl.glVertex3f(B0.X, B0.Y, B0.Z);
                         Gl.glVertex3f(B3.X, B3.Y, B3.Z);
                         Gl.glVertex3f(B2.X, B2.Y, B2.Z);
-                        Gl.glVertex3f(B1.X, B1.Y, B1.Z);                      
+                        Gl.glVertex3f(B1.X, B1.Y, B1.Z);
                         //Left
                         Gl.glVertex3f(B0.X, B0.Y, B0.Z);
                         Gl.glVertex3f(B3.X, B3.Y, B3.Z);

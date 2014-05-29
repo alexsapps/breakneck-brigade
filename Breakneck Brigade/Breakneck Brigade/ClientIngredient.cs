@@ -92,13 +92,11 @@ namespace Breakneck_Brigade
             string team = null;
             if(player != null)
                 team = player.TeamName;
-            
+
             if (team != null && this.Game.TintedObjects[team].Contains(this.Type.Name))
-            {
-                Gl.glColor3f(1.0f, 0f, 0f);
-                base.Render();
-                Gl.glColor3f(1.0f, 1.0f, 1.0f);
-            }
+                base.RenderRed();
+            else if (this.Game.LookatId == this.Id)
+                base.RenderRed();
             else
                 base.Render();
 

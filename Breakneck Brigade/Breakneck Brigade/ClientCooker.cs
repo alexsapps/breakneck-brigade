@@ -67,12 +67,14 @@ namespace Breakneck_Brigade
                 int x = reader.ReadInt32();
                 Contents.Add((ClientIngredient)Game.LiveGameObjects[x]);
             }
-                
         }
 
         public override void Render()
         {
-            base.Render();
+            if (this.Game.LookatId == this.Id)
+                base.RenderRed();
+            else
+                base.Render();
         }
     }
 
