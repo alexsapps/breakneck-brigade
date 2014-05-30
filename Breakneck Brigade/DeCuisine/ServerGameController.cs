@@ -142,10 +142,7 @@ namespace DeCuisine
             if(_goalsDirty)
             {
                 _goalsDirty = false;
-                var goalList = new List<string>();
-                foreach(var goal in Goals)
-                    goalList.Add(goal.GoalIng.Name);
-                this.Game.ServerEvents.Add(new ServerGoalsUpdateMessage() { Goals = goalList });
+                Game.SendGoalsUpdate();
             }
 
             if (CheckWin())

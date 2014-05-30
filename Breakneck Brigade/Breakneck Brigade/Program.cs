@@ -190,6 +190,15 @@ namespace Breakneck_Brigade
                                     Program.WriteLine("you didn't specify a command to send to the server.");
                                 }
                                 break;
+                            case "goals":
+                                {
+                                    consoleGameOp(() =>
+                                        {
+                                            foreach (var goal in game.Goals)
+                                                Program.WriteLine(goal.Name);
+                                        });
+                                    break;
+                                }
                             case "team":
                                 {
                                     if(parts.Length >= 2)
@@ -259,6 +268,36 @@ namespace Breakneck_Brigade
             cancelConsole = true;
         }
         public static bool cancelConsole = false;
+
+        protected delegate void consoleNetworkOpFunc();
+        protected static void consoleNetworkOp(consoleNetworkOpFunc func)
+        {
+            lock (clientLock)
+            {
+                if (client != null && client.IsConnected)
+                {
+                    func();
+                }
+            }
+        }
+        protected delegate void consoleGameOpFunc();
+        protected static void consoleGameOp(consoleGameOpFunc func)
+        {
+            lock (clientLock)
+            {
+                if (client != null && client.IsConnected)
+                {
+                    lock (gameLock)
+                    {
+                        func();
+                    }
+                }
+                else
+                {
+                    Program.WriteLine("not connected.");
+                }
+            }
+        }
 
         private static void rateThread()
         {

@@ -260,7 +260,7 @@ namespace DeCuisine
                 }
             }
             // add to the list of server events
-            this.Game.ServerEvents.Add(new ServerTintListUpdateMessage(){Team = this.Team.Name, TintList = this.Team.TintList.ToList()});
+            Game.SendTintListUpdate(this.Team);
         }
 
     }
