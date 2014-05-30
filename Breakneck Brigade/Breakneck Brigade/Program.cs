@@ -43,7 +43,7 @@ namespace Breakneck_Brigade
         }
         static BBLock gameLock = new BBLock();
 
-        static ClientLobbyState lobbyState = new ClientLobbyState();
+        public static ClientLobbyState lobbyState = new ClientLobbyState();
         static Renderer renderer;
         static Camera camera;
 

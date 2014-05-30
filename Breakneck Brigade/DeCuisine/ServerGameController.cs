@@ -138,7 +138,17 @@ namespace DeCuisine
          */
         IngredientType getWeightedRandomGoal()
         {
-            return randomGoalChooser.Choose();
+            // the goal must be the final product of a recipe, because if it is a leaf ingredient, it can't be made (because it's a leaf) and goals are never spawned
+
+            IngredientType goal;
+            
+            goal = randomGoalChooser.Choose();
+
+            foreach (var recipe in Game.Config.Recipies.Values)
+                if (goal == recipe.FinalProduct)
+                    return goal;
+
+            return getWeightedRandomGoal(); //try again
         }
 
         ServerIngredient spawnIngredient(IngredientType type, Vector3 location)
@@ -151,7 +161,16 @@ namespace DeCuisine
 
         IngredientType getWeightedRandomIngredient()
         {
-            return randomIngredientChooser.Choose();
+            IngredientType result;
+
+            result = randomIngredientChooser.Choose();
+
+            // we don't want to spawn the goals.  make sure we didn't.
+            foreach (var goal in Goals)
+                if (goal.GoalIng == result)
+                    return getWeightedRandomIngredient(); //try again
+
+            return result;
         }
 
         public static Vector3 RandomLocation()
@@ -251,7 +270,7 @@ namespace DeCuisine
             foreach(var team in Teams.Values)
             {
                 if(maxTeam == null || team.Points > maxTeam.Points)
-        {
+                {
                     maxTeam = team;
                 }
             }
