@@ -143,22 +143,25 @@ namespace Breakneck_Brigade
         /// </summary>
         public virtual void Render()
         {
-            render();
+            if (this.Game.HeldId == this.Id)
+                render(.2f);
+            else
+                render(1);
         }
 
         protected void RenderRed()
         {
             Gl.glColor3f(1.0f, 0f, 0f);
-            render();
+            render(1);
             Gl.glColor3f(1.0f, 1.0f, 1.0f);
         }
 
-        protected void render() //need a way to call this directly, ignoring overridden version
+        protected void render(float scale) //need a way to call this directly, ignoring overridden version
         {
             if (this.ToRender)
             {
                 Gl.glPushMatrix();
-                Gl.glMultMatrixf(Transformation.glArray);
+                Gl.glMultMatrixf((Transformation * Matrix4.MakeScalingMat(scale, scale, scale)).glArray);
                 Model.Render();
                 Gl.glPopMatrix();
 

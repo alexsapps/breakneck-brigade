@@ -178,8 +178,11 @@ namespace Breakneck_Brigade
             {
                 //NetworkEvents.Add(new ClientBeginMoveEvent()); //this is being done above at the moment.
             }
-            if(this.Player != null)
+            if (this.Player != null)
+            {
                 this.Game.LookatId = this.Player.LookingAtId;
+                this.Game.HeldId = this.Player.HeldId;
+            }
             // 3D picking stuff
             /*int width, height;
             Glfw.glfwGetWindowSize(out width, out height);

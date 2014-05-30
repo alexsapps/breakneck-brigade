@@ -16,6 +16,7 @@ namespace Breakneck_Brigade
         public string TeamName { get; set; } // TODO: Make this control the texture used
         public ClientGameObject LookingAt { get; set; }
         public int LookingAtId { get; set; }
+        public int HeldId { get; set; }
 
         public override float[] Sides { get { return BB.GetPlayerSides(); } }
 
@@ -53,6 +54,7 @@ namespace Breakneck_Brigade
             start = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             end = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             eyeHeight = reader.ReadSingle();
+            this.HeldId = reader.ReadInt32();
         }
 
         public static Vector4 start = new Vector4(), end = new Vector4();

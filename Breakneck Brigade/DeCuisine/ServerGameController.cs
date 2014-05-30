@@ -28,7 +28,11 @@ namespace DeCuisine
         private int currentGameState { get; set; }
         public string CurrentGameState { get { return gameStates[currentGameState]; } }
         private string[] gameStates = { "start", "waiting", "stage1", "stage2", "stage3", "end" };
+#if PROJECT_DEBUG
+        private int startTick = 3; // Debug, make waiting much shorter
+#else
         private int startTick = 30 * 5; // 5 seconds.
+#endif
 
         private int _numGoals = 0;
         public int NumGoals
@@ -101,12 +105,9 @@ namespace DeCuisine
                     if (ticks == startTick)
                         currentGameState++;
                     updateObj();
-                    scatterPile();
+                    scatterPile(); // gives a crazy scatter pile effect
                     break;
                 case "stage1":
-                    /*
-                     * handle an instant in time, e.g. gravity, collisions
-                     */
                     this.updateObj();
                     if (_lobbyStateDirty)
                     {
@@ -177,7 +178,7 @@ namespace DeCuisine
         {
             return new Vector3(
                 (float)Math.Pow(DC.random.Next(-20, 20), 1),
-                (float)Math.Pow(DC.random.Next(2, 20), 2),
+                (float)Math.Pow(DC.random.Next(2, 5), 2),
                 (float)Math.Pow(DC.random.Next(-20, 20), 1));
         }
 
@@ -330,7 +331,7 @@ namespace DeCuisine
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
                 {
                     // scatter only ingredients. SHould be in the pile currently
-                    obj.Body.LinearVelocity = randomVelocity(300);
+                    obj.Body.LinearVelocity = randomVelocity(600);
                     obj.Body.Gravity = this.Game.World.Gravity;
                 }
             }
@@ -345,6 +346,7 @@ namespace DeCuisine
             Vector3 vel = new Vector3(DC.random.Next(-max, max), DC.random.Next(100), DC.random.Next(-max, max));
             return vel;
         }
+
         /// <summary>
         /// Class which facilitates choosing items randomly based on their weights.
         /// </summary>

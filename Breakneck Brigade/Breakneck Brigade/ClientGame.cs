@@ -20,6 +20,7 @@ namespace Breakneck_Brigade
         public Dictionary<int, ClientGameObject> GameObjectsCache { get; set; }
         public Dictionary<string, HashSet<string>> TintedObjects { get; set; }
         public int LookatId { get; set; }
+        public int HeldId { get; set; }
 
         public ConfigSalad Config { get; private set; }
 
@@ -35,7 +36,7 @@ namespace Breakneck_Brigade
             TintedObjects.Add("red", new HashSet<string>());
             TintedObjects.Add("blue", new HashSet<string>());
             LookatId = -1;
-
+            HeldId = -1;
         }
 
 

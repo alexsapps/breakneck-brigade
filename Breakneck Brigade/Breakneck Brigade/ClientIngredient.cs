@@ -89,8 +89,10 @@ namespace Breakneck_Brigade
         public override void Render()
         {
             var team = Program.lobbyState.MyTeam;
-         
-            if (team != null && this.Game.TintedObjects[team.Name].Contains(this.Type.Name))
+
+            if (team != null && this.Game.HeldId == this.Id)
+                base.Render();
+            else if (team != null && this.Game.TintedObjects[team].Contains(this.Type.Name))
                 base.RenderRed();
             else if (this.Game.LookatId == this.Id)
                 base.RenderRed();

@@ -37,6 +37,8 @@ namespace DeCuisine
 
         public List<ServerMessage> ServerEvents { get; set; }
 
+        public HashSet<int> HeldObjects = new HashSet<int>();
+
 
         long millisecond_ticks = (new TimeSpan(0, 0, 0, 0, 1)).Ticks;
         private int _frameRate;
@@ -84,6 +86,11 @@ namespace DeCuisine
                 loadConfig();
             }
             this.ServerEvents = new List<ServerMessage>();
+#if PROJECT_DEBUG
+            MultiJump = true;
+#else
+            MultiJump = false;
+#endif
         }
 
         public void ReloadConfig()
@@ -350,6 +357,8 @@ namespace DeCuisine
                 {
                     if (!client.IsConnected)
                         break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
+                    if (this.Controller.CurrentGameState == "waiting" && input.Event.Type != ClientEventType.ChangeOrientation)
+                        break; // don't process these client events.
                     var player = client.Player;
                     switch (input.Event.Type)
                     {
@@ -380,6 +389,7 @@ namespace DeCuisine
                             player.AttemptToEjectCooker();
                             break;
                         case ClientEventType.ChangeTeam:
+                            break;
                         case ClientEventType.Cook:
                             player.AttemptToCook();
                             break;
@@ -391,8 +401,6 @@ namespace DeCuisine
                     }
                 }
             }
-
-
 
             /*
              * Physics happens here.
