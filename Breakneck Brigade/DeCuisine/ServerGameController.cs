@@ -25,9 +25,23 @@ namespace DeCuisine
 
 
         private int pileSize = 200;
-        private int currentGameState { get; set; }
-        public string CurrentGameState { get { return gameStates[currentGameState]; } }
-        private string[] gameStates = { "start", "waiting", "stage1", "stage2", "stage3", "end" };
+        
+        public GameControllerState CurrentGameState { get; set; }
+        
+        public enum GameControllerState
+        {
+            Start,
+            Waiting,
+            Stage1,
+            Stage2,
+            Stage3,
+            End
+        }
+        protected void nextGameState()
+        {
+            CurrentGameState = (GameControllerState)((int)CurrentGameState + 1);
+        }
+
 #if PROJECT_DEBUG
         private int startTick = 3; // Debug, make waiting much shorter
 #else
@@ -35,6 +49,7 @@ namespace DeCuisine
 #endif
 
         private int _numGoals = 0;
+        private bool _goalsDirty = false;
         public int NumGoals
         {
             get
@@ -46,8 +61,14 @@ namespace DeCuisine
                 _numGoals = value;
                 
                 //remove or add goals until we have NumGoals goals
-                while (value < Goals.Count)
-                    Goals.RemoveAt(DC.random.Next(Goals.Count));
+                if (value < Goals.Count)
+                {
+                    do
+                        Goals.RemoveAt(DC.random.Next(Goals.Count));
+                    while (value < Goals.Count);
+
+                    _goalsDirty = true;
+                }
                 FillGoals();
             }
         }
@@ -88,6 +109,7 @@ namespace DeCuisine
             {
                 IngredientType tmpIng = getWeightedRandomIngredient();
                 Goals.Add(new Goal(100, tmpIng));
+                _goalsDirty = true;
             }
         }
 
@@ -95,31 +117,39 @@ namespace DeCuisine
 
         public bool Update()
         {
-            switch (gameStates[currentGameState])
+            switch (CurrentGameState)
             {
-                case "start":
+                case GameControllerState.Start:
                     spawnPile();
-                    currentGameState++;
+                    nextGameState();
                     break;
-                case "waiting":
+                case GameControllerState.Waiting:
                     if (ticks == startTick)
-                        currentGameState++;
+                        nextGameState();
                     updateObj();
                     scatterPile(); // gives a crazy scatter pile effect
                     break;
-                case "stage1":
-                    this.updateObj();
-                    if (_lobbyStateDirty)
-                    {
-                        _lobbyStateDirty = false;
-                        Game.SendLobbyStateToAll();
-                    }
-
-                    if (CheckWin())
-                        return false;
+                case GameControllerState.Stage1:
+                    updateObj();
                     break;
             }
            
+            if (_lobbyStateDirty)
+            {
+                _lobbyStateDirty = false;
+                Game.SendLobbyStateToAll();
+            }
+            if(_goalsDirty)
+            {
+                _goalsDirty = false;
+                var goalList = new List<string>();
+                foreach(var goal in Goals)
+                    goalList.Add(goal.GoalIng.Name);
+                this.Game.ServerEvents.Add(new ServerGoalsUpdateMessage() { Goals = goalList });
+            }
+
+            if (CheckWin())
+                return false;
             
             ticks++;
             return true;

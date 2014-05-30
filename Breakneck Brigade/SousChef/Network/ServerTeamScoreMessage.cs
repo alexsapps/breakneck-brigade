@@ -10,7 +10,7 @@ namespace SousChef
     {
         public override ServerMessageType Type
         {
-            get { return ServerMessageType.ServerTeamScoreMessage; }
+            get { return ServerMessageType.TeamScoresUpdate; }
         }
     }
 }

@@ -357,7 +357,7 @@ namespace DeCuisine
                 {
                     if (!client.IsConnected)
                         break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
-                    if (this.Controller.CurrentGameState == "waiting" && input.Event.Type != ClientEventType.ChangeOrientation)
+                    if (this.Controller.CurrentGameState == ServerGameController.GameControllerState.Waiting && input.Event.Type != ClientEventType.ChangeOrientation)
                         break; // don't process these client events.
                     var player = client.Player;
                     switch (input.Event.Type)
