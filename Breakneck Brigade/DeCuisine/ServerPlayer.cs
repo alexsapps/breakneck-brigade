@@ -16,7 +16,7 @@ namespace DeCuisine
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
-        private const float HOLDDISTANCE = 40.0f;
+        private const float HOLDDISTANCE = 10.0f;
         private const float LINEOFSIGHTSCALAR = 200;
         private const float RAYSTARTDISTANCE = 10;
         private const int DASHTIME = 15; // seconds * 30. 
@@ -133,6 +133,10 @@ namespace DeCuisine
             stream.Write(this.start);
             stream.Write(this.end);
             stream.Write(this.EyeHeight);
+            if (this.Hands["left"].Held != null)
+                stream.Write(this.Hands["left"].Held.Id);
+            else
+                stream.Write(-1);
         }
 
         /// <summary>
@@ -190,18 +194,20 @@ namespace DeCuisine
             imp = rotate * imp; 
             imp *= scalar;
 
+            // find out where your cross hairs are.
+            var crossPos = new Vector3(
+                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
+                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
+                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
+
             // Cause you can shoot oranges now. Why the fuck not? 
             if (this.Hands[hand].Held == null)
             {
-                var ingSpawn = new Vector3(
-                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
-                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
-                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
-                var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, ingSpawn);
+                var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, crossPos);
                 tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
                 return;
             }
-
+            this.Hands[hand].Held.Position = crossPos;
             this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
             this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
             this.Hands[hand] = new HandInventory(null); //clear the hands
@@ -260,7 +266,7 @@ namespace DeCuisine
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(
                     this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE), 
-                    this.Position.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE,
+                    this.Position.Y , // TODO: Have the hold logic be a lot better
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
 

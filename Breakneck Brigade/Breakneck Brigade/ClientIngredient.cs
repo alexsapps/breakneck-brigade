@@ -93,7 +93,9 @@ namespace Breakneck_Brigade
             if(player != null)
                 team = player.TeamName;
 
-            if (team != null && this.Game.TintedObjects[team].Contains(this.Type.Name))
+            if (team != null && this.Game.HeldId == this.Id)
+                base.Render();
+            else if (team != null && this.Game.TintedObjects[team].Contains(this.Type.Name))
                 base.RenderRed();
             else if (this.Game.LookatId == this.Id)
                 base.RenderRed();
