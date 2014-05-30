@@ -200,17 +200,21 @@ namespace DeCuisine
                     this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
                     this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
 
+            var _hand = this.Hands[hand];
+            var held = _hand.Held;
+
             // Cause you can shoot oranges now. Why the fuck not? 
-            if (this.Hands[hand].Held == null)
+            if (held == null)
             {
                 var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, crossPos);
                 tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
                 return;
             }
-            this.Hands[hand].Held.Position = crossPos;
-            this.Hands[hand].Held.Body.Gravity = this.Game.World.Gravity;
-            this.Hands[hand].Held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
-            this.Hands[hand] = new HandInventory(null); //clear the hands
+            held.Position = crossPos;
+            held.Body.Gravity = this.Game.World.Gravity;
+            held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
+            _hand.Held = null;
+            MarkDirty();
         }
 
         /// <summary>

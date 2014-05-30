@@ -225,7 +225,8 @@ namespace DeCuisine
             base.OnCollide(obj);
             if (obj.ObjectClass == GameObjectClass.Ingredient && 
                 !this.Contents.ContainsKey(obj.Id) && 
-                ((ServerIngredient)obj).LastPlayerHolding != null)
+                ((ServerIngredient)obj).LastPlayerHolding != null &&
+                ((ServerIngredient)obj).LastPlayerHolding.Client.Team == Team)
             {
                 this.AddIngredient((ServerIngredient)obj);
             }
@@ -238,10 +239,24 @@ namespace DeCuisine
         {
             foreach (var ing in this.Contents.Values)
             {
-                foreach (var potentialRec in this.Type.RecipeHash[ing.Type.Name].ToList()) 
+                foreach (var potentialRec in this.Type.RecipeHash[ing.Type.Name]) 
                 {
-                    foreach(var potentialIng in potentialRec.Ingredients)
-                        this.Team.TintList.Add(potentialIng.Ingredient.Name);
+                    foreach (var potentialIng in potentialRec.Ingredients)
+                    {
+                        bool skip = false;
+                        foreach(var ing2 in Contents.Values)
+                        {
+                            if (ing2.Type == potentialIng.Ingredient)
+                            {
+                                skip = true;
+                                break; //don't tint if already in contents
+                            }
+                        }
+                        if (!skip)
+                        {
+                            this.Team.TintList.Add(potentialIng.Ingredient.Name);
+                        }
+                    }
                 }
             }
             // add to the list of server events

@@ -149,9 +149,16 @@ namespace Breakneck_Brigade
                 render(1);
         }
 
-        protected void RenderRed()
+        protected void RenderColored()
         {
-            Gl.glColor3f(1.0f, 0f, 0f);
+            var teamname = Program.lobbyState.MyTeam.Name;
+            if (teamname.Equals("red"))
+                Gl.glColor3f(1.0f, 0.1f, 0.1f);
+            else if (teamname.Equals("blue"))
+                Gl.glColor3f(0.1f, 0.1f, 1.0f);
+            else
+                throw new Exception("don't know what color in ClientGameObject.RenderColored");
+
             render(1);
             Gl.glColor3f(1.0f, 1.0f, 1.0f);
         }
