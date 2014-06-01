@@ -151,13 +151,13 @@ namespace Breakneck_Brigade
 
         protected void RenderColored()
         {
-            var teamname = Program.lobbyState.MyTeam.Name;
-            if (teamname.Equals("red"))
-                Gl.glColor3f(1.0f, 0.1f, 0.1f);
-            else if (teamname.Equals("blue"))
-                Gl.glColor3f(0.1f, 0.1f, 1.0f);
-            else
-                throw new Exception("don't know what color in ClientGameObject.RenderColored");
+            //var teamname = Program.lobbyState.MyTeam.Name;
+            //if (teamname.Equals("red"))
+            //    Gl.glColor3f(1.0f, 0.1f, 0.1f);
+            //else if (teamname.Equals("blue"))
+            //    Gl.glColor3f(0.1f, 0.1f, 1.0f);
+            //else
+            //    throw new Exception("don't know what color in ClientGameObject.RenderColored");
 
             render(1);
             Gl.glColor3f(1.0f, 1.0f, 1.0f);
@@ -173,7 +173,7 @@ namespace Breakneck_Brigade
                 Gl.glPopMatrix();
 
                 //Wire collision box
-
+#if PROJECT_DEBUG
                 Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE);
                 Gl.glDisable(Gl.GL_TEXTURE);
                 Gl.glDisable(Gl.GL_CULL_FACE);
@@ -220,6 +220,7 @@ namespace Breakneck_Brigade
                 Gl.glEnable(Gl.GL_TEXTURE);
                 Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
                 Gl.glEnable(Gl.GL_CULL_FACE);
+#endif
             }
         }
 

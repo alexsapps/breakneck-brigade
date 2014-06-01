@@ -309,7 +309,7 @@ namespace Breakneck_Brigade.Graphics
 
             float[] position1 = { 1000, 2000, 0, 1 };
             float[] position2 = { 1000, 2000, 0, 1};
-            float[] ambientColor = { .2f, .2f, .2f, 1 };
+            float[] ambientColor = { .1f, .1f, .1f, 1 };
             //float[] ambientColor = { 0, 0, 0, 1 };
             float[] diffuseColor = { 1, 1, 1, 1 };
             float[] specularColor = { 1, 1, 1, 1 };

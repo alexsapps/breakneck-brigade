@@ -7,11 +7,70 @@
     <terrain type="wall" shape="box" coordinate="-1000, 100,  0"   size="10,1000,1000"/>
     <terrain type="wall" shape="box" coordinate="1000, 100,  0"   size="10,1000,1000" />
 
+
+    <!--First level red team side-->
+    <terrain type="floor" shape="box" coordinate="850, 200, -100" size="150,10,900" />
+    <terrain type="floor" shape="box" coordinate="800, 200, 900"  size="100,10,100" />
+    <terrain type="wall" shape="box" coordinate="850, 260, 500"   size="150,50,50" />
+    <!--step up-->
+    <terrain type="floor" shape="box" coordinate="950, 150, 900"  size="50,5,50" />
     
-    <!--Platforms-->
-    <terrain type="floor" shape="box" coordinate="1000, 200, 0" size="200,10,100" />
+    <!--Second level, -x,-z  side-->
+    <terrain type="floor" shape="box" coordinate="0, 250, -850" size="350, 10, 150" />
+    
+    <!--Third Level -->
+    <terrain type="floor" shape="box" coordinate="750, 310, 0" size="250,10,1000" />
+
+    <!--Fourth, the run to the other side-->
+    <terrain type="floor" shape="box" coordinate="0, 340, -950" size="400,10,50" />
+
+    <!--Steps up to the fifth level-->
+    <terrain type="floor" shape="box" coordinate="400, 400, -400" size="40,10,500" />
+
+    <!--Fifth level, much higher-->
+    <terrain type="floor" shape="box" coordinate="750, 510, 750" size="250,10,250" />
+    <terrain type="floor" shape="box" coordinate="750, 510, -750" size="250,10,250" />
+    <!--<terrain type="floor" shape="box" coordinate="0, 350, -750" size="350, 10, 250" />-->
+    
+    <!--Sixth Level-->
+    <terrain type="floor" shape="box" coordinate="750, 560, 0" size="250,10,450" />
+
+    
+    
+    <!--This 
+        is the start of the blue team world-->
+
+    <!--First level red team side-->
+    <terrain type="floor" shape="box" coordinate="-850, 200, 100" size="150,10,900" />
+    <terrain type="floor" shape="box" coordinate="-800, 200, -900"  size="100,10,100" />
+    <terrain type="wall" shape="box" coordinate="-850, 260, -500"   size="150,50,50" />
+    <!--step up-->
+    <terrain type="floor" shape="box" coordinate="-950, 150, -900"  size="50,5,50" />
+    
+    <!--Second level, +x,+z  side-->
+    <terrain type="floor" shape="box" coordinate="0, 250, 850" size="350, 10, 150" />
+
+    <!--Third Level -->
+    <terrain type="floor" shape="box" coordinate="-750, 310, 0" size="250,10,1000" />
+
+    <!--Fourth, the run to the other side-->
+    <terrain type="floor" shape="box" coordinate="0, 340, 950" size="400,10,50" />
+
+    <!--Steps up to the fifth level-->
+    <terrain type="floor" shape="box" coordinate="-400, 400, 400" size="40,10,500" />
+
+    <!--Fifth level, much higher-->
+    <terrain type="floor" shape="box" coordinate="-750, 510, -750" size="250,10,250" />
+    <terrain type="floor" shape="box" coordinate="-750, 510, 750" size="250,10,250" />
+    <!--<terrain type="floor" shape="box" coordinate="0, 350, -750" size="350, 10, 250" />-->
+
+    <!--Sixth Level-->
+    <terrain type="floor" shape="box" coordinate="-750, 560, 0" size="250,10,450" />
+
+   
+
     <!--Ceiling-->
-    <terrain type="floor" shape="box" coordinate="0, 1000, 0" size="1000,1,1000" />
+    <terrain type="floor" shape="box" coordinate="0, 1000, 0" size="1000,40,1000" />
 
     <!-- Red team side -->
     <static team="red" type="woodenCounter"  coordinate="-800, 40, -600"  size="7,2.7,7" model="woodenCounter"></static>
@@ -62,11 +121,9 @@
 
 
     <!--Some initial ingredients for testing-->
-    <ingredient type="iceCream" coordinate="10,12,0" />
-    <ingredient type="milk" coordinate="10,12,0" />
-    <ingredient type="iceCream" coordinate="10,12,0" />
-    <ingredient type="milk" coordinate="10,12,0" />
-    <ingredient type="iceCream" coordinate="10,12,0" />
-    <ingredient type="milk" coordinate="10,12,0" />
+    <ingredient type="iceCream" coordinate="500,12,0" />
+    <ingredient type="milk" coordinate="-500,12,0" />
+    <ingredient type="orange" coordinate="0,12,500" />
+    <ingredient type="milkshake" coordinate="0,12,-500" />
   </space>
 </world>

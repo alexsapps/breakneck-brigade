@@ -57,7 +57,7 @@
     <OutputPath>bin\GameTest\</OutputPath>
     <DefineConstants>TRACE;DEBUG;PROJECT_GAME_TEST</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>

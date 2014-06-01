@@ -20,7 +20,7 @@ namespace DeCuisine
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
         private string[] defaultTeams = new string[]{"red", "blue"}; //Add more team names for more teams
-        private Vector3 teamSpawn = new Vector3(700, 20, 700);
+        private Vector3 teamSpawn = new Vector3(400, 20, 0);
 
 
 
@@ -29,7 +29,7 @@ namespace DeCuisine
         public string CurrentGameState { get { return gameStates[currentGameState]; } }
         private string[] gameStates = { "start", "waiting", "stage1", "stage2", "stage3", "end" };
 #if PROJECT_DEBUG
-        private int startTick = 3; // Debug, make waiting much shorter
+        private int startTick = 3;//0 * 5; // Debug, make waiting much shorter
 #else
         private int startTick = 30 * 5; // 5 seconds.
 #endif
@@ -66,7 +66,7 @@ namespace DeCuisine
             foreach (string teamName in this.defaultTeams)
             {
                 this.Teams.Add(teamName, new ServerTeam(teamName,teamSpawn ));
-                teamSpawn *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams
+                teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams
             }
             this.Goals = new List<Goal>();
         }
@@ -331,7 +331,7 @@ namespace DeCuisine
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
                 {
                     // scatter only ingredients. SHould be in the pile currently
-                    obj.Body.LinearVelocity = randomVelocity(600);
+                    obj.Body.LinearVelocity = randomVelocity(200);
                     obj.Body.Gravity = this.Game.World.Gravity;
                 }
             }
@@ -343,7 +343,7 @@ namespace DeCuisine
         /// </summary>
         private Vector3 randomVelocity(int max)
         {
-            Vector3 vel = new Vector3(DC.random.Next(-max, max), DC.random.Next(100), DC.random.Next(-max, max));
+            Vector3 vel = new Vector3(DC.random.Next(-max, max), DC.random.Next(max), DC.random.Next(-max, max));
             return vel;
         }
 

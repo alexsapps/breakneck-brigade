@@ -19,8 +19,13 @@ namespace DeCuisine
         private const float HOLDDISTANCE = 10.0f;
         private const float LINEOFSIGHTSCALAR = 200;
         private const float RAYSTARTDISTANCE = 10;
-        private const int DASHTIME = 15; // seconds * 30. 
+#if PROJECT_DEBUG
+        private const int DASHTIME = 15;
+#else
+        private const int DASHTIME = 5; // seconds * 30. 
+#endif
         private int dashTicks { get; set; }
+        private int dashCool { get; set; }
         public string Name { get; set; }
 
         private bool isFalling { get; set; }
@@ -102,6 +107,7 @@ namespace DeCuisine
             this.Hands.Add("left", tmp);
             this.Hands.Add("right", tmp);
             this.dashTicks = 0; // don't start dashing
+            this.dashCool = 0;
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -144,7 +150,8 @@ namespace DeCuisine
         /// </summary>
         public void Move(Vector3 vel)
         {
-            this.dashTicks = 0;
+            if (this.dashTicks != 0)
+                return;
             this.Body.LinearVelocity = new Vector3(vel.X, this.Body.LinearVelocity.Y + vel.Y, vel.Z);
             this.Body.ActivationState = ActivationState.ActiveTag;
         }
@@ -154,7 +161,8 @@ namespace DeCuisine
         /// </summary>
         public void Move(float x, float y, float z)
         {
-            this.dashTicks = 0;
+            if (this.dashTicks != 0)
+                return;
             this.Body.LinearVelocity = new Vector3(x, this.Body.LinearVelocity.Y + y, z);
             this.Body.ActivationState = ActivationState.ActiveTag;
         }
@@ -174,6 +182,8 @@ namespace DeCuisine
 
         public void Dash()
         {
+            if (this.dashCool != 0)
+                return; // no dash until cooldown is done.
             this.dashTicks = DASHTIME;
             SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
             Matrix4 rotate = Matrix4.MakeRotateYDeg(-this.Orientation) * Matrix4.MakeRotateXDeg(-this.Incline);
@@ -181,6 +191,11 @@ namespace DeCuisine
 
             this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.DASHSCALER;
             this.lastDashVelocity = this.Body.LinearVelocity;
+#if PROJECT_DEBUG
+            this.dashCool = 0;
+#else
+            this.dashCool = 5 * dashTicks;
+#endif
         }
 
         /// <summary>
@@ -302,11 +317,11 @@ namespace DeCuisine
             this.start = start;
             this.end = end;
 
-            // Check if player can dash
+            // Check if player needs to stop dashing
             if (dashTicks > 0)
-            {
                 CheckDashing();
-            }
+            if (this.dashCool > 0)
+                this.dashCool--;
 
         }
 
@@ -314,7 +329,7 @@ namespace DeCuisine
 
         private void CheckDashing()
         {
-            dashTicks--;
+            this.dashTicks--;
             if (dashTicks == 0)
             {
                 // stop dashing
