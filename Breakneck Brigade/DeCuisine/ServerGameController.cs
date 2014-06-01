@@ -50,6 +50,7 @@ namespace DeCuisine
 
         private int _numGoals = 0;
         private bool _goalsDirty = false;
+        // TODO: We don't really want to do this. Run down a set list of goals first, then repopulate the goals list.
         public int NumGoals
         {
             get
@@ -87,7 +88,7 @@ namespace DeCuisine
             foreach (string teamName in this.defaultTeams)
             {
                 this.Teams.Add(teamName, new ServerTeam(teamName,teamSpawn ));
-                teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams
+                teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams.
             }
             this.Goals = new List<Goal>();
         }
@@ -275,6 +276,7 @@ namespace DeCuisine
 
         public void ScoreDeliver(ServerIngredient ing)
         {
+            Goal goalToRemove = null;
             foreach (var goal in Goals)
             {
                 if (goal.GoalIng.Name == ing.Type.Name)
@@ -284,12 +286,16 @@ namespace DeCuisine
                         ing.LastPlayerHolding.Client.Team.Points += ((Goal)goal).Points;
                         ing.Remove();
                         MarkLobbyStateDirty();
-
-                        Program.WriteLine("Scored " + ((Goal)goal).Points + " for team " + ing.LastPlayerHolding.Client.Team.Name);
+                        goalToRemove = goal;
+                        _goalsDirty = true;
+                        Program.WriteLine("Scored " + ((Goal)goal).Points + " By making a " + ((Goal)goal).GoalIng.Name + " for team " + ing.LastPlayerHolding.Client.Team.Name);
                         this.DisplayScore();
+                        break;
                     }
                 }
             }
+            if (goalToRemove != null)
+                this.Goals.Remove(goalToRemove);
 
         }
         public bool CheckWin()

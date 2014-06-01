@@ -743,8 +743,16 @@ namespace Breakneck_Brigade
                                             var e = new ServerGoalsUpdateMessage();
                                             e.Read(reader);
                                             game.Goals.Clear();
+#if PROJECT_DEBUG
+                                            int x = 0;
+                                            foreach(var g in e.Goals){
+                                                game.Goals.Add(game.Config.Ingredients[g]);
+                                                Program.WriteLine("Goal " + ++x + " " + g);
+                                            }
+#else
                                             foreach (var g in e.Goals)
                                                 game.Goals.Add(game.Config.Ingredients[g]);
+#endif
                                             break;
                                         }
                                         case ServerMessageType.TintListUpdate:
@@ -791,6 +799,10 @@ namespace Breakneck_Brigade
                                     }
                                     lobbyState.Teams.Add(name, team);
                                 }
+#if PROJECT_DEBUG
+                                foreach (var team in lobbyState.Teams.Values)
+                                    Program.WriteLine(team.Name + " Has " + team.Score); 
+#endif
                                 string myTeam = r.ReadString();
                                 lobbyState.MyTeam = lobbyState.Teams[myTeam];
                                 lobbyState.MaxScore = r.ReadInt32();
