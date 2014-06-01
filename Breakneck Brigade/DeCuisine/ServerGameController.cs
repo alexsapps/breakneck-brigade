@@ -32,6 +32,7 @@ namespace DeCuisine
         {
             Start,
             Waiting,
+            Scatter,
             Stage1,
             Stage2,
             Stage3,
@@ -43,9 +44,11 @@ namespace DeCuisine
         }
 
 #if PROJECT_DEBUG
-        private int startTick = 3;//0 * 5; // Debug, make waiting much shorter
+        private int startTick = 30 * 7; // Debug, make waiting much shorter
+        private int scatterTick = 30 * 5;
 #else
-        private int startTick = 30 * 5; // 5 seconds.
+        private int startTick = 30 * 7; // 5 seconds.
+        private int scatterTick = 30 * 5;
 #endif
 
         private int _numGoals = 0;
@@ -125,11 +128,22 @@ namespace DeCuisine
                     nextGameState();
                     break;
                 case GameControllerState.Waiting:
-                    if (ticks == startTick)
+                    if (ticks == scatterTick)
+                    {
+                        risePile(); // gives a crazy scatter pile effect
                         nextGameState();
+                    }
                     updateObj();
-                    scatterPile(); // gives a crazy scatter pile effect
                     break;
+                case GameControllerState.Scatter:
+                    if (ticks == startTick)
+                    {
+                        scatterPile(); // gives a crazy scatter pile effect
+                        nextGameState();
+                    }
+                    updateObj();
+                    break;
+
                 case GameControllerState.Stage1:
                     updateObj();
                     break;
@@ -364,7 +378,21 @@ namespace DeCuisine
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
                 {
                     // scatter only ingredients. SHould be in the pile currently
-                    obj.Body.LinearVelocity = randomVelocity(200);
+                    obj.Body.LinearVelocity = randomVelocity(500);
+                    obj.Body.Gravity = this.Game.World.Gravity;
+                }
+            }
+        }
+
+
+        private void risePile()
+        {
+            foreach (var obj in this.Game.GameObjects.Values)
+            {
+                if (obj.ObjectClass == GameObjectClass.Ingredient)
+                {
+                    // Raise the pile
+                    obj.Body.LinearVelocity = new Vector3(0, DC.random.Next(0, 1500), 0);
                     obj.Body.Gravity = this.Game.World.Gravity;
                 }
             }
@@ -376,7 +404,12 @@ namespace DeCuisine
         /// </summary>
         private Vector3 randomVelocity(int max)
         {
-            Vector3 vel = new Vector3(DC.random.Next(-max, max), DC.random.Next(max), DC.random.Next(-max, max));
+            // Some weird logic to get a random large negative and positive number
+            float[] xVel = new float[2]{DC.random.Next(max / 2, max), DC.random.Next(-max, -(max/2))};
+            //float yVel = DC.random.Next(max, max*4/3);
+            float[] zVel = new float[2]{ DC.random.Next(max / 2, max), DC.random.Next(-max, -(max / 2)) };
+
+            Vector3 vel = new Vector3(xVel[DC.random.Next(0, 2)], 0, zVel[DC.random.Next(0, 2)]);
             return vel;
         }
 
