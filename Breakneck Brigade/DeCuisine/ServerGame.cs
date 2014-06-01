@@ -357,7 +357,7 @@ namespace DeCuisine
                 {
                     if (!client.IsConnected)
                         break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
-                    if (this.Controller.CurrentGameState == "waiting" && input.Event.Type != ClientEventType.ChangeOrientation)
+                    if (this.Controller.CurrentGameState == ServerGameController.GameControllerState.Waiting && input.Event.Type != ClientEventType.ChangeOrientation)
                         break; // don't process these client events.
                     var player = client.Player;
                     switch (input.Event.Type)
@@ -499,10 +499,10 @@ namespace DeCuisine
             foreach (var obj in HasRemoved)
                 writer.Write(obj);
             writer.Write(ServerEvents.Count);
-            foreach(var m in this.ServerEvents)
+            foreach(var e in this.ServerEvents)
             {
-                writer.Write((byte)m.Type);
-                m.Write(writer);
+                writer.Write((byte)e.Type);
+                e.Write(writer);
             }
             HasAdded.Clear();
             HasChanged.Clear();
@@ -522,7 +522,20 @@ namespace DeCuisine
             }
             writer.Write(0); //0 "changed"
             writer.Write(0); //0 "deleted"
-            writer.Write(0); //0 "events"
+
+            var events = new List<ServerMessage>();
+            foreach (var team in Controller.Teams.Values)
+            {
+                events.Add(computeTintListMessage(team));
+                events.Add(computeGoalsMessage());
+            }
+
+            writer.Write(events.Count);
+            foreach (var e in events)
+            {
+                writer.Write((byte)e.Type);
+                e.Write(writer);
+            }
         }
 
         protected void CalculateGameStateHeader(BinaryWriter writer)
@@ -723,5 +736,27 @@ namespace DeCuisine
         }
 
         public ServerTeam Winner { get; set; }
+
+        public void SendTintListUpdate(ServerTeam serverTeam)
+        {
+            ServerEvents.Add(computeTintListMessage(serverTeam));
+        }
+        private ServerTintListUpdateMessage computeTintListMessage(ServerTeam team)
+        {
+            return new ServerTintListUpdateMessage() { Team = team.Name, TintList = team.TintList.ToList() };
+        }
+
+
+        public void SendGoalsUpdate()
+        {
+            ServerEvents.Add(computeGoalsMessage());
+        }
+        private ServerGoalsUpdateMessage computeGoalsMessage()
+        {
+            var goalList = new List<string>();
+            foreach (var goal in Controller.Goals)
+                goalList.Add(goal.GoalIng.Name);
+            return new ServerGoalsUpdateMessage() { Goals = goalList };
+        }
     }
 }

@@ -18,7 +18,8 @@ namespace Breakneck_Brigade
         //locking directly on gameObjects before accessing
         public Dictionary<int, ClientGameObject> LiveGameObjects { get; set; }
         public Dictionary<int, ClientGameObject> GameObjectsCache { get; set; }
-        public Dictionary<string, HashSet<string>> TintedObjects { get; set; }
+        public Dictionary<string, HashSet<string>> TintedObjects { get; protected set; }
+        public List<IngredientType> Goals { get; protected set; }
         public int LookatId { get; set; }
         public int HeldId { get; set; }
 
@@ -30,6 +31,7 @@ namespace Breakneck_Brigade
             
             LiveGameObjects = new Dictionary<int, ClientGameObject>();
             GameObjectsCache = new Dictionary<int, ClientGameObject>();
+            Goals = new List<IngredientType>();
 
             Config = new GameObjectConfig().GetConfigSalad();
             TintedObjects = new Dictionary<string, HashSet<string>>();

@@ -12,7 +12,7 @@ namespace SousChef
         { 
             get 
             { 
-                return ServerMessageType.ServerLobbyStateUpdateMessage; 
+                return ServerMessageType.LobbyStateUpdate; 
             }
         }
     }

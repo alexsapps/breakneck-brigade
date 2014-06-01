@@ -7,12 +7,12 @@ using System.IO;
 
 namespace SousChef
 {
-    public class ServerSendTintList : ServerMessage
+    public class ServerTintListUpdateMessage : ServerMessage
     {
-        public override ServerMessageType Type { get { return ServerMessageType.ServerTintList; } }
+        public override ServerMessageType Type { get { return ServerMessageType.TintListUpdate; } }
         public List<string> TintList;
         public string Team;
-        public ServerSendTintList() { TintList = new List<string>(); }
+        public ServerTintListUpdateMessage() { TintList = new List<string>(); }
         public override void Write(BinaryWriter writer)
         {
             writer.Write(Team);
