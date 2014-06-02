@@ -107,8 +107,7 @@ namespace DeCuisine
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
             FrameRateMilliseconds = int.Parse(config.GetSetting("frame-rate", 100));
-            
-            Controller.UpdateConfig(Config, int.Parse(config.GetSetting("num-goals", 1)));
+            this.Controller.UpdateConfig();
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -380,9 +379,9 @@ namespace DeCuisine
                         case ClientEventType.Jump:
                             player.Jump();
                             break;
-                        case ClientEventType.ThrowItem:
+                        case ClientEventType.LeftClickEvent:
                             var thrEv = (ClientLeftClickEvent)input.Event;
-                            player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline, thrEv.Force);
+                            player.HandleClick(thrEv.Hand, thrEv.Orientation, thrEv.Incline, thrEv.Force);
                             break;
                         case ClientEventType.Dash:
                             player.Dash();
@@ -409,7 +408,6 @@ namespace DeCuisine
              */
             var timeStep = (FrameRateMilliseconds - (float)fallBehind) / 1000;
             _world.StepSimulation(FrameRateMilliseconds);
-            //_world.StepSimulation(timeStep, 0, timeStep);
 
             if(!this.Controller.Update())
             {
@@ -757,7 +755,7 @@ namespace DeCuisine
         {
             var goalList = new List<string>();
             foreach (var goal in Controller.Goals)
-                goalList.Add(goal.GoalIng.Name);
+                goalList.Add(goal.EndGoal.FinalProduct.Name);
             return new ServerGoalsUpdateMessage() { Goals = goalList };
         }
     }
