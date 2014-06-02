@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 02.06.2014 01:16:22
+# File Created: 02.06.2014 02:30:17
 
 mtllib hamburger.mtl
 
@@ -6423,7 +6423,7 @@ vt 0.5081 0.5825 0.2500
 # 1221 texture coords
 
 g Cylinder003
-usemtl wire_006135006
+usemtl Material__49
 s 2
 f 741/839/531 742/840/532 743/841/533 744/842/534 
 f 745/843/535 746/844/536 743/841/533 742/840/532 
