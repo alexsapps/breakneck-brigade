@@ -6,8 +6,8 @@
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
   <ingredient name="banana" points="15" size=".7, .7, .7"/>
   <ingredient name="tomato" points="15" size="1.75, 1.75, 1.75"/>
-  <ingredient name="bottle" points="15" size="1, 1, 1"/>
   <ingredient name="butter" points="15" size="1, .5, 2"/>
+  <ingredient name="beer" points="15" size="1, .5, 2"/>
   <ingredient name="cheese" points="15" size="2, 1, 2"/>
   <ingredient name="carrot" points="15" size=".5, 2, .5"/>
   <ingredient name="coconut" points="15" size="2, 2, 2"/>
@@ -18,16 +18,27 @@
   <ingredient name="flour" points="40" size="4, 5, 6"/>
   <ingredient name="bread" points="15" size="3, 3, 3"/>
   <ingredient name="lettuce" points="10" size="4, 4, 4"/>
-  <ingredient name="milkshake" points="70" size="4, 6, 4" />
   <ingredient name="watermelon" points="70" size="4, 4, 4"/>
   <ingredient name="egg" points="110" size="1, 1, 1" />
   <ingredient name="orange" points="110" shape="sphere" sides="8" size="1.5, 1.5, 1.5"/>
-  <ingredient name="sauce" points="110" size="1.5, 4, 1.5" />
-  <ingredient name="meat" points="110" size="4, 1, 4" />
   <ingredient name="steak" points="110" size="4, 1, 4" />
   <ingredient name="salt" points="110" size="2, 1, 2"/>
-  <ingredient name="caesarSalad" points="2000" size="4, 2, 4"/>
-  <ingredient name="cake" points="2000" size="6, 4, 6"/>
-  <ingredient name="hamburger" points="2000" size="2, 3, 2"/>
   <ingredient name="onion" points="2000" size="2, 2, 2"/>
+  <ingredient name="noodles" points="110" size="4, 1, 4" />
+  <ingredient name="rawChicken" points="110" size="4, 1, 4" />
+
+
+  <!--Final Recipe Products-->
+  <ingredient name="hamburger" points="2000" size="2, 2, 2"/>
+  <ingredient name="milkshake" points="70" size="4, 6, 4" />
+  <ingredient name="cookedSteak" points="110" size="4, 1, 4" />
+  <ingredient name="pasta" points="110" size="4, 1, 4" />
+  <ingredient name="cake" points="2000" size="6, 4, 6"/>
+  <ingredient name="toastedBread" points="110" size="4, 1, 4" />
+  <ingredient name="chicken" points="110" size="4, 1, 4" />
+  <ingredient name="caesarSalad" points="110" size="4, 1, 4" />
+  <ingredient name="soup" points="110" size="4, 1, 4" />
+  <ingredient name="cakeBatter" points="110" size="4, 1, 4" />
+  <ingredient name="sauce" points="110" size="1.5, 4, 1.5" />
+
 </ingredients>

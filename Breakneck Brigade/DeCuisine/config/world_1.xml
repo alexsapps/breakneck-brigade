@@ -76,9 +76,6 @@
     <static team="red" type="woodenCounter"  coordinate="-800, 40, -600"  size="7,2.7,7" model="woodenCounter"></static>
     <cooker team="red" type="blender" coordinate="-800, 120, -600" ></cooker>
 
-    <static type="woodenCounter"  coordinate="-800, 40, -700" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="red" type="juicer" coordinate="-800, 80, -700"></cooker>
-
     <static type="woodenCounter"  coordinate="-800, 40, -800" size="7,2.7,7" model="woodenCounter"></static>
     <cooker team="red" type="pot" coordinate="-800, 80, -800"></cooker>
 
@@ -97,9 +94,6 @@
     <static type="woodenCounter"  coordinate="800, 40, 600"  size="7,2.7,7" model="woodenCounter"></static>
     <cooker team="blue" type="blender" coordinate="800, 120, 600" ></cooker>
 
-    <static type="woodenCounter"  coordinate="800, 40, 700" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="blue" type="juicer" coordinate="800, 80, 700"></cooker>
-
     <static type="woodenCounter"  coordinate="800, 40, 800" size="7,2.7,7" model="woodenCounter"></static>
     <cooker team="blue" type="pot" coordinate="800, 80, 800"></cooker>
 
@@ -114,11 +108,7 @@
     <static type="woodenCounter"  coordinate="300, 40, 800" size="7,2.7,7" model="woodenCounter"></static>
     <cooker team="blue" type="toaster" coordinate="300, 80, 800"></cooker>
 
-
-
     <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" model="deliveryWindow"/>
-
-
 
     <!--Some initial ingredients for testing-->
     <ingredient type="iceCream" coordinate="500,12,0" />
