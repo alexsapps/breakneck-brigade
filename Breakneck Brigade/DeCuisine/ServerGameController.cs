@@ -15,6 +15,7 @@ namespace DeCuisine
         public Dictionary<string, ServerTeam> Teams { get; set; }
         public List<Goal> Goals { get; set; }
         public Dictionary<string,string> TintList { get; set; }
+        public Dictionary<IngredientType, int> NeededHash { get; set; } // the dict of the number of ingredients needed to make the goals 
         
 
         public int SpawnTick;
@@ -53,8 +54,6 @@ namespace DeCuisine
         private int startTick = 30 * 7; // 5 seconds.
         private int scatterTick = 30 * 5;
 #endif
-
-        private int _numGoals = 0;
         private bool _goalsDirty = false;
 
         public int ScoreToWin = 20000000;
@@ -71,12 +70,12 @@ namespace DeCuisine
                 teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams.
             }
             this.Goals = new List<Goal>();
+            this.NeededHash = new Dictionary<IngredientType, int>();
             this.numOfGoalsByState = new Dictionary<string,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
             this.numOfGoalsByState.Add(GameControllerState.Stage1.ToString(), 5);
             this.numOfGoalsByState.Add(GameControllerState.Stage2.ToString(), 7);
             this.numOfGoalsByState.Add(GameControllerState.Stage3.ToString(), 10);
-
         }
 
         private void FillGoals(int numOfGoals, int complexity)
@@ -84,8 +83,19 @@ namespace DeCuisine
             int numOfRecipes = this.Game.Config.Recipes.Count();
             while (numOfGoals > Goals.Count)
             {
-                var tmpIng = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
-                Goals.Add(new Goal(100, tmpIng, complexity));
+                // Grab random recipe
+                var tmpRec = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
+                // loop over ingredients and add them to the needed hash
+                foreach (var ing in tmpRec.Ingredients)
+                {
+                    int count;
+                    if (!this.NeededHash.TryGetValue(ing.Ingredient, out count))
+                        this.NeededHash.Add(ing.Ingredient, 0); // initialize the dict
+                    int i = 0;
+                    while(i++ < ing.nCount + ing.nOptional)
+                        this.NeededHash[ing.Ingredient]++;
+                }
+                Goals.Add(new Goal(100, tmpRec, complexity));
                 _goalsDirty = true;
             }
         }
@@ -315,10 +325,20 @@ namespace DeCuisine
         /// </summary>
         private void spawnPile()
         {
+            foreach (var ing in this.NeededHash)
+            {
+                for (int x = 0; x < ing.Value; x++)
+                {
+                    var tmp = spawnIngredient(ing.Key, RandomLocation());
+                    //tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet
+                    //tmp.Body.ActivationState = ActivationState.ActiveTag;
+                }
+            }
             for (int x = 0; x < pileSize; x++)
             {
                 var tmp = spawnIngredient(this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count)), RandomLocation());
-                tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet
+                //tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet
+                //tmp.Body.ActivationState = ActivationState.ActiveTag;
             }
         }
 
