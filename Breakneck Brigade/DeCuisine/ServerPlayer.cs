@@ -252,7 +252,7 @@ namespace DeCuisine
             constraint.LinearLowerLimit = new Vector3(0, 0, 0);
             constraint.LinearUpperLimit = new Vector3(0, 0, 0);
 
-            this.Game.World.AddConstraint(constraint);
+            this.Game.World.AddConstraint(constraint,true);
             this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
             obj.LastPlayerHolding = this;
             MarkDirty();

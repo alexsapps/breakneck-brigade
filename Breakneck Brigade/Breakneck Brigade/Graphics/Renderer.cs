@@ -471,11 +471,43 @@ namespace Breakneck_Brigade.Graphics
             Models[CROSSHAIR_MODEL_NAME].Render();
             Renderer.enableTransparency();
             //Models[BLANKQUAD_MODEL_NAME].Render();
-            TextRenderer.printToScreen(10, 10, "Tansen's Own Text Rendering", .75f, .75f);
+            drawGoals();
+            drawHeld();
             Renderer.disableTransparency();
             //Models["iceCream"].Render();
 
             Gl.glPopAttrib();
+        }
+
+        private void drawGoals()
+        {
+            //CHANGE THESE
+            int padding = 5;
+            int spacing = 10;
+            int xPos = 5;
+
+            //DONUT CHANGE THESE. You can have these donuts tho alex
+            int yPos = padding;
+            if (Program.game != null && Program.game.Goals != null)
+            {
+                foreach (IngredientType it in Program.game.Goals)
+                {
+                    TextRenderer.printToScreen(xPos, yPos, it.Name, .75f, .75f);
+                    yPos += spacing + padding;
+                }
+                TextRenderer.printToScreen(xPos, yPos, "\"Make these items!\"", .75f, .75f);
+                yPos += spacing + padding;
+                TextRenderer.printToScreen(xPos, yPos, "The master chef sez", .75f, .75f);
+            }
+        }
+
+        private void drawHeld()
+        {
+            if (Program.game != null && Program.game.LiveGameObjects != null)
+            {
+                string lookingAt = Program.game.LookatId == -1 ? "nothing" : Program.game.LiveGameObjects[Program.game.LookatId].ModelName;
+                TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
+            }
         }
 
         ModelTimer modelTimer = null;
