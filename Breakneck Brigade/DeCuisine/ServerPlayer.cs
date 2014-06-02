@@ -99,7 +99,7 @@ namespace DeCuisine
             : base(game)
         {
             base.AddToWorld(position);
-            this.EyeHeight = 8.0f;
+            this.EyeHeight = 15.0f;
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
@@ -332,13 +332,7 @@ namespace DeCuisine
             this.dashTicks--;
             if (dashTicks == 0)
             {
-                // stop dashing
-                var stopForce = new Vector3(-lastDashVelocity.X, 0, -lastDashVelocity.Z);
-                // Can't modify indivdual force velocity vectors, workaround
-                var newVel = this.Body.LinearVelocity + stopForce;
-                if(newVel.Y > 0)
-                    newVel.Y = 0; // stop upward momentum. 
-                this.Body.LinearVelocity = newVel;
+                this.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
         }
 
