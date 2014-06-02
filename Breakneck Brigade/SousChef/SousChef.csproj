@@ -81,6 +81,7 @@
     <Compile Include="Network\ServerTeamScoreMessage.cs" />
     <Compile Include="Network\ServerTintListUpdateMessage.cs" />
     <Compile Include="RecipeIngredient.cs" />
+    <Compile Include="SoundThing.cs" />
     <Compile Include="TerrainType.cs" />
     <Compile Include="IngredientType.cs" />
     <Compile Include="Math\Coordinate.cs" />
@@ -291,6 +292,17 @@
     <Folder Include="Obj Loader\packages\ninject.extensions.conventions.3.0.0.11\lib\sl5\" />
     <Folder Include="Obj Loader\packages\NUnit.2.6.0.12054\lib\" />
     <Folder Include="Obj Loader\packages\RhinoMocks.3.6.1\lib\net\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
