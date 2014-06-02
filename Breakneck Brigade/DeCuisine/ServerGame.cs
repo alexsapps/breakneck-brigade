@@ -702,39 +702,6 @@ namespace DeCuisine
         }
 
 
-
-
-        // TEST: Dev code for cooker adding
-        public void TestCookerAdd(int cookerId, int ingredientId)
-        {
-            CommandLinePlayer.TestCookerAdd(this.GameObjects, cookerId, ingredientId);
-        }
-
-        // TEST: Dev Code to list current game objects
-        public string ListGameObjects()
-        {
-            return CommandLinePlayer.ListGameObjects(this.GameObjects);
-        }
-        public string ListIngredients()
-        {
-            return CommandLinePlayer.ListIngredients(this.GameObjects);
-        }
-        public string ListCookerContents(int cookerId)
-        {
-            return CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
-        }
-
-        // TEST
-        public string ClearBoard()
-        {
-            return CommandLinePlayer.ClearBoard(this.GameObjects);
-        }
-
-        public void RemoveObj(int id)
-        {
-            this.GameObjects[id].Remove();
-        }
-
         public ServerTeam Winner { get; set; }
 
         public void SendTintListUpdate(ServerTeam serverTeam)
@@ -757,6 +724,74 @@ namespace DeCuisine
             foreach (var goal in Controller.Goals)
                 goalList.Add(goal.EndGoal.FinalProduct.Name);
             return new ServerGoalsUpdateMessage() { Goals = goalList };
+        }
+
+
+        // TEST: Dev code for cooker adding
+        public void TestCookerAdd(int cookerId, int ingredientId)
+        {
+            CommandLinePlayer.TestCookerAdd(this.GameObjects, cookerId, ingredientId);
+        }
+
+        // TEST: Dev Code to list current game objects
+        public string ListGameObjects()
+        {
+            return CommandLinePlayer.ListGameObjects(this.GameObjects);
+        }
+        public string ListIngredients()
+        {
+            return CommandLinePlayer.ListIngredients(this.GameObjects);
+        }
+        public string ListCookerContents(int cookerId)
+        {
+            return CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
+        }
+
+        // Command Line Player functions
+        public string ClearBoard()
+        {
+            return CommandLinePlayer.ClearBoard(this.GameObjects);
+        }
+
+        public void RemoveObj(int id)
+        {
+            this.GameObjects[id].Remove();
+        }
+
+        public void MoveObj(int id, int x, int y, int z)
+        {
+            ServerGameObject objToMove;
+            if (this.GameObjects.TryGetValue(id, out objToMove))
+                objToMove.Position = new Vector3(x, y, z);
+       }
+        public int ScaleObj(int id, int x, int y, int z)
+        {
+            ServerGameObject objToMove;
+            if (!this.GameObjects.TryGetValue(id, out objToMove))
+                return -1;
+
+            switch (objToMove.ObjectClass)
+            {
+                case GameObjectClass.Cooker:
+                    var casted = (ServerCooker)objToMove;
+                    // Hacked way to scale on the fly, reset the Geom info before making
+                    // the new cooker object. Hacked but we will never need to do this in production
+                    //this.Config.Cookers[casted.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(new Dictionary<string,string>(), )
+                    //new ServerCooker(objToMove)
+                    break;
+                case GameObjectClass.Ingredient:
+                    break;
+                case GameObjectClass.Player:
+                    break;
+                case GameObjectClass.StaticObject:
+                    break;
+                case GameObjectClass.Terrain:
+                    break;
+
+            }
+            objToMove.Position = new Vector3(x, y, z);
+
+            return -1;
         }
     }
 }
