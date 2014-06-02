@@ -2,7 +2,6 @@
   <recipe product="milkshake">
     <ingredient>milk</ingredient>
     <ingredient count ="1" optional="3">iceCream</ingredient>
-    <ingredient optional="1">banana</ingredient>
   </recipe>
   <recipe product="caesarSalad">
     <ingredient>lettuce</ingredient>
