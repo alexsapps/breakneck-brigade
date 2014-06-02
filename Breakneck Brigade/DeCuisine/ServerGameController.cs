@@ -23,7 +23,7 @@ namespace DeCuisine
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
 
 
-
+        private Dictionary<string,int> numOfGoalsByState; // dictionary conaining the number of goals
         private int pileSize = 200;
         
         public GameControllerState CurrentGameState { get; set; }
@@ -53,35 +53,9 @@ namespace DeCuisine
 
         private int _numGoals = 0;
         private bool _goalsDirty = false;
-        // TODO: We don't really want to do this. Run down a set list of goals first, then repopulate the goals list.
-        public int NumGoals
-        {
-            get
-            {
-                return _numGoals;
-            }
-            protected set
-            {
-                _numGoals = value;
-                
-                //remove or add goals until we have NumGoals goals
-                if (value < Goals.Count)
-                {
-                    do
-                        Goals.RemoveAt(DC.random.Next(Goals.Count));
-                    while (value < Goals.Count);
-
-                    _goalsDirty = true;
-                }
-                FillGoals();
-            }
-        }
 
         public int ScoreToWin = 20000000;
         public long MaxTime = new TimeSpan(0,15,0).Ticks;
-
-        WeightedRandomChooser<IngredientType> randomIngredientChooser;
-        WeightedRandomChooser<IngredientType> randomGoalChooser;
 
         public ServerGameController(ServerGame game)
         {
@@ -94,28 +68,35 @@ namespace DeCuisine
                 teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams.
             }
             this.Goals = new List<Goal>();
+            this.numOfGoalsByState = new Dictionary<string,int>();
+            // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
+            this.numOfGoalsByState.Add(GameControllerState.Stage1.ToString(), 5);
+            this.numOfGoalsByState.Add(GameControllerState.Stage2.ToString(), 7);
+            this.numOfGoalsByState.Add(GameControllerState.Stage3.ToString(), 10);
+
         }
 
-        public void UpdateConfig(ConfigSalad salad, int numGoals) //must be called once before Update gets called
+        private void FillGoals(int numOfGoals, int complexity)
         {
-            //ingredient worth more points => ingredient unlikely to be spawned
-            randomIngredientChooser = new WeightedRandomChooser<IngredientType>(salad.Ingredients.Values, (ingr) => { return 1.0f / ingr.DefaultPoints; });
-
-            //ingredient worth more points => ingredient more likely to be chosen as a goal ingredient
-            randomGoalChooser = new WeightedRandomChooser<IngredientType>(salad.Ingredients.Values, (ingr) => { return ingr.DefaultPoints; });
-
-            this.NumGoals = numGoals;
-        }
-
-        private void FillGoals()
-        {
-            while (NumGoals > Goals.Count)
+            int numOfRecipes = this.Game.Config.Recipes.Count();
+            while (numOfGoals > Goals.Count)
             {
-                IngredientType tmpIng = getWeightedRandomIngredient();
-                Goals.Add(new Goal(100, tmpIng));
+                var tmpIng = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
+                Goals.Add(new Goal(100, tmpIng, complexity));
                 _goalsDirty = true;
             }
         }
+
+        public void UpdateConfig() 
+        {
+            if (CurrentGameState <= GameControllerState.Stage1)
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage1.ToString()], 0);
+            else if(CurrentGameState <= GameControllerState.Stage2)
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage2.ToString()], 0);
+            else
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage3.ToString()], 0);
+        }
+
 
         int ticks = 1; //server ticks, not time ticks
 
@@ -175,24 +156,6 @@ namespace DeCuisine
             }
 
         }
-        /*
-         * chooses an ingredient to be spawned based on what ingredients are needed to make the goal recipes (goals).
-         * chooses random ingredients if no ingredients are needed to make goals.
-         */
-        IngredientType getWeightedRandomGoal()
-        {
-            // the goal must be the final product of a recipe, because if it is a leaf ingredient, it can't be made (because it's a leaf) and goals are never spawned
-
-            IngredientType goal;
-            
-            goal = randomGoalChooser.Choose();
-
-            foreach (var recipe in Game.Config.Recipies.Values)
-                if (goal == recipe.FinalProduct)
-                    return goal;
-
-            return getWeightedRandomGoal(); //try again
-        }
 
         ServerIngredient spawnIngredient(IngredientType type, Vector3 location)
         {
@@ -200,20 +163,6 @@ namespace DeCuisine
             IngredientType randIng = types[DC.random.Next(types.Count)];
             var loc = RandomLocation();
             return new ServerIngredient(randIng, Game, loc);
-        }
-
-        IngredientType getWeightedRandomIngredient()
-        {
-            IngredientType result;
-
-            result = randomIngredientChooser.Choose();
-
-            // we don't want to spawn the goals.  make sure we didn't.
-            foreach (var goal in Goals)
-                if (goal.GoalIng == result)
-                    return getWeightedRandomIngredient(); //try again
-
-            return result;
         }
 
         public static Vector3 RandomLocation()
@@ -252,7 +201,6 @@ namespace DeCuisine
         /// Assign the player to the passed in team name. Currently not called by anything
         /// but somwhere we may want to have the ability to let players pick. 
         /// </summary>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               /// <param name="player"></param> 
         /// <param name="teamName"></param>
         /// <returns></returns>
         public void AssignTeam(Client client, string teamName)
@@ -293,7 +241,7 @@ namespace DeCuisine
             Goal goalToRemove = null;
             foreach (var goal in Goals)
             {
-                if (goal.GoalIng.Name == ing.Type.Name)
+                if (goal.EndGoal.FinalProduct.Name == ing.Type.Name)
                 {
                     if (ing.LastPlayerHolding != null)
                     {
@@ -302,7 +250,7 @@ namespace DeCuisine
                         MarkLobbyStateDirty();
                         goalToRemove = goal;
                         _goalsDirty = true;
-                        Program.WriteLine("Scored " + ((Goal)goal).Points + " By making a " + ((Goal)goal).GoalIng.Name + " for team " + ing.LastPlayerHolding.Client.Team.Name);
+                        Program.WriteLine("Scored " + ((Goal)goal).Points + " By making a " + ((Goal)goal).EndGoal.FinalProduct.Name + " for team " + ing.LastPlayerHolding.Client.Team.Name);
                         this.DisplayScore();
                         break;
                     }
@@ -366,7 +314,7 @@ namespace DeCuisine
         {
             for (int x = 0; x < pileSize; x++)
             {
-                var tmp = spawnIngredient(getWeightedRandomGoal(), RandomLocation());
+                var tmp = spawnIngredient(this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count)), RandomLocation());
                 tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet
             }
         }
@@ -377,13 +325,17 @@ namespace DeCuisine
             {
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
                 {
-                    // scatter only ingredients. SHould be in the pile currently
+                    // scatter only ingredients. Should be in the pile currently
                     obj.Body.LinearVelocity = randomVelocity(700);
                     obj.Body.Gravity = this.Game.World.Gravity;
                 }
             }
         }
 
+        private void checkGoals()
+        {
+
+        }
 
         private void risePile()
         {

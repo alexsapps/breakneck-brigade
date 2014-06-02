@@ -10,13 +10,18 @@ namespace DeCuisine
     public class Goal
     {
         public int Points { get; set; }
-        public IngredientType GoalIng { get; set; }
+        public Recipe EndGoal { get; set; }
+        public string GoalString { get; set; } // the string that is used to convey what the goal is
         //delegate CompleteFunction;
 
-        public Goal(int points, IngredientType ing)
+        public Goal(int points, Recipe goal, int complexity)
         {
             this.Points = points;
-            this.GoalIng = ing;
+            this.EndGoal = goal;
+            if (complexity > 0)
+            {
+                // add optional goals as well.
+            }
         }
 
 

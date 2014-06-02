@@ -107,8 +107,7 @@ namespace DeCuisine
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
             FrameRateMilliseconds = int.Parse(config.GetSetting("frame-rate", 100));
-            
-            Controller.UpdateConfig(Config, int.Parse(config.GetSetting("num-goals", 1)));
+            this.Controller.UpdateConfig();
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -756,7 +755,7 @@ namespace DeCuisine
         {
             var goalList = new List<string>();
             foreach (var goal in Controller.Goals)
-                goalList.Add(goal.GoalIng.Name);
+                goalList.Add(goal.EndGoal.FinalProduct.Name);
             return new ServerGoalsUpdateMessage() { Goals = goalList };
         }
     }
