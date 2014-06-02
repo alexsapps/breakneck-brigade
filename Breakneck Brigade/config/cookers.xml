@@ -24,7 +24,7 @@
   </cooker>
   
   <cooker name="toaster" size="2.5,1.5,2.5" mass="9001.0">
-    <recipe>toastedBread</recipe>
+    <recipe>Toasted Bread</recipe>
   </cooker>
   
   <cooker name="bowl" size="4,2,4" mass="9001.0">

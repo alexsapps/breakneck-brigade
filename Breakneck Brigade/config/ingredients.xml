@@ -31,7 +31,7 @@
   <ingredient name="cookedSteak" points="110" size="4, 1, 4" />
   <ingredient name="pasta" points="110" size="4, 1, 4" />
   <ingredient name="cake" points="2000" size="6, 4, 6"/>
-  <ingredient name="toastedBread" points="110" size="4, 1, 4" />
+  <ingredient name="Toasted Bread" points="110" size="3, 0.5, 3" />
   <ingredient name="chicken" points="110" size="4, 1, 4" />
   <ingredient name="caesarSalad" points="110" size="4, 1, 4" />
   <ingredient name="soup" points="110" size="4, 1, 4" />

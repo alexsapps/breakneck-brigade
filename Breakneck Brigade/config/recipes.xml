@@ -40,7 +40,7 @@
     <ingredient optional="1">coconut</ingredient>
     <ingredient optional="1">beer</ingredient>
   </recipe>
-  <recipe product="toastedBread">
+  <recipe product="Toasted Bread">
     <ingredient>bread</ingredient>
     <ingredient optional="3">butter</ingredient>
   </recipe>
