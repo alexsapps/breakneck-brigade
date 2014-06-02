@@ -198,7 +198,7 @@ namespace DeCuisine
         {
             if (this.Hands[hand].Held == null && this.LookingAt != null && 
                 this.LookingAt.ObjectClass == GameObjectClass.Ingredient)
-                pickUpObject((ServerIngredient)this.LookingAt);
+                this.PickUpObject((ServerIngredient)this.LookingAt);
             else
             {
                 SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
@@ -223,6 +223,8 @@ namespace DeCuisine
                     tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
                     return;
                 }
+
+                // Throw object
                 held.Position = crossPos;
                 held.Body.Gravity = this.Game.World.Gravity;
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
@@ -232,7 +234,7 @@ namespace DeCuisine
 
         }
 
-        private void pickUpObject(ServerIngredient obj)
+        private void PickUpObject(ServerIngredient obj)
         {
             obj.Body.Gravity = Vector3.Zero;
             this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
@@ -292,8 +294,8 @@ namespace DeCuisine
             {
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(
-                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE), 
-                    this.Position.Y , // TODO: Have the hold logic be a lot better
+                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE),
+                    this.Position.Y + this.EyeHeight * 0.75f + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: Have the hold logic be a lot better
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
 
