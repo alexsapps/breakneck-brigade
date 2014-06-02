@@ -16,6 +16,7 @@
     <ingredient optional="1">onion</ingredient>
     <ingredient optional="1">sauce</ingredient>
     <ingredient optional="2">butter</ingredient>
+    <ingredient optional="1">cheese</ingredient>
   </recipe>
   <recipe product="cookedSteak">
     <ingredient>steak</ingredient>
