@@ -24,8 +24,11 @@ namespace DeCuisine
 
 
         private Dictionary<string,int> numOfGoalsByState; // dictionary conaining the number of goals
+#if PROJECT_DEBUG
+        private int pileSize = 5; // don't spawn ingredients
+#else
         private int pileSize = 200;
-        
+#endif   
         public GameControllerState CurrentGameState { get; set; }
         
         public enum GameControllerState
