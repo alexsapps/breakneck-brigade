@@ -488,6 +488,11 @@ namespace DeCuisine
                 game.MoveObj(parsed[0], parsed[1], parsed[2], parsed[3]);
             else if(args[0] == "scale")
             {
+                int newId = game.ScaleObj(parsed[0], parsed[1], parsed[2], parsed[3]);
+                if (newId == -1)
+                    Program.WriteLine("Scalling faild, object not found in world");
+                else
+                    Program.WriteLine("ID of newly scaled object is " + newId); 
                 return;
             }else
                 throw new Exception("Bug. Who the hell called this function?");
