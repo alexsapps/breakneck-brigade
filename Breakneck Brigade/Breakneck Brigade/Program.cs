@@ -17,9 +17,10 @@ namespace Breakneck_Brigade
 {
     class Program
     {
-        static Client client; static BBLock clientLock = new BBLock();
+        public static Client client; 
+        static BBLock clientLock = new BBLock();
         static ClientGame _game;
-        static ClientGame game
+        public static ClientGame game
         {
             get
             {

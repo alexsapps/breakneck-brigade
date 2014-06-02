@@ -142,7 +142,7 @@ namespace Breakneck_Brigade.Graphics
             xMax = (xInd + 1) * GLYPH_WIDTH / (float)TEXTURE_WIDTH;
 
             yMin = 1 - (yInd + 1) * GLYPH_HEIGHT / (float)TEXTURE_HEIGHT;
-            yMax = 1 - yInd * GLYPH_HEIGHT / (float)TEXTURE_HEIGHT -0.002f;
+            yMax = 1 - yInd * GLYPH_HEIGHT / (float)TEXTURE_HEIGHT -0.004f;
         }
     }
 }
