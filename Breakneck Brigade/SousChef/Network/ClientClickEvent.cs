@@ -9,7 +9,7 @@ namespace SousChef
 {
     public class ClientLeftClickEvent : ClientEvent
     {
-        public override ClientEventType Type { get { return ClientEventType.ThrowItem; } }
+        public override ClientEventType Type { get { return ClientEventType.LeftClickEvent; } }
         public float Orientation { get; set; }
         public float Incline { get; set; }
         public string Hand { get; set; }

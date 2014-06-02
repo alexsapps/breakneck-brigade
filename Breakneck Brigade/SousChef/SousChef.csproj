@@ -98,7 +98,7 @@
     <Compile Include="Math\MathConstants.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Vector4.cs" />
-    <Compile Include="Network\ClientThrowEvent.cs" />
+    <Compile Include="Network\ClientClickEvent.cs" />
     <Compile Include="Network\ServerCommandResponseMessage.cs" />
     <Compile Include="Network\ServerGameModeUpdateMessage.cs" />
     <Compile Include="Network\ServerGameStateUpdateMessage.cs" />

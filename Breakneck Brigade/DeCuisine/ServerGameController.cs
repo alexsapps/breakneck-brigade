@@ -409,7 +409,6 @@ namespace DeCuisine
             //float yVel = DC.random.Next(max, max*4/3);
             float[] zVel = new float[3]{ DC.random.Next(max / 2, max), DC.random.Next(-max, -(max / 2)), 0, };
             
-
             Vector3 vel = new Vector3(xVel[DC.random.Next(0, 3)], 0, zVel[DC.random.Next(0, 3)]);
             if(vel.X == 0 && vel.Y == 0)
             {
