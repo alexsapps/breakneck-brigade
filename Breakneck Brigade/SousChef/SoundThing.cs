@@ -54,7 +54,6 @@ namespace SousChef
                 int length = s.LastIndexOf('.')  - start;
                 m.Add(s.Substring(start, length), s);
             }
-
             return m;
         }
 
@@ -85,12 +84,7 @@ namespace SousChef
              */
             public void DoWork()
             {
-                //var player = new WMPLib.WindowsMediaPlayer();
-                //player.URL = @path;
-                //player.
                 MediaPlayer player = new MediaPlayer();
-                Console.WriteLine(path);
-
                 player.Open(new Uri(path, UriKind.Relative));
                 player.Play();
                 Thread.Sleep(10000); //FIXME: This really should be managed by an event

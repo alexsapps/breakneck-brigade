@@ -55,11 +55,12 @@ namespace Breakneck_Brigade
 
         static void Main(string[] args)
         {
+            /*
             for (int i = 0; i < 5; i++ )
             { 
                 SoundThing.Play("scratch");
                 Thread.Sleep(1000);
-        }
+            }*/
 
             //Thread.Sleep(5000);
 
