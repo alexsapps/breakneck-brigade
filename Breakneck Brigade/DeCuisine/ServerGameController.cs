@@ -378,7 +378,7 @@ namespace DeCuisine
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
                 {
                     // scatter only ingredients. SHould be in the pile currently
-                    obj.Body.LinearVelocity = randomVelocity(500);
+                    obj.Body.LinearVelocity = randomVelocity(700);
                     obj.Body.Gravity = this.Game.World.Gravity;
                 }
             }
@@ -392,7 +392,7 @@ namespace DeCuisine
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
                 {
                     // Raise the pile
-                    obj.Body.LinearVelocity = new Vector3(0, DC.random.Next(0, 1500), 0);
+                    obj.Body.LinearVelocity = new Vector3(0, DC.random.Next(300, 1000), 0);
                     obj.Body.Gravity = this.Game.World.Gravity;
                 }
             }
@@ -405,11 +405,24 @@ namespace DeCuisine
         private Vector3 randomVelocity(int max)
         {
             // Some weird logic to get a random large negative and positive number
-            float[] xVel = new float[2]{DC.random.Next(max / 2, max), DC.random.Next(-max, -(max/2))};
+            float[] xVel = new float[3]{DC.random.Next(max / 2, max),  DC.random.Next(-max, -(max / 2)), 0};
             //float yVel = DC.random.Next(max, max*4/3);
-            float[] zVel = new float[2]{ DC.random.Next(max / 2, max), DC.random.Next(-max, -(max / 2)) };
+            float[] zVel = new float[3]{ DC.random.Next(max / 2, max), DC.random.Next(-max, -(max / 2)), 0, };
+            
 
-            Vector3 vel = new Vector3(xVel[DC.random.Next(0, 2)], 0, zVel[DC.random.Next(0, 2)]);
+            Vector3 vel = new Vector3(xVel[DC.random.Next(0, 3)], 0, zVel[DC.random.Next(0, 3)]);
+            if(vel.X == 0 && vel.Y == 0)
+            {
+                // randomize one of the velocities so it doens't go no where.
+                switch(DC.random.Next(0,2)){
+                    case(0):
+                        vel.X = xVel[DC.random.Next(0, 2)]; // don't select the zero value
+                        break;
+                    case(1):
+                        vel.Z = zVel[DC.random.Next(0, 2)]; // don't select the zero value
+                        break;
+                }
+            }
             return vel;
         }
 
