@@ -16,6 +16,8 @@ namespace DeCuisine
     /// </summary>
     class ServerCooker : ServerGameObject
     {
+        private const float EJECTSPEED = 5.0f;
+
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
         public Dictionary<int, ServerIngredient> Contents { get; private set; }
         public CookerType Type { get; set; }
@@ -106,9 +108,9 @@ namespace DeCuisine
             //find if there is a valid recipe
             foreach (var recipe in this.Type.Recipes)
             {
-                if (CheckRecipe(recipe.Value))
+                if (this.CheckRecipe(recipe.Value))
                 {
-                    finishCook(recipe.Value);
+                    this.FinishCook(recipe.Value);
                     break;
                 }
                    
@@ -116,7 +118,8 @@ namespace DeCuisine
             
             return null;
         }
-        private void finishCook(Recipe recipe)
+
+        private void FinishCook(Recipe recipe)
         {
             int cookScore = 0;
             List<ServerIngredient> toEject = new List<ServerIngredient>();
@@ -124,7 +127,7 @@ namespace DeCuisine
             foreach (var recIng in recipe.Ingredients)
             {
                 List<ServerIngredient> matchingCont = new List<ServerIngredient>();
-                matchingCont = ReturnContents(recIng);
+                matchingCont = this.ReturnContents(recIng, recIng.nCount + recIng.nOptional);
                 if (matchingCont != null)
                 {
                     toEject.AddRange(matchingCont);
@@ -137,9 +140,10 @@ namespace DeCuisine
                 //remove all the ingredients from the game world
                 ingredient.Remove();
             }
-            var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 100, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-            var newIng = new ServerIngredient(recipe.FinalProduct, Game, ingSpawn);
-            //newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
+
+            Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1], this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+            ServerIngredient newIngredient = new ServerIngredient(recipe.FinalProduct, this.Game, ingredientSpawningPoint);
+            newIngredient.Body.ApplyImpulse(new Vector3(0, EJECTSPEED, 0), ingredientSpawningPoint);
         }
 
 
@@ -164,14 +168,21 @@ namespace DeCuisine
             return found >= numEssential;
         }
 
-        public List<ServerIngredient> ReturnContents(RecipeIngredient ing)
+        public List<ServerIngredient> ReturnContents(RecipeIngredient ing, int needed)
         {
             List<ServerIngredient> matchingIng = new List<ServerIngredient>();
             foreach (var content in this.Contents.Values)
             {
                 if (ing.Ingredient == content.Type)
+                {
                     matchingIng.Add(content);
+                    if (matchingIng.Count >= needed)
+                    {
+                        break;
+                    }
+                }
             }
+
             return matchingIng;
         }
 
@@ -183,8 +194,9 @@ namespace DeCuisine
         {
             foreach (ServerIngredient containedIngredient in this.Contents.Values.ToList())
             {
-                Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + 200, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-                ServerIngredient newIng = new ServerIngredient(containedIngredient.Type, this.Game, ingredientSpawningPoint);
+                Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1], this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                ServerIngredient newIngredient = new ServerIngredient(containedIngredient.Type, this.Game, ingredientSpawningPoint);
+                newIngredient.Body.ApplyImpulse(new Vector3(0, EJECTSPEED, 0), ingredientSpawningPoint);
             }
             this.Contents.Clear();
         }
