@@ -228,6 +228,8 @@ namespace DeCuisine
                 held.Position = crossPos;
                 held.Body.Gravity = this.Game.World.Gravity;
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
+                if (held.Body.LinearVelocity.X == 0 && held.Body.LinearVelocity.Y == 0 && held.Body.LinearVelocity.Z == 0)
+                    Console.WriteLine("WHAT THE FUCK");
                 _hand.Held = null;
                 MarkDirty();
             }

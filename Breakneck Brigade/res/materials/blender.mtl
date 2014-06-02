@@ -1,59 +1,44 @@
-# Max2Mtl Version 4.0 Mar 10th, 2001
-#
-# Multi/Sub Material__293 (2) to come 
-#
-newmtl 1_-_Default1
-Ka  0.0 0.0 0.0
-Kd  0.9 0.4 0.1
-Ks  0.0 0.0 0.0
-d  1.0
-Ns  10.0
-illum 2
-#
-newmtl 1_-_Default1
-Ka  0.0 0.0 0.0
-Kd  0.9 0.4 0.1
-Ks  0.0 0.0 0.0
-d  1.0
-Ns  10.0
-illum 2
-#
-# Multi/Sub Material__293 done 
-#
-# Multi/Sub 14_-_Default (4) to come 
-#
-newmtl Material__269
-Ka  0.9 0.9 0.9
-Kd  0.9 0.9 0.9
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  6.6
-illum 2
-#
-newmtl 8_-_Default
-Ka  0.0 0.0 0.0
-Kd  0.0 0.0 0.0
-Ks  1.0 1.0 1.0
-d  -0.0
-Ns  10.0
-illum 2
-#
-newmtl Material__280
-Ka  1.0 1.0 1.0
-Kd  1.0 1.0 1.0
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl 8_-_Default
-Ka  0.0 0.0 0.0
-Kd  0.0 0.0 0.0
-Ks  1.0 1.0 1.0
-d  -0.0
-Ns  10.0
-illum 2
-#
-# Multi/Sub 14_-_Default done 
-#
-# EOF
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 20.05.2014 12:43:38
+
+newmtl Material__28
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka colWhite.tga
+	map_Kd colWhite.tga
+
+newmtl Material__29
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka colBlack.tga
+	map_Kd colBlack.tga
+
+newmtl Material__30
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka colGrey.tga
+	map_Kd colGrey.tga
