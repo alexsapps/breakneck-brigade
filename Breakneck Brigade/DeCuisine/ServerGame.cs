@@ -107,8 +107,7 @@ namespace DeCuisine
             var configFolder = new GlobalsConfigFolder();
             var config = configFolder.Open("settings.xml");
             FrameRateMilliseconds = int.Parse(config.GetSetting("frame-rate", 100));
-            
-            Controller.UpdateConfig(Config, int.Parse(config.GetSetting("num-goals", 1)));
+            this.Controller.UpdateConfig();
         }
 
         void server_ClientEnter(object sender, ClientEventArgs e)
@@ -357,8 +356,10 @@ namespace DeCuisine
                 {
                     if (!client.IsConnected)
                         break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
+#if !PROJECT_DEBUG
                     if (this.Controller.CurrentGameState == ServerGameController.GameControllerState.Waiting && input.Event.Type != ClientEventType.ChangeOrientation)
                         break; // don't process these client events.
+#endif
                     var player = client.Player;
                     switch (input.Event.Type)
                     {
@@ -378,9 +379,9 @@ namespace DeCuisine
                         case ClientEventType.Jump:
                             player.Jump();
                             break;
-                        case ClientEventType.ThrowItem:
-                            var thrEv = (ClientThrowEvent)input.Event;
-                            player.Throw(thrEv.Hand, thrEv.Orientation, thrEv.Incline, thrEv.Force);
+                        case ClientEventType.LeftClickEvent:
+                            var thrEv = (ClientLeftClickEvent)input.Event;
+                            player.HandleClick(thrEv.Hand, thrEv.Orientation, thrEv.Incline, thrEv.Force);
                             break;
                         case ClientEventType.Dash:
                             player.Dash();
@@ -407,7 +408,6 @@ namespace DeCuisine
              */
             var timeStep = (FrameRateMilliseconds - (float)fallBehind) / 1000;
             _world.StepSimulation(FrameRateMilliseconds);
-            //_world.StepSimulation(timeStep, 0, timeStep);
 
             if(!this.Controller.Update())
             {
@@ -755,7 +755,7 @@ namespace DeCuisine
         {
             var goalList = new List<string>();
             foreach (var goal in Controller.Goals)
-                goalList.Add(goal.GoalIng.Name);
+                goalList.Add(goal.EndGoal.FinalProduct.Name);
             return new ServerGoalsUpdateMessage() { Goals = goalList };
         }
     }

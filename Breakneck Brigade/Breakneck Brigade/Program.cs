@@ -55,6 +55,15 @@ namespace Breakneck_Brigade
 
         static void Main(string[] args)
         {
+            /*
+            for (int i = 0; i < 5; i++ )
+            { 
+                SoundThing.Play("scratch");
+                Thread.Sleep(1000);
+            }*/
+
+            //Thread.Sleep(5000);
+
             try { Console.SetWindowSize(120, 40); } catch { } //see also server's Main()
 
 #if PROJECT_GRAPHICS_TEST

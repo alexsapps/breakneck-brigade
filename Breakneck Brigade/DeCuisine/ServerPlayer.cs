@@ -99,7 +99,7 @@ namespace DeCuisine
             : base(game)
         {
             base.AddToWorld(position);
-            this.EyeHeight = 8.0f;
+            this.EyeHeight = 15.0f;
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
@@ -170,14 +170,6 @@ namespace DeCuisine
         public override void OnCollide(ServerGameObject obj)
         {
             base.OnCollide(obj);
-
-            if (obj.ObjectClass == GameObjectClass.Ingredient
-                && this.Hands["left"].Held == null)
-            {
-                obj.Body.Gravity = Vector3.Zero;
-                this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
-                ((ServerIngredient)obj).LastPlayerHolding = this;
-            }
         }
 
         public void Dash()
@@ -202,33 +194,51 @@ namespace DeCuisine
         /// Throw an object from the passed in hand
         /// </summary>
         /// <param name="hand"></param>
-        public void Throw(string hand, float orientation, float incline, float scalar)
+        public void HandleClick(string hand, float orientation, float incline, float scalar)
         {
-            SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
-            Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(-incline);
-            imp = rotate * imp; 
-            imp *= scalar;
-
-            // find out where your cross hairs are.
-            var crossPos = new Vector3(
-                    this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
-                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
-                    this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
-
-            var _hand = this.Hands[hand];
-            var held = _hand.Held;
-
-            // Cause you can shoot oranges now. Why the fuck not? 
-            if (held == null)
+            if (this.Hands[hand].Held == null && this.LookingAt != null && 
+                this.LookingAt.ObjectClass == GameObjectClass.Ingredient)
+                this.PickUpObject((ServerIngredient)this.LookingAt);
+            else
             {
-                var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, crossPos);
-                tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
-                return;
+                SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
+                Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(-incline);
+                imp = rotate * imp;
+                imp *= scalar;
+
+                // find out where your cross hairs are.
+                var crossPos = new Vector3(
+                        this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
+                        this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
+                        this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
+
+                // Is this to get around a bug? Why would you want to do this...
+                var _hand = this.Hands[hand];
+                var held = _hand.Held;
+
+                // Cause you can shoot oranges now. Why the fuck not? 
+                if (held == null)
+                {
+                    var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, crossPos);
+                    tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
+                    return;
+                }
+
+                // Throw object
+                held.Position = crossPos;
+                held.Body.Gravity = this.Game.World.Gravity;
+                held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
+                _hand.Held = null;
+                MarkDirty();
             }
-            held.Position = crossPos;
-            held.Body.Gravity = this.Game.World.Gravity;
-            held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
-            _hand.Held = null;
+
+        }
+
+        private void PickUpObject(ServerIngredient obj)
+        {
+            obj.Body.Gravity = Vector3.Zero;
+            this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
+            obj.LastPlayerHolding = this;
             MarkDirty();
         }
 
@@ -284,8 +294,8 @@ namespace DeCuisine
             {
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(
-                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE), 
-                    this.Position.Y , // TODO: Have the hold logic be a lot better
+                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE),
+                    this.Position.Y + this.EyeHeight * 0.75f + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: Have the hold logic be a lot better
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
 
@@ -332,13 +342,7 @@ namespace DeCuisine
             this.dashTicks--;
             if (dashTicks == 0)
             {
-                // stop dashing
-                var stopForce = new Vector3(-lastDashVelocity.X, 0, -lastDashVelocity.Z);
-                // Can't modify indivdual force velocity vectors, workaround
-                var newVel = this.Body.LinearVelocity + stopForce;
-                if(newVel.Y > 0)
-                    newVel.Y = 0; // stop upward momentum. 
-                this.Body.LinearVelocity = newVel;
+                this.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
         }
 

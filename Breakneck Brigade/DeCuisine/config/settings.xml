@@ -1,4 +1,4 @@
 <settings>
   <frame-rate>30</frame-rate> <!-- in milliseconds -->
-  <num-goals>5</num-goals> <!-- number of recipes/goals that the cheffs will be asked to make at once -->
+  <num-goals-0>5</num-goals-0> <!-- number of recipes/goals that the cheffs will be asked to make at once -->
 </settings>

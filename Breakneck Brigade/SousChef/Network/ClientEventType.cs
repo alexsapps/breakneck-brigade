@@ -34,7 +34,7 @@ namespace SousChef
         /// "Force" -> a float[3] representing a force (direction + magnitude)
         /// To drop an object, throw it with a force of 0.
         /// </summary>
-        ThrowItem,
+        LeftClickEvent,
         /// <summary>
         /// Player jumped
         /// Params:

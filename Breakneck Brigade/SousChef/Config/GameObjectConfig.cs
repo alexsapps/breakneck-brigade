@@ -34,7 +34,7 @@ namespace SousChef
             ConfigSalad salad = new ConfigSalad()
             {
                 Ingredients = new Dictionary<string, IngredientType>(),
-                Recipies = new Dictionary<string, Recipe>(),
+                Recipes = new Dictionary<string, Recipe>(),
                 Cookers = new Dictionary<string, CookerType>(),
                 Terrains = new Dictionary<string,TerrainType>()
             };
@@ -50,7 +50,7 @@ namespace SousChef
             foreach (var ingredient in new BBXIngredientsFileParser(this).LoadFile(out filenames[0]))
                 salad.Ingredients.Add(ingredient.Name, ingredient);
             foreach (var recipe in new BBXRecipesFileParser(this).LoadFile(out filenames[1]))
-                salad.Recipies.Add(recipe.Name, recipe);
+                salad.Recipes.Add(recipe.Name, recipe);
             foreach (var cooker in new BBXCookersFileParser(this).LoadFile(out filenames[2]))
                 salad.Cookers.Add(cooker.Name, cooker);
             foreach (var terrain in new BBXTerrainsFileParser(this).LoadFile(out filenames[3]))

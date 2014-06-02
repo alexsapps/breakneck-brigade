@@ -149,16 +149,10 @@ namespace Breakneck_Brigade
                 render(1);
         }
 
-        protected void RenderColored()
+        protected void RenderColored(float r, float g, float b)
         {
-            //var teamname = Program.lobbyState.MyTeam.Name;
-            //if (teamname.Equals("red"))
-            //    Gl.glColor3f(1.0f, 0.1f, 0.1f);
-            //else if (teamname.Equals("blue"))
-            //    Gl.glColor3f(0.1f, 0.1f, 1.0f);
-            //else
-            //    throw new Exception("don't know what color in ClientGameObject.RenderColored");
-
+            // everything is green when it
+            Gl.glColor3f(r, g, b);
             render(1);
             Gl.glColor3f(1.0f, 1.0f, 1.0f);
         }

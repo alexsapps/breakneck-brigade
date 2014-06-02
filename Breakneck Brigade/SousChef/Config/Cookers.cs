@@ -48,7 +48,7 @@ namespace SousChef
             var recipes = this.parseStringList(reader, "recipe", false);
             foreach (var i in recipes)
             {
-                this.recipes.Add(config.CurrentSalad.Recipies[i]);
+                this.recipes.Add(config.CurrentSalad.Recipes[i]);
             }
         }
 

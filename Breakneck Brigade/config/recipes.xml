@@ -15,14 +15,39 @@
     <ingredient optional="1">tomato</ingredient>
     <ingredient optional="1">onion</ingredient>
     <ingredient optional="1">sauce</ingredient>
+    <ingredient optional="2">butter</ingredient>
+    <ingredient optional="1">cheese</ingredient>
   </recipe>
-  <recipe product="steak">
-    <ingredient>meat</ingredient>
+  <recipe product="cookedSteak">
+    <ingredient>steak</ingredient>
     <ingredient optional="1">salt</ingredient>
     <ingredient optional="1">sauce</ingredient>
-    <ingredient optional="1">butter</ingredient>
+    <ingredient optional="2">butter</ingredient>
   </recipe>
   <recipe product="cake">
+    <ingredient>cakeBatter</ingredient>
+    <ingredient optional="1">cake</ingredient>
+  </recipe>
+  <recipe product="sauce">
+    <ingredient>tomato</ingredient>
+    <ingredient>onion</ingredient>
+  </recipe>
+  <recipe product="chicken">
+    <ingredient>rawChicken</ingredient>
+    <ingredient optional="1">egg</ingredient>
+    <ingredient optional="1">flour</ingredient>
+    <ingredient optional="3">salt</ingredient>
+    <ingredient optional="1">coconut</ingredient>
+    <ingredient optional="1">beer</ingredient>
+  </recipe>
+  <recipe product="toastedBread">
+    <ingredient>bread</ingredient>
+    <ingredient optional="3">butter</ingredient>
+  </recipe>
+  <recipe product="soup">
+    <ingredient>tomato</ingredient>
+  </recipe>
+  <recipe product="cakeBatter">
     <ingredient>flour</ingredient>
     <ingredient>milk</ingredient>
     <ingredient>egg</ingredient>
@@ -30,6 +55,12 @@
     <ingredient>butter</ingredient>
     <ingredient>butter</ingredient>
     <ingredient>sugar</ingredient>
-    <ingredient optional="1">cake</ingredient>
+    <ingredient>sugar</ingredient>
+  </recipe>
+  <recipe product="pasta">
+    <ingredient>noodles</ingredient>
+    <ingredient>sauce</ingredient>
+    <ingredient optional="2">butter</ingredient>
+    <ingredient optional="1">cheese</ingredient>
   </recipe>
 </recipes>

@@ -72,7 +72,7 @@ namespace Breakneck_Brigade
         public override void Render()
         {
             if (this.Game.LookatId == this.Id)
-                base.RenderColored();
+                base.RenderColored(0,1,0);
             else
                 base.Render();
         }

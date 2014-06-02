@@ -1,35 +1,34 @@
 <cookers defaultSize="8,8,8" defaultMass="30.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.1" defaultAngularDamping=".999">
-
   <!--  default shape is box -->
-
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
-
   <cooker name="blender" size="4, 5, 4" mass="9001.0">
     <recipe>milkshake</recipe>
+    <recipe>sauce</recipe>
   </cooker>
 
   <cooker name="oven" size="6,3,6" mass="9001.0">
-    <recipe>milkshake</recipe>
+    <recipe>chicken</recipe>
+    <recipe>cake</recipe>
   </cooker>
 
   <cooker name="pot" size="4,2,4" mass="9001.0">
-    <recipe>milkshake</recipe>
+    <recipe>soup</recipe>
+    <recipe>pasta</recipe>
   </cooker>
 
   <cooker name="pan" size="4,2,4" mass="9001.0">
-    <recipe>milkshake</recipe>
+    <recipe>chicken</recipe>
+    <recipe>cookedSteak</recipe>
+    <recipe>hamburger</recipe>
   </cooker>
-
-  <cooker name="juicer" size="4,2,4" mass="9001.0">
-    <recipe>milkshake</recipe>
-  </cooker>
-
+  
   <cooker name="toaster" size="2.5,1.5,2.5" mass="9001.0">
-    <recipe>milkshake</recipe>
+    <recipe>toastedBread</recipe>
   </cooker>
   
   <cooker name="bowl" size="4,2,4" mass="9001.0">
-    <recipe>milkshake</recipe>
+    <recipe>caesarSalad</recipe>
+    <recipe>cakeBatter</recipe>
   </cooker>
 </cookers>
