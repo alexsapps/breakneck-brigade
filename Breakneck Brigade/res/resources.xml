@@ -15,6 +15,12 @@ filename: 	the name of the texture. Note: all files associated
     <texture>
       <filename>white</filename>
     </texture>
+    <texture>
+      <filename>font</filename>
+    </texture>
+    <texture>
+      <filename>fontWhite</filename>
+    </texture>
   </textures>
 
 <!-- 

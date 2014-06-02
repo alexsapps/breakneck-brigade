@@ -1,0 +1,13 @@
+A-Z 	26
+a-z 	26
+.   	1
+!	1
+?	1
+0-9	10
+()	2
+:	1
+-	1
+
+	69 total characters
+	16 chars per line @ 16x16 dimensions
+	256 x 256 img size
