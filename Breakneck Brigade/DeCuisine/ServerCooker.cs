@@ -139,6 +139,7 @@ namespace DeCuisine
             }
             var ingSpawn = new Vector3(this.Position.X, this.Position.Y + 100, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
             var newIng = new ServerIngredient(recipe.FinalProduct, Game, ingSpawn);
+            Program.WriteLine("Team " + this.Team.Name + " Cooked " + newIng.Type.Name + " for cookscore");
             //newIng.Body.LinearVelocity = new Vector3(0, 500, 0);
         }
 

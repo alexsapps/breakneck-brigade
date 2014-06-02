@@ -252,7 +252,7 @@ namespace DeCuisine
             constraint.LinearLowerLimit = new Vector3(0, 0, 0);
             constraint.LinearUpperLimit = new Vector3(0, 0, 0);
 
-            this.Game.World.AddConstraint(constraint);
+            this.Game.World.AddConstraint(constraint,true);
             this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
             obj.LastPlayerHolding = this;
             MarkDirty();
@@ -312,7 +312,7 @@ namespace DeCuisine
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(
                     this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE),
-                    this.Position.Y + this.EyeHeight * 0.75f, // + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: Have the hold logic be a lot better
+                    this.Position.Y + this.EyeHeight * 0.75f + (float)Math.Sin( (this.Incline > 0 && this.canJump ? 0 : this.Incline) * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: Have the hold logic be a lot better
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
             

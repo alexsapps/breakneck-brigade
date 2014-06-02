@@ -466,9 +466,15 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <rotX>0</rotX>
       <rotY>0</rotY>
       <rotZ>0</rotZ>
+<<<<<<< HEAD
+    </model>
+    <model>
+      <filename>noodles</filename>
+=======
     </model> 
     <model>
       <filename>bowl</filename>
+>>>>>>> 8a4e8ade1513fc8b64916d8e979026d2459a1775
       <posX>0</posX>
       <posY>0</posY>
       <posZ>0</posZ>
@@ -478,6 +484,10 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <rotX>0</rotX>
       <rotY>0</rotY>
       <rotZ>0</rotZ>
+<<<<<<< HEAD
+    </model>	
+=======
     </model>     
+>>>>>>> 8a4e8ade1513fc8b64916d8e979026d2459a1775
   </models>
 </resources>

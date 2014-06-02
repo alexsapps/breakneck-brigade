@@ -763,34 +763,61 @@ namespace DeCuisine
             ServerGameObject objToMove;
             if (this.GameObjects.TryGetValue(id, out objToMove))
                 objToMove.Position = new Vector3(x, y, z);
-       }
-        public int ScaleObj(int id, int x, int y, int z)
+        }
+
+        // Hacked way to scale on the fly, reset the Geom info before making
+        // the new object. Hacked but we will never need to do this in production
+        public int ScaleObj(int id, float x, float y, float z)
         {
             ServerGameObject objToMove;
             if (!this.GameObjects.TryGetValue(id, out objToMove))
                 return -1;
-
+            ServerGameObject scaled = null;
+            GeometryInfo oldGeomInfo;
+            GeometryInfo newGeomInfo;
             switch (objToMove.ObjectClass)
             {
                 case GameObjectClass.Cooker:
-                    var casted = (ServerCooker)objToMove;
-                    // Hacked way to scale on the fly, reset the Geom info before making
-                    // the new cooker object. Hacked but we will never need to do this in production
-                    //this.Config.Cookers[casted.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(new Dictionary<string,string>(), )
+                    var cooker = (ServerCooker)objToMove;
+                    oldGeomInfo = this.Config.Cookers[cooker.Type.Name].GeomInfo;
+                    this.Config.Cookers[cooker.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, cooker.Type.Name);
+                    scaled = new ServerCooker(cooker.Type, cooker.Team, cooker.Game, cooker.Position);
+                    cooker.Remove();
                     //new ServerCooker(objToMove)
                     break;
                 case GameObjectClass.Ingredient:
+                    var ing = (ServerIngredient)objToMove;
+                    oldGeomInfo = this.Config.Ingredients[ing.Type.Name].GeomInfo;
+                    this.Config.Ingredients[ing.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, ing.Type.Name);
+                    scaled = new ServerIngredient(ing.Type, ing.Game, ing.Position);
+                    ing.Remove();
                     break;
                 case GameObjectClass.Player:
+                    Program.WriteLine("Just don't try to scale the player...it will fuck shit up");
                     break;
                 case GameObjectClass.StaticObject:
+                    var statObj = (ServerStaticObject)objToMove;
+                    oldGeomInfo = statObj.GeomInfo; // No type so it's different
+                    newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, null);
+                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, statObj.Position);
+                    statObj.Remove();
                     break;
                 case GameObjectClass.Terrain:
+                    var terrain = (ServerTerrain)objToMove;
+                    oldGeomInfo = terrain.GeomInfo; // No type so it's different
+                    newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, terrain.Type.Name);
+                    scaled = new ServerTerrain(terrain.Game, terrain.Type, terrain.Position, newGeomInfo);
+                    terrain.Remove();
                     break;
 
             }
-            objToMove.Position = new Vector3(x, y, z);
 
+            if (scaled != null)
+                return scaled.Id;
             return -1;
         }
     }
