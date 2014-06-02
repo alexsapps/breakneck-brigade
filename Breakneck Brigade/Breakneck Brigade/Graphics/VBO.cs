@@ -60,6 +60,49 @@ namespace Breakneck_Brigade.Graphics
         }
 
         /// <summary>
+        /// Makes a quad with the specified texture coordinates
+        /// 
+        /// Verts are in this order:
+        /// 0   1
+        ///     
+        /// 3   2
+        /// </summary>
+        /// <param name="T0"></param>
+        /// <param name="T1"></param>
+        /// <param name="T2"></param>
+        /// <param name="T3"></param>
+        /// <returns></returns>
+        public static VBO MakeQuadWithUVCoords(float[] T0, float[] T1, float[] T2, float[] T3)
+        {
+            VBO newVBO = new VBO();
+            newVBO.Indices.AddRange(new float[] {
+                                  0, 1, 2, 3, 4, 5,
+                              });
+            newVBO.Data.AddRange(new float[] {
+                               //Horiz
+                                -0.01f,  0.01f,  0,   //V0
+                                     0,     0,  -1,   //N0
+                                 T0[0], T0[1],        //T0
+                                 0.01f, -0.01f,  0,   //V2
+                                     0,      0, -1,   //N2
+                                 T2[0],  T2[1],       //T2
+                                 0.01f,  0.01f,  0,   //V1
+                                    0,     0,   -1,   //N1
+                                 T1[0],  T1[1],       //T1
+                                -0.01f, 0.01f,   0,   //V0
+                                    0,      0,  -1,   //N0
+                                 T0[0], T0[1],        //T0
+                                -0.01f, -0.01f,  0,   //V3
+                                     0,      0, -1,   //N3
+                                 T3[0],  T3[1],       //T3
+                                 0.01f, -0.01f,  0,   //V2
+                                    0,     0,   -1,   //N2
+                                T2[0], T2[1],         //T2
+                            });
+            return newVBO;
+        }
+
+        /// <summary>
         /// Loads the data from the lists into VBO memory. Only call after
         /// Indices, Vertices, Normals, and TextureCoordinates are populated
         /// </summary>

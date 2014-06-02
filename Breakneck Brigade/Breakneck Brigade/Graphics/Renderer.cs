@@ -21,10 +21,13 @@ namespace Breakneck_Brigade.Graphics
     };
     class Renderer : IDisposable
     {
+        public static TextRenderer TextRenderer;
         private ModelParser parser;
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
         private const string CROSSHAIR_MODEL_NAME = "crosshair";
+        public const string BLANKQUAD_MODEL_NAME = "blankQuad";
+        public const string FONT_TEXTURE = "fontWhite.tga";
 
         private Stopwatch  _stopwatch = new Stopwatch();
         private Stopwatch  _stopwatch2 = new Stopwatch();
@@ -52,10 +55,10 @@ namespace Breakneck_Brigade.Graphics
 
         private     Matrix4         WorldTransform;
         private     Camera          Camera;
-        private     int             _windowWidth    = 0;
-        private     int             _windowHeight   = 0;
-        private     const float     _desiredWidth = 1024.0f;
-        private     const float     _desiredHeight = 768.0f;
+        public      static int      WindowWidth    = 0;
+        public      static int      WindowHeight   = 0;
+        private     const float     _desiredWidth   = 1024.0f;
+        private     const float     _desiredHeight  = 768.0f;
         private     const float     _desiredRatio = _desiredWidth/_desiredHeight;
 
         /// <summary>
@@ -99,7 +102,7 @@ namespace Breakneck_Brigade.Graphics
                     {
                         numberOfTextures++;
                     }
-                    while (firstPass.ReadToNextSibling("textures"))
+                    while (firstPass.ReadToNextSibling("texture"))
                     {
                         numberOfTextures++;
                     }
@@ -128,6 +131,11 @@ namespace Breakneck_Brigade.Graphics
                         modelSubtree.ReadToDescendant("filename");
                         string filename = modelSubtree.ReadElementContentAsString() + ".tga";
 
+                        if (ii != numberOfTextures - 1)
+                        {
+                            reader.ReadEndElement();
+                            reader.ReadToNextSibling("texture");
+                        }
                         Texture texture;
                         if (Renderer.Textures.ContainsKey(filename))
                         {
@@ -188,20 +196,22 @@ namespace Breakneck_Brigade.Graphics
 
                         Models.Add(filename, model);
 
-                        if(ii != numberOfModels - 1)
+                        if (ii != numberOfModels - 1)
+                        {
                             reader.ReadEndElement();
                             reader.ReadToNextSibling("model");
+                        }
                     }
                 }
             
             }
             //2D UI setup
             VBO crosshairVBO = new VBO();
-            float[] indices = {
+            float[] crosshairIndices = {
                                   0, 1, 2, 3, 4, 5,
                                   6, 7, 8, 9, 10, 11
                               };
-            float[] data = {
+            float[] crosshairData = {
                                //Horiz
                                 -0.1f,  0.01f,  0,    //V0
                                     0,     0, -1,    //N0
@@ -242,17 +252,26 @@ namespace Breakneck_Brigade.Graphics
                                     1,     0,        //T2
 
                             };
-            crosshairVBO.Indices.AddRange(indices);
-            crosshairVBO.Data.AddRange(data);
+            crosshairVBO.Indices.AddRange(crosshairIndices);
+            crosshairVBO.Data.AddRange(crosshairData);
             crosshairVBO.LoadData();
             TexturedMesh crosshairMesh = new TexturedMesh() { VBO = crosshairVBO, Texture = Renderer.Textures["white.tga"] };
             Model crosshairModel = new Model(CROSSHAIR_MODEL_NAME);
             crosshairModel.Meshes.Add(crosshairMesh);
             crosshairModel.ModelMatrix = Matrix4.MakeTranslationMat(.5f, 0.5f, 0.0f) * Matrix4.MakeScalingMat(.10f, .10f*_desiredRatio, 1.0f);
 
-
             Models.Add(crosshairModel.Name, crosshairModel);
 
+            VBO blankQuad = VBO.MakeQuadWithUVCoords(new float[] { 0, 1 }, new float[] { 1, 1 }, new float[] { 1, 0 }, new float[] { 0, 0 });
+            blankQuad.LoadData();
+            TexturedMesh blankQuadMesh = new TexturedMesh() { VBO = blankQuad, Texture = Renderer.Textures["fontWhite.tga"] };
+            Model blankQuadModel = new Model(BLANKQUAD_MODEL_NAME);
+            blankQuadModel.ModelMatrix = Matrix4.MakeTranslationMat(.5f, .5f, 0.0f) * Matrix4.MakeScalingMat(10f, 10f, 1f);
+            blankQuadModel.Meshes.Add(blankQuadMesh);
+
+            Models.Add(blankQuadModel.Name, blankQuadModel);
+
+            TextRenderer = new TextRenderer();
         }
 
         public void Render(LocalPlayer lp)
@@ -330,16 +349,19 @@ namespace Breakneck_Brigade.Graphics
             //Generates normals for objects which do not specify normals
             Gl.glEnable(Gl.GL_AUTO_NORMAL);
             //Turns on backface culling (culls surfaces you cannot see)
-            Gl.glEnable(Gl.GL_CULL_FACE);
+            //Gl.glEnable(Gl.GL_CULL_FACE);
             //For basic polygons. Only draws front faces
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
             //What shading model to use for rendering Gl prims
-            //Gl.glShadeModel(Gl.GL_SMOOTH);
+            Gl.glShadeModel(Gl.GL_SMOOTH);
             //Turn on texturing
             Gl.glEnable(Gl.GL_TEXTURE_2D);
             //Turn on depth test
             Gl.glEnable(Gl.GL_DEPTH_TEST);
             Gl.glDepthFunc(Gl.GL_LEQUAL);
+
+            //Disable transparency by default
+            Renderer.disableTransparency();
 
             //Optimizations
             Gl.glDisable(Gl.GL_DITHER);
@@ -377,7 +399,7 @@ namespace Breakneck_Brigade.Graphics
                 Environment.Exit(1);
             }
             Glfw.glfwOpenWindowHint(Glfw.GLFW_WINDOW_NO_RESIZE, Gl.GL_TRUE);
-            Glfw.glfwOpenWindow((int) _desiredWidth, (int) _desiredHeight, 0, 0, 0, 8, 16, 0, Glfw.GLFW_WINDOW);
+            Glfw.glfwOpenWindow((int) _desiredWidth, (int) _desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_WINDOW);
             Glfw.glfwSwapInterval(0);
 
         }
@@ -399,22 +421,21 @@ namespace Breakneck_Brigade.Graphics
         private void setViewport()
         {
             
-            Glfw.glfwGetWindowSize(out _windowWidth, out _windowHeight);
-            var actualRatio = (float) _windowWidth / (float) _windowHeight;
+            Glfw.glfwGetWindowSize(out WindowWidth, out WindowHeight);
+            var actualRatio = (float) WindowWidth / (float) WindowHeight;
 
-            Gl.glViewport(0, 0, _windowWidth, _windowHeight);
+            Gl.glViewport(0, 0, WindowWidth, WindowHeight);
         }
 
         private void prep2D()
         {
-            float aspect = (float)_windowWidth / (float)_windowHeight;
+            float aspect = (float)WindowWidth / (float)WindowHeight;
             Gl.glMatrixMode(Gl.GL_PROJECTION);
             Gl.glLoadIdentity();
             Glu.gluOrtho2D(0, 1, 0, 1);
 
             Gl.glMatrixMode(Gl.GL_MODELVIEW);
             Gl.glLoadIdentity();
-
 
             Gl.glColor3f(1, 1, 1);
 
@@ -448,6 +469,10 @@ namespace Breakneck_Brigade.Graphics
              */
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
             Models[CROSSHAIR_MODEL_NAME].Render();
+            Renderer.enableTransparency();
+            //Models[BLANKQUAD_MODEL_NAME].Render();
+            TextRenderer.printToScreen(10, 10, "Tansen's Own Text Rendering", .75f, .75f);
+            Renderer.disableTransparency();
             //Models["iceCream"].Render();
 
             Gl.glPopAttrib();
@@ -490,6 +515,20 @@ namespace Breakneck_Brigade.Graphics
             */
 
             CurrentDrawMode = -1;
+        }
+
+        public static void enableTransparency()
+        {
+            //Blending for transparency
+            Gl.glEnable(Gl.GL_BLEND);
+            Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
+            Gl.glEnable(Gl.GL_ALPHA_TEST);
+        }
+
+        public static void disableTransparency()
+        {
+            Gl.glDisable(Gl.GL_BLEND);
+            Gl.glDisable(Gl.GL_ALPHA_TEST);
         }
 
         public string GetModelTimerStatus()

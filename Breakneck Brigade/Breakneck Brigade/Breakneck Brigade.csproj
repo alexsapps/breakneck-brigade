@@ -94,6 +94,9 @@
     <Reference Include="Tao.FFmpeg">
       <HintPath>lib\Tao.FFmpeg.dll</HintPath>
     </Reference>
+    <Reference Include="Tao.FreeType">
+      <HintPath>lib\Tao.FreeType.dll</HintPath>
+    </Reference>
     <Reference Include="Tao.Glfw">
       <HintPath>lib\Tao.Glfw.dll</HintPath>
     </Reference>
@@ -138,6 +141,7 @@
     <Compile Include="Graphics\3D Objects\Particles\Particle3D.cs" />
     <Compile Include="Graphics\3D Objects\Particles\AParticleSpawner.cs" />
     <Compile Include="Graphics\3D Objects\Particles\PSFountain.cs" />
+    <Compile Include="Graphics\TextRenderer.cs" />
     <Compile Include="Graphics\Model.cs" />
     <Compile Include="Graphics\3D Objects\AObject3D.cs" />
     <Compile Include="Graphics\3D Objects\Meshes\TexturedMesh.cs" />
