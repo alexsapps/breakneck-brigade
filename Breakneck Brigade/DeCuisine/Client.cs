@@ -137,7 +137,7 @@ namespace DeCuisine
                 case ClientEventType.ChangeOrientation: return typeof(ClientChangeOrientationEvent);
                 case ClientEventType.Test: return typeof(ClientTestEvent);
                 case ClientEventType.Jump: return typeof(ClientJumpEvent); 
-                case ClientEventType.ThrowItem: return typeof(ClientThrowEvent);
+                case ClientEventType.ThrowItem: return typeof(ClientLeftClickEvent);
                 case ClientEventType.Command: return typeof(ClientCommandEvent);
                 case ClientEventType.Dash: return typeof(ClientDashEvent);
                 case ClientEventType.Eject: return typeof(ClientEjectEvent);

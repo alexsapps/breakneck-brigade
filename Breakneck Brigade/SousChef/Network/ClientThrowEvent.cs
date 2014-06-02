@@ -7,7 +7,7 @@ using System.IO;
 
 namespace SousChef
 {
-    public class ClientThrowEvent : ClientEvent
+    public class ClientLeftClickEvent : ClientEvent
     {
         public override ClientEventType Type { get { return ClientEventType.ThrowItem; } }
         public float Orientation { get; set; }
@@ -15,8 +15,8 @@ namespace SousChef
         public string Hand { get; set; }
         public float Force { get; set; }
 
-        public ClientThrowEvent() { }
-        public ClientThrowEvent(BinaryReader reader) 
+        public ClientLeftClickEvent() { }
+        public ClientLeftClickEvent(BinaryReader reader) 
         {
             this.Hand = reader.ReadString();
             this.Orientation = reader.ReadSingle();

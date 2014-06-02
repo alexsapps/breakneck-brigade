@@ -120,6 +120,7 @@ namespace Breakneck_Brigade
                 throwing = true;
                 lastThrow = DateTime.Now;
             }
+
             if(IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])
             {
                 if (throwing && DateTime.Now.Subtract(lastDownThrow).TotalMilliseconds > 1000) //user holds mouse down for one second
@@ -156,7 +157,7 @@ namespace Breakneck_Brigade
             // Handle drop event
             if(this.downKeys.Contains(GlfwKeys.GLFW_KEY_F))
             {
-                NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 0.0f });
+                NetworkEvents.Add(new ClientLeftClickEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 0.0f });
             }
 
             IM.FpsOk = Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == Gl.GL_TRUE;
@@ -221,7 +222,7 @@ namespace Breakneck_Brigade
 
         protected void throwSomething()
         {
-            NetworkEvents.Add(new ClientThrowEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 1.0f });
+            NetworkEvents.Add(new ClientLeftClickEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 1.0f });
         }
 
         private bool checkKey(GlfwKeys key, ref GlfwKeys def)
