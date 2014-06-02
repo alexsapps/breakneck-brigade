@@ -16,7 +16,7 @@ namespace DeCuisine
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
-        private const float HOLDDISTANCE = 10.0f;
+        private const float HOLDDISTANCE = 15.0f;
         private const float LINEOFSIGHTSCALAR = 200;
         private const float RAYSTARTDISTANCE = 10;
 #if PROJECT_DEBUG
@@ -27,7 +27,7 @@ namespace DeCuisine
         private int dashTicks { get; set; }
         private int dashCool { get; set; }
         public string Name { get; set; }
-
+        private Generic6DofConstraint constraint { get; set; }
         private bool isFalling { get; set; }
         private bool canJump { get; set; }
         private Vector3 lastVelocity { get; set; }
@@ -99,7 +99,9 @@ namespace DeCuisine
             : base(game)
         {
             base.AddToWorld(position);
+            this.Body.Friction = 2.05f;
             this.EyeHeight = 15.0f;
+            this.constraint = null;
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
@@ -225,9 +227,13 @@ namespace DeCuisine
                 }
 
                 // Throw object
+                //this.Game.World.RemoveConstraint(spSlider1);
+                this.Game.World.RemoveConstraint(constraint);
                 held.Position = crossPos;
-                held.Body.Gravity = this.Game.World.Gravity;
+                //held.Body.Gravity = this.Game.World.Gravity;
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
+                if (held.Body.LinearVelocity.X == 0 && held.Body.LinearVelocity.Y == 0 && held.Body.LinearVelocity.Z == 0)
+                    Console.WriteLine("WHAT THE FUCK");
                 _hand.Held = null;
                 MarkDirty();
             }
@@ -236,7 +242,17 @@ namespace DeCuisine
 
         private void PickUpObject(ServerIngredient obj)
         {
-            obj.Body.Gravity = Vector3.Zero;
+            constraint = new Generic6DofConstraint(
+                this.Body, obj.Body,
+                Matrix.Identity,// * Matrix.Translation(0, this.EyeHeight * 0.75f, 0),
+                Matrix.Identity,// * Matrix.Translation(0, this.EyeHeight * 0.75f, HOLDDISTANCE), 
+                true);
+            constraint.AngularLowerLimit = new Vector3(0, 0, 0);
+            constraint.AngularUpperLimit = new Vector3(0, 0, 0);
+            constraint.LinearLowerLimit = new Vector3(0, 0, 0);
+            constraint.LinearUpperLimit = new Vector3(0, 0, 0);
+
+            this.Game.World.AddConstraint(constraint,true);
             this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
             obj.LastPlayerHolding = this;
             MarkDirty();
@@ -290,21 +306,22 @@ namespace DeCuisine
                 this.canJump = true;
             }
 
+            
             if (this.Hands["left"].Held != null)
             {
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(
                     this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE),
-                    this.Position.Y + this.EyeHeight * 0.75f + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: Have the hold logic be a lot better
+                    this.Position.Y + this.EyeHeight * 0.75f + (float)Math.Sin( (this.Incline > 0 && this.canJump ? 0 : this.Incline) * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: Have the hold logic be a lot better
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
-
+            
             // Check what the player is looking at
             Vector3 start = new Vector3
                 (
-                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * RAYSTARTDISTANCE), //Math.Sin(this.Incline * Math.PI / 180.0f) *
-                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -RAYSTARTDISTANCE,
-                    this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -RAYSTARTDISTANCE) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * this.GeomInfo.Size[0]), //Math.Sin(this.Incline * Math.PI / 180.0f) *
+                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -this.GeomInfo.Size[0],
+                    this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
                );
 
             Vector3 end = new Vector3

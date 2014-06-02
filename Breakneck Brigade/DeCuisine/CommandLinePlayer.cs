@@ -121,6 +121,28 @@ namespace DeCuisine
                                 }
                         break;
                     }
+                case "move":
+                    {
+                        lock (server.Lock)
+                            lock (server.Game.Lock)
+                                if (server.Game.Mode == GameMode.Started)
+                                {
+
+                                    ManipulateObj(server.Game,args);
+                                }
+                        break;
+                    }
+                case "scale":
+                    {
+                        lock (server.Lock)
+                            lock (server.Game.Lock)
+                                if (server.Game.Mode == GameMode.Started)
+                                {
+
+                                    ManipulateObj(server.Game,args);
+                                }
+                        break;
+                    }
                 case "wingame":
                     {
                         server.Game.Mode = GameMode.None;
@@ -443,6 +465,37 @@ namespace DeCuisine
                     break;
             }
             return b.ToString();
+        }
+
+        public static void ManipulateObj(ServerGame game, string[] args)
+        {
+            if (args.Length < 4)
+            {
+                Console.WriteLine("Needs an id, x, y, and z position");
+                return;
+            }
+            int id, x, y, z;
+            int[] parsed = new int[4];
+            for (int i = 1; i < args.GetLength(0); i++)
+            {
+                if (!int.TryParse(args[i], out parsed[i - 1]))
+                {
+                    Program.WriteLine(args[i] + " is not an int");
+                    return;
+                }
+            }
+            if(args[0] == "move")
+                game.MoveObj(parsed[0], parsed[1], parsed[2], parsed[3]);
+            else if(args[0] == "scale")
+            {
+                int newId = game.ScaleObj(parsed[0], parsed[1], parsed[2], parsed[3]);
+                if (newId == -1)
+                    Program.WriteLine("Scalling faild, object not found in world");
+                else
+                    Program.WriteLine("ID of newly scaled object is " + newId); 
+                return;
+            }else
+                throw new Exception("Bug. Who the hell called this function?");
         }
     }
 }

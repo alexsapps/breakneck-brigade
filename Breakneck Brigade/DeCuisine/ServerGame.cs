@@ -702,39 +702,6 @@ namespace DeCuisine
         }
 
 
-
-
-        // TEST: Dev code for cooker adding
-        public void TestCookerAdd(int cookerId, int ingredientId)
-        {
-            CommandLinePlayer.TestCookerAdd(this.GameObjects, cookerId, ingredientId);
-        }
-
-        // TEST: Dev Code to list current game objects
-        public string ListGameObjects()
-        {
-            return CommandLinePlayer.ListGameObjects(this.GameObjects);
-        }
-        public string ListIngredients()
-        {
-            return CommandLinePlayer.ListIngredients(this.GameObjects);
-        }
-        public string ListCookerContents(int cookerId)
-        {
-            return CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
-        }
-
-        // TEST
-        public string ClearBoard()
-        {
-            return CommandLinePlayer.ClearBoard(this.GameObjects);
-        }
-
-        public void RemoveObj(int id)
-        {
-            this.GameObjects[id].Remove();
-        }
-
         public ServerTeam Winner { get; set; }
 
         public void SendTintListUpdate(ServerTeam serverTeam)
@@ -757,6 +724,101 @@ namespace DeCuisine
             foreach (var goal in Controller.Goals)
                 goalList.Add(goal.EndGoal.FinalProduct.Name);
             return new ServerGoalsUpdateMessage() { Goals = goalList };
+        }
+
+
+        // TEST: Dev code for cooker adding
+        public void TestCookerAdd(int cookerId, int ingredientId)
+        {
+            CommandLinePlayer.TestCookerAdd(this.GameObjects, cookerId, ingredientId);
+        }
+
+        // TEST: Dev Code to list current game objects
+        public string ListGameObjects()
+        {
+            return CommandLinePlayer.ListGameObjects(this.GameObjects);
+        }
+        public string ListIngredients()
+        {
+            return CommandLinePlayer.ListIngredients(this.GameObjects);
+        }
+        public string ListCookerContents(int cookerId)
+        {
+            return CommandLinePlayer.ListCookerContents(this.GameObjects, cookerId);
+        }
+
+        // Command Line Player functions
+        public string ClearBoard()
+        {
+            return CommandLinePlayer.ClearBoard(this.GameObjects);
+        }
+
+        public void RemoveObj(int id)
+        {
+            this.GameObjects[id].Remove();
+        }
+
+        public void MoveObj(int id, int x, int y, int z)
+        {
+            ServerGameObject objToMove;
+            if (this.GameObjects.TryGetValue(id, out objToMove))
+                objToMove.Position = new Vector3(x, y, z);
+        }
+
+        // Hacked way to scale on the fly, reset the Geom info before making
+        // the new object. Hacked but we will never need to do this in production
+        public int ScaleObj(int id, float x, float y, float z)
+        {
+            ServerGameObject objToMove;
+            if (!this.GameObjects.TryGetValue(id, out objToMove))
+                return -1;
+            ServerGameObject scaled = null;
+            GeometryInfo oldGeomInfo;
+            GeometryInfo newGeomInfo;
+            switch (objToMove.ObjectClass)
+            {
+                case GameObjectClass.Cooker:
+                    var cooker = (ServerCooker)objToMove;
+                    oldGeomInfo = this.Config.Cookers[cooker.Type.Name].GeomInfo;
+                    this.Config.Cookers[cooker.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, cooker.Type.Name);
+                    scaled = new ServerCooker(cooker.Type, cooker.Team, cooker.Game, cooker.Position);
+                    cooker.Remove();
+                    //new ServerCooker(objToMove)
+                    break;
+                case GameObjectClass.Ingredient:
+                    var ing = (ServerIngredient)objToMove;
+                    oldGeomInfo = this.Config.Ingredients[ing.Type.Name].GeomInfo;
+                    this.Config.Ingredients[ing.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, ing.Type.Name);
+                    scaled = new ServerIngredient(ing.Type, ing.Game, ing.Position);
+                    ing.Remove();
+                    break;
+                case GameObjectClass.Player:
+                    Program.WriteLine("Just don't try to scale the player...it will fuck shit up");
+                    break;
+                case GameObjectClass.StaticObject:
+                    var statObj = (ServerStaticObject)objToMove;
+                    oldGeomInfo = statObj.GeomInfo; // No type so it's different
+                    newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, null);
+                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, statObj.Position);
+                    statObj.Remove();
+                    break;
+                case GameObjectClass.Terrain:
+                    var terrain = (ServerTerrain)objToMove;
+                    oldGeomInfo = terrain.GeomInfo; // No type so it's different
+                    newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
+                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, terrain.Type.Name);
+                    scaled = new ServerTerrain(terrain.Game, terrain.Type, terrain.Position, newGeomInfo);
+                    terrain.Remove();
+                    break;
+
+            }
+
+            if (scaled != null)
+                return scaled.Id;
+            return -1;
         }
     }
 }
