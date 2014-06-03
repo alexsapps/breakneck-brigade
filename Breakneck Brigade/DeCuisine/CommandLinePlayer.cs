@@ -474,7 +474,7 @@ namespace DeCuisine
                 Console.WriteLine("Needs an id, x, y, and z position");
                 return;
             }
-            int id, x, y, z;
+            
             int[] parsed = new int[4];
             for (int i = 1; i < args.GetLength(0); i++)
             {

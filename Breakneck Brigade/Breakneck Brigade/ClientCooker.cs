@@ -79,7 +79,7 @@ namespace Breakneck_Brigade
 
         public override string ToString()
         {
-            return Type.Name;
+            return Type.FriendlyName;
         }
     }
 
