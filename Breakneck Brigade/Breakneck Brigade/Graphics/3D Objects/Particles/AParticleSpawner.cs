@@ -9,11 +9,6 @@ using SousChef;
 
 namespace Breakneck_Brigade.Graphics
 {
-    public enum ParticleType
-    {
-        WATER
-    }
-
     abstract class AParticleSpawner
     {
         /// <summary>
@@ -23,37 +18,52 @@ namespace Breakneck_Brigade.Graphics
         
         private Matrix4         _transform;
 
-        protected           List<AParticle> _particles;
-        protected           double          _lastUpdateTime;
-        protected           double          _currentUpdateTime;
-        protected           bool            _spawning;
-        protected           int             _currentNumberOfParticles;
-        protected   const   int             MAX_PARTICLES = 99;
+        protected       List<AParticle> _particles;
+        protected       List<AParticle> _toKill;
+        protected       double          _lastSpawnTime;
+        protected       double          _lastUpdateTime;
+        protected       double          _currentUpdateTime;
+        protected       bool            _spawning;
+        /// <summary>
+        /// The maximum amount of particles this spawner should have out at any time
+        /// </summary>
+        public          int             MaxParticles = 99;
+        /// <summary>
+        /// How often the particles should spawn in seconds
+        /// </summary>
+        public          double          spawnPeriod = .1000;
 
         public AParticleSpawner()
         {
             _particles                  = new List<AParticle>();
+            _toKill                     = new List<AParticle>();
             _lastUpdateTime             = -1.0;
             _transform                  = new Matrix4();
             _spawning                   = false;
-            _currentNumberOfParticles   = 0; 
             Position                    = new Vector4();
         }
 
         public AParticleSpawner(Vector4 position)
         {
             _particles                  = new List<AParticle>();
+            _toKill                     = new List<AParticle>();
             _lastUpdateTime             = -1.0;
             _transform                  = new Matrix4();
             _spawning                   = false;
-            _currentNumberOfParticles   = 0;
             Position                    = position;
         }
 
+        /// <summary>
+        /// Turns on spawning. Can be used to run additional logic
+        /// </summary>
         public virtual void StartSpawning()
         {
             _spawning = true;
+            _lastSpawnTime = Glfw.glfwGetTime();
         }
+        /// <summary>
+        /// Turns off spawning. Can be used to run additional logic
+        /// </summary>
         public virtual void StopSpawning()
         {
             _spawning = false;
@@ -62,11 +72,11 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// Updates all the particles this spawner has created.
         /// 
-        /// This base function moves all the particles according to their accelerations,
-        /// and should be called if you want your particles to have normal kinematic motion.
+        /// Always call this base function if you override its behavior
         /// </summary>
         public virtual void Update()
         {
+            //Update time
             if(_lastUpdateTime == -1.0)
             {
                 _currentUpdateTime = Glfw.glfwGetTime();
@@ -76,14 +86,40 @@ namespace Breakneck_Brigade.Graphics
 
             float timestep = (float) (_currentUpdateTime - _lastUpdateTime);
 
+            //See if we should spawn a new particle
+            if( (_currentUpdateTime - _lastSpawnTime) > spawnPeriod )
+            {
+                this.SpawnParticle();
+            }
+
+            //Update all particles
+
+
+            
             foreach(AParticle particle in _particles)
             {
                 particle.Update(timestep);
+                if(particle.ShouldDie)
+                {
+                    _toKill.Add(particle);
+                }
             }
 
+            //Destroy any particles that need to be killed
+            foreach(AParticle particle in _toKill)
+            {
+                particle.OnDestroy();
+                _particles.Remove(particle);
+            }
+            _toKill.Clear();
+
+            //Make sure location is accurate
             _transform.TranslationMat(Position.X, Position.Y, Position.Z);
         }
 
+        /// <summary>
+        /// Renders the particles of the particle spawner (But not the spawner itself)
+        /// </summary>
         public virtual void Render()
         {
             Gl.glPushMatrix();
@@ -97,20 +133,23 @@ namespace Breakneck_Brigade.Graphics
             Gl.glPopMatrix();
         }
 
+        /// <summary>
+        /// Clears all active particles from this spawner
+        /// </summary>
         public virtual void DestroyAll()
         {
             _particles.Clear();
         }
 
-        protected AParticle CreateParticle(ParticleType pt)
+        /// <summary>
+        /// Creates a particle for this spawner and adds it to the particles for the spawner.
+        /// 
+        /// Subclasses of AParticleSpawner should override this behavior with the specific
+        /// particle spawning behavior wanted, and should call this base function.
+        /// </summary>
+        protected virtual void SpawnParticle()
         {
-            switch(pt)
-            {
-                case ParticleType.WATER:
-                    return new Particle3D(Position, new Vector4(), new Vector4(), .25f, 10000.0f);
-                default:
-                    return null;
-            }
+            _lastSpawnTime = Glfw.glfwGetTime();
         }
     }
 }

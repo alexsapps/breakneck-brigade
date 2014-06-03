@@ -177,5 +177,13 @@ namespace SousChef
                 sides[i] = float.Parse(sidesstrarr[i].Trim());
             return sides;
         }
+
+        protected void parseName(out string name, out string friendlyName)
+        {
+            name = attributes["name"];
+            friendlyName = null;
+            if (!attributes.TryGetValue("friendlyName", out friendlyName))
+                friendlyName = name;
+        }
     }
 }

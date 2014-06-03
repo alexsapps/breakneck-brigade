@@ -56,6 +56,10 @@ namespace SousChef
             foreach (var terrain in new BBXTerrainsFileParser(this).LoadFile(out filenames[3]))
                 salad.Terrains.Add(terrain.Name, terrain);
 
+            foreach (var cooker in salad.Cookers.Values)
+                foreach (var recipe in cooker.Recipes.Values)
+                    recipe.UsableCookers.Add(cooker);
+
             byte[][] hashes = new byte[nfiles][];
             for(int i = 0; i < nfiles; i++){
                 hashes[i] = SHA512.GetChecksum(filenames[i]);

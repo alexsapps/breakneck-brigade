@@ -395,7 +395,7 @@ namespace Breakneck_Brigade
                                     break;
                                 case GameMode.Results:
                                     Program.WriteLine("Game finished!");
-                                    Program.WriteLine("Winner: " + lobbyState.WinningTeam.Name);
+                                    Program.WriteLine("Winner: " + (lobbyState.WinningTeam == null ? "{draw}" : lobbyState.WinningTeam.Name));
                                     break;
                                 case GameMode.Stopping:
                                     Program.WriteLine("Game ended.");
@@ -408,6 +408,7 @@ namespace Breakneck_Brigade
                             case GameMode.Started:
                             case GameMode.Paused:
                                 renderer.GameObjects = game.GameObjectsCache.Values.ToList<ClientGameObject>();
+                                renderer.ParticleSpawners = game.ParticleSpawners;
                                 break;
                         }
                     }
@@ -667,7 +668,8 @@ namespace Breakneck_Brigade
 
             while (true)
             {
-                lock (client.ServerMessagesLock)
+                var mylock = client.ServerMessagesLock;
+                lock (mylock)
                 {
                     while(client.ServerMessages.Count == 0)
                     {
@@ -675,7 +677,8 @@ namespace Breakneck_Brigade
                         if (checkDisconnect(false, out b))
                             return;
 
-                        Monitor.Wait(client.ServerMessagesLock);
+                        Debug.Assert(mylock == client.ServerMessagesLock);
+                        Monitor.Wait(mylock);
                     }
                     serverMessages = new List<ServerMessage>(client.ServerMessages);
                     client.ServerMessages.Clear();
@@ -698,7 +701,7 @@ namespace Breakneck_Brigade
                                     game = new ClientGame(gameLock);
                                     break;
                                 case GameMode.Results:
-                                    MessageBox.Show(lobbyState.WinningTeam.Name + " wins!");
+                                    MessageBox.Show(lobbyState.WinningTeam == null ? "Draw!  Neither team wins." : lobbyState.WinningTeam.Name + " wins!");
                                     break;
                                 case GameMode.Stopping:
                                     break;
@@ -774,7 +777,11 @@ namespace Breakneck_Brigade
                                         {
                                             var e = new ServerSoundMessage();
                                             e.Read(reader);
-                                            SoundThing.Play(e.Sound);
+                                            var playerPos = localPlayer.GetPosition();
+                                            var soundPos = e.Location;
+                                            double distance = getDistance(playerPos, soundPos);
+                                            int volume = (int)Math.Log(distance, 2.0);
+                                            SoundThing.Play(e.Sound, volume);
                                             break;
                                         }
                                         case ServerMessageType.ParticleEffect:
@@ -803,20 +810,21 @@ namespace Breakneck_Brigade
                             msg.Read((r) =>
                             {
                                 int teamCount = r.ReadInt32();
-                                lobbyState.Teams.Clear();
+
+                                var oldTeams = lobbyState.Teams;
+                                lobbyState.Teams = new Dictionary<string, ClientTeam>();
                                 for(int i = 0; i < teamCount; i++)
                                 {
                                     var name = r.ReadString();
-                                    var team = new ClientTeam()
-                                    {
-                                        Name = name,
-                                        Score = r.ReadInt32()
-                                    };
+                                    ClientTeam team;
+                                    if (!oldTeams.TryGetValue(name, out team))
+                                        team = new ClientTeam() { Name = name };
+                                    team.Score = r.ReadInt32();
+                                    
                                     int memberCount = r.ReadInt32();
+                                    team.Clients.Clear();
                                     for (int j = 0; j < memberCount; j++)
-                                    {
                                         team.Clients.Add(r.ReadString());
-                                    }
                                     lobbyState.Teams.Add(name, team);
                                 }
 #if PROJECT_DEBUG
@@ -856,6 +864,16 @@ namespace Breakneck_Brigade
                     }
                 }
             }
+        }
+
+        public static double getDistance(Vector4 p1, Vector4 p2)
+        {
+            return
+                Math.Pow(
+                Math.Pow(p1.X - p2.X, 2.0) +
+                Math.Pow(p1.Y - p2.Y, 2.0) +
+                Math.Pow(p1.Z - p2.Z, 2.0),
+                0.5);
         }
 
         static void sendEvents(List<ClientEvent> events)

@@ -8,7 +8,7 @@ namespace SousChef
 {
     public enum BBSound
     {
-        Sound1, //corresponds to Sound1.wav
-        Sound2
+        scratch, //corresponds to scratch.wav
+        sound2
     }
 }

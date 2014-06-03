@@ -12,16 +12,18 @@ namespace DeCuisine
     {
         public override GameObjectClass ObjectClass { get { return GameObjectClass.StaticObject; } }
         public string Model { get; set; } // don't need to render the model, but a convinient way to store type
+        public string FriendlyName { get; set; }
         private GeometryInfo _geomInfo;
         protected override GeometryInfo getGeomInfo() { return _geomInfo; }
 
 
         public override int SortOrder { get { return 0; } }
 
-        public ServerStaticObject(ServerGame game, GeometryInfo geomInfo, string model, Vector3 position)
+        public ServerStaticObject(ServerGame game, GeometryInfo geomInfo, string model, string friendlyName, Vector3 position)
             : base(game)
         {
             this.Model = model;
+            this.FriendlyName = friendlyName;
             this._geomInfo = geomInfo;
             base.AddToWorld(position);
         }
@@ -35,6 +37,7 @@ namespace DeCuisine
         {
             base.Serialize(stream);
             stream.Write(this.Model);
+            stream.Write(this.FriendlyName);
             
             stream.Write(GeomInfo.Size.Length);
             for (int i = 0; i < GeomInfo.Size.Length; i++)

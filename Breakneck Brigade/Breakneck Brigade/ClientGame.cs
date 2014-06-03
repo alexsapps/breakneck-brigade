@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Breakneck_Brigade.Graphics;
 
 namespace Breakneck_Brigade
 {
@@ -22,6 +23,7 @@ namespace Breakneck_Brigade
         public List<IngredientType> Goals { get; protected set; }
         public int LookatId { get; set; }
         public int HeldId { get; set; }
+        public List<AParticleSpawner> ParticleSpawners { get; set;}
 
         public ConfigSalad Config { get; private set; }
         public List<Recipe> Recipies { get; private set; }
@@ -30,16 +32,17 @@ namespace Breakneck_Brigade
         {
             Lock = @lock;
             
-            this.LiveGameObjects = new Dictionary<int, ClientGameObject>();
-            this.GameObjectsCache = new Dictionary<int, ClientGameObject>();
-            this.Goals = new List<IngredientType>();
-            this.Config = new GameObjectConfig().GetConfigSalad();
+            LiveGameObjects = new Dictionary<int, ClientGameObject>();
+            GameObjectsCache = new Dictionary<int, ClientGameObject>();
+            ParticleSpawners = new List<AParticleSpawner>();
+            Goals = new List<IngredientType>();
+            Config = new GameObjectConfig().GetConfigSalad();
             this.Recipies = this.Config.Recipes.Values.ToList();
-            this.TintedObjects = new Dictionary<string, HashSet<string>>();
-            this.TintedObjects.Add("red", new HashSet<string>());
-            this.TintedObjects.Add("blue", new HashSet<string>());
-            this.LookatId = -1;
-            this.HeldId = -1;
+            TintedObjects = new Dictionary<string, HashSet<string>>();
+            TintedObjects.Add("red", new HashSet<string>());
+            TintedObjects.Add("blue", new HashSet<string>());
+            LookatId = -1;
+            HeldId = -1;
         }
 
 

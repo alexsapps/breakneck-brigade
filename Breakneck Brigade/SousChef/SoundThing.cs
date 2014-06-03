@@ -25,18 +25,19 @@ namespace SousChef
         /**
          * Internal dictionary/hashmap which links files with their shorthand names.
          */
-        private static Dictionary<string, string> l = makeDict();
+        private static Dictionary<string, string> _l;
+        private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
         /**
          * Plays a sound. See class header comments for details.
          * 
          * @param key The key of the sound to play.  Note that this *is* case-sensitive.
          */
-        public static void Play(BBSound key)
+        public static void Play(BBSound key, int volume)
         {
             String temp = "";
             l.TryGetValue(key.ToString(), out temp);
-            new Thread(new SoundThread(temp).DoWork).Start();
+            new Thread(new SoundThread(temp, volume).DoWork).Start();
         }
 
         /**
@@ -70,13 +71,20 @@ namespace SousChef
             private string path;
 
             /**
+             * The volume to play the sound at
+             */
+            private double volume;
+
+            /**
              * Constructor, creates a SoundThread with a specified sound to play.
              * 
              * @param path The path to the file to play
+             * @param volume The volume level to play a sound between 0-1, where 0 is queit, and 1 is loudest.
              */
-            public SoundThread(string path)
+            public SoundThread(string path, double volume)
             {
                 this.path = path;
+                this.volume = volume;
             }
 
             /**
@@ -86,9 +94,10 @@ namespace SousChef
             {
                 MediaPlayer player = new MediaPlayer();
                 player.Open(new Uri(path, UriKind.Relative));
+                player.Volume = volume;
                 player.Play();
                 Thread.Sleep(10000); //FIXME: This really should be managed by an event
-                Console.WriteLine("Done playing sound");
+                Console.WriteLine("Done playing " + path);
             }
         }
     }

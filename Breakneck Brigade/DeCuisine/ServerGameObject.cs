@@ -155,7 +155,7 @@ namespace DeCuisine
                 this.Geom = geom;
                 this.Body = this.MakeBody(geom, this.GeomInfo);
                 this.Game.World.AddRigidBody(this.Body);
-                this.Body.ProceedToTransform(Matrix.Identity + Matrix.Translation(coordinate));
+                this.Body.ProceedToTransform( Matrix.RotationY(this.GeomInfo.Orientation)* Matrix.Translation(coordinate) );
                 return geom;
             });
             

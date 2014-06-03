@@ -10,8 +10,8 @@ namespace SousChef
     {
         public int DefaultPoints { get; set; }
 
-        public IngredientType(string name, GeometryInfo geomInfo, int defaultPoints) 
-            : base(name, geomInfo)
+        public IngredientType(string name, string friendlyName, GeometryInfo geomInfo, int defaultPoints) 
+            : base(name, friendlyName, geomInfo)
         {
             this.DefaultPoints = defaultPoints;
         }
