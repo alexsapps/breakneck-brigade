@@ -36,8 +36,10 @@ namespace SousChef
         public static void Play(BBSound key, int volume)
         {
             String temp = "";
-            l.TryGetValue(key.ToString(), out temp);
-            new Thread(new SoundThread(temp, volume).DoWork).Start();
+            if (l.TryGetValue(key.ToString(), out temp))
+                new Thread(new SoundThread(temp, volume).DoWork).Start();
+            else
+                throw new Exception("no sound file for " + key.ToString());
         }
 
         /**

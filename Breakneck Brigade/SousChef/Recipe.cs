@@ -17,7 +17,7 @@ namespace SousChef
         public Recipe(string name, string friendlyName, List<RecipeIngredient> ingredients, IngredientType finalProduct)
         {
             this.Name = name;
-            this.FriendlyName = name;
+            this.FriendlyName = friendlyName;
             this.Ingredients = ingredients;
             this.FinalProduct = finalProduct;
             this.UsableCookers = new List<CookerType>();

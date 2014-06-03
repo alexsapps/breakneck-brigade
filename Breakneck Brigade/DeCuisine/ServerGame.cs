@@ -872,6 +872,7 @@ namespace DeCuisine
             ServerGameObject objToMove;
             if (this.GameObjects.TryGetValue(id, out objToMove))
             {
+                objToMove.GeomInfo.Orientation = deg * MathConstants.DEG2RAD;
                 objToMove.Body.ProceedToTransform(Matrix.RotationY(deg * MathConstants.DEG2RAD) * Matrix.Translation(objToMove.Position));
                 Program.WriteLine("The new Position is " + objToMove.Position.X + " " + objToMove.Position.Y + " " + objToMove.Position.Z + " with rotation "+ deg);
                 objToMove.MarkDirty();

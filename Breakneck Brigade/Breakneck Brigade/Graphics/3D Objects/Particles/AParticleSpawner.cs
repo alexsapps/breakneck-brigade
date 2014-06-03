@@ -33,6 +33,19 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public          double          spawnPeriod = .1000;
 
+        /// <summary>
+        /// How long this spawner should be active for
+        /// If lifetime is = -1, the spawner will run forever
+        /// By default, lifetime is -1
+        /// </summary>
+        public float Lifetime = -1;
+        /// <summary>
+        /// How long this spawner has currently be running for
+        /// </summary>
+        protected float _age { get; set; }
+
+        public bool RemoveMe { get; protected set; }
+
         public AParticleSpawner()
         {
             _particles                  = new List<AParticle>();
@@ -41,6 +54,7 @@ namespace Breakneck_Brigade.Graphics
             _transform                  = new Matrix4();
             _spawning                   = false;
             Position                    = new Vector4();
+            RemoveMe                    = false;
         }
 
         public AParticleSpawner(Vector4 position)
@@ -51,6 +65,7 @@ namespace Breakneck_Brigade.Graphics
             _transform                  = new Matrix4();
             _spawning                   = false;
             Position                    = position;
+            RemoveMe                    = false;
         }
 
         /// <summary>
@@ -59,7 +74,7 @@ namespace Breakneck_Brigade.Graphics
         public virtual void StartSpawning()
         {
             _spawning = true;
-            _lastSpawnTime = Glfw.glfwGetTime();
+            _age = 0.0f;
         }
         /// <summary>
         /// Turns off spawning. Can be used to run additional logic
@@ -86,16 +101,25 @@ namespace Breakneck_Brigade.Graphics
 
             float timestep = (float) (_currentUpdateTime - _lastUpdateTime);
 
-            //See if we should spawn a new particle
-            if( (_currentUpdateTime - _lastSpawnTime) > spawnPeriod )
+            if (Lifetime != -1)
             {
-                this.SpawnParticle();
+                _age += timestep;
+                if (_age > Lifetime)
+                {
+                    if(_spawning)
+                        StopSpawning();
+                    if(_particles.Count == 0)
+                        RemoveMe = true;
+                }
+            }
+
+            //See if we should spawn a new particle
+            if( (_currentUpdateTime - _lastSpawnTime) > spawnPeriod  && _spawning)
+            {
+                this.Spawn();
             }
 
             //Update all particles
-
-
-            
             foreach(AParticle particle in _particles)
             {
                 particle.Update(timestep);
@@ -111,7 +135,8 @@ namespace Breakneck_Brigade.Graphics
                 particle.OnDestroy();
                 _particles.Remove(particle);
             }
-            _toKill.Clear();
+            if(_toKill.Count > 0)
+                _toKill.Clear();
 
             //Make sure location is accurate
             _transform.TranslationMat(Position.X, Position.Y, Position.Z);
@@ -147,7 +172,7 @@ namespace Breakneck_Brigade.Graphics
         /// Subclasses of AParticleSpawner should override this behavior with the specific
         /// particle spawning behavior wanted, and should call this base function.
         /// </summary>
-        protected virtual void SpawnParticle()
+        protected virtual void Spawn()
         {
             _lastSpawnTime = Glfw.glfwGetTime();
         }

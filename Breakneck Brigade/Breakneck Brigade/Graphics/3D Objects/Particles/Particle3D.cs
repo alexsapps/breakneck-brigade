@@ -18,6 +18,8 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public AObject3D Obj3D;
 
+        private VBO _singletonQuad;
+
         /// <summary>
         /// Instanciates a basic 3D particle with a blank 1x1x0 TexturedMesh as the as the object to render.
         /// Has the default texture.
@@ -26,26 +28,13 @@ namespace Breakneck_Brigade.Graphics
         public Particle3D() 
             : base()
         {
-            VBO quad = VBO.MakeFilledCenteredQuad();
-            quad.LoadData();
+            if(_singletonQuad == null)
+            {
+                _singletonQuad = VBO.MakeFilledCenteredQuad();
+                _singletonQuad.LoadData();
+            }
+            VBO quad = _singletonQuad;
             Obj3D = new TexturedMesh() { VBO = quad, Texture = Renderer.DefaultTexture};
-        }
-
-        /// <summary>
-        /// Spawns a particle with a blank 1x1x0 TexturedMesh as the as the object to render.
-        /// Particle has the default texture.
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="velocity"></param>
-        /// <param name="acceleration"></param>
-        /// <param name="scale"></param>
-        /// <param name="lifetime"></param>
-        public Particle3D(Vector4 position, Vector4 velocity, Vector4 acceleration, float scale, float lifetime)
-            : base(position, velocity, acceleration, scale, lifetime)
-        {
-            VBO quad = VBO.MakeFilledCenteredQuad();
-            quad.LoadData();
-            Obj3D = new TexturedMesh() { VBO = quad, Texture = Renderer.DefaultTexture };
         }
 
         /// <summary>
@@ -56,28 +45,14 @@ namespace Breakneck_Brigade.Graphics
         public Particle3D(Texture texture)
             : base()
         {
-            VBO quad = VBO.MakeFilledCenteredQuad();
-            quad.LoadData();
-            Obj3D = new TexturedMesh() { VBO = quad, Texture = texture };
-        }
-
-        /// <summary>
-        /// Instanciates a basic 3D particle with a blank 1x1x0 TexturedMesh as the as the object to render.
-        /// Has the specified texture and physics parameters
-        /// </summary>
-        /// <param name="texture"></param>
-        /// <param name="position"></param>
-        /// <param name="velocity"></param>
-        /// <param name="acceleration"></param>
-        /// <param name="scale"></param>
-        /// <param name="lifetime"></param>
-        public Particle3D(Texture texture, Vector4 position, Vector4 velocity, Vector4 acceleration, float scale, float lifetime)
-            : base(position, velocity, acceleration, scale, lifetime)
-        {
-            VBO quad = VBO.MakeFilledCenteredQuad();
-            quad.LoadData();
-            Obj3D = new TexturedMesh() { VBO = quad, Texture = texture};
-            //Obj3D = Renderer.Models["flour"].Meshes[0];
+            if (_singletonQuad == null)
+            {
+                _singletonQuad = VBO.MakeFilledCenteredQuad();
+                _singletonQuad.LoadData();
+            }
+            VBO quad = _singletonQuad;
+            //Obj3D = new TexturedMesh() { VBO = quad, Texture = texture };
+            Obj3D = new TexturedMesh() { VBO = ((TexturedMesh) Renderer.Models["cube111"].Meshes[0]).VBO, Texture = texture };
         }
 
         /// <summary>
@@ -96,8 +71,8 @@ namespace Breakneck_Brigade.Graphics
 
         public override void Render()
         {
-            Gl.glLoadMatrixf(_transform.glArray);
             Gl.glPushMatrix();
+            Gl.glMultMatrixf(_transform.glArray);
                 Obj3D.Render();
             Gl.glPopMatrix();
         }

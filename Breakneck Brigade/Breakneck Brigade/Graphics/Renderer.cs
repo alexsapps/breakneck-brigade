@@ -53,8 +53,8 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
-        public IList<ClientGameObject>    GameObjects { get; set; }
-        public IList<AParticleSpawner>    ParticleSpawners { get; set; }
+        public IList<ClientGameObject>      GameObjects { get; set; }
+        public IList<AParticleSpawner>      ParticleSpawners { get; set; }
 
         private     Matrix4         WorldTransform;
         private     Camera          Camera;
@@ -502,7 +502,7 @@ namespace Breakneck_Brigade.Graphics
             {
                 foreach (IngredientType it in Program.game.Goals)
                 {
-                    TextRenderer.printToScreen(xPos, yPos, it.Name, .75f, .75f);
+                    TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, .75f, .75f);
                     yPos += spacing + padding;
                 }
                 TextRenderer.printToScreen(xPos, yPos, "\"Make these items!\"", .75f, .75f);
@@ -612,17 +612,17 @@ namespace Breakneck_Brigade.Graphics
             int spacing = 10;
             if (selectedRecipe != null)
             {
-                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.Name, .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, .75f, .75f);
                 yPos -= (spacing + padding);
                 TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
                 yPos -= (spacing + padding);
-                TextRenderer.printToScreen(xPos, yPos, "REQURIED:" , .75f, .75f);
-                yPos -= (spacing + padding);
+                //TextRenderer.printToScreen(xPos, yPos, "REQURIED:" , .75f, .75f);
+                //yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {
                     for( int i = 0; i < ingredient.nCount; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, .75f, .75f);
                         yPos -= (spacing + padding);
                     }
                 }
@@ -635,7 +635,7 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for (int i = 0; i < ingredient.nOptional; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, .75f, .75f);
                         yPos -= (spacing + padding);
                     }
                 }
@@ -664,17 +664,19 @@ namespace Breakneck_Brigade.Graphics
             if(ParticleSpawners != null)
             {
                 //DEBUG
+                /*
                 if(ParticleSpawners.Count == 0)
                 {
-                    PSFlourPoof psfp = new PSFlourPoof(new Vector4(0, 50, 0));
-                    psfp.StartSpawning();
-                    ParticleSpawners.Add(psfp);
+                    AParticleSpawner testSpawner = new PSSmoke(new Vector4(0, 10, 0), SmokeType.YELLOW | SmokeType.WHITE | SmokeType.RED | SmokeType.GREY | SmokeType.GREEN | SmokeType.BLUE);
+                    testSpawner.StartSpawning();
+                    ParticleSpawners.Add(testSpawner);
                 }
-                foreach(AParticleSpawner ps in ParticleSpawners)
+                 * */
+                foreach (AParticleSpawner ps in ParticleSpawners)
                 {
-                    ps.Update();
                     ps.Render();
                 }
+
             }
             Renderer.disableTransparency();
 
