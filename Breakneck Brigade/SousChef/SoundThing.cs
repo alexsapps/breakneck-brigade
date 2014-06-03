@@ -25,7 +25,8 @@ namespace SousChef
         /**
          * Internal dictionary/hashmap which links files with their shorthand names.
          */
-        private static Dictionary<string, string> l = makeDict();
+        private static Dictionary<string, string> _l;
+        private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
         /**
          * Plays a sound. See class header comments for details.
