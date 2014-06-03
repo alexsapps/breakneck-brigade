@@ -74,6 +74,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WorldBuilding|AnyCPU'">
+    <OutputPath>bin\WorldBuilding\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PROJECT_WORLD_BUILDING</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
       <HintPath>lib\BulletSharp.dll</HintPath>
@@ -232,7 +238,7 @@
 echo "Copying in library dependencies"
 robocopy lib\deps $(OutDir) /s
 echo "Copying in resources"
-robocopy ..\res $(OutDir)\res /s
+robocopy ..\res $(OutDir)\res /s /purge
 popd
 exit 0</PostBuildEvent>
   </PropertyGroup>

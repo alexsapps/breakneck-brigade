@@ -25,8 +25,8 @@ namespace DeCuisine
 
 
         private Dictionary<string,int> numOfGoalsByState; // dictionary conaining the number of goals
-#if PROJECT_DEBUG
-        private int pileSize = 5; // don't spawn ingredients
+#if PROJECT_WORLD_BUILDING
+        private int pileSize = 0; // don't spawn ingredients
 #else
         private int pileSize = 200;
 #endif   
@@ -47,9 +47,9 @@ namespace DeCuisine
             CurrentGameState = (GameControllerState)((int)CurrentGameState + 1);
         }
 
-#if PROJECT_DEBUG
-        private int startTick = 30 * 7; // Debug, make waiting much shorter
-        private int scatterTick = 30 * 5;
+#if PROJECT_WORLD_BUILDING
+        private int startTick = 30 * 2; // Don't care about pile when buliding the world
+        private int scatterTick = 30 * 1;
 #else
         private int startTick = 30 * 7; // 5 seconds.
         private int scatterTick = 30 * 5;
@@ -80,6 +80,7 @@ namespace DeCuisine
 
         private void FillGoals(int numOfGoals, int complexity)
         {
+#if !PROJECT_WORLD_BUILDING
             int numOfRecipes = this.Game.Config.Recipes.Count();
             while (numOfGoals > Goals.Count)
             {
@@ -98,6 +99,7 @@ namespace DeCuisine
                 Goals.Add(new Goal(100, tmpRec, complexity));
                 _goalsDirty = true;
             }
+#endif
         }
 
         public void UpdateConfig() 
@@ -276,17 +278,27 @@ namespace DeCuisine
         public bool CheckWin()
         {
             ServerTeam maxTeam = null;
-            foreach(var team in Teams.Values)
+#if PROJECT_WORLD_BUILDING
+            return false;       
+#endif
+            List<ServerTeam> maxTeams = new List<ServerTeam>();
+            foreach (var team in Teams.Values)
             {
-                if(maxTeam == null || team.Points > maxTeam.Points)
+                if (maxTeams.Count == 0 || team.Points == maxTeams[0].Points)
+                    maxTeams.Add(team);
+                else if(team.Points > maxTeams[0].Points)
                 {
-                    maxTeam = team;
+                    maxTeams.Clear();
+                    maxTeams.Add(team);
                 }
             }
 
-            if (maxTeam.Points >= this.ScoreToWin || DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime)
+            if (maxTeams[0].Points >= this.ScoreToWin || DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime)
             {
-                Game.Winner = maxTeam;
+                if (maxTeams.Count == 1)
+                    Game.Winner = maxTeams[0];
+                else
+                    Game.Winner = null; //draw
                 return true;
             }
 

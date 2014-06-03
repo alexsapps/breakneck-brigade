@@ -48,14 +48,17 @@ namespace SousChef
         }
         protected override IngredientType returnItem()
         {
-            string name = attributes["name"];
+            string name;
+            string friendlyName;
+            parseName(out name, out friendlyName);
+
             int points = int.Parse(attributes["points"]);
 
             var geomInfo = getGeomInfo(attributes,
                 fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
                 );
 
-            return new IngredientType(name, geomInfo, points);
+            return new IngredientType(name, friendlyName, geomInfo, points);
         }
 
         protected override void reset() { }

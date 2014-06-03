@@ -86,7 +86,7 @@ namespace DeCuisine
                 loadConfig();
             }
             this.ServerEvents = new List<ServerMessage>();
-#if PROJECT_DEBUG
+#if PROJECT_DEBUG || PROJECT_WORLD_BUILDING
             MultiJump = true;
 #else
             MultiJump = false;
@@ -356,7 +356,7 @@ namespace DeCuisine
                 {
                     if (!client.IsConnected)
                         break; //player has disconnected by the time we got around to processing this event.  may get null ptr trying to access its player, so return.
-#if !PROJECT_DEBUG
+#if !PROJECT_DEBUG && !PROJECT_WORLD_BUILDING
                     if (this.Controller.CurrentGameState == ServerGameController.GameControllerState.Waiting && input.Event.Type != ClientEventType.ChangeOrientation)
                         break; // don't process these client events.
 #endif
@@ -412,7 +412,12 @@ namespace DeCuisine
             if(!this.Controller.Update())
             {
                 SendLobbyStateToAll(); //Game.MarkLobbyStateDirty(); //TODO: what's the right way to do this?
+                
+                if (Winner != null)
                 Program.WriteLine("Team " + Winner.Name + " Wins!");
+                else
+                    Program.WriteLine("Draw! No team won.");
+
                 Mode = GameMode.Results;
                 SendModeChangeUpdate();
                 return false;
@@ -733,7 +738,11 @@ namespace DeCuisine
         }
         public void SendParticleEffect(BBParticleEffect effect, Vector3 location)
         {
-            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4() };
+            SendParticleEffect(effect, location, 0);
+        }
+        public void SendParticleEffect(BBParticleEffect effect, Vector3 location, int param)
+        {
+            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4(), Param = param };
             ServerEvents.Add(msg);
         }
 
@@ -774,7 +783,27 @@ namespace DeCuisine
         {
             ServerGameObject objToMove;
             if (this.GameObjects.TryGetValue(id, out objToMove))
+            {
                 objToMove.Position = new Vector3(x, y, z);
+                objToMove.Body.ProceedToTransform(Matrix.RotationY(objToMove.GeomInfo.Orientation) * Matrix.Translation(objToMove.Position));
+                Program.WriteLine("The new Position is " + objToMove.Position.X + " " + objToMove.Position.Y + " " + objToMove.Position.Z);
+        }
+
+        }
+
+
+        /// <summary>
+        /// Change the values by deltas
+        /// </summary>
+        public void TransObj(int id, int x, int y, int z)
+        {
+            ServerGameObject objToMove;
+            if (this.GameObjects.TryGetValue(id, out objToMove))
+            {
+                objToMove.Position = new Vector3(objToMove.Position.X + x, objToMove.Position.Y + y, objToMove.Position.Z + z);
+                objToMove.Body.ProceedToTransform(Matrix.RotationY(objToMove.GeomInfo.Orientation) * Matrix.Translation(objToMove.Position));
+                Program.WriteLine("The new Position is " + objToMove.Position.X + " " + objToMove.Position.Y + " " + objToMove.Position.Z);
+            }
         }
 
         // Hacked way to scale on the fly, reset the Geom info before making
@@ -787,13 +816,16 @@ namespace DeCuisine
             ServerGameObject scaled = null;
             GeometryInfo oldGeomInfo;
             GeometryInfo newGeomInfo;
+            Dictionary<string, string> attributes = new Dictionary<string, string>();
             switch (objToMove.ObjectClass)
             {
                 case GameObjectClass.Cooker:
                     var cooker = (ServerCooker)objToMove;
                     oldGeomInfo = this.Config.Cookers[cooker.Type.Name].GeomInfo;
+                    // * MathConstants.DEG2RAD
+                    attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     this.Config.Cookers[cooker.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, cooker.Type.Name);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, cooker.Type.Name);
                     scaled = new ServerCooker(cooker.Type, cooker.Team, cooker.Game, cooker.Position);
                     cooker.Remove();
                     //new ServerCooker(objToMove)
@@ -801,8 +833,9 @@ namespace DeCuisine
                 case GameObjectClass.Ingredient:
                     var ing = (ServerIngredient)objToMove;
                     oldGeomInfo = this.Config.Ingredients[ing.Type.Name].GeomInfo;
+                    attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     this.Config.Ingredients[ing.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, ing.Type.Name);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, ing.Type.Name);
                     scaled = new ServerIngredient(ing.Type, ing.Game, ing.Position);
                     ing.Remove();
                     break;
@@ -812,16 +845,18 @@ namespace DeCuisine
                 case GameObjectClass.StaticObject:
                     var statObj = (ServerStaticObject)objToMove;
                     oldGeomInfo = statObj.GeomInfo; // No type so it's different
+                    attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, null);
-                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, statObj.Position);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, null);
+                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, "fucker", statObj.Position);
                     statObj.Remove();
                     break;
                 case GameObjectClass.Terrain:
                     var terrain = (ServerTerrain)objToMove;
                     oldGeomInfo = terrain.GeomInfo; // No type so it's different
+                    attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, terrain.Type.Name);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, terrain.Type.Name);
                     scaled = new ServerTerrain(terrain.Game, terrain.Type, terrain.Position, newGeomInfo);
                     terrain.Remove();
                     break;
@@ -831,6 +866,22 @@ namespace DeCuisine
             if (scaled != null)
                 return scaled.Id;
             return -1;
+        }
+        public void RotObj(int id, int deg)
+        {
+            ServerGameObject objToMove;
+            if (this.GameObjects.TryGetValue(id, out objToMove))
+            {
+                objToMove.Body.ProceedToTransform(Matrix.RotationY(deg * MathConstants.DEG2RAD) * Matrix.Translation(objToMove.Position));
+                Program.WriteLine("The new Position is " + objToMove.Position.X + " " + objToMove.Position.Y + " " + objToMove.Position.Z + " with rotation "+ deg);
+                objToMove.MarkDirty();
+            }
+        }
+        private string radToDegreeString(float rad)
+        {
+            string str = (rad * (1 / MathConstants.DEG2RAD)).ToString();
+            return str;
+
         }
     }
 }

@@ -44,6 +44,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WorldBuilding|AnyCPU'">
+    <OutputPath>bin\WorldBuilding\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
       <HintPath>..\Breakneck Brigade\lib\BulletSharp.dll</HintPath>

@@ -178,7 +178,7 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <rotZ>0</rotZ>
     </model>
     <model>
-      <filename>iceCream</filename>
+      <filename>icecream</filename>
       <posX>0</posX>
       <posY>0</posY>
       <posZ>0</posZ>

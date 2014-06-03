@@ -37,13 +37,23 @@ namespace SousChef
         protected override Recipe returnItem()
         {
             string finalProductName = attributes["product"];
-            string name;
-            if (!attributes.TryGetValue("name", out name))
-                name = finalProductName;
-            
             IngredientType finalProduct = config.CurrentSalad.Ingredients[finalProductName];
 
-            return new Recipe(name, ingredients, finalProduct);
+            string name;
+            string friendlyName = null;
+            attributes.TryGetValue("friendlyName", out friendlyName);
+
+            if (attributes.TryGetValue("name", out name))
+            {
+                friendlyName = friendlyName ?? (name);
+            }
+            else
+            {
+                name = finalProductName;
+                friendlyName = friendlyName ?? finalProduct.FriendlyName;
+            }
+            
+            return new Recipe(name, friendlyName, ingredients, finalProduct);
         }
 
         protected override void reset()

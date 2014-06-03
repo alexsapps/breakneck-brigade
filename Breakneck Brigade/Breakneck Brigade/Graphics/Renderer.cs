@@ -28,6 +28,8 @@ namespace Breakneck_Brigade.Graphics
         private const string CROSSHAIR_MODEL_NAME = "crosshair";
         public const string BLANKQUAD_MODEL_NAME = "blankQuad";
         public const string FONT_TEXTURE = "fontWhite.tga";
+        private int padding = 5;
+        private int spacing = 10;
 
         private Stopwatch  _stopwatch = new Stopwatch();
         private Stopwatch  _stopwatch2 = new Stopwatch();
@@ -481,6 +483,10 @@ namespace Breakneck_Brigade.Graphics
                 this.DrawRecipe(player.SelectedRecipe, 5, 500);
             }
 
+            this.DrawTime((int)WindowWidth / 2, (int)WindowHeight - 20);
+            this.DrawScores(5, (int)WindowHeight - 20);
+
+
             Renderer.disableTransparency();
             //Models["iceCream"].Render();
 
@@ -490,8 +496,6 @@ namespace Breakneck_Brigade.Graphics
         private void drawGoals()
         {
             //CHANGE THESE
-            int padding = 5;
-            int spacing = 10;
             int xPos = 5;
 
             //DONUT CHANGE THESE. You can have these donuts tho alex
@@ -514,33 +518,96 @@ namespace Breakneck_Brigade.Graphics
             if (Program.game != null && Program.game.LiveGameObjects != null)
             {
                 string lookingAt;
+#if PROJECT_WORLD_BUILDING
+                string info = "";
+#endif
                 if (Program.game.LiveGameObjects.ContainsKey(Program.game.LookatId))
                 {
                     ClientGameObject lookedAtObject = Program.game.LiveGameObjects[Program.game.LookatId];
                     lookingAt = lookedAtObject.ModelName;
+#if PROJECT_WORLD_BUILDING
+                    // append id if we are building the world
+                    lookingAt += " " + Program.game.LookatId +
+                        " At position ";
+                    info = +(int)lookedAtObject.Position.X + " " +
+                        (int)lookedAtObject.Position.Y + " " + (int)lookedAtObject.Position.Z + 
+                        " scaled at " + (int)lookedAtObject.Sides[0] + " " + (int)lookedAtObject.Sides[1] + " " +
+                        (int)lookedAtObject.Sides[2];
+#endif
                     if(lookedAtObject is ClientCooker)
                     {
                         ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
-                        string ingedientList = "[ ";
+                        string ingedientList = "- ";
                         foreach(ClientIngredient ingredient in lookedAtCooker.Contents)
                         {
                             ingedientList += ingredient.ModelName + " ";
                         }
 
-                        ingedientList += "]";
+                        ingedientList += "-";
                         TextRenderer.printToScreen(500, 20, ingedientList , .75f, .75f);
                     }
+
+                    lookingAt = lookedAtObject.ToString();
                 }
                 else
                 {
                     lookingAt = "nothing";
                 }
-
+#if PROJECT_WORLD_BUILDING
+                TextRenderer.printToScreen(500, 40, "Looking at: " + lookingAt, .75f, .75f);
+                TextRenderer.printToScreen(500, 15, info, .75f, .75f);
+#else
                 TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
+#endif
                 
             }
         }
 
+        /// <summary>
+        /// Draws the timer
+        /// </summary>
+        /// <param name="xPos"></param>
+        /// <param name="yPos"></param>
+        private void DrawTime(int xPos, int yPos)
+        {
+            if (Program.game != null)
+            {
+                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(), .75f, .75f);
+            }
+        }
+
+        /// <summary>
+        /// Draw team scores.
+        /// </summary>
+        /// <param name="xPos"></param>
+        /// <param name="yPos"></param>
+        private void DrawScores(int xPos, int yPos)
+        {
+            string header;
+            if (Program.lobbyState.MyTeam != null)
+                header = "Team: " + Program.lobbyState.MyTeam.Name;
+            else
+                header = "Team Scores:";
+            TextRenderer.printToScreen(xPos, yPos, header, .75f, .75f);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "-----------", .75f, .75f);
+            yPos -= (spacing + padding);
+            if (Program.lobbyState != null && Program.lobbyState.Teams != null)
+            {
+                foreach (ClientTeam team in Program.lobbyState.Teams.Values.ToList())
+                {
+                    TextRenderer.printToScreen(xPos, yPos, team.Name + ": " + team.Score.ToString(), .75f, .75f);
+                    yPos -= (spacing + padding);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw current cookbook page.
+        /// </summary>
+        /// <param name="selectedRecipe"></param>
+        /// <param name="xPos"></param>
+        /// <param name="yPos"></param>
         private void DrawRecipe(Recipe selectedRecipe, int xPos, int yPos)
         {
             int padding = 5;
@@ -549,7 +616,9 @@ namespace Breakneck_Brigade.Graphics
             {
                 TextRenderer.printToScreen(xPos, yPos, selectedRecipe.Name, .75f, .75f);
                 yPos -= (spacing + padding);
-                TextRenderer.printToScreen(xPos, yPos, "-REQURIED-" , .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
+                yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "REQURIED:" , .75f, .75f);
                 yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {
@@ -560,7 +629,9 @@ namespace Breakneck_Brigade.Graphics
                     }
                 }
 
-                TextRenderer.printToScreen(xPos, yPos, "-optional-", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
+                yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "OPTIONAL:", .75f, .75f);
                 yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {

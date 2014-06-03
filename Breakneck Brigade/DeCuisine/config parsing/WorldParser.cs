@@ -238,7 +238,9 @@ namespace DeCuisine
         {
             var position = getCoordinateAttrib("coordinate");
             var geomInfo = getGeomInfo(attributes, new float[] {5, 5, 5}, 10000, 5, 5, 0, .999f, null);
-            serverStatic = new ServerStaticObject(serverGame, geomInfo, attributes["model"], position);
+            string friendlyName = null;
+            attributes.TryGetValue("friendlyName", out friendlyName);
+            serverStatic = new ServerStaticObject(serverGame, geomInfo, attributes["model"], friendlyName, position);
             serverStatic.Body.LinearFactor = new Vector3(0, 0, 0);  // disable movement in all axis
             serverStatic.Body.AngularFactor = new Vector3(0, 0, 0); // disable rotation in all axis
 

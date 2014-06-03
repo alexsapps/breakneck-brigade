@@ -60,13 +60,15 @@ namespace SousChef
         static readonly float[] defaultDefaultSides = new float[] { 6f, 6f, 6f };
         protected override CookerType returnItem()
         {
-            string name = attributes["name"];
+            string name;
+            string friendlyName;
+            parseName(out name, out friendlyName);
 
             var geomInfo = getGeomInfo(attributes,
                 fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
                 );
 
-            return new CookerType(name, geomInfo, recipes);
+            return new CookerType(name, friendlyName, geomInfo, recipes);
         }
 
         protected override void reset()
