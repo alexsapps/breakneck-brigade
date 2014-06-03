@@ -689,7 +689,7 @@ namespace Breakneck_Brigade.Graphics
 
             }
             Renderer.disableTransparency();
-            //this.DebugPicking();
+            DebugPicking();
 
             CurrentDrawMode = -1;
         }

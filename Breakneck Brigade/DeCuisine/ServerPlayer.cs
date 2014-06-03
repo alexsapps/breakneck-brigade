@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SCVector4 = SousChef.Vector4;
 
 namespace DeCuisine
 {
@@ -16,13 +17,13 @@ namespace DeCuisine
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
-        private const float HOLDDISTANCE = 15.0f;
+        private const float HOLDDISTANCE = 5.0f;
 #if PROJECT_WORLD_BUILDING
-        private const float LINEOFSIGHTSCALAR = 4000;
+        private const float LINEOFSIGHTSCALAR = 100;//4000;
 #else
         private const float LINEOFSIGHTSCALAR = 200;
 #endif
-        private const float RAYSTARTDISTANCE = 10;
+        private const float RAYSTARTDISTANCE = 0;
 #if PROJECT_DEBUG || PROJECT_WORLD_BUILDING
         private const int DASHTIME = 15;
 #else
@@ -104,7 +105,7 @@ namespace DeCuisine
         {
             base.AddToWorld(position);
             this.Body.Friction = 2.05f;
-            this.EyeHeight = 15.0f;
+            this.EyeHeight = 8.0f;
             this.constraint = null;
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
@@ -328,21 +329,33 @@ namespace DeCuisine
             // Check what the player is looking at
             Vector3 start = new Vector3
                 (
-                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * this.GeomInfo.Size[0]), //Math.Sin(this.Incline * Math.PI / 180.0f) *
-                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -this.GeomInfo.Size[0],
-                    this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+                    this.Position.X, //Math.Sin(this.Incline * Math.PI / 180.0f) *
+                    this.Position.Y + this.EyeHeight,
+                    this.Position.Z//this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
                );
 
+            SCVector4 yDir = new SCVector4
+                (
+                    0,
+                    (float)Math.Sin(this.Incline * MathConstants.DEG2RAD) * -1,
+                    (float)Math.Cos(this.Incline * MathConstants.DEG2RAD)
+                );
+
+            Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
+
+            SCVector4 final = rotMat * yDir;
+            final *= LINEOFSIGHTSCALAR;
             Vector3 end = new Vector3
                 (
-                    start.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * LINEOFSIGHTSCALAR), //Math.Sin(this.Incline * Math.PI / 180.0f) * 
-                    start.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR,
-                    start.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+                    start.X + final.X,
+                    start.Y + final.Y,
+                    start.Z + final.Z
                 );
-            CollisionWorld.ClosestRayResultCallback raycastCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
+            CollisionWorld.AllHitsRayResultCallback raycastCallback = new CollisionWorld.AllHitsRayResultCallback(start, end);
             this.Game.World.RayTest(start, end, raycastCallback);
             if (raycastCallback.HasHit)
             {
+                //Filter Results
                 this.LookingAt = (ServerGameObject)raycastCallback.CollisionObject.CollisionShape.UserObject;
             }
             else

@@ -29,7 +29,7 @@ namespace SousChef
         }
         public static float[] GetPlayerSides()
         {
-            return new float[] { 6.0f, 17.0f, 4.0f };
+            return new float[] { 1.0f, 17.0f, 1.0f };
         }
 
         public static Vector4 ReadCoordinate(this BinaryReader stream)

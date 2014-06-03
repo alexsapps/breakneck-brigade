@@ -11,9 +11,19 @@
     <terrain type="floor" shape="box" coordinate="0, 250, 0" size="500,10,500" />
 
     <!-- Red team side -->
-    <static team="red" type="woodenCounter"  coordinate="0, 4, 0"  size="7,2.7,7" model="woodenCounter" friendlyName="Wooden Counter"></static>
-    <cooker team="red" type="blender" coordinate="0, 20, 0" ></cooker>
+    <static team="red" type="woodenCounter"  coordinate="200, 5, 0"  size="7,2.7,7" model="woodenCounter" friendlyName="Wooden Counter"></static>
+    <cooker team="red" type="blender" coordinate="200, 20, 0" ></cooker>
 
+    <static team="red" type="woodenCounter"  coordinate="250, 5, 0"  size="7,2.7,7" model="woodenCounter" friendlyName="Wooden Counter"></static>
+    <cooker team="red" type="pan" coordinate="250, 20, 0" ></cooker>
+
+    <static team="blue" type="woodenCounter"  coordinate="-250, 5, 0"  size="7,2.7,7" model="woodenCounter" friendlyName="Wooden Counter"></static>
+    <cooker team="blue" type="blender" coordinate="-250, 20, 0" ></cooker>
+
+    <static team="blue" type="woodenCounter"  coordinate="-200, 5, 0"  size="7,2.7,7" model="woodenCounter" friendlyName="Wooden Counter"></static>
+    <cooker team="blue" type="pan" coordinate="-200, 20, 0" ></cooker>
+
+    <ingredient type="hamburger" coordinate="0,0,0" size="4, 2.7, 4"></ingredient>
 
     <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
 

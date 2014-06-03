@@ -33,7 +33,9 @@ namespace Breakneck_Brigade
         {
             this.TeamName = reader.ReadString();
             LookingAtId = reader.ReadInt32();
-            this.LookingAt = LookingAtId != -1 ? this.Game.LiveGameObjects[LookingAtId] : null;
+            ClientGameObject tmp;
+            this.Game.LiveGameObjects.TryGetValue(LookingAtId, out tmp);
+            this.LookingAt = tmp;
             start = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             end = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             eyeHeight = reader.ReadSingle();

@@ -69,6 +69,8 @@
     <OutputPath>bin\WorldBuilding\</OutputPath>
     <DefineConstants>TRACE;DEBUG;PROJECT_WORLD_BUILDING</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
