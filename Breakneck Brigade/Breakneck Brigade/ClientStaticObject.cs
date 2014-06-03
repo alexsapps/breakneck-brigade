@@ -12,6 +12,7 @@ namespace Breakneck_Brigade
     {
         private string _modelName;
         public override string ModelName { get { return _modelName; } }
+        public string FriendlyName { get; set; }
         float[] _sides;
         public override float[] Sides { get { return _sides; } }
         
@@ -22,6 +23,7 @@ namespace Breakneck_Brigade
         public ClientStaticObject(int id, BinaryReader reader, ClientGame game) : base (id, game, reader)
         {
             this._modelName = reader.ReadString();
+            this.FriendlyName = reader.ReadString();
             this._sides = new float[reader.ReadInt32()];
             for (int i = 0; i < this._sides.Length; i++)
                 this._sides[i] = reader.ReadSingle();
@@ -30,7 +32,7 @@ namespace Breakneck_Brigade
 
         public override string ToString()
         {
-            return ModelName;
+            return FriendlyName;
         }
     }
 }

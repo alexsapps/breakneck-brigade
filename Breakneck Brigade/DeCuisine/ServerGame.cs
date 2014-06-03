@@ -814,7 +814,7 @@ namespace DeCuisine
                     oldGeomInfo = statObj.GeomInfo; // No type so it's different
                     newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
                         new Dictionary<string, string>(), new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, null);
-                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, statObj.Position);
+                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, statObj.FriendlyName, statObj.Position);
                     statObj.Remove();
                     break;
                 case GameObjectClass.Terrain:
