@@ -16,7 +16,7 @@ namespace SousChef
         public const string DefaultServerHost = "127.0.0.1";
         public const int DefaultServerPort = 2222;
         public static string GlobalConfigFilename = "global-config.xml";
-        public const string DefaultPlayerModel = "teapotPillar";
+        public const string DefaultPlayerModel = "chef";
 
         public static ModelParser modelParser = new ModelParser();
 
@@ -28,7 +28,7 @@ namespace SousChef
         }
         public static float[] GetPlayerSides()
         {
-            return new float[] { 6.0f, 3.0f, 6.0f };
+            return new float[] { 3.0f, 14.0f, 6.0f };
         }
     }
 }
