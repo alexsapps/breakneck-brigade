@@ -156,7 +156,7 @@ namespace Breakneck_Brigade
                 this.NetworkEvents.Add(new ClientCookEvent());
             }
             // Handle drop event
-            if(this.downKeys.Contains(GlfwKeys.GLFW_KEY_F))
+            if(this.downKeys.Contains(GlfwKeys.GLFW_KEY_Q))
             {
                 NetworkEvents.Add(new ClientLeftClickEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 0.0f });
             }
@@ -182,14 +182,14 @@ namespace Breakneck_Brigade
             }
 
             // Change page down.
-            if(keyDown(GlfwKeys.GLFW_KEY_LEFT_SHIFT))
+            if(keyDown(GlfwKeys.GLFW_KEY_R))
             {
                 this.bookIndex = (this.bookIndex + 1) % this.Game.Recipies.Count;
                 this.SelectedRecipe = this.Game.Recipies[bookIndex];
             }
 
             // Change page up.
-            if (keyDown(GlfwKeys.GLFW_KEY_LEFT_CONTROL))
+            if (keyDown(GlfwKeys.GLFW_KEY_F))
             {
                 this.bookIndex--;
                 if (this.bookIndex < 0)
