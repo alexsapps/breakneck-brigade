@@ -285,7 +285,7 @@ namespace Breakneck_Brigade.Graphics
             prep3D(lp);
             render3D();
             prep2D();
-            render2D();
+            Render2D(lp);
 
             _stopwatch3.Start();
             Glfw.glfwSwapBuffers();
@@ -456,7 +456,7 @@ namespace Breakneck_Brigade.Graphics
             Camera.Render();
         }
 
-        private void render2D()
+        private void Render2D(LocalPlayer player)
         {
             /*
             Gl.glPushMatrix();
@@ -474,6 +474,11 @@ namespace Breakneck_Brigade.Graphics
             //Models[BLANKQUAD_MODEL_NAME].Render();
             drawGoals();
             drawHeld();
+            if (player != null)
+            {
+                this.DrawRecipe(player.SelectedRecipe, 5, 500);
+            }
+
             Renderer.disableTransparency();
             //Models["iceCream"].Render();
 
@@ -506,8 +511,63 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null && Program.game.LiveGameObjects != null)
             {
-                string lookingAt = Program.game.LookatId == -1 ? "nothing" : Program.game.LiveGameObjects[Program.game.LookatId].ModelName;
+                string lookingAt;
+                if (Program.game.LiveGameObjects.ContainsKey(Program.game.LookatId))
+                {
+                    ClientGameObject lookedAtObject = Program.game.LiveGameObjects[Program.game.LookatId];
+                    lookingAt = lookedAtObject.ModelName;
+                    if(lookedAtObject is ClientCooker)
+                    {
+                        ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
+                        string ingedientList = "[ ";
+                        foreach(ClientIngredient ingredient in lookedAtCooker.Contents)
+                        {
+                            ingedientList += ingredient.ModelName + " ";
+                        }
+
+                        ingedientList += "]";
+                        TextRenderer.printToScreen(500, 20, ingedientList , .75f, .75f);
+                    }
+                }
+                else
+                {
+                    lookingAt = "nothing";
+                }
+
                 TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
+                
+            }
+        }
+
+        private void DrawRecipe(Recipe selectedRecipe, int xPos, int yPos)
+        {
+            int padding = 5;
+            int spacing = 10;
+            if (selectedRecipe != null)
+            {
+                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.Name, .75f, .75f);
+                yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "-REQURIED-" , .75f, .75f);
+                yPos -= (spacing + padding);
+                foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
+                {
+                    for( int i = 0; i < ingredient.nCount; i++)
+                    {
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        yPos -= (spacing + padding);
+                    }
+                }
+
+                TextRenderer.printToScreen(xPos, yPos, "-optional-", .75f, .75f);
+                yPos -= (spacing + padding);
+                foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
+                {
+                    for (int i = 0; i < ingredient.nOptional; i++)
+                    {
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        yPos -= (spacing + padding);
+                    }
+                }
             }
         }
 

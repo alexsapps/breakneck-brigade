@@ -25,17 +25,18 @@ namespace SousChef
         /**
          * Internal dictionary/hashmap which links files with their shorthand names.
          */
-        private static Dictionary<string, string> l = makeDict();
+        private static Dictionary<string, string> _l;
+        private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
         /**
          * Plays a sound. See class header comments for details.
          * 
          * @param key The key of the sound to play.  Note that this *is* case-sensitive.
          */
-        public static void Play(string key)
+        public static void Play(BBSound key)
         {
             String temp = "";
-            l.TryGetValue(key, out temp);
+            l.TryGetValue(key.ToString(), out temp);
             new Thread(new SoundThread(temp).DoWork).Start();
         }
 

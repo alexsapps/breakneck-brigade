@@ -17,7 +17,7 @@ namespace SousChef
 
         protected Dictionary<string, string> attributes;
         public string attrib(string name) { return attributes.get(name); }
-        public static Dictionary<string, Vector4[]> scaleVector = BB.modelParser.ScaleVector;
+        public static Dictionary<string, Vector4[]> scaleVector { get { return BB.modelParser.ScaleVector; } }
 
         bool _needsReset = false;
         public T Parse(XmlReader reader)

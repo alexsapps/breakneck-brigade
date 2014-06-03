@@ -26,6 +26,7 @@ namespace Breakneck_Brigade
         public List<AParticleSpawner> ParticleSpawners { get; set;}
 
         public ConfigSalad Config { get; private set; }
+        public List<Recipe> Recipies { get; private set; }
 
         public ClientGame(BBLock @lock)
         {
@@ -35,7 +36,7 @@ namespace Breakneck_Brigade
             GameObjectsCache = new Dictionary<int, ClientGameObject>();
             ParticleSpawners = new List<AParticleSpawner>();
             Goals = new List<IngredientType>();
-
+            this.Recipies = this.Config.Recipes.Values.ToList();
             Config = new GameObjectConfig().GetConfigSalad();
             TintedObjects = new Dictionary<string, HashSet<string>>();
             TintedObjects.Add("red", new HashSet<string>());

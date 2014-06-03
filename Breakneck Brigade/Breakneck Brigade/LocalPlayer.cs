@@ -25,9 +25,10 @@ namespace Breakneck_Brigade
         public Vector4 Velocity;
         public float WalkSpeed = 140f;
         public float RunSpeed = 380f;
+        public Recipe SelectedRecipe { get; private set; }
         public List<ClientEvent> NetworkEvents;
-
         private bool _stopped = false;
+        private int bookIndex = 0;
         
         public LocalPlayer()
         {
@@ -179,6 +180,26 @@ namespace Breakneck_Brigade
             {
                 //NetworkEvents.Add(new ClientBeginMoveEvent()); //this is being done above at the moment.
             }
+
+            // Change page down.
+            if(keyDown(GlfwKeys.GLFW_KEY_LEFT_SHIFT))
+            {
+                this.bookIndex = (this.bookIndex + 1) % this.Game.Recipies.Count;
+                this.SelectedRecipe = this.Game.Recipies[bookIndex];
+            }
+
+            // Change page up.
+            if(keyDown(GlfwKeys.GLFW_KEY_TAB))
+            {
+                this.bookIndex--;
+                if (this.bookIndex < 0)
+                {
+                    this.bookIndex = this.Game.Recipies.Count - 1;
+                }
+
+                this.SelectedRecipe = this.Game.Recipies[bookIndex];
+            }
+
             if (this.Player != null)
             {
                 this.Game.LookatId = this.Player.LookingAtId;

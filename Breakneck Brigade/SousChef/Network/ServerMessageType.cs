@@ -16,5 +16,7 @@ namespace SousChef
         GoalsUpdate,
         TintListUpdate,
         ServerCommandResponse,
+        ParticleEffect,
+        Sound,
     }
 }

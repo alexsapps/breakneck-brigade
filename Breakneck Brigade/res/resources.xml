@@ -505,6 +505,6 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <rotX>0</rotX>
       <rotY>0</rotY>
       <rotZ>0</rotZ>
-    </model>	
+    </model>
   </models>
 </resources>
