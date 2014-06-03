@@ -395,7 +395,7 @@ namespace Breakneck_Brigade
                                     break;
                                 case GameMode.Results:
                                     Program.WriteLine("Game finished!");
-                                    Program.WriteLine("Winner: " + lobbyState.WinningTeam.Name);
+                                    Program.WriteLine("Winner: " + (lobbyState.WinningTeam == null ? "{draw}" : lobbyState.WinningTeam.Name));
                                     break;
                                 case GameMode.Stopping:
                                     Program.WriteLine("Game ended.");
@@ -699,7 +699,7 @@ namespace Breakneck_Brigade
                                     game = new ClientGame(gameLock);
                                     break;
                                 case GameMode.Results:
-                                    MessageBox.Show(lobbyState.WinningTeam.Name + " wins!");
+                                    MessageBox.Show(lobbyState.WinningTeam == null ? "Draw!  Neither team wins." : lobbyState.WinningTeam.Name + " wins!");
                                     break;
                                 case GameMode.Stopping:
                                     break;

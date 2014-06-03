@@ -412,7 +412,12 @@ namespace DeCuisine
             if(!this.Controller.Update())
             {
                 SendLobbyStateToAll(); //Game.MarkLobbyStateDirty(); //TODO: what's the right way to do this?
-                Program.WriteLine("Team " + Winner.Name + " Wins!");
+                
+                if (Winner != null)
+                    Program.WriteLine("Team " + Winner.Name + " Wins!");
+                else
+                    Program.WriteLine("Draw! No team won.");
+
                 Mode = GameMode.Results;
                 SendModeChangeUpdate();
                 return false;
