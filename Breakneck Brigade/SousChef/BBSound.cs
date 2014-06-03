@@ -22,6 +22,10 @@ namespace SousChef
         trayhit1,
         trayhit2,
         punchmiss,
-        eatfood
+        eatfood,
+        pageturn1,
+        pageturn2,
+        sadtrombone,
+        lasercannonfire
     }
 }

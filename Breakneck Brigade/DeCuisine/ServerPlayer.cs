@@ -196,7 +196,7 @@ namespace DeCuisine
             this.dashCool = 5 * dashTicks;
 #endif
 
-            Game.SendSound(BBSound.explode1, Position);
+            Game.SendSound(BBSound.lasercannonfire, Position);
         }
 
         /// <summary>

@@ -190,6 +190,11 @@ namespace Breakneck_Brigade
             {
                 this.bookIndex = (this.bookIndex + 1) % this.Game.Recipies.Count;
                 this.SelectedRecipe = this.Game.Recipies[bookIndex];
+
+                // Play sound
+                //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());
+                int volume = (int)Math.Log(4, 2.0);
+                SoundThing.Play(BBSound.pageturn1, volume);
             }
 
             // Change page up.
@@ -202,6 +207,11 @@ namespace Breakneck_Brigade
                 }
 
                 this.SelectedRecipe = this.Game.Recipies[bookIndex];
+
+                // Play sound
+                //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());
+                int volume = (int)Math.Log(4, 2.0);
+                SoundThing.Play(BBSound.pageturn2, volume);
             }
 
             if (this.Player != null)
