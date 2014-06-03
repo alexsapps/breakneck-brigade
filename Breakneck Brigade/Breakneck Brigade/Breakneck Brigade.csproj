@@ -139,12 +139,15 @@
     </Compile>
     <Compile Include="GlfwKeys.cs" />
     <Compile Include="Graphics\3D Objects\Glu Prims\TexturedGluSphere.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\Particle2D.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\Spawners\PSSmoke.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\Spawners\PSConfetti.cs" />
     <Compile Include="Graphics\3D Objects\PrimativePlane.cs" />
     <Compile Include="Graphics\3D Objects\Meshes\AMesh.cs" />
     <Compile Include="Graphics\3D Objects\Particles\AParticle.cs" />
     <Compile Include="Graphics\3D Objects\Particles\Particle3D.cs" />
     <Compile Include="Graphics\3D Objects\Particles\AParticleSpawner.cs" />
-    <Compile Include="Graphics\3D Objects\Particles\PSFlourPoof.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\Spawners\PSSparks.cs" />
     <Compile Include="Graphics\TextRenderer.cs" />
     <Compile Include="Graphics\Model.cs" />
     <Compile Include="Graphics\3D Objects\AObject3D.cs" />

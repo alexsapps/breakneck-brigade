@@ -36,8 +36,8 @@ namespace Breakneck_Brigade
             GameObjectsCache = new Dictionary<int, ClientGameObject>();
             ParticleSpawners = new List<AParticleSpawner>();
             Goals = new List<IngredientType>();
-            this.Recipies = this.Config.Recipes.Values.ToList();
             Config = new GameObjectConfig().GetConfigSalad();
+            this.Recipies = this.Config.Recipes.Values.ToList();
             TintedObjects = new Dictionary<string, HashSet<string>>();
             TintedObjects.Add("red", new HashSet<string>());
             TintedObjects.Add("blue", new HashSet<string>());

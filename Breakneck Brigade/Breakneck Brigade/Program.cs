@@ -782,7 +782,6 @@ namespace Breakneck_Brigade
                                         {
                                             var e = new ServerParticleEffectMessage();
                                             e.Read(reader);
-                                            //TODO: render effect
                                             break;
                                         }
                                         default:

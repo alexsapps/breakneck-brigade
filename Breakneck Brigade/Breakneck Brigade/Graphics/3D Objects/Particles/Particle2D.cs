@@ -9,9 +9,9 @@ using Tao.OpenGl;
 namespace Breakneck_Brigade.Graphics
 {
     /// <summary>
-    /// A particle that is represented by a 3D object
+    /// A particle that is represented by a 2D quad
     /// </summary>
-    class Particle3D : AParticle
+    class Particle2D : AParticle
     {
         /// <summary>
         /// The 3D object that represents this particle
@@ -25,7 +25,7 @@ namespace Breakneck_Brigade.Graphics
         /// Has the default texture.
         /// This particle has no velocity, no acceleration, and a lifetime of 10 seconds
         /// </summary>
-        public Particle3D() 
+        public Particle2D() 
             : base()
         {
             if(_singletonQuad == null)
@@ -42,7 +42,7 @@ namespace Breakneck_Brigade.Graphics
         /// Has the specified texture and physics parameters
         /// </summary>
         /// <param name="texture"></param>
-        public Particle3D(Texture texture)
+        public Particle2D(Texture texture)
             : base()
         {
             if (_singletonQuad == null)
@@ -51,17 +51,7 @@ namespace Breakneck_Brigade.Graphics
                 _singletonQuad.LoadData();
             }
             VBO quad = _singletonQuad;
-            //Obj3D = new TexturedMesh() { VBO = quad, Texture = texture };
-            Obj3D = new TexturedMesh() { VBO = ((TexturedMesh) Renderer.Models["cube111"].Meshes[0]).VBO, Texture = texture };
-        }
-
-        /// <summary>
-        /// Instanciates a basic 3D particle with the specified 3D object as the particle model
-        /// </summary>
-        public Particle3D(AObject3D obj3D)
-            : base()
-        {
-            Obj3D = obj3D;
+            Obj3D = new TexturedMesh() { VBO = quad, Texture = texture };
         }
 
         public override void Update(float timestep)
