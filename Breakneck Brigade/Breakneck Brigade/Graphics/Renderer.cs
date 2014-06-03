@@ -502,7 +502,7 @@ namespace Breakneck_Brigade.Graphics
             {
                 foreach (IngredientType it in Program.game.Goals)
                 {
-                    TextRenderer.printToScreen(xPos, yPos, it.Name, .75f, .75f);
+                    TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, .75f, .75f);
                     yPos += spacing + padding;
                 }
                 TextRenderer.printToScreen(xPos, yPos, "\"Make these items!\"", .75f, .75f);
@@ -612,17 +612,17 @@ namespace Breakneck_Brigade.Graphics
             int spacing = 10;
             if (selectedRecipe != null)
             {
-                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.Name, .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, .75f, .75f);
                 yPos -= (spacing + padding);
                 TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
                 yPos -= (spacing + padding);
-                TextRenderer.printToScreen(xPos, yPos, "REQURIED:" , .75f, .75f);
-                yPos -= (spacing + padding);
+                //TextRenderer.printToScreen(xPos, yPos, "REQURIED:" , .75f, .75f);
+                //yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {
                     for( int i = 0; i < ingredient.nCount; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, .75f, .75f);
                         yPos -= (spacing + padding);
                     }
                 }
@@ -635,7 +635,7 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for (int i = 0; i < ingredient.nOptional; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, .75f, .75f);
                         yPos -= (spacing + padding);
                     }
                 }

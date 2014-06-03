@@ -1,7 +1,7 @@
 <recipes>
   <recipe product="milkshake">
     <ingredient>milk</ingredient>
-    <ingredient count ="1" optional="3">iceCream</ingredient>
+    <ingredient count ="1" optional="3">icecream</ingredient>
   </recipe>
   <recipe product="caesarSalad">
     <ingredient>lettuce</ingredient>
