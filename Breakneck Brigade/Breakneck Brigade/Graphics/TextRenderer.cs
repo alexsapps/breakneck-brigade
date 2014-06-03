@@ -126,7 +126,7 @@ namespace Breakneck_Brigade.Graphics
             float [] T3 = {xMin, yMin};
 
             Model returnModel = new Model("character_" + c);
-            VBO vbo = VBO.MakeQuadWithUVCoords(T0, T1, T2, T3);
+            VBO vbo = VBO.MakeCornerQuadWithUVCoords(T0, T1, T2, T3);
             vbo.LoadData();
             TexturedMesh charMesh = new TexturedMesh() { VBO = vbo, Texture = Renderer.Textures["fontWhite.tga"] };
             returnModel.Meshes.Add(charMesh);

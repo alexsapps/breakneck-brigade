@@ -52,6 +52,7 @@ namespace Breakneck_Brigade.Graphics
         public static Texture   DefaultTexture;
 
         public IList<ClientGameObject>    GameObjects { get; set; }
+        public IList<AParticleSpawner>    ParticleSpawners { get; set; }
 
         private     Matrix4         WorldTransform;
         private     Camera          Camera;
@@ -262,7 +263,7 @@ namespace Breakneck_Brigade.Graphics
 
             Models.Add(crosshairModel.Name, crosshairModel);
 
-            VBO blankQuad = VBO.MakeQuadWithUVCoords(new float[] { 0, 1 }, new float[] { 1, 1 }, new float[] { 1, 0 }, new float[] { 0, 0 });
+            VBO blankQuad = VBO.MakeCornerQuadWithUVCoords(new float[] { 0, 1 }, new float[] { 1, 1 }, new float[] { 1, 0 }, new float[] { 0, 0 });
             blankQuad.LoadData();
             TexturedMesh blankQuadMesh = new TexturedMesh() { VBO = blankQuad, Texture = Renderer.Textures["fontWhite.tga"] };
             Model blankQuadModel = new Model(BLANKQUAD_MODEL_NAME);
@@ -514,6 +515,7 @@ namespace Breakneck_Brigade.Graphics
 
         private void render3D()
         {
+            //Game objects
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
                 {
@@ -525,6 +527,25 @@ namespace Breakneck_Brigade.Graphics
                     if(modelTimer != null)
                         modelTimer.stop();
                 }
+
+            Renderer.enableTransparency();
+            //Particles
+            if(ParticleSpawners != null)
+            {
+                //DEBUG
+                if(ParticleSpawners.Count == 0)
+                {
+                    PSFlourPoof psfp = new PSFlourPoof(new Vector4(0, 50, 0));
+                    psfp.StartSpawning();
+                    ParticleSpawners.Add(psfp);
+                }
+                foreach(AParticleSpawner ps in ParticleSpawners)
+                {
+                    ps.Update();
+                    ps.Render();
+                }
+            }
+            Renderer.disableTransparency();
 
             /*
             // Debug triangles for picking
@@ -555,12 +576,14 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnable(Gl.GL_BLEND);
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
             Gl.glEnable(Gl.GL_ALPHA_TEST);
+            Gl.glDepthMask(false);
         }
 
         public static void disableTransparency()
         {
             Gl.glDisable(Gl.GL_BLEND);
             Gl.glDisable(Gl.GL_ALPHA_TEST);
+            Gl.glDepthMask(true);
         }
 
         public string GetModelTimerStatus()

@@ -21,6 +21,9 @@ filename: 	the name of the texture. Note: all files associated
     <texture>
       <filename>fontWhite</filename>
     </texture>
+    <texture>
+      <filename>poof</filename>
+    </texture>
   </textures>
 
 <!-- 

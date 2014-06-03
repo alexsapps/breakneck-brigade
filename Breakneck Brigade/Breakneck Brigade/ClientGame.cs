@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Breakneck_Brigade.Graphics;
 
 namespace Breakneck_Brigade
 {
@@ -22,6 +23,7 @@ namespace Breakneck_Brigade
         public List<IngredientType> Goals { get; protected set; }
         public int LookatId { get; set; }
         public int HeldId { get; set; }
+        public List<AParticleSpawner> ParticleSpawners { get; set;}
 
         public ConfigSalad Config { get; private set; }
 
@@ -31,6 +33,7 @@ namespace Breakneck_Brigade
             
             LiveGameObjects = new Dictionary<int, ClientGameObject>();
             GameObjectsCache = new Dictionary<int, ClientGameObject>();
+            ParticleSpawners = new List<AParticleSpawner>();
             Goals = new List<IngredientType>();
 
             Config = new GameObjectConfig().GetConfigSalad();

@@ -412,6 +412,7 @@ namespace Breakneck_Brigade
                             case GameMode.Started:
                             case GameMode.Paused:
                                 renderer.GameObjects = game.GameObjectsCache.Values.ToList<ClientGameObject>();
+                                renderer.ParticleSpawners = game.ParticleSpawners;
                                 break;
                         }
                     }

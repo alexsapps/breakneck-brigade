@@ -16,16 +16,68 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// The 3D object that represents this particle
         /// </summary>
-        AObject3D Obj3D;
+        public AObject3D Obj3D;
 
         /// <summary>
-        /// Instanciates a basic 3D particle with a 1.0 radius TexturedGluSphere as the object to render.
+        /// Instanciates a basic 3D particle with a blank 1x1x0 TexturedMesh as the as the object to render.
+        /// Has the default texture.
         /// This particle has no velocity, no acceleration, and a lifetime of 10 seconds
         /// </summary>
         public Particle3D() 
             : base()
         {
-            Obj3D = new TexturedGluSphere(1.0, 5, 5);
+            VBO quad = VBO.MakeFilledCenteredQuad();
+            quad.LoadData();
+            Obj3D = new TexturedMesh() { VBO = quad, Texture = Renderer.DefaultTexture};
+        }
+
+        /// <summary>
+        /// Spawns a particle with a blank 1x1x0 TexturedMesh as the as the object to render.
+        /// Particle has the default texture.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="velocity"></param>
+        /// <param name="acceleration"></param>
+        /// <param name="scale"></param>
+        /// <param name="lifetime"></param>
+        public Particle3D(Vector4 position, Vector4 velocity, Vector4 acceleration, float scale, float lifetime)
+            : base(position, velocity, acceleration, scale, lifetime)
+        {
+            VBO quad = VBO.MakeFilledCenteredQuad();
+            quad.LoadData();
+            Obj3D = new TexturedMesh() { VBO = quad, Texture = Renderer.DefaultTexture };
+        }
+
+        /// <summary>
+        /// Instanciates a basic 3D particle with a blank 1x1x0 TexturedMesh as the as the object to render.
+        /// Has the specified texture and physics parameters
+        /// </summary>
+        /// <param name="texture"></param>
+        public Particle3D(Texture texture)
+            : base()
+        {
+            VBO quad = VBO.MakeFilledCenteredQuad();
+            quad.LoadData();
+            Obj3D = new TexturedMesh() { VBO = quad, Texture = texture };
+        }
+
+        /// <summary>
+        /// Instanciates a basic 3D particle with a blank 1x1x0 TexturedMesh as the as the object to render.
+        /// Has the specified texture and physics parameters
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="position"></param>
+        /// <param name="velocity"></param>
+        /// <param name="acceleration"></param>
+        /// <param name="scale"></param>
+        /// <param name="lifetime"></param>
+        public Particle3D(Texture texture, Vector4 position, Vector4 velocity, Vector4 acceleration, float scale, float lifetime)
+            : base(position, velocity, acceleration, scale, lifetime)
+        {
+            VBO quad = VBO.MakeFilledCenteredQuad();
+            quad.LoadData();
+            Obj3D = new TexturedMesh() { VBO = quad, Texture = texture};
+            //Obj3D = Renderer.Models["flour"].Meshes[0];
         }
 
         /// <summary>
@@ -33,37 +85,6 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public Particle3D(AObject3D obj3D)
             : base()
-        {
-            Obj3D = obj3D;
-        }
-
-        /// <summary>
-        /// Instanciates a basic 3D particle with a 1.0 radius TexturedGluSphere as the object to render
-        /// This particle has no velocity, no acceleration, and a lifetime of 10 seconds
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="velocity"></param>
-        /// <param name="acceleration"></param>
-        /// <param name="scale"></param>
-        /// <param name="lifetime"></param>
-        public Particle3D(Vector4 position, Vector4 velocity, Vector4 acceleration, float scale, float lifetime) :
-            base(position, velocity, acceleration, scale, lifetime)
-        {
-            Obj3D = new TexturedGluSphere(1.0, 5, 5);
-        }
-
-
-        /// <summary>
-        /// Instanciates a basic 3D particle with the specified 3D object as the particle model
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="velocity"></param>
-        /// <param name="acceleration"></param>
-        /// <param name="scale"></param>
-        /// <param name="lifetime"></param>
-        /// <param name="obj3D"></param>
-        public Particle3D(Vector4 position, Vector4 velocity, Vector4 acceleration, float scale, float lifetime, AObject3D obj3D) :
-            base(position, velocity, acceleration, scale, lifetime)
         {
             Obj3D = obj3D;
         }
