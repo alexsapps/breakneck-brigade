@@ -329,9 +329,13 @@ namespace DeCuisine
             // Check what the player is looking at
             Vector3 start = new Vector3
                 (
-                    this.Position.X, //Math.Sin(this.Incline * Math.PI / 180.0f) *
+                    /*this.Position.X, //Math.Sin(this.Incline * Math.PI / 180.0f) *
                     this.Position.Y + this.EyeHeight,
-                    this.Position.Z//this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+                    this.Position.Z//this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) */
+                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * this.GeomInfo.Size[0]), //Math.Sin(this.Incline * Math.PI / 180.0f) *
+                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -this.GeomInfo.Size[0],
+                    this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+
                );
 
             SCVector4 yDir = new SCVector4
@@ -347,11 +351,15 @@ namespace DeCuisine
             final *= LINEOFSIGHTSCALAR;
             Vector3 end = new Vector3
                 (
-                    start.X + final.X,
+                    /*start.X + final.X,
                     start.Y + final.Y,
-                    start.Z + final.Z
+                    start.Z + final.Z*/
+                    start.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * LINEOFSIGHTSCALAR), //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+                    start.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR,
+                    start.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+
                 );
-            CollisionWorld.AllHitsRayResultCallback raycastCallback = new CollisionWorld.AllHitsRayResultCallback(start, end);
+            CollisionWorld.ClosestRayResultCallback raycastCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
             this.Game.World.RayTest(start, end, raycastCallback);
             if (raycastCallback.HasHit)
             {
