@@ -229,12 +229,15 @@ namespace DeCuisine
                 var held = _hand.Held;
 
                 // Cause you can shoot oranges now. Why the fuck not? 
+                
                 if (held == null)
                 {
+                    return;
                     var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, crossPos);
                     tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
                     return;
                 }
+
 
                 // Throw object
                 //this.Game.World.RemoveConstraint(spSlider1);
