@@ -17,9 +17,13 @@ namespace DeCuisine
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
         private const float HOLDDISTANCE = 15.0f;
+#if PROJECT_WORLD_BUILDING
+        private const float LINEOFSIGHTSCALAR = 4000;
+#else
         private const float LINEOFSIGHTSCALAR = 200;
+#endif
         private const float RAYSTARTDISTANCE = 10;
-#if PROJECT_DEBUG
+#if PROJECT_DEBUG || PROJECT_WORLD_BUILDING
         private const int DASHTIME = 15;
 #else
         private const int DASHTIME = 5; // seconds * 30. 
@@ -185,8 +189,8 @@ namespace DeCuisine
 
             this.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.DASHSCALER;
             this.lastDashVelocity = this.Body.LinearVelocity;
-#if PROJECT_DEBUG
-            this.dashCool = 0;
+#if PROJECT_DEBUG || PROJECT_WORLD_BUILDING
+            this.dashCool = 0;     
 #else
             this.dashCool = 5 * dashTicks;
 #endif
@@ -198,6 +202,9 @@ namespace DeCuisine
         /// <param name="hand"></param>
         public void HandleClick(string hand, float orientation, float incline, float scalar)
         {
+#if PROJECT_WORLD_BUILDING
+            return;
+#endif
             if (this.Hands[hand].Held == null && this.LookingAt != null && 
                 this.LookingAt.ObjectClass == GameObjectClass.Ingredient)
                 this.PickUpObject((ServerIngredient)this.LookingAt);

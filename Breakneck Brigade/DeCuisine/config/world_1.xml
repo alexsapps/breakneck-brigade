@@ -1,119 +1,22 @@
 <world gravity="0,-190,0">
   <space>
     <!-- Floor + Walls -->
-    <terrain type="floor" shape="box" coordinate="0, -100, 0"          size="1000,100,1000" />
-    <terrain type="wall" shape="box" coordinate="-1000, 100,  0"   size="10,1000,1000" orientation="90"/>
-    <terrain type="wall" shape="box" coordinate="1000, 100,  0"   size="10,1000,1000" orientation="90"/>
-    <terrain type="wall" shape="box" coordinate="-1000, 100,  0"   size="10,1000,1000"/>
-    <terrain type="wall" shape="box" coordinate="1000, 100,  0"   size="10,1000,1000" />
-
-
-    <!--First level red team side-->
-    <terrain type="floor" shape="box" coordinate="850, 100, -100" size="150,10,900" />
-    <terrain type="floor" shape="box" coordinate="800, 100, 900"  size="100,10,100" />
-    <terrain type="wall" shape="box" coordinate="850, 160, 500"   size="150,50,50" />
-    <!--step up-->
-    <terrain type="floor" shape="box" coordinate="950, 50, 900"  size="50,5,50" />
-    
-    <!--Second level, -x,-z  side-->
-    <terrain type="floor" shape="box" coordinate="0, 150, -850" size="350, 10, 150" />
-    
-    <!--Third Level -->
-    <terrain type="floor" shape="box" coordinate="750, 210, 0" size="250,10,1000" />
-
-    <!--Fourth, the run to the other side-->
-    <terrain type="floor" shape="box" coordinate="0, 240, -950" size="400,10,50" />
-
-    <!--Steps up to the fifth level-->
-    <terrain type="floor" shape="box" coordinate="400, 300, -400" size="40,10,500" />
-
-    <!--Fifth level, much higher-->
-    <terrain type="floor" shape="box" coordinate="750, 410, 750" size="250,10,250" />
-    <terrain type="floor" shape="box" coordinate="750, 410, -750" size="250,10,250" />
-    <!--<terrain type="floor" shape="box" coordinate="0, 350, -750" size="350, 10, 250" />-->
-    
-    <!--Sixth Level-->
-    <terrain type="floor" shape="box" coordinate="750, 460, 0" size="250,10,450" />
-
-    
-    
-    <!--This 
-        is the start of the blue team world-->
-
-    <!--First level red team side-->
-    <terrain type="floor" shape="box" coordinate="-850, 100, 100" size="150,10,900" />
-    <terrain type="floor" shape="box" coordinate="-800, 100, -900"  size="100,10,100" />
-    <terrain type="wall" shape="box" coordinate="-850, 160, -500"   size="150,50,50" />
-    <!--step up-->
-    <terrain type="floor" shape="box" coordinate="-950, 50, -900"  size="50,5,50" />
-    
-    <!--Second level, +x,+z  side-->
-    <terrain type="floor" shape="box" coordinate="0, 150, 850" size="350, 10, 150" />
-
-    <!--Third Level -->
-    <terrain type="floor" shape="box" coordinate="-750, 210, 0" size="250,10,1000" />
-
-    <!--Fourth, the run to the other side-->
-    <terrain type="floor" shape="box" coordinate="0, 240, 950" size="400,10,50" />
-
-    <!--Steps up to the fifth level-->
-    <terrain type="floor" shape="box" coordinate="-400, 300, 400" size="40,10,500" />
-
-    <!--Fifth level, much higher-->
-    <terrain type="floor" shape="box" coordinate="-750, 410, -750" size="250,10,250" />
-    <terrain type="floor" shape="box" coordinate="-750, 410, 750" size="250,10,250" />
-    <!--<terrain type="floor" shape="box" coordinate="0, 350, -750" size="350, 10, 250" />-->
-
-    <!--Sixth Level-->
-    <terrain type="floor" shape="box" coordinate="-750, 460, 0" size="250,10,450" />
-
-   
+    <terrain type="floor" shape="box" coordinate="0, 0, 0"        size="500,10,500" />
+    <terrain type="wall" shape="box" coordinate="-510, 115,  0"   size="10,125,500" />
+    <terrain type="wall" shape="box" coordinate="0, 115,  -510"    size="500,125,10" />
+    <terrain type="wall" shape="box" coordinate="0, 115, 510"   size="500,125,10" />
+    <terrain type="wall" shape="box" coordinate="510, 115,   0"    size="10,125,500" />
 
     <!--Ceiling-->
-    <terrain type="floor" shape="box" coordinate="0, 1000, 0" size="1000,40,1000" />
+    <terrain type="floor" shape="box" coordinate="0, 250, 0" size="500,10,500" />
 
     <!-- Red team side -->
-    <static team="red" type="woodenCounter"  coordinate="-800, 4, -600"  size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="red" type="blender" coordinate="-800, 20, -600" ></cooker>
+    <static team="red" type="woodenCounter"  coordinate="0, 4, 0"  size="7,2.7,7" model="woodenCounter"></static>
+    <cooker team="red" type="blender" coordinate="0, 20, 0" ></cooker>
 
-    <static type="woodenCounter"  coordinate="-800, 4, -800" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="red" type="pot" coordinate="-800, 20, -800"></cooker>
 
-    <static type="woodenCounter" coordinate="-300, 4, -600" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="red" type="pan" coordinate="-300, 20, -600"></cooker>
+    <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" orientation="90" model="deliveryWindow"/>
+    <static type="deliveryWindow" coordinate="0,40,0" size="20,20,20" model="deliveryWindow"/>
 
-    <static type="table"  coordinate="-300, 4, -900" model="table" size="7,2.7,7"></static>
-    <cooker team="red" type="bowl" coordinate="-300, 20, -900"></cooker>
-
-    <cooker team="red" type="oven" coordinate="-300, 80, -700"></cooker>
-
-    <static type="woodenCounter"  coordinate="-300, 4, -800" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="red" type="toaster" coordinate="-300, 20, -800"></cooker>
-
-    <!-- Blue team side -->
-    <static type="woodenCounter"  coordinate="800, 4, 600"  size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="blue" type="blender" coordinate="800, 20, 600" ></cooker>
-
-    <static type="woodenCounter"  coordinate="800, 4, 800" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="blue" type="pot" coordinate="800, 20, 800"></cooker>
-
-    <static type="woodenCounter" coordinate="300, 4, 600" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="blue" type="pan" coordinate="300, 20, 600"></cooker>
-
-    <static type="table"  coordinate="300, 4, 900" model="table" size="7,2.7,7"></static>
-    <cooker team="blue" type="bowl" coordinate="300, 20, 900"></cooker>
-
-    <cooker team="blue" type="oven" coordinate="300, 20, 700"></cooker>
-
-    <static type="woodenCounter"  coordinate="300, 4, 800" size="7,2.7,7" model="woodenCounter"></static>
-    <cooker team="blue" type="toaster" coordinate="300, 8, 800"></cooker>
-
-    <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" model="deliveryWindow"/>
-
-    <!--Some initial ingredients for testing-->
-    <ingredient type="iceCream" coordinate="500,12,0" />
-    <ingredient type="milk" coordinate="-500,12,0" />
-    <ingredient type="orange" coordinate="0,12,500" />
-    <ingredient type="milkshake" coordinate="0,12,-500" />
   </space>
 </world>

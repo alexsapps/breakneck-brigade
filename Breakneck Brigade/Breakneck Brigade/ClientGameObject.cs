@@ -167,7 +167,7 @@ namespace Breakneck_Brigade
                 Gl.glPopMatrix();
 
                 //Wire collision box
-#if PROJECT_DEBUG
+#if PROJECT_DEBUG || PROJECT_WORLD_BUILDING
                 Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE);
                 Gl.glDisable(Gl.GL_TEXTURE);
                 Gl.glDisable(Gl.GL_CULL_FACE);

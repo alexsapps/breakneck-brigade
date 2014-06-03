@@ -65,6 +65,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WorldBuilding|AnyCPU'">
+    <OutputPath>bin\WorldBuilding\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PROJECT_WORLD_BUILDING</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
       <HintPath>..\Breakneck Brigade\lib\BulletSharp.dll</HintPath>

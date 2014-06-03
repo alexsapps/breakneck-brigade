@@ -32,9 +32,5 @@ namespace Breakneck_Brigade
             finalizeConstruction();
         }
         
-        public override void StreamUpdate(BinaryReader reader)
-        {
-            throw new NotSupportedException();
-        }
     }
 }

@@ -143,6 +143,16 @@ namespace DeCuisine
                                 }
                         break;
                     }
+                case "rotate":
+                    {
+                        lock (server.Lock)
+                            lock (server.Game.Lock)
+                                if (server.Game.Mode == GameMode.Started)
+                                {
+                                    ManipulateObj(server.Game, args);
+                                }
+                        break;
+                    }
                 case "wingame":
                     {
                         server.Game.Mode = GameMode.None;
@@ -469,32 +479,60 @@ namespace DeCuisine
 
         public static void ManipulateObj(ServerGame game, string[] args)
         {
+            if( args[0] == "rotate" && args.Length == 3)
+            {
+                int id, deg;
+                if (!int.TryParse(args[1], out id))
+                {
+                    Program.WriteLine(id + " is not an int");
+                    return;
+                }
+                if (!int.TryParse(args[2], out deg))
+                {
+                    Program.WriteLine(id + " is not an int");
+                    return;
+                }
+                game.RotObj(id, deg);
+                return;
+
+            }
             if (args.Length < 4)
             {
                 Console.WriteLine("Needs an id, x, y, and z position");
                 return;
             }
-            int id, x, y, z;
-            int[] parsed = new int[4];
-            for (int i = 1; i < args.GetLength(0); i++)
+            int startIdx = 1;
+            // It's a translate not an absolute movement
+            if (args[1] == "+")
             {
-                if (!int.TryParse(args[i], out parsed[i - 1]))
+                startIdx = 2;
+            }
+            int[] parsed = new int[4];
+            for (int i = startIdx; i < args.GetLength(0); i++)
+            {
+                if (!int.TryParse(args[i], out parsed[i - startIdx]))
                 {
                     Program.WriteLine(args[i] + " is not an int");
                     return;
                 }
             }
-            if(args[0] == "move")
-                game.MoveObj(parsed[0], parsed[1], parsed[2], parsed[3]);
-            else if(args[0] == "scale")
+            if (args[0] == "move")
+            {
+                if (args[1] == "+")
+                    game.TransObj(parsed[0], parsed[1], parsed[2], parsed[3]);
+                else
+                    game.MoveObj(parsed[0], parsed[1], parsed[2], parsed[3]);
+            }
+            else if (args[0] == "scale")
             {
                 int newId = game.ScaleObj(parsed[0], parsed[1], parsed[2], parsed[3]);
                 if (newId == -1)
                     Program.WriteLine("Scalling faild, object not found in world");
                 else
-                    Program.WriteLine("ID of newly scaled object is " + newId); 
+                    Program.WriteLine("ID of newly scaled object is " + newId);
                 return;
-            }else
+            }
+            else
                 throw new Exception("Bug. Who the hell called this function?");
         }
     }
