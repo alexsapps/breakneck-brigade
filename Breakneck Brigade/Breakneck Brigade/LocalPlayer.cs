@@ -189,7 +189,7 @@ namespace Breakneck_Brigade
             }
 
             // Change page up.
-            if(keyDown(GlfwKeys.GLFW_KEY_TAB))
+            if (keyDown(GlfwKeys.GLFW_KEY_LEFT_CONTROL))
             {
                 this.bookIndex--;
                 if (this.bookIndex < 0)
