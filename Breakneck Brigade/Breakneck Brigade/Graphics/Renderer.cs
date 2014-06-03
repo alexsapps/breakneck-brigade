@@ -285,7 +285,8 @@ namespace Breakneck_Brigade.Graphics
             render3D();
             prep2D();
             render2D();
-            this.DrawCookbook(lp.SelectedRecipe, 5, 500);
+            if( lp != null)
+                this.DrawCookbook(lp.SelectedRecipe, 5, 500);
 
             _stopwatch3.Start();
             Glfw.glfwSwapBuffers();

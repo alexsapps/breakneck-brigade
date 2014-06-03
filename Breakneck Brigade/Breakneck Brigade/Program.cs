@@ -57,7 +57,7 @@ namespace Breakneck_Brigade
         static void Main(string[] args)
         {
             
-            SoundThing.Play("scratch");
+            //SoundThing.Play("scratch");
 
             //Thread.Sleep(5000);
 
