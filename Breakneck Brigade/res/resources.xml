@@ -24,6 +24,37 @@ filename: 	the name of the texture. Note: all files associated
     <texture>
       <filename>poof</filename>
     </texture>
+    <texture>
+      <filename>colSparkYellow</filename>
+    </texture>
+    <texture>
+      <filename>confettiRed</filename>
+    </texture>
+    <texture>
+      <filename>confettiGreen</filename>
+    </texture>
+    <texture>
+      <filename>confettiBlue</filename>
+    </texture>
+    <texture>
+      <filename>smokeBlue</filename>
+    </texture>
+    <texture>
+      <filename>smokeGreen</filename>
+    </texture>
+    <texture>
+      <filename>smokeGrey</filename>
+    </texture>
+    <texture>
+      <filename>smokeRed</filename>
+    </texture>
+    <texture>
+      <filename>smokeWhite</filename>
+    </texture>
+    <texture>
+      <filename>smokeYellow</filename>
+    </texture>
+
   </textures>
 
 <!-- 
@@ -505,6 +536,18 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <rotX>0</rotX>
       <rotY>0</rotY>
       <rotZ>0</rotZ>
+    </model>
+    <model>
+      <filename>cube111</filename>
+      <posX>0</posX>
+      <posY>0</posY>
+      <posZ>0</posZ>
+      <scaleX>1.0</scaleX>
+      <scaleY>1.0</scaleY>
+      <scaleZ>1.0</scaleZ>
+      <rotX>0</rotX>
+      <rotY>0</rotY>
+      <rotZ>0</rotZ>      
     </model>
   </models>
 </resources>

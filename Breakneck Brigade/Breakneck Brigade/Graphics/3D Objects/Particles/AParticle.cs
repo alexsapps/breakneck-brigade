@@ -36,7 +36,7 @@ namespace Breakneck_Brigade.Graphics
         public      float   Scale;
 
         public      float   Lifetime;
-        public      float   Age { get; private set; }
+        protected   float   _age { get; set; }
         public      bool    ShouldDie;
 
 
@@ -51,7 +51,7 @@ namespace Breakneck_Brigade.Graphics
             RotationalVelocity  = new Vector4(0, 0, 0);
             Rotation            = new Vector4(0, 0, 0);
             Lifetime            = 10.0f;
-            Age                 = 0.0f;
+            _age                 = 0.0f;
             ShouldDie           = false;
             _transform          = new Matrix4();
         }
@@ -65,7 +65,7 @@ namespace Breakneck_Brigade.Graphics
             Rotation            = new Vector4(0, 0, 0);
             Scale               = scale;
             Lifetime            = lifetime;
-            Age                 = 0.0f;
+            _age                 = 0.0f;
             ShouldDie           = false;
             _transform          = new Matrix4();
         }
@@ -77,12 +77,12 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="timestep">The amount of time that has passed since the particle was last updated</param>
         public virtual void Update(float timestep)
         {
-            if(Age == 0.0f)
+            if(_age == 0.0f)
             {
                 //OnCreate();
             }
-            Age += timestep;
-            if(Age > Lifetime)
+            _age += timestep;
+            if(_age > Lifetime)
             {
                 ShouldDie = true;
                 //OnDestroy();

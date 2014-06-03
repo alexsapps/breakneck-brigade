@@ -53,8 +53,8 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         public static Texture   DefaultTexture;
 
-        public IList<ClientGameObject>    GameObjects { get; set; }
-        public IList<AParticleSpawner>    ParticleSpawners { get; set; }
+        public IList<ClientGameObject>      GameObjects { get; set; }
+        public IList<AParticleSpawner>      ParticleSpawners { get; set; }
 
         private     Matrix4         WorldTransform;
         private     Camera          Camera;
@@ -664,17 +664,19 @@ namespace Breakneck_Brigade.Graphics
             if(ParticleSpawners != null)
             {
                 //DEBUG
+                /*
                 if(ParticleSpawners.Count == 0)
                 {
-                    PSFlourPoof psfp = new PSFlourPoof(new Vector4(0, 50, 0));
-                    psfp.StartSpawning();
-                    ParticleSpawners.Add(psfp);
+                    AParticleSpawner testSpawner = new PSSmoke(new Vector4(0, 10, 0), SmokeType.YELLOW | SmokeType.WHITE | SmokeType.RED | SmokeType.GREY | SmokeType.GREEN | SmokeType.BLUE);
+                    testSpawner.StartSpawning();
+                    ParticleSpawners.Add(testSpawner);
                 }
-                foreach(AParticleSpawner ps in ParticleSpawners)
+                 * */
+                foreach (AParticleSpawner ps in ParticleSpawners)
                 {
-                    ps.Update();
                     ps.Render();
                 }
+
             }
             Renderer.disableTransparency();
 
