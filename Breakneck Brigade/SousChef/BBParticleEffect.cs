@@ -8,8 +8,11 @@ namespace SousChef
 {
     public enum BBParticleEffect
     {
-        Effect1,
-        Effect2
+        SMOKE,
+        CONFETTI,
+        SPARKS,
+        SPLASH,
+        STARS
     }
     [Flags]
     public enum SmokeType

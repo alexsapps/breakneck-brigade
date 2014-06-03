@@ -51,6 +51,8 @@ namespace Breakneck_Brigade
         static GlobalsConfigFolder config = new GlobalsConfigFolder();
         static GlobalsConfigFile globalConfig;
 
+        private static List<AParticleSpawner> PSToRemove { get; set; }
+
         static public LocalPlayer localPlayer;
         static public InputManager IM;
 
@@ -88,6 +90,8 @@ namespace Breakneck_Brigade
 
             //appThread.Join();
 
+            PSToRemove = new List<AParticleSpawner>();
+            
             doGameCycle();
 
             CloseHandle(GetStdHandle(StdHandle.Stdin)); //terminate input thread
@@ -407,8 +411,19 @@ namespace Breakneck_Brigade
                         {
                             case GameMode.Started:
                             case GameMode.Paused:
-                                renderer.GameObjects = game.GameObjectsCache.Values.ToList<ClientGameObject>();
-                                renderer.ParticleSpawners = game.ParticleSpawners;
+                                renderer.GameObjects        = game.GameObjectsCache.Values.ToList<ClientGameObject>();
+                                //Update particles
+                                foreach(AParticleSpawner ps in game.ParticleSpawners)
+                                {
+                                    ps.Update();
+                                    if (ps.RemoveMe)
+                                        PSToRemove.Add(ps);
+                                }
+                                foreach(AParticleSpawner ps in PSToRemove)
+                                    game.ParticleSpawners.Remove(ps);
+                                if(PSToRemove.Count > 0)
+                                    PSToRemove.Clear();
+                                renderer.ParticleSpawners   = new List<AParticleSpawner>(game.ParticleSpawners);
                                 break;
                         }
                     }
@@ -788,6 +803,28 @@ namespace Breakneck_Brigade
                                         {
                                             var e = new ServerParticleEffectMessage();
                                             e.Read(reader);
+                                            AParticleSpawner spawner = null;
+                                            switch(e.ParticleEffect)
+                                            {
+                                                case BBParticleEffect.CONFETTI:
+                                                    spawner = new PSConfetti(e.Location);
+                                                    break;
+                                                case BBParticleEffect.SMOKE:
+                                                    spawner = new PSSmoke(e.Location, (SmokeType) e.Param);
+                                                    break;
+                                                case BBParticleEffect.SPARKS:
+                                                    spawner = new PSSparks(e.Location);
+                                                    break;
+                                                case BBParticleEffect.SPLASH:
+                                                    break;
+                                                case BBParticleEffect.STARS:
+                                                    break;
+                                            }
+                                            if(spawner != null)
+                                            {
+                                                game.ParticleSpawners.Add(spawner);
+                                                spawner.StartSpawning();
+                                            }
                                             break;
                                         }
                                         default:

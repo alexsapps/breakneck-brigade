@@ -55,7 +55,6 @@ namespace Breakneck_Brigade.Graphics
 
         public IList<ClientGameObject>      GameObjects { get; set; }
         public IList<AParticleSpawner>      ParticleSpawners { get; set; }
-        private List<AParticleSpawner>      PSToRemove { get; set; }
 
         private     Matrix4         WorldTransform;
         private     Camera          Camera;
@@ -78,7 +77,6 @@ namespace Breakneck_Brigade.Graphics
         {
             parser          = new ModelParser();
             WorldTransform  = new Matrix4();
-            PSToRemove      = new List<AParticleSpawner>();
 
             InitGLFW();
             InitGL();
@@ -666,23 +664,19 @@ namespace Breakneck_Brigade.Graphics
             if(ParticleSpawners != null)
             {
                 //DEBUG
+                /*
                 if(ParticleSpawners.Count == 0)
                 {
                     AParticleSpawner testSpawner = new PSSmoke(new Vector4(0, 10, 0), SmokeType.YELLOW | SmokeType.WHITE | SmokeType.RED | SmokeType.GREY | SmokeType.GREEN | SmokeType.BLUE);
                     testSpawner.StartSpawning();
                     ParticleSpawners.Add(testSpawner);
                 }
-                foreach(AParticleSpawner ps in ParticleSpawners)
+                 * */
+                foreach (AParticleSpawner ps in ParticleSpawners)
                 {
-                    ps.Update();
                     ps.Render();
-                    if (ps.RemoveMe)
-                        PSToRemove.Add(ps);
                 }
-                foreach(AParticleSpawner ps in PSToRemove)
-                    ParticleSpawners.Remove(ps);
-                if(PSToRemove.Count > 0)
-                    PSToRemove.Clear();
+
             }
             Renderer.disableTransparency();
 
