@@ -21,18 +21,18 @@ namespace Breakneck_Brigade.Graphics
         private VBO _singletonQuad;
 
         /// <summary>
-        /// Instanciates a basic 3D particle with a blank 1x1x0 TexturedMesh as the as the object to render.
+        /// Instanciates a basic 3D particle with a blank 1x1x1 TexturedMesh as the as the object to render.
         /// Has the default texture.
         /// This particle has no velocity, no acceleration, and a lifetime of 10 seconds
         /// </summary>
         public Particle3D() 
             : base()
         {
-            Obj3D = new TexturedMesh() { VBO = quad, Texture = Renderer.DefaultTexture};
+            Obj3D = new TexturedMesh() { VBO = ((TexturedMesh)Renderer.Models["cube111"].Meshes[0]).VBO, Texture = Renderer.DefaultTexture };
         }
 
         /// <summary>
-        /// Instanciates a basic 3D particle with a blank 1x1x0 TexturedMesh as the as the object to render.
+        /// Instanciates a basic 3D particle with a blank 1x1x1 TexturedMesh as the as the object to render.
         /// Has the specified texture and physics parameters
         /// </summary>
         /// <param name="texture"></param>
