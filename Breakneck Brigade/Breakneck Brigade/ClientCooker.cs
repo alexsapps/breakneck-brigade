@@ -13,7 +13,7 @@ namespace Breakneck_Brigade
     {
         public CookerType Type { get; set; }
         public List<ClientIngredient> Contents { get; set; }
-
+        public ClientTeam Team { get; set; }
         public override float[] Sides { get { return Type.GeomInfo.Size; } }
         public override string ModelName { get { return Type.Name; } }
 
@@ -32,6 +32,8 @@ namespace Breakneck_Brigade
         {
             string cookerType = reader.ReadString();
             this.Type = game.Config.Cookers[cookerType];
+            string cookerTeam = reader.ReadString();
+            this.Team = Program.lobbyState.Teams[cookerTeam];
             this.Contents = new List<ClientIngredient>();
             processIngredients(reader);
             base.finalizeConstruction(); //set the model based on the type of object

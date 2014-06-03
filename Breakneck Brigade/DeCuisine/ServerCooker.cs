@@ -68,6 +68,7 @@ namespace DeCuisine
         {
             base.Serialize(stream);
             stream.Write(this.Type.Name);
+            stream.Write(this.Team.Name);
             writeIngredients(stream);
         }
 
