@@ -775,7 +775,11 @@ namespace Breakneck_Brigade
                                         {
                                             var e = new ServerSoundMessage();
                                             e.Read(reader);
-                                            SoundThing.Play(e.Sound);
+                                            var playerPos = localPlayer.GetPosition();
+                                            var soundPos = e.Location;
+                                            double distance = getDistance(playerPos, soundPos);
+                                            int volume = (int)Math.Log(distance, 2.0);
+                                            SoundThing.Play(e.Sound, volume);
                                             break;
                                         }
                                         case ServerMessageType.ParticleEffect:
@@ -858,6 +862,16 @@ namespace Breakneck_Brigade
                     }
                 }
             }
+        }
+
+        public static double getDistance(Vector4 p1, Vector4 p2)
+        {
+            return
+                Math.Pow(
+                Math.Pow(p1.X - p2.X, 2.0) +
+                Math.Pow(p1.Y - p2.Y, 2.0) +
+                Math.Pow(p1.Z - p2.Z, 2.0),
+                0.5);
         }
 
         static void sendEvents(List<ClientEvent> events)

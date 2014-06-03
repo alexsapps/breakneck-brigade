@@ -33,11 +33,11 @@ namespace SousChef
          * 
          * @param key The key of the sound to play.  Note that this *is* case-sensitive.
          */
-        public static void Play(BBSound key)
+        public static void Play(BBSound key, int volume)
         {
             String temp = "";
             l.TryGetValue(key.ToString(), out temp);
-            new Thread(new SoundThread(temp).DoWork).Start();
+            new Thread(new SoundThread(temp, volume).DoWork).Start();
         }
 
         /**
@@ -71,13 +71,19 @@ namespace SousChef
             private string path;
 
             /**
+             * The volume to play the sound at
+             */
+            private int volume;
+
+            /**
              * Constructor, creates a SoundThread with a specified sound to play.
              * 
              * @param path The path to the file to play
              */
-            public SoundThread(string path)
+            public SoundThread(string path, int volume)
             {
                 this.path = path;
+                this.volume = volume;
             }
 
             /**
