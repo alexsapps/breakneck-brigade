@@ -84,7 +84,8 @@ namespace DeCuisine
                 Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
-                this.recomputeTintList(); 
+                this.recomputeTintList();
+                this.MarkDirty();
                 return true;
             }
             return false;
@@ -96,6 +97,7 @@ namespace DeCuisine
             var ingredient = ((ServerIngredient)sender);
             Contents.Remove(ingredient.Id);
             ingredient.Removed -= ingredient_Removed;
+            this.MarkDirty();
         }
 
         /*
@@ -145,6 +147,8 @@ namespace DeCuisine
             Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1], this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
             ServerIngredient newIngredient = new ServerIngredient(recipe.FinalProduct, this.Game, ingredientSpawningPoint);
             newIngredient.Body.ApplyImpulse(new Vector3(0, EJECTSPEED, 0), ingredientSpawningPoint);
+            this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
+            this.MarkDirty();
         }
 
 

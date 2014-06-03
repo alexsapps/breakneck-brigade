@@ -1,7 +1,7 @@
 <world gravity="0,-190,0">
   <space>
     <!-- Floor + Walls -->
-    <terrain type="floor" shape="box" coordinate="0, 0, 0"        size="500,10,500" />
+    <terrain type="floor" shape="box" coordinate="0, -10, 0"        size="500,10,500" />
     <terrain type="wall" shape="box" coordinate="-510, 115,  0"   size="10,125,500" />
     <terrain type="wall" shape="box" coordinate="0, 115,  -510"    size="500,125,10" />
     <terrain type="wall" shape="box" coordinate="0, 115, 510"   size="500,125,10" />
@@ -16,7 +16,7 @@
 
 
     <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
-    <static type="deliveryWindow" coordinate="0,40,0" size="20,20,20" model="deliveryWindow" friendlyName="Delivery Window"/>
+
 
   </space>
 </world>
