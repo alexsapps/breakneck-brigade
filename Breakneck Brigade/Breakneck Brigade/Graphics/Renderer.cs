@@ -505,7 +505,7 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null && Program.game.LiveGameObjects != null)
             {
-                string lookingAt = Program.game.LookatId == -1 ? "nothing" : Program.game.LiveGameObjects[Program.game.LookatId].ModelName;
+                string lookingAt = Program.game.LiveGameObjects.ContainsKey(Program.game.LookatId) ? Program.game.LiveGameObjects[Program.game.LookatId].ModelName : "nothing";
                 TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
             }
         }
