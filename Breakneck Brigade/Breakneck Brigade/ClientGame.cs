@@ -24,21 +24,22 @@ namespace Breakneck_Brigade
         public int HeldId { get; set; }
 
         public ConfigSalad Config { get; private set; }
+        public List<Recipe> Recipies { get; private set; }
 
         public ClientGame(BBLock @lock)
         {
             Lock = @lock;
             
-            LiveGameObjects = new Dictionary<int, ClientGameObject>();
-            GameObjectsCache = new Dictionary<int, ClientGameObject>();
-            Goals = new List<IngredientType>();
-
-            Config = new GameObjectConfig().GetConfigSalad();
-            TintedObjects = new Dictionary<string, HashSet<string>>();
-            TintedObjects.Add("red", new HashSet<string>());
-            TintedObjects.Add("blue", new HashSet<string>());
-            LookatId = -1;
-            HeldId = -1;
+            this.LiveGameObjects = new Dictionary<int, ClientGameObject>();
+            this.GameObjectsCache = new Dictionary<int, ClientGameObject>();
+            this.Goals = new List<IngredientType>();
+            this.Config = new GameObjectConfig().GetConfigSalad();
+            this.Recipies = this.Config.Recipes.Values.ToList();
+            this.TintedObjects = new Dictionary<string, HashSet<string>>();
+            this.TintedObjects.Add("red", new HashSet<string>());
+            this.TintedObjects.Add("blue", new HashSet<string>());
+            this.LookatId = -1;
+            this.HeldId = -1;
         }
 
 
