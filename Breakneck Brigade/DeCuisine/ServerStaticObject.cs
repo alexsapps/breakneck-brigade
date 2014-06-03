@@ -61,8 +61,10 @@ namespace DeCuisine
             if (Model == "deliveryWindow" && obj.ObjectClass == GameObjectClass.Ingredient)
             {
                 // trying to score, pass to the controller
-                this.Game.SendSound(BBSound.eatfood, this.Position);
-                this.Game.Controller.ScoreDeliver((ServerIngredient)obj);
+                if(this.Game.Controller.ScoreDeliver((ServerIngredient)obj))
+                {
+                    this.Game.SendSound(BBSound.eatfood, this.Position);
+                }
             }
         }
     }

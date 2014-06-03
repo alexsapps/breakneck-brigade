@@ -725,6 +725,17 @@ namespace Breakneck_Brigade
                                     break;
                                 case GameMode.Results:
                                     MessageBox.Show(lobbyState.WinningTeam == null ? "Draw!  Neither team wins." : lobbyState.WinningTeam.Name + " wins!");
+                                    if(lobbyState.WinningTeam != null && lobbyState.WinningTeam.Clients.Contains("hi"))
+                                    {
+                                        int volume = (int)Math.Log(4, 2.0);
+                                        SoundThing.Play(BBSound.explosionfar, volume);
+                                    }
+                                    else
+                                    {
+                                        int volume = (int)Math.Log(4, 2.0);
+                                        SoundThing.Play(BBSound.sadtrombone, volume);
+                                    }
+
                                     break;
                                 case GameMode.Stopping:
                                     break;

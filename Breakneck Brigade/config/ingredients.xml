@@ -21,9 +21,9 @@
   <ingredient name="orange" friendlyName="Orange" points="110" shape="sphere" size="5, 5, 5"/>
   <ingredient name="steak" friendlyName="Steak" points="110" size="8, 2, 8" />
   <!--et starts here-->
-  <ingredient name="salt" friendlyName="Salt" points="110" size="2, 1, 2"/>
+  <ingredient name="salt" friendlyName="Salt" points="110" size="8, 5, 8"/>
   <ingredient name="onion" friendlyName="Onion" points="2000" size="2, 2, 2"/>
-  <ingredient name="noodles" friendlyName="Noodles" points="110" size="4, 1, 4" />
+  <ingredient name="noodles" friendlyName="Noodles" points="110" size="5, 9, 2" />
   <ingredient name="rawChicken" friendlyName="Raw Chicken" points="110" size="4, 1, 4" />
 
   <!--Final Recipe Products-->
@@ -32,11 +32,11 @@
   <ingredient name="cookedSteak" friendlyName="Cooked Steak" points="110" size="4, 1, 4" />
   <ingredient name="pasta" friendlyName="Pasta" points="110" size="4, 1, 4" />
   <ingredient name="cake" friendlyName="Cake" points="2000" size="6, 4, 6"/>
-  <ingredient name="Toasted Bread" friendlyName="Toasted Bread" points="110" size="3, 0.5, 3" />
+  <ingredient name="Toasted Bread" friendlyName="Toasted Bread" points="110" size="9, 1.5, 9" />
   <ingredient name="chicken" friendlyName="chicken" points="110" size="4, 1, 4" />
   <ingredient name="caesarSalad" friendlyName="Caesar Salad" points="110" size="4, 1, 4" />
   <ingredient name="soup" friendlyName="Soup" points="110" size="4, 1, 4" />
   <ingredient name="cakeBatter" friendlyName="Cake Batter" points="110" size="4, 1, 4" />
-  <ingredient name="sauce" friendlyName="Sauce" points="110" size="1.5, 4, 1.5" />
+  <ingredient name="sauce" friendlyName="Sauce" points="110" size="4, 8, 4" />
 
 </ingredients>

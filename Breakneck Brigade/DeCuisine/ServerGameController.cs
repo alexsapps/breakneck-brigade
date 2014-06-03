@@ -251,7 +251,7 @@ namespace DeCuisine
             this.DisplayScore();
         }
 
-        public void ScoreDeliver(ServerIngredient ing)
+        public bool ScoreDeliver(ServerIngredient ing)
         {
             Goal goalToRemove = null;
             foreach (var goal in Goals)
@@ -272,9 +272,16 @@ namespace DeCuisine
                 }
             }
             if (goalToRemove != null)
+            {
                 this.Goals.Remove(goalToRemove);
-
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
+
         public bool CheckWin()
         {
 #if PROJECT_WORLD_BUILDING
