@@ -284,9 +284,7 @@ namespace Breakneck_Brigade.Graphics
             prep3D(lp);
             render3D();
             prep2D();
-            render2D();
-            if( lp != null)
-                this.DrawCookbook(lp.SelectedRecipe, 5, 500);
+            Render2D(lp);
 
             _stopwatch3.Start();
             Glfw.glfwSwapBuffers();
@@ -457,7 +455,7 @@ namespace Breakneck_Brigade.Graphics
             Camera.Render();
         }
 
-        private void render2D()
+        private void Render2D(LocalPlayer player)
         {
             /*
             Gl.glPushMatrix();
@@ -475,6 +473,11 @@ namespace Breakneck_Brigade.Graphics
             //Models[BLANKQUAD_MODEL_NAME].Render();
             drawGoals();
             drawHeld();
+            if (player != null)
+            {
+                this.DrawRecipe(player.SelectedRecipe, 5, 500);
+            }
+
             Renderer.disableTransparency();
             //Models["iceCream"].Render();
 
@@ -535,7 +538,7 @@ namespace Breakneck_Brigade.Graphics
             }
         }
 
-        private void DrawCookbook(Recipe selectedRecipe, int xPos, int yPos)
+        private void DrawRecipe(Recipe selectedRecipe, int xPos, int yPos)
         {
             int padding = 5;
             int spacing = 10;
@@ -544,6 +547,7 @@ namespace Breakneck_Brigade.Graphics
                 TextRenderer.printToScreen(xPos, yPos, selectedRecipe.Name, .75f, .75f);
                 yPos -= (spacing + padding);
                 TextRenderer.printToScreen(xPos, yPos, "-REQURIED-" , .75f, .75f);
+                yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {
                     for( int i = 0; i < ingredient.nCount; i++)
