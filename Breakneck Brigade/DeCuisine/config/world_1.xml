@@ -12,31 +12,28 @@
 
     <!-- Red team side -->
     <static team="red" type="woodenCounter"  coordinate="484, 5, 200"  size="25,10,300" model="woodenCounter" friendlyName="Wooden Counter"></static>
-    <cooker team="red" type="blender" coordinate="484, 20, 200" orientation="270"></cooker>
+    <cooker team="red" type="blender" coordinate="484, 20, -100"></cooker>
 
-    <cooker team="red" type="pan" coordinate="250, 20, 0" ></cooker>
+    <cooker team="red" type="pan" coordinate="484, 20, 0" ></cooker>
 
-    <cooker team="red" type="toaster" coordinate="200, 20, 0"></cooker>
+    <cooker team="red" type="toaster" coordinate="484, 20, 100"></cooker>
 
-    <cooker team="red" type="pot" coordinate="200, 20, 0"></cooker>
+    <cooker team="red" type="pot" coordinate="484, 20, 200"></cooker>
     
-    <cooker team="red" type="oven" coordinate="200, 20, 0"></cooker>
+    <cooker team="red" type="oven" coordinate="484, 20, 300"></cooker>
 
 
     <!--Blue team side-->
     <static team="blue" type="woodenCounter"  coordinate="170, 5,485"  orientation="90" size="25,10,300" model="woodenCounter" friendlyName="Wooden Counter"></static>
-    <cooker team="blue" type="blender" coordinate="200, 20, 0" ></cooker>
+    <cooker team="blue" type="blender" coordinate="-100, 20, 484" ></cooker>
                   
-    <cooker team="blue" type="pan" coordinate="250, 20, 0" ></cooker>
+    <cooker team="blue" type="pan" coordinate="0, 20, 484" ></cooker>
                   
-    <cooker team="blue" type="toaster" coordinate="200, 20, 0"></cooker>
+    <cooker team="blue" type="toaster" coordinate="100, 20, 484"></cooker>
                   
-    <cooker team="blue" type="pot" coordinate="200, 20, 0"></cooker>
+    <cooker team="blue" type="pot" coordinate="200, 20, 484"></cooker>
                   
-    <cooker team="blue" type="oven" coordinate="200, 20, 0"></cooker>
-
-    <ingredient type="hamburger" coordinate="0,0,0" ></ingredient>
-    <ingredient type="milkshake" coordinate="0,0,0" ></ingredient>
+    <cooker team="blue" type="oven" coordinate="300, 20, 484"></cooker>
 
     <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,90,180" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
 
