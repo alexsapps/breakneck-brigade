@@ -84,7 +84,6 @@ namespace DeCuisine
                 Contents.Add(ingredient.Id, ingredient);
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
-                this.Game.Controller.ScoreAdd(ingredient.LastPlayerHolding, ingredient);
                 this.recomputeTintList(); 
                 return true;
             }
