@@ -532,6 +532,7 @@ namespace Breakneck_Brigade.Graphics
                     if(lookedAtObject is ClientCooker)
                     {
                         ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
+                        lookingAt += " (" + lookedAtCooker.Team.Name + ")";
                         string ingedientList = "- ";
                         foreach(ClientIngredient ingredient in lookedAtCooker.Contents)
                         {
@@ -540,11 +541,11 @@ namespace Breakneck_Brigade.Graphics
 
                         ingedientList += "-";
 
-                        yPos -= (spacing + padding);
+                        //yPos -= (spacing + padding);
                         TextRenderer.printToScreen(xPos, yPos - (spacing + padding), ingedientList, .75f, .75f);
                     }
 
-                    lookingAt = lookedAtObject.ToString();
+                    // lookingAt = lookedAtObject.ToString();
                 }
                 else
                 {
@@ -688,8 +689,13 @@ namespace Breakneck_Brigade.Graphics
 
             }
             Renderer.disableTransparency();
+            //this.DebugPicking();
 
-            
+            CurrentDrawMode = -1;
+        }
+
+        private static void DebugPicking()
+        {
             // Debug triangles for picking
             Gl.glDisable(Gl.GL_CULL_FACE);
             Gl.glColor3f(1.0f, 0f, 0f);
@@ -707,9 +713,6 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnd();
             Gl.glDisable(Gl.GL_CULL_FACE);
             Gl.glColor3f(1.0f, 1.0f, 1.0f);
-            
-
-            CurrentDrawMode = -1;
         }
 
         public static void enableTransparency()
