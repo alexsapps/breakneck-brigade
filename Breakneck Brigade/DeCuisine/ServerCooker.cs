@@ -19,7 +19,9 @@ namespace DeCuisine
         private const float EJECTSPEED = 5.0f;
 
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
-        public Dictionary<int, ServerIngredient> Contents { get; private set; }
+        public Dictionary<int, ServerIngredient> Contents
+        { get { return _contents; } private set { this.MarkDirty(); this._contents = value; } }
+        public Dictionary<int, ServerIngredient> _contents;
         public CookerType Type { get; set; }
         protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
         public ServerTeam Team { get; set; }
@@ -42,7 +44,7 @@ namespace DeCuisine
             : base(game)
         {
             this.Type = type;
-            this.Contents = new Dictionary<int, ServerIngredient>();
+            this._contents = new Dictionary<int, ServerIngredient>();
             this.Team = team;
             AddToWorld(transform);
         }
