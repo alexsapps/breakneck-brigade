@@ -474,8 +474,8 @@ namespace Breakneck_Brigade.Graphics
             Models[CROSSHAIR_MODEL_NAME].Render();
             Renderer.enableTransparency();
             //Models[BLANKQUAD_MODEL_NAME].Render();
-            drawGoals();
-            drawHeld();
+            this.DrawGoals(5, padding);
+            this.DrawHeld(500, 30);
             if (player != null)
             {
                 this.DrawRecipe(player.SelectedRecipe, 5, 500);
@@ -491,13 +491,8 @@ namespace Breakneck_Brigade.Graphics
             Gl.glPopAttrib();
         }
 
-        private void drawGoals()
+        private void DrawGoals(int xPos, int yPos)
         {
-            //CHANGE THESE
-            int xPos = 5;
-
-            //DONUT CHANGE THESE. You can have these donuts tho alex
-            int yPos = padding;
             var goalCache = Program.game != null ? Program.game.Goals : null;
             if (goalCache != null)
             {
@@ -513,7 +508,7 @@ namespace Breakneck_Brigade.Graphics
             }
         }
 
-        private void drawHeld()
+        private void DrawHeld(int xPos, int yPos)
         {
             if (Program.game != null && Program.game.LiveGameObjects != null)
             {
@@ -544,7 +539,9 @@ namespace Breakneck_Brigade.Graphics
                         }
 
                         ingedientList += "-";
-                        TextRenderer.printToScreen(500, 20, ingedientList , .75f, .75f);
+
+                        yPos -= (spacing + padding);
+                        TextRenderer.printToScreen(xPos, yPos - (spacing + padding), ingedientList, .75f, .75f);
                     }
 
                     lookingAt = lookedAtObject.ToString();
@@ -557,7 +554,7 @@ namespace Breakneck_Brigade.Graphics
                 TextRenderer.printToScreen(500, 40, "Looking at: " + lookingAt, .75f, .75f);
                 TextRenderer.printToScreen(500, 15, info, .75f, .75f);
 #else
-                TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "Looking at: " + lookingAt, .75f, .75f);
 #endif
                 
             }
@@ -616,6 +613,16 @@ namespace Breakneck_Brigade.Graphics
             {
                 TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, .75f, .75f);
                 yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
+                yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "USABLE COOKERS:", .75f, .75f);
+                yPos -= (spacing + padding);
+                foreach (CookerType cooker in selectedRecipe.UsableCookers)
+                {
+                    TextRenderer.printToScreen(xPos, yPos, cooker.FriendlyName, .75f, .75f);
+                    yPos -= (spacing + padding);
+                }
+
                 TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
                 yPos -= (spacing + padding);
                 //TextRenderer.printToScreen(xPos, yPos, "REQURIED:" , .75f, .75f);
@@ -682,7 +689,7 @@ namespace Breakneck_Brigade.Graphics
             }
             Renderer.disableTransparency();
 
-            /*
+            
             // Debug triangles for picking
             Gl.glDisable(Gl.GL_CULL_FACE);
             Gl.glColor3f(1.0f, 0f, 0f);
@@ -700,7 +707,7 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnd();
             Gl.glDisable(Gl.GL_CULL_FACE);
             Gl.glColor3f(1.0f, 1.0f, 1.0f);
-            */
+            
 
             CurrentDrawMode = -1;
         }
