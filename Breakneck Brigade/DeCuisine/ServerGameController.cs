@@ -260,6 +260,7 @@ namespace DeCuisine
                 {
                     if (ing.LastPlayerHolding != null)
                     {
+                        Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position);
                         ing.LastPlayerHolding.Client.Team.Points += ((Goal)goal).Points;
                         ing.Remove();
                         MarkLobbyStateDirty();

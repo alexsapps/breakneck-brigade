@@ -82,7 +82,7 @@ namespace Breakneck_Brigade.Graphics
         private Vector4 genRandomPos()
         {
             return new Vector4((rand.Next(2) == 0 ? 1 : -1) * rand.NextDouble() * MAX_POS,
-                                0,
+                                20,
                                 (rand.Next(2) == 0 ? 1 : -1) * rand.NextDouble() * MAX_POS);
         }
 
