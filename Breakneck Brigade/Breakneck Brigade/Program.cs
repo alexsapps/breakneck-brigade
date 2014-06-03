@@ -56,12 +56,8 @@ namespace Breakneck_Brigade
 
         static void Main(string[] args)
         {
-            /*
-            for (int i = 0; i < 5; i++ )
-            { 
-                SoundThing.Play("scratch");
-                Thread.Sleep(1000);
-            }*/
+            
+            //SoundThing.Play("scratch");
 
             //Thread.Sleep(5000);
 
@@ -772,6 +768,20 @@ namespace Breakneck_Brigade
                                             var lst = game.TintedObjects[e.Team];
                                             foreach (var tintIng in e.TintList)
                                                 lst.Add(tintIng);
+                                            break;
+                                        }
+                                        case ServerMessageType.Sound:
+                                        {
+                                            var e = new ServerSoundMessage();
+                                            e.Read(reader);
+                                            SoundThing.Play(e.Sound);
+                                            break;
+                                        }
+                                        case ServerMessageType.ParticleEffect:
+                                        {
+                                            var e = new ServerParticleEffectMessage();
+                                            e.Read(reader);
+                                            //TODO: render effect
                                             break;
                                         }
                                         default:

@@ -726,6 +726,18 @@ namespace DeCuisine
             return new ServerGoalsUpdateMessage() { Goals = goalList };
         }
 
+        public void SendSound(BBSound sound, Vector3 location)
+        {
+            var msg = new ServerSoundMessage() { Sound = sound, Location = location.ToVector4() };
+            ServerEvents.Add(msg);
+        }
+        public void SendParticleEffect(BBParticleEffect effect, Vector3 location)
+        {
+            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4() };
+            ServerEvents.Add(msg);
+        }
+
+
 
         // TEST: Dev code for cooker adding
         public void TestCookerAdd(int cookerId, int ingredientId)

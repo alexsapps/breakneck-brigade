@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SousChef
+{
+    public enum BBParticleEffect
+    {
+        Effect1,
+        Effect2
+    }
+}

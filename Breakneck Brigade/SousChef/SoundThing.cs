@@ -32,10 +32,10 @@ namespace SousChef
          * 
          * @param key The key of the sound to play.  Note that this *is* case-sensitive.
          */
-        public static void Play(string key)
+        public static void Play(BBSound key)
         {
             String temp = "";
-            l.TryGetValue(key, out temp);
+            l.TryGetValue(key.ToString(), out temp);
             new Thread(new SoundThread(temp).DoWork).Start();
         }
 
