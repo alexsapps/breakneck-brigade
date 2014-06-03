@@ -86,6 +86,7 @@ namespace DeCuisine
                 ingredient.ToRender = false; // hide the object
                 ingredient.Removed += ingredient_Removed;
                 this.recomputeTintList();
+                this.Game.SendSound(BBSound.trayhit2, Position);
                 this.MarkDirty();
                 return true;
             }
@@ -119,7 +120,8 @@ namespace DeCuisine
                 }
                    
             }
-            
+
+            this.Game.SendSound(BBSound.glass, this.Position);
             return null;
         }
 
@@ -149,6 +151,7 @@ namespace DeCuisine
             ServerIngredient newIngredient = new ServerIngredient(recipe.FinalProduct, this.Game, ingredientSpawningPoint);
             newIngredient.Body.ApplyImpulse(new Vector3(0, EJECTSPEED, 0), ingredientSpawningPoint);
             this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
+            this.Game.SendSound(BBSound.trayhit1, this.Position);
             this.MarkDirty();
         }
 
@@ -205,6 +208,7 @@ namespace DeCuisine
                 newIngredient.Body.ApplyImpulse(new Vector3(0, EJECTSPEED, 0), ingredientSpawningPoint);
             }
             this.Contents.Clear();
+            this.Game.SendSound(BBSound.boom1, Position);
         }
 
         /// <summary>

@@ -99,7 +99,7 @@ namespace SousChef
                 player.Volume = volume;
                 player.Play();
                 Thread.Sleep(10000); //FIXME: This really should be managed by an event
-                Console.WriteLine("Done playing " + path);
+                // Console.WriteLine("Done playing " + path);
             }
         }
     }

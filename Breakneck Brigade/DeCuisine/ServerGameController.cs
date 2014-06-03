@@ -355,6 +355,9 @@ namespace DeCuisine
 
         private void scatterPile()
         {
+#if PROJECT_WORLD_BUILDING
+            return;
+#endif
             foreach (var obj in this.Game.GameObjects.Values)
             {
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
@@ -373,6 +376,9 @@ namespace DeCuisine
 
         private void risePile()
         {
+#if PROJECT_WORLD_BUILDING
+            return;
+#endif
             foreach (var obj in this.Game.GameObjects.Values)
             {
                 if (obj.ObjectClass == GameObjectClass.Ingredient)

@@ -8,6 +8,8 @@ namespace SousChef
 {
     public enum BBSound
     {
+        bodyfall1,
+        explosionfar,
         sound2,
         boom1,
         explode1, 
@@ -16,6 +18,10 @@ namespace SousChef
         soundtrack,
         splat1,
         splat2,
-        splat3
+        splat3,
+        trayhit1,
+        trayhit2,
+        punchmiss,
+        eatfood
     }
 }
