@@ -21,6 +21,7 @@ namespace SousChef
         splat3,
         trayhit1,
         trayhit2,
-        punchmiss
+        punchmiss,
+        eatfood
     }
 }

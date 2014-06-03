@@ -120,7 +120,8 @@ namespace DeCuisine
                 }
                    
             }
-            
+
+            this.Game.SendSound(BBSound.glass, this.Position);
             return null;
         }
 
