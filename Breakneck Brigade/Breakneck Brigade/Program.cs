@@ -774,6 +774,20 @@ namespace Breakneck_Brigade
                                                 lst.Add(tintIng);
                                             break;
                                         }
+                                        case ServerMessageType.Sound:
+                                        {
+                                            var e = new ServerSoundMessage();
+                                            e.Read(reader);
+                                            SoundThing.Play(e.Sound);
+                                            break;
+                                        }
+                                        case ServerMessageType.ParticleEffect:
+                                        {
+                                            var e = new ServerParticleEffectMessage();
+                                            e.Read(reader);
+                                            //TODO: render effect
+                                            break;
+                                        }
                                         default:
                                             throw new Exception("No event like that.");
                                     }

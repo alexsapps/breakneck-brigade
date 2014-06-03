@@ -60,6 +60,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BBParticleEffect.cs" />
+    <Compile Include="BBSound.cs" />
     <Compile Include="Config\BBXFileParser.cs" />
     <Compile Include="Config\BBXml.cs" />
     <Compile Include="Config\Terrains.cs" />
@@ -81,9 +83,11 @@
     <Compile Include="Network\ClientCookEvent.cs" />
     <Compile Include="Network\ServerGoalsUpdateMessage.cs" />
     <Compile Include="Network\ServerLobbyStateUpdateMessage.cs" />
+    <Compile Include="Network\ServerSoundMessage.cs" />
     <Compile Include="Network\ServerTeamScoreMessage.cs" />
     <Compile Include="Network\ServerTintListUpdateMessage.cs" />
     <Compile Include="RecipeIngredient.cs" />
+    <Compile Include="Network\ServerParticleEffectMessage.cs" />
     <Compile Include="SoundThing.cs" />
     <Compile Include="TerrainType.cs" />
     <Compile Include="IngredientType.cs" />

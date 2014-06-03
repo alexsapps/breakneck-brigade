@@ -23,9 +23,9 @@ namespace DeCuisine
             stream.Write((float)value.Z);
         }
 
-        public static Coordinate ReadCoordinate(this BinaryReader stream)
+        public static SousChef.Vector4 ToVector4(this Vector3 vector)
         {
-            return new Coordinate(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+            return new SousChef.Vector4(vector.X, vector.Y, vector.Z);
         }
     }
 }

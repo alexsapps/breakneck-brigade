@@ -18,7 +18,8 @@ namespace SousChef
         public static string GlobalConfigFilename = "global-config.xml";
         public const string DefaultPlayerModel = "chef";
 
-        public static ModelParser modelParser = new ModelParser();
+        private static ModelParser _mp;
+        public static ModelParser modelParser { get { return _mp ?? (_mp = new ModelParser()); } }
 
         public static GeometryInfo GetPlayerGeomInfo()
         {
@@ -29,6 +30,26 @@ namespace SousChef
         public static float[] GetPlayerSides()
         {
             return new float[] { 3.0f, 14.0f, 6.0f };
+        }
+
+        public static Vector4 ReadCoordinate(this BinaryReader stream)
+        {
+            return new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+        }
+
+        public static Matrix4 ReadRotation(this BinaryReader stream)
+        {
+            return new Matrix4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), 0,
+                               stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), 0,
+                               stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), 0,
+                               0, 0, 0, 1);
+        }
+
+        public static void Write(this BinaryWriter writer, Vector4 coordinate)
+        {
+            writer.Write(coordinate.X);
+            writer.Write(coordinate.Y);
+            writer.Write(coordinate.Z);
         }
     }
 }
