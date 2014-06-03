@@ -672,16 +672,7 @@ namespace Breakneck_Brigade.Graphics
             Renderer.enableTransparency();
             //Particles
             if(ParticleSpawners != null)
-            {
-                //DEBUG
-                /*
-                if(ParticleSpawners.Count == 0)
-                {
-                    AParticleSpawner testSpawner = new PSSmoke(new Vector4(0, 10, 0), SmokeType.YELLOW | SmokeType.WHITE | SmokeType.RED | SmokeType.GREY | SmokeType.GREEN | SmokeType.BLUE);
-                    testSpawner.StartSpawning();
-                    ParticleSpawners.Add(testSpawner);
-                }
-                 * */
+            {           
                 foreach (AParticleSpawner ps in ParticleSpawners)
                 {
                     ps.Render();

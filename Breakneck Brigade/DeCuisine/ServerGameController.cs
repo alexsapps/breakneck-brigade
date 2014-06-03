@@ -135,7 +135,6 @@ namespace DeCuisine
                     if (ticks == startTick)
                     {
                         scatterPile(); // gives a crazy scatter pile effect
-                        Game.SendParticleEffect(BBParticleEffect.SMOKE, new Vector3(0, 10, 0), (int)(SmokeType.BLUE | SmokeType.RED));
                         nextGameState();
                     }
                     updateObj();

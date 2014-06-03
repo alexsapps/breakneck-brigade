@@ -55,6 +55,10 @@ namespace SousChef
         /// Eject the cooker that the player is looking at.
         /// </summary>
         Eject,
+        /// <summary>
+        /// Show player location of relevant ingredients with floating arrows
+        /// </summary>
+        Hint,
 
         ChangeTeam,
         Cook

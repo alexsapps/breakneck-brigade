@@ -121,6 +121,10 @@ namespace Breakneck_Brigade
                 throwing = true;
                 lastThrow = DateTime.Now;
             }
+            if(this.downKeys.Contains(GlfwKeys.GLFW_KEY_H))
+            {
+                NetworkEvents.Add(new ClientHintEvent() { });
+            }
 
             if(IM[GlfwKeys.GLFW_MOUSE_BUTTON_LEFT])
             {

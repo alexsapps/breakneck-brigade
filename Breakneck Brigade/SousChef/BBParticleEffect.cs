@@ -12,7 +12,8 @@ namespace SousChef
         CONFETTI,
         SPARKS,
         SPLASH,
-        STARS
+        STARS,
+        ARROW
     }
     [Flags]
     public enum SmokeType
