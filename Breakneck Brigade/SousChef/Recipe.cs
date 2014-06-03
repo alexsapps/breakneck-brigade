@@ -9,6 +9,7 @@ namespace SousChef
     public class Recipe 
     {
         public string Name { get; private set; } //in case FinalProduct does not uniquely determine Recipe
+        public List<CookerType> UsableCookers { get; private set; }
         public List<RecipeIngredient> Ingredients { get; private set; } //if this ever changes, make sure to set _hash=null
         public IngredientType FinalProduct;
         
@@ -17,6 +18,7 @@ namespace SousChef
             this.Name = name;
             this.Ingredients = ingredients;
             this.FinalProduct = finalProduct;
+            this.UsableCookers = new List<CookerType>();
 
             int sum = 0;
             foreach (var ingredient in ingredients)
