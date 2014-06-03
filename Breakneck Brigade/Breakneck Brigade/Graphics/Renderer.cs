@@ -498,9 +498,11 @@ namespace Breakneck_Brigade.Graphics
 
             //DONUT CHANGE THESE. You can have these donuts tho alex
             int yPos = padding;
-            if (Program.game != null && Program.game.Goals != null)
+            var goalCache = Program.game != null ? Program.game.Goals : null;
+            if (goalCache != null)
             {
-                foreach (IngredientType it in Program.game.Goals)
+                goalCache = goalCache.ToList(); //make it a cache, so we can enumerate safely
+                foreach (IngredientType it in goalCache)
                 {
                     TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, .75f, .75f);
                     yPos += spacing + padding;

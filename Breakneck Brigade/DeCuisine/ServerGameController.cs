@@ -278,7 +278,6 @@ namespace DeCuisine
         }
         public bool CheckWin()
         {
-            ServerTeam maxTeam = null;
 #if PROJECT_WORLD_BUILDING
             return false;       
 #endif
