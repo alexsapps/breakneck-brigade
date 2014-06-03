@@ -194,6 +194,8 @@ namespace DeCuisine
 #else
             this.dashCool = 5 * dashTicks;
 #endif
+
+            Game.SendSound(BBSound.scratch, Position);
         }
 
         /// <summary>

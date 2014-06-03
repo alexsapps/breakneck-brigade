@@ -412,7 +412,12 @@ namespace DeCuisine
             if(!this.Controller.Update())
             {
                 SendLobbyStateToAll(); //Game.MarkLobbyStateDirty(); //TODO: what's the right way to do this?
+                
+                if (Winner != null)
                 Program.WriteLine("Team " + Winner.Name + " Wins!");
+                else
+                    Program.WriteLine("Draw! No team won.");
+
                 Mode = GameMode.Results;
                 SendModeChangeUpdate();
                 return false;
@@ -778,7 +783,7 @@ namespace DeCuisine
                 objToMove.Position = new Vector3(x, y, z);
                 objToMove.Body.ProceedToTransform(Matrix.RotationY(objToMove.GeomInfo.Orientation) * Matrix.Translation(objToMove.Position));
                 Program.WriteLine("The new Position is " + objToMove.Position.X + " " + objToMove.Position.Y + " " + objToMove.Position.Z);
-            }
+        }
 
         }
 

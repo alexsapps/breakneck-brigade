@@ -28,6 +28,8 @@ namespace Breakneck_Brigade.Graphics
         private const string CROSSHAIR_MODEL_NAME = "crosshair";
         public const string BLANKQUAD_MODEL_NAME = "blankQuad";
         public const string FONT_TEXTURE = "fontWhite.tga";
+        private int padding = 5;
+        private int spacing = 10;
 
         private Stopwatch  _stopwatch = new Stopwatch();
         private Stopwatch  _stopwatch2 = new Stopwatch();
@@ -52,6 +54,7 @@ namespace Breakneck_Brigade.Graphics
         public static Texture   DefaultTexture;
 
         public IList<ClientGameObject>    GameObjects { get; set; }
+        public IList<AParticleSpawner>    ParticleSpawners { get; set; }
 
         private     Matrix4         WorldTransform;
         private     Camera          Camera;
@@ -262,7 +265,7 @@ namespace Breakneck_Brigade.Graphics
 
             Models.Add(crosshairModel.Name, crosshairModel);
 
-            VBO blankQuad = VBO.MakeQuadWithUVCoords(new float[] { 0, 1 }, new float[] { 1, 1 }, new float[] { 1, 0 }, new float[] { 0, 0 });
+            VBO blankQuad = VBO.MakeCornerQuadWithUVCoords(new float[] { 0, 1 }, new float[] { 1, 1 }, new float[] { 1, 0 }, new float[] { 0, 0 });
             blankQuad.LoadData();
             TexturedMesh blankQuadMesh = new TexturedMesh() { VBO = blankQuad, Texture = Renderer.Textures["fontWhite.tga"] };
             Model blankQuadModel = new Model(BLANKQUAD_MODEL_NAME);
@@ -478,6 +481,10 @@ namespace Breakneck_Brigade.Graphics
                 this.DrawRecipe(player.SelectedRecipe, 5, 500);
             }
 
+            this.DrawTime((int)WindowWidth / 2, (int)WindowHeight - 20);
+            this.DrawScores(5, (int)WindowHeight - 20);
+
+
             Renderer.disableTransparency();
             //Models["iceCream"].Render();
 
@@ -487,8 +494,6 @@ namespace Breakneck_Brigade.Graphics
         private void drawGoals()
         {
             //CHANGE THESE
-            int padding = 5;
-            int spacing = 10;
             int xPos = 5;
 
             //DONUT CHANGE THESE. You can have these donuts tho alex
@@ -530,15 +535,17 @@ namespace Breakneck_Brigade.Graphics
                     if(lookedAtObject is ClientCooker)
                     {
                         ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
-                        string ingedientList = "[ ";
+                        string ingedientList = "- ";
                         foreach(ClientIngredient ingredient in lookedAtCooker.Contents)
                         {
                             ingedientList += ingredient.ModelName + " ";
                         }
 
-                        ingedientList += "]";
+                        ingedientList += "-";
                         TextRenderer.printToScreen(500, 20, ingedientList , .75f, .75f);
                     }
+
+                    lookingAt = lookedAtObject.ToString();
                 }
                 else
                 {
@@ -550,10 +557,55 @@ namespace Breakneck_Brigade.Graphics
 #else
                 TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
 #endif
-
+                
             }
         }
 
+        /// <summary>
+        /// Draws the timer
+        /// </summary>
+        /// <param name="xPos"></param>
+        /// <param name="yPos"></param>
+        private void DrawTime(int xPos, int yPos)
+        {
+            if (Program.game != null)
+            {
+                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(), .75f, .75f);
+            }
+        }
+
+        /// <summary>
+        /// Draw team scores.
+        /// </summary>
+        /// <param name="xPos"></param>
+        /// <param name="yPos"></param>
+        private void DrawScores(int xPos, int yPos)
+        {
+            string header;
+            if (Program.lobbyState.MyTeam != null)
+                header = "Team: " + Program.lobbyState.MyTeam.Name;
+            else
+                header = "Team Scores:";
+            TextRenderer.printToScreen(xPos, yPos, header, .75f, .75f);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "-----------", .75f, .75f);
+            yPos -= (spacing + padding);
+            if (Program.lobbyState != null && Program.lobbyState.Teams != null)
+            {
+                foreach (ClientTeam team in Program.lobbyState.Teams.Values.ToList())
+                {
+                    TextRenderer.printToScreen(xPos, yPos, team.Name + ": " + team.Score.ToString(), .75f, .75f);
+                    yPos -= (spacing + padding);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw current cookbook page.
+        /// </summary>
+        /// <param name="selectedRecipe"></param>
+        /// <param name="xPos"></param>
+        /// <param name="yPos"></param>
         private void DrawRecipe(Recipe selectedRecipe, int xPos, int yPos)
         {
             int padding = 5;
@@ -562,7 +614,9 @@ namespace Breakneck_Brigade.Graphics
             {
                 TextRenderer.printToScreen(xPos, yPos, selectedRecipe.Name, .75f, .75f);
                 yPos -= (spacing + padding);
-                TextRenderer.printToScreen(xPos, yPos, "-REQURIED-" , .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
+                yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "REQURIED:" , .75f, .75f);
                 yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {
@@ -573,7 +627,9 @@ namespace Breakneck_Brigade.Graphics
                     }
                 }
 
-                TextRenderer.printToScreen(xPos, yPos, "-optional-", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
+                yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "OPTIONAL:", .75f, .75f);
                 yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {
@@ -590,6 +646,7 @@ namespace Breakneck_Brigade.Graphics
 
         private void render3D()
         {
+            //Game objects
             if (GameObjects != null)
                 foreach (ClientGameObject cgo in GameObjects)
                 {
@@ -601,6 +658,25 @@ namespace Breakneck_Brigade.Graphics
                     if(modelTimer != null)
                         modelTimer.stop();
                 }
+
+            Renderer.enableTransparency();
+            //Particles
+            if(ParticleSpawners != null)
+            {
+                //DEBUG
+                if(ParticleSpawners.Count == 0)
+                {
+                    PSFlourPoof psfp = new PSFlourPoof(new Vector4(0, 50, 0));
+                    psfp.StartSpawning();
+                    ParticleSpawners.Add(psfp);
+                }
+                foreach(AParticleSpawner ps in ParticleSpawners)
+                {
+                    ps.Update();
+                    ps.Render();
+                }
+            }
+            Renderer.disableTransparency();
 
             /*
             // Debug triangles for picking
@@ -631,12 +707,14 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnable(Gl.GL_BLEND);
             Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
             Gl.glEnable(Gl.GL_ALPHA_TEST);
+            Gl.glDepthMask(false);
         }
 
         public static void disableTransparency()
         {
             Gl.glDisable(Gl.GL_BLEND);
             Gl.glDisable(Gl.GL_ALPHA_TEST);
+            Gl.glDepthMask(true);
         }
 
         public string GetModelTimerStatus()

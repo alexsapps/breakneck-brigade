@@ -11,12 +11,12 @@
     <terrain type="floor" shape="box" coordinate="0, 250, 0" size="500,10,500" />
 
     <!-- Red team side -->
-    <static team="red" type="woodenCounter"  coordinate="0, 4, 0"  size="7,2.7,7" model="woodenCounter"></static>
+    <static team="red" type="woodenCounter"  coordinate="0, 4, 0"  size="7,2.7,7" model="woodenCounter" friendlyName="Wooden Counter"></static>
     <cooker team="red" type="blender" coordinate="0, 20, 0" ></cooker>
 
 
-    <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" orientation="90" model="deliveryWindow"/>
-    <static type="deliveryWindow" coordinate="0,40,0" size="20,20,20" model="deliveryWindow"/>
+    <static type="deliveryWindow" coordinate="0,40,-250" size="20,20,20" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
+    <static type="deliveryWindow" coordinate="0,40,0" size="20,20,20" model="deliveryWindow" friendlyName="Delivery Window"/>
 
   </space>
 </world>

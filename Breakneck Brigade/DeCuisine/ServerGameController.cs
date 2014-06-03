@@ -281,17 +281,24 @@ namespace DeCuisine
 #if PROJECT_WORLD_BUILDING
             return false;       
 #endif
+            List<ServerTeam> maxTeams = new List<ServerTeam>();
             foreach (var team in Teams.Values)
             {
-                if(maxTeam == null || team.Points > maxTeam.Points)
+                if (maxTeams.Count == 0 || team.Points == maxTeams[0].Points)
+                    maxTeams.Add(team);
+                else if(team.Points > maxTeams[0].Points)
                 {
-                    maxTeam = team;
+                    maxTeams.Clear();
+                    maxTeams.Add(team);
                 }
             }
 
-            if (maxTeam.Points >= this.ScoreToWin || DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime)
+            if (maxTeams[0].Points >= this.ScoreToWin || DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime)
             {
-                Game.Winner = maxTeam;
+                if (maxTeams.Count == 1)
+                    Game.Winner = maxTeams[0];
+                else
+                    Game.Winner = null; //draw
                 return true;
             }
 
