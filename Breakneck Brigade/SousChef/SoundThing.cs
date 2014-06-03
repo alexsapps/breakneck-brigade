@@ -73,14 +73,15 @@ namespace SousChef
             /**
              * The volume to play the sound at
              */
-            private int volume;
+            private double volume;
 
             /**
              * Constructor, creates a SoundThread with a specified sound to play.
              * 
              * @param path The path to the file to play
+             * @param volume The volume level to play a sound between 0-1, where 0 is queit, and 1 is loudest.
              */
-            public SoundThread(string path, int volume)
+            public SoundThread(string path, double volume)
             {
                 this.path = path;
                 this.volume = volume;
@@ -93,9 +94,10 @@ namespace SousChef
             {
                 MediaPlayer player = new MediaPlayer();
                 player.Open(new Uri(path, UriKind.Relative));
+                player.Volume = volume;
                 player.Play();
                 Thread.Sleep(10000); //FIXME: This really should be managed by an event
-                Console.WriteLine("Done playing sound");
+                Console.WriteLine("Done playing " + path);
             }
         }
     }
