@@ -73,5 +73,10 @@ namespace Breakneck_Brigade
             }
         }
 
+        public override string ToString()
+        {
+            return TeamName + " Player";
+        }
+
     }
 }

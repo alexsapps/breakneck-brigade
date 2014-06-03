@@ -14,8 +14,8 @@ namespace SousChef
         public Dictionary<string, HashSet<Recipe>> RecipeHash; // Fast dict to keep track of what ingredients are a part of what recipe
 
 
-        public CookerType(string name, GeometryInfo geomInfo, List<Recipe> recipes)
-            : base(name, geomInfo)
+        public CookerType(string name, string friendlyName, GeometryInfo geomInfo, List<Recipe> recipes)
+            : base(name, friendlyName, geomInfo)
         {
             Debug.Assert(recipes != null);
             

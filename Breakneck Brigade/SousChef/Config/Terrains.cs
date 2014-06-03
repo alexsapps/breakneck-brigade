@@ -48,13 +48,15 @@ namespace SousChef
         }
         protected override TerrainType returnItem()
         {
-            string name = attributes["name"];
+            string name;
+            string friendlyName;
+            parseName(out name, out friendlyName);
 
             var geomInfo = getGeomInfo(attributes,
                 fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, 0, null
                 );
 
-            return new TerrainType(name, geomInfo);
+            return new TerrainType(name, friendlyName, geomInfo);
         }
 
         protected override void reset() { }

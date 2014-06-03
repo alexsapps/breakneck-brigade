@@ -14,6 +14,7 @@ namespace Breakneck_Brigade
         public override string ModelName { get { return _modelName; } }
         float[] _sides;
         public override float[] Sides { get { return _sides; } }
+        
         public ClientStaticObject(int id,  ClientGame game) : base(id, game)
         {
         }
@@ -27,10 +28,9 @@ namespace Breakneck_Brigade
             base.finalizeConstruction();
         }
 
-        public override void StreamUpdate(BinaryReader reader)
+        public override string ToString()
         {
-            base.StreamUpdate(reader);
+            return ModelName;
         }
-
     }
 }

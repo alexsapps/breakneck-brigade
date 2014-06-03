@@ -2,32 +2,32 @@
   <!--  default shape is box -->
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
-  <cooker name="blender" size="4, 5, 4" mass="9001.0">
+  <cooker name="blender" friendlyName="Blender" size="4, 5, 4" mass="9001.0">
     <recipe>milkshake</recipe>
     <recipe>sauce</recipe>
   </cooker>
 
-  <cooker name="oven" size="6,3,6" mass="9001.0">
+  <cooker name="oven" friendlyName="Oven" size="6,3,6" mass="9001.0">
     <recipe>chicken</recipe>
     <recipe>cake</recipe>
   </cooker>
 
-  <cooker name="pot" size="4,2,4" mass="9001.0">
+  <cooker name="pot" friendlyName="Pot" size="4,2,4" mass="9001.0">
     <recipe>soup</recipe>
     <recipe>pasta</recipe>
   </cooker>
 
-  <cooker name="pan" size="4,2,4" mass="9001.0">
+  <cooker name="pan" friendlyName="Pan" size="4,2,4" mass="9001.0">
     <recipe>chicken</recipe>
     <recipe>cookedSteak</recipe>
     <recipe>hamburger</recipe>
   </cooker>
   
-  <cooker name="toaster" size="2.5,1.5,2.5" mass="9001.0">
+  <cooker name="toaster" friendlyName="Toaster" size="2.5,1.5,2.5" mass="9001.0">
     <recipe>Toasted Bread</recipe>
   </cooker>
   
-  <cooker name="bowl" size="4,2,4" mass="9001.0">
+  <cooker name="bowl" friendlyName="Bowl" size="4,2,4" mass="9001.0">
     <recipe>caesarSalad</recipe>
     <recipe>cakeBatter</recipe>
   </cooker>

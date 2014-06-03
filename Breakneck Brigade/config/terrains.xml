@@ -5,7 +5,7 @@
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
 
-  <terrain name="wall" />
-  <terrain name="floor" />
-  <terrain name="ceiling" />
+  <terrain name="wall" friendlyName="Wall" />
+  <terrain name="floor" friendlyName="Floor" />
+  <terrain name="ceiling" friendlyName="Ceiling" />
 </terrains>

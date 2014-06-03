@@ -8,7 +8,7 @@ namespace SousChef
 {
     public class TerrainType : GameObjectType
     {
-        public TerrainType(string name, GeometryInfo geomInfo) : base(name, geomInfo)
+        public TerrainType(string name, string friendlyName, GeometryInfo geomInfo) : base(name, friendlyName, geomInfo)
         {
 
         }

@@ -76,6 +76,11 @@ namespace Breakneck_Brigade
             else
                 base.Render();
         }
+
+        public override string ToString()
+        {
+            return Type.Name;
+        }
     }
 
 
