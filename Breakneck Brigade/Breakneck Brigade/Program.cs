@@ -804,20 +804,21 @@ namespace Breakneck_Brigade
                             msg.Read((r) =>
                             {
                                 int teamCount = r.ReadInt32();
-                                lobbyState.Teams.Clear();
+
+                                var oldTeams = lobbyState.Teams;
+                                lobbyState.Teams = new Dictionary<string, ClientTeam>();
                                 for(int i = 0; i < teamCount; i++)
                                 {
                                     var name = r.ReadString();
-                                    var team = new ClientTeam()
-                                    {
-                                        Name = name,
-                                        Score = r.ReadInt32()
-                                    };
+                                    ClientTeam team;
+                                    if (!oldTeams.TryGetValue(name, out team))
+                                        team = new ClientTeam() { Name = name };
+                                    team.Score = r.ReadInt32();
+                                    
                                     int memberCount = r.ReadInt32();
+                                    team.Clients.Clear();
                                     for (int j = 0; j < memberCount; j++)
-                                    {
                                         team.Clients.Add(r.ReadString());
-                                    }
                                     lobbyState.Teams.Add(name, team);
                                 }
 #if PROJECT_DEBUG
