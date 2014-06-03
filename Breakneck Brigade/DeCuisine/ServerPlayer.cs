@@ -245,13 +245,15 @@ namespace DeCuisine
                 if (held.Body.LinearVelocity.X == 0 && held.Body.LinearVelocity.Y == 0 && held.Body.LinearVelocity.Z == 0)
                     Console.WriteLine("WHAT THE FUCK");
                 _hand.Held = null;
-                MarkDirty();
+                this.Game.SendSound(BBSound.punchmiss, Position);
+                this.MarkDirty();
             }
 
         }
 
         private void PickUpObject(ServerIngredient obj)
         {
+            Game.SendSound(BBSound.bodyfall1, Position);
             constraint = new Generic6DofConstraint(
                 this.Body, obj.Body,
                 Matrix.Identity,// * Matrix.Translation(0, this.EyeHeight * 0.75f, 0),
