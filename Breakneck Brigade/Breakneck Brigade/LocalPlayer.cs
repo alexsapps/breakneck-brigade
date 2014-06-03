@@ -179,6 +179,19 @@ namespace Breakneck_Brigade
             {
                 //NetworkEvents.Add(new ClientBeginMoveEvent()); //this is being done above at the moment.
             }
+
+            // Change page down.
+            if(keyDown(GlfwKeys.GLFW_KEY_LEFT_SHIFT))
+            {
+
+            }
+
+            // Change page up.
+            if(keyDown(GlfwKeys.GLFW_KEY_TAB))
+            {
+
+            }
+
             if (this.Player != null)
             {
                 this.Game.LookatId = this.Player.LookingAtId;

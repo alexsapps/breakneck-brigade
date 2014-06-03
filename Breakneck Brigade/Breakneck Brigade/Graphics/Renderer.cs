@@ -505,8 +505,31 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null && Program.game.LiveGameObjects != null)
             {
-                string lookingAt = Program.game.LiveGameObjects.ContainsKey(Program.game.LookatId) ? Program.game.LiveGameObjects[Program.game.LookatId].ModelName : "nothing";
+                string lookingAt;
+                if (Program.game.LiveGameObjects.ContainsKey(Program.game.LookatId))
+                {
+                    ClientGameObject lookedAtObject = Program.game.LiveGameObjects[Program.game.LookatId];
+                    lookingAt = lookedAtObject.ModelName;
+                    if(lookedAtObject is ClientCooker)
+                    {
+                        ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
+                        string ingedientList = "[ ";
+                        foreach(ClientIngredient ingredient in lookedAtCooker.Contents)
+                        {
+                            ingedientList += ingredient.ModelName + " ";
+                        }
+
+                        ingedientList += "]";
+                        TextRenderer.printToScreen(500, 20, ingedientList , .75f, .75f);
+                    }
+                }
+                else
+                {
+                    lookingAt = "nothing";
+                }
+
                 TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
+                
             }
         }
 
