@@ -738,7 +738,11 @@ namespace DeCuisine
         }
         public void SendParticleEffect(BBParticleEffect effect, Vector3 location)
         {
-            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4() };
+            SendParticleEffect(effect, location, 0);
+        }
+        public void SendParticleEffect(BBParticleEffect effect, Vector3 location, int param)
+        {
+            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4(), Param = param };
             ServerEvents.Add(msg);
         }
 
