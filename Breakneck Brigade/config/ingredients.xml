@@ -12,7 +12,7 @@
   <ingredient name="coconut" friendlyName="Coconut" points="15" size="2, 2, 2"/>
   <ingredient name="sugar" friendlyName="Sugar" points="10" size="1.5, 1.5, 1.5"/>
   <ingredient name="milk" friendlyName="Milk" points="30" size="4, 5, 4"/>
-  <ingredient name="iceCream" friendlyName="Ice Cream" points="40" size="3, 3, 3"/>
+  <ingredient name="icecream" friendlyName="Ice Cream" points="40" size="3, 3, 3"/>
   <ingredient name="flour" friendlyName="Flour" points="40" size="4, 5, 6"/>
   <ingredient name="bread" friendlyName="Bread" points="15" size="4, 2, 2"/>
   <ingredient name="lettuce" friendlyName="Lettuce" points="10" size="4, 4, 4"/>
