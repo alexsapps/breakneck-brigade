@@ -1,16 +1,58 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 08.05.2014 16:11:37
+# File Created: 02.06.2014 22:16:09
 
-newmtl Material__25
-	Ns 25.0000
+newmtl Material__29
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
 	Tr 0.0000
 	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.5000 0.5000 0.5000
-	Kd 0.5000 0.5000 0.5000
-	Ks 0.0450 0.0450 0.0450
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka iceCream.tga
-	map_Kd iceCream.tga
+	map_Ka icecream_cone.tga
+	map_Kd icecream_cone.tga
+
+newmtl Material__30
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka icecream_chocolate.tga
+	map_Kd icecream_chocolate.tga
+
+newmtl Material__31
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka icecream_vanilla.tga
+	map_Kd icecream_vanilla.tga
+
+newmtl Material__28
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka icecream_strawberry.tga
+	map_Kd icecream_strawberry.tga
