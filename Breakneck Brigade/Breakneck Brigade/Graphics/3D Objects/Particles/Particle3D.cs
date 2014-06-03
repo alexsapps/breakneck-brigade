@@ -28,12 +28,6 @@ namespace Breakneck_Brigade.Graphics
         public Particle3D() 
             : base()
         {
-            if(_singletonQuad == null)
-            {
-                _singletonQuad = VBO.MakeFilledCenteredQuad();
-                _singletonQuad.LoadData();
-            }
-            VBO quad = _singletonQuad;
             Obj3D = new TexturedMesh() { VBO = quad, Texture = Renderer.DefaultTexture};
         }
 
@@ -45,23 +39,16 @@ namespace Breakneck_Brigade.Graphics
         public Particle3D(Texture texture)
             : base()
         {
-            if (_singletonQuad == null)
-            {
-                _singletonQuad = VBO.MakeFilledCenteredQuad();
-                _singletonQuad.LoadData();
-            }
-            VBO quad = _singletonQuad;
-            //Obj3D = new TexturedMesh() { VBO = quad, Texture = texture };
             Obj3D = new TexturedMesh() { VBO = ((TexturedMesh) Renderer.Models["cube111"].Meshes[0]).VBO, Texture = texture };
         }
 
         /// <summary>
-        /// Instanciates a basic 3D particle with the specified 3D object as the particle model
+        /// Instanciates a basic 3D particle with the specified 3D object as the particle model. It will only use the first mesh in the model.
         /// </summary>
-        public Particle3D(AObject3D obj3D)
+        public Particle3D(Model model)
             : base()
         {
-            Obj3D = obj3D;
+            Obj3D = (TexturedMesh) model.Meshes[0];
         }
 
         public override void Update(float timestep)
