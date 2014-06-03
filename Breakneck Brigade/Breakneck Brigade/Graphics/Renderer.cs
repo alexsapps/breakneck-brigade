@@ -564,7 +564,12 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="yPos"></param>
         private void DrawScores(int xPos, int yPos)
         {
-            TextRenderer.printToScreen(xPos, yPos, "Team Scores", .75f, .75f);
+            string header;
+            if (Program.lobbyState.MyTeam != null)
+                header = "Team: " + Program.lobbyState.MyTeam.Name;
+            else
+                header = "Team Scores:";
+            TextRenderer.printToScreen(xPos, yPos, header, .75f, .75f);
             yPos -= (spacing + padding);
             TextRenderer.printToScreen(xPos, yPos, "-----------", .75f, .75f);
             yPos -= (spacing + padding);

@@ -668,7 +668,8 @@ namespace Breakneck_Brigade
 
             while (true)
             {
-                lock (client.ServerMessagesLock)
+                var mylock = client.ServerMessagesLock;
+                lock (mylock)
                 {
                     while(client.ServerMessages.Count == 0)
                     {
@@ -676,7 +677,8 @@ namespace Breakneck_Brigade
                         if (checkDisconnect(false, out b))
                             return;
 
-                        Monitor.Wait(client.ServerMessagesLock);
+                        Debug.Assert(mylock == client.ServerMessagesLock);
+                        Monitor.Wait(mylock);
                     }
                     serverMessages = new List<ServerMessage>(client.ServerMessages);
                     client.ServerMessages.Clear();
