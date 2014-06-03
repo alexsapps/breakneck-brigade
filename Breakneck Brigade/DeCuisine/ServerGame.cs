@@ -394,6 +394,22 @@ namespace DeCuisine
                         case ClientEventType.Cook:
                             player.AttemptToCook();
                             break;
+                        case ClientEventType.Hint:
+                            foreach(string objectName in client.Team.TintList)
+                            {
+                                foreach(ServerGameObject sgo in GameObjects.Values)
+                                {
+                                    if(sgo is ServerIngredient)
+                                    {
+                                        if(((ServerIngredient) sgo).Type.Name == objectName)
+                                        {
+                                            Vector3 above = sgo.Position + new Vector3(0, 10, 0);
+                                            SendParticleEffect(BBParticleEffect.ARROW, above);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                         case ClientEventType.Command:
                             throw new InvalidOperationException(); //these handled elsewhere
                         default:

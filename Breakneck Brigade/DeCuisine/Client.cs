@@ -143,6 +143,7 @@ namespace DeCuisine
                 case ClientEventType.Eject: return typeof(ClientEjectEvent);
                 case ClientEventType.ChangeTeam: return typeof(ClientChangeTeamEvent);
                 case ClientEventType.Cook: return typeof(ClientCookEvent);
+                case ClientEventType.Hint: return typeof(ClientHintEvent);
                 default: throw new Exception("getClientEventType not defiend for " + t.ToString());
             }
         }

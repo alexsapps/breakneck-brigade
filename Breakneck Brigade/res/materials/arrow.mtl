@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 03.06.2014 15:01:39
+# File Created: 03.06.2014 15:30:53
 
-newmtl Material__28
+newmtl Material__25
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -12,5 +12,5 @@ newmtl Material__28
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka maximumYellow.tga
-	map_Kd maximumYellow.tga
+	map_Ka confettiRed.tga
+	map_Kd confettiRed.tga

@@ -23,6 +23,7 @@ namespace Breakneck_Brigade.Graphics
         protected       double          _lastSpawnTime;
         protected       double          _lastUpdateTime;
         protected       double          _currentUpdateTime;
+        protected       float           _lastTimeStep;
         protected       bool            _spawning;
         /// <summary>
         /// The maximum amount of particles this spawner should have out at any time
@@ -99,11 +100,11 @@ namespace Breakneck_Brigade.Graphics
             _lastUpdateTime = _currentUpdateTime;
             _currentUpdateTime = Glfw.glfwGetTime();
 
-            float timestep = (float) (_currentUpdateTime - _lastUpdateTime);
+            _lastTimeStep = (float) (_currentUpdateTime - _lastUpdateTime);
 
             if (Lifetime != -1)
             {
-                _age += timestep;
+                _age += _lastTimeStep;
                 if (_age > Lifetime)
                 {
                     if(_spawning)
@@ -122,7 +123,7 @@ namespace Breakneck_Brigade.Graphics
             //Update all particles
             foreach(AParticle particle in _particles)
             {
-                particle.Update(timestep);
+                particle.Update(_lastTimeStep);
                 if(particle.ShouldDie)
                 {
                     _toKill.Add(particle);

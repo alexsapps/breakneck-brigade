@@ -39,7 +39,7 @@ namespace Breakneck_Brigade
         GLFW_KEY_E             = 69,
         GLFW_KEY_F             = 70,
         //GLFW_KEY_G             = 71,
-        //GLFW_KEY_H             = 72,
+        GLFW_KEY_H             = 72,
         //GLFW_KEY_I             = 73,
         //GLFW_KEY_J             = 74,
         //GLFW_KEY_K             = 75,

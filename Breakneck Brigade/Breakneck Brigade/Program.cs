@@ -423,6 +423,14 @@ namespace Breakneck_Brigade
                                     game.ParticleSpawners.Remove(ps);
                                 if(PSToRemove.Count > 0)
                                     PSToRemove.Clear();
+
+                                /*DEBUG
+                                if (game.ParticleSpawners.Count == 0)
+                                {
+                                    AParticleSpawner testSpawner = new PSArrow(new Vector4(10, 10, 10));
+                                    testSpawner.StartSpawning();
+                                    game.ParticleSpawners.Add(testSpawner);
+                                }*/
                                 renderer.ParticleSpawners   = new List<AParticleSpawner>(game.ParticleSpawners);
                                 break;
                         }
@@ -818,6 +826,9 @@ namespace Breakneck_Brigade
                                                 case BBParticleEffect.SPLASH:
                                                     break;
                                                 case BBParticleEffect.STARS:
+                                                    break;
+                                                case BBParticleEffect.ARROW:
+                                                    spawner = new PSArrow(e.Location);
                                                     break;
                                             }
                                             if(spawner != null)

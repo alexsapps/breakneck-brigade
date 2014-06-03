@@ -86,6 +86,7 @@
     <Compile Include="IIngredient.cs" />
     <Compile Include="Network\BinaryServerMessage.cs" />
     <Compile Include="Network\ClientCookEvent.cs" />
+    <Compile Include="Network\ClientHintEvent.cs" />
     <Compile Include="Network\ServerGoalsUpdateMessage.cs" />
     <Compile Include="Network\ServerLobbyStateUpdateMessage.cs" />
     <Compile Include="Network\ServerSoundMessage.cs" />

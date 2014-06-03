@@ -325,17 +325,19 @@ namespace DeCuisine
                     this.Position.Y + this.EyeHeight * 0.75f + (float)Math.Sin((this.Incline > 0 && this.canJump ? 0 : this.Incline) * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: 
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
-            
+
+            Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
+
+            SCVector4 moveOutsideBody = new SCVector4(0, 0, 1);
+            moveOutsideBody *= rotMat;
+            moveOutsideBody *= this.GeomInfo.Size[2];
+
             // Check what the player is looking at
             Vector3 start = new Vector3
                 (
-                    /*this.Position.X, //Math.Sin(this.Incline * Math.PI / 180.0f) *
-                    this.Position.Y + this.EyeHeight,
-                    this.Position.Z//this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) */
-                    this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * this.GeomInfo.Size[0]), //Math.Sin(this.Incline * Math.PI / 180.0f) *
-                    this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -this.GeomInfo.Size[0],
-                    this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
-
+                    this.Position.X + moveOutsideBody.X, //Math.Sin(this.Incline * Math.PI / 180.0f) *
+                    this.Position.Y + moveOutsideBody.Y + this.EyeHeight,
+                    this.Position.Z + moveOutsideBody.Z//this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
                );
 
             SCVector4 yDir = new SCVector4
@@ -345,19 +347,13 @@ namespace DeCuisine
                     (float)Math.Cos(this.Incline * MathConstants.DEG2RAD)
                 );
 
-            Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
-
             SCVector4 final = rotMat * yDir;
             final *= LINEOFSIGHTSCALAR;
             Vector3 end = new Vector3
                 (
-                    /*start.X + final.X,
+                    start.X + final.X,
                     start.Y + final.Y,
-                    start.Z + final.Z*/
-                    start.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * LINEOFSIGHTSCALAR), //Math.Sin(this.Incline * Math.PI / 180.0f) * 
-                    start.Y + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR,
-                    start.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -LINEOFSIGHTSCALAR) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
-
+                    start.Z + final.Z
                 );
             CollisionWorld.ClosestRayResultCallback raycastCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
             this.Game.World.RayTest(start, end, raycastCallback);
