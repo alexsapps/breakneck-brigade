@@ -285,6 +285,7 @@ namespace Breakneck_Brigade.Graphics
             render3D();
             prep2D();
             render2D();
+            this.DrawCookbook(lp.SelectedRecipe, 5, 500);
 
             _stopwatch3.Start();
             Glfw.glfwSwapBuffers();
@@ -530,6 +531,37 @@ namespace Breakneck_Brigade.Graphics
 
                 TextRenderer.printToScreen(500, 5, "Looking at: " + lookingAt, .75f, .75f);
                 
+            }
+        }
+
+        private void DrawCookbook(Recipe selectedRecipe, int xPos, int yPos)
+        {
+            int padding = 5;
+            int spacing = 10;
+            if (selectedRecipe != null)
+            {
+                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.Name, .75f, .75f);
+                yPos -= (spacing + padding);
+                TextRenderer.printToScreen(xPos, yPos, "-REQURIED-" , .75f, .75f);
+                foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
+                {
+                    for( int i = 0; i < ingredient.nCount; i++)
+                    {
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        yPos -= (spacing + padding);
+                    }
+                }
+
+                TextRenderer.printToScreen(xPos, yPos, "-optional-", .75f, .75f);
+                yPos -= (spacing + padding);
+                foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
+                {
+                    for (int i = 0; i < ingredient.nOptional; i++)
+                    {
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.Name, .75f, .75f);
+                        yPos -= (spacing + padding);
+                    }
+                }
             }
         }
 
