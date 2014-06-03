@@ -36,7 +36,23 @@
     <cooker team="blue" type="oven" coordinate="200, 20, 0"></cooker>
 
     <ingredient type="hamburger" coordinate="0,0,0" ></ingredient>
-    <ingredient type="milkshake" coordinate="0,0,0" ></ingredient>
+    <ingredient type="tomato" coordinate="0,0,0" ></ingredient>
+    <ingredient type="butter" coordinate="0,0,0" ></ingredient>
+    <ingredient type="beer" coordinate="0,0,0" ></ingredient>
+    <ingredient type="cheese" coordinate="0,0,0" ></ingredient>
+    <ingredient type="carrot" coordinate="0,0,0" ></ingredient>
+    <ingredient type="coconut" coordinate="0,0,0" ></ingredient>
+    <ingredient type="sugar" coordinate="0,0,0" ></ingredient>
+    <ingredient type="milk" coordinate="0,0,0" ></ingredient>
+    <ingredient type="icecream" coordinate="0,0,0" ></ingredient>
+    <ingredient type="flour" coordinate="0,0,0" ></ingredient>
+    <ingredient type="bread" coordinate="0,0,0" ></ingredient>
+    <ingredient type="lettuce" coordinate="0,0,0" ></ingredient>
+    <ingredient type="watermelon" coordinate="0,0,0" ></ingredient>
+    <ingredient type="egg" coordinate="0,0,0" ></ingredient>
+    <ingredient type="orange" coordinate="0,0,0" ></ingredient>
+    <ingredient type="steak" coordinate="0,0,0" ></ingredient>
+    
 
     <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,90,180" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
 
