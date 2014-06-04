@@ -404,7 +404,7 @@ namespace DeCuisine
                                         if(((ServerIngredient) sgo).Type.Name == objectName)
                                         {
                                             Vector3 above = sgo.Position + new Vector3(0, 10, 0);
-                                            SendParticleEffect(BBParticleEffect.ARROW, above, player.Id);
+                                            SendParticleEffect(BBParticleEffect.ARROW, above, player);
                                         }
                                     }
                                 }
