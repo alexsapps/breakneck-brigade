@@ -28,7 +28,9 @@ namespace Breakneck_Brigade.Graphics
         
         public override void Render() //Disable transparency and disable face culling
         {
+            Renderer.disableTransparency();
             base.Render();
+            Renderer.enableTransparency();
         }
 
         protected override void Spawn()

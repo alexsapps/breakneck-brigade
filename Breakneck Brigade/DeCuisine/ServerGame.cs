@@ -772,7 +772,11 @@ namespace DeCuisine
             var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4(), Param = param, Id = id };
             ServerEvents.Add(msg);
         }
-
+        public void SendParticleEffect(BBParticleEffect effect, Vector3 location, int param, int followID)
+        {
+            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4(), Param = param , FollowID = followID};
+            ServerEvents.Add(msg);
+        }
 
 
         // TEST: Dev code for cooker adding

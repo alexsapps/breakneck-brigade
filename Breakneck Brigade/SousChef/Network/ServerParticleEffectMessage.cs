@@ -11,7 +11,12 @@ namespace SousChef
         public Vector4 Location { get; set; }
         public BBParticleEffect ParticleEffect { get; set; }
         public int Param { get; set; }
-        public int Id { get; set; }
+        public int FollowID { get; set; }
+
+        public ServerParticleEffectMessage()
+        {
+            FollowID = -1;
+        }
 
         public override ServerMessageType Type
         {
@@ -23,7 +28,7 @@ namespace SousChef
             writer.Write(Location);
             writer.Write((Int32)ParticleEffect);
             writer.Write(Param);
-            writer.Write(Id);
+            writer.Write(FollowID);
         }
 
         public override void Read(System.IO.BinaryReader reader)
@@ -31,7 +36,7 @@ namespace SousChef
             Location = reader.ReadCoordinate();
             ParticleEffect = (BBParticleEffect)reader.ReadInt32();
             Param = reader.ReadInt32();
-            Id = reader.ReadInt32();
+            FollowID = reader.ReadInt32();
         }
     }
 }

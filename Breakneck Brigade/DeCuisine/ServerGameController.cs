@@ -303,7 +303,7 @@ namespace DeCuisine
                 {
                     if (ing.LastPlayerHolding != null)
                     {
-                        Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position);
+                        Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position, 0, ing.LastPlayerHolding.Id);
                         ing.LastPlayerHolding.Client.Team.Points += ((Goal)goal).Points;
                         ing.Remove();
                         MarkLobbyStateDirty();

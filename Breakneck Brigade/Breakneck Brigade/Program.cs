@@ -819,7 +819,10 @@ namespace Breakneck_Brigade
                                             switch(e.ParticleEffect)
                                             {
                                                 case BBParticleEffect.CONFETTI:
-                                                    spawner = new PSConfetti(e.Location);
+                                                    if (e.FollowID != -1)
+                                                        spawner = new PSConfetti(e.Location, game.LiveGameObjects[e.FollowID]);
+                                                    else
+                                                        spawner = new PSConfetti(e.Location);
                                                     break;
                                                 case BBParticleEffect.SMOKE:
                                                     spawner = new PSSmoke(e.Location, (SmokeType) e.Param);
