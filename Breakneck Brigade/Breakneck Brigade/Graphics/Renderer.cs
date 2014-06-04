@@ -402,7 +402,7 @@ namespace Breakneck_Brigade.Graphics
                 Console.Error.WriteLine("ERROR: GLFW Initialization failed!");
                 Environment.Exit(1);
             }
-            Glfw.glfwOpenWindow((int) _desiredWidth, (int) _desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_FULLSCREEN);
+            Glfw.glfwOpenWindow((int)_desiredWidth, (int)_desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_WINDOW);
             Glfw.glfwSwapInterval(0);
 
         }
