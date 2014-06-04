@@ -33,7 +33,7 @@
   <ingredient name="pasta" friendlyName="Pasta" points="110" size="4, 1, 4" />
   <ingredient name="cake" friendlyName="Cake" points="2000" size="6, 4, 6"/>
   <ingredient name="Toasted Bread" friendlyName="Toasted Bread" points="110" size="9, 1.5, 9" />
-  <ingredient name="chicken" friendlyName="chicken" points="110" size="4, 1, 4" />
+  <ingredient name="chicken" friendlyName="Chicken" points="110" size="4, 1, 4" />
   <ingredient name="caesarSalad" friendlyName="Caesar Salad" points="110" size="4, 1, 4" />
   <ingredient name="soup" friendlyName="Soup" points="110" size="4, 1, 4" />
   <ingredient name="cakeBatter" friendlyName="Cake Batter" points="110" size="4, 1, 4" />

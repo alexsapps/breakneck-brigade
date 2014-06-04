@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
-    public class IngredientType : GameObjectType
+    public class IngredientType : GameObjectType, IComparable<IngredientType>
     {
         public int DefaultPoints { get; set; }
 
@@ -14,6 +14,11 @@ namespace SousChef
             : base(name, friendlyName, geomInfo)
         {
             this.DefaultPoints = defaultPoints;
+        }
+
+        public int CompareTo(IngredientType other)
+        {
+            return DefaultPoints - other.DefaultPoints;
         }
     }
 }

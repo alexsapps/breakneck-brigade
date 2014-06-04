@@ -105,7 +105,7 @@ namespace DeCuisine
                     while(i++ < ing.nCount + ing.nOptional)
                         this.NeededHash[ing.Ingredient]++;
                 }
-                Goals.Add(new Goal(100, tmpRec, complexity));
+                Goals.Add(new Goal(tmpRec.FinalProduct.DefaultPoints, tmpRec, complexity));
                 _goalsDirty = true;
             }
 #endif

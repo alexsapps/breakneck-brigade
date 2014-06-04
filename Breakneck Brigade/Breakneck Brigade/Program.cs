@@ -786,16 +786,9 @@ namespace Breakneck_Brigade
                                             var e = new ServerGoalsUpdateMessage();
                                             e.Read(reader);
                                             game.Goals.Clear();
-#if PROJECT_DEBUG
-                                            int x = 0;
-                                            foreach(var g in e.Goals){
-                                                game.Goals.Add(game.Config.Ingredients[g]);
-                                                Program.WriteLine("Goal " + ++x + " " + g);
-                                            }
-#else
                                             foreach (var g in e.Goals)
                                                 game.Goals.Add(game.Config.Ingredients[g]);
-#endif
+                                            game.Goals.Sort();
                                             break;
                                         }
                                         case ServerMessageType.TintListUpdate:
