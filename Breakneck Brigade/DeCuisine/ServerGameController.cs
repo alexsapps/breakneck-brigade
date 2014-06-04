@@ -20,11 +20,11 @@ namespace DeCuisine
 
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
-        private string[] defaultTeams = new string[]{"red", "blue"}; //Add more team names for more teams
+        private string[] defaultTeams = new string[]{"blue", "red"}; //Add more team names for more teams
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
 
 
-        private Dictionary<string,int> numOfGoalsByState; // dictionary conaining the number of goals
+        private Dictionary<GameControllerState, int> numOfGoalsByState; // dictionary conaining the number of goals
 #if PROJECT_WORLD_BUILDING
         private int pileSize = 0; // don't spawn ingredients
 #else
@@ -71,13 +71,22 @@ namespace DeCuisine
             }
             this.Goals = new List<Goal>();
             this.NeededHash = new Dictionary<IngredientType, int>();
-            this.numOfGoalsByState = new Dictionary<string,int>();
+            this.numOfGoalsByState = new Dictionary<GameControllerState,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
-            this.numOfGoalsByState.Add(GameControllerState.Stage1.ToString(), 5);
-            this.numOfGoalsByState.Add(GameControllerState.Stage2.ToString(), 7);
-            this.numOfGoalsByState.Add(GameControllerState.Stage3.ToString(), 10);
+            this.numOfGoalsByState.Add(GameControllerState.Stage1, 5);
+            this.numOfGoalsByState.Add(GameControllerState.Stage2, 7);
+            this.numOfGoalsByState.Add(GameControllerState.Stage3, 10);
         }
 
+        private void FillGoals()
+        {
+            if (CurrentGameState <= GameControllerState.Stage1)
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage1], 0);
+            else if (CurrentGameState <= GameControllerState.Stage2)
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage2], 0);
+            else
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage3], 0);
+        }
         private void FillGoals(int numOfGoals, int complexity)
         {
 #if !PROJECT_WORLD_BUILDING
@@ -96,7 +105,7 @@ namespace DeCuisine
                     while(i++ < ing.nCount + ing.nOptional)
                         this.NeededHash[ing.Ingredient]++;
                 }
-                Goals.Add(new Goal(100, tmpRec, complexity));
+                Goals.Add(new Goal(tmpRec.FinalProduct.DefaultPoints, tmpRec, complexity));
                 _goalsDirty = true;
             }
 #endif
@@ -104,12 +113,7 @@ namespace DeCuisine
 
         public void UpdateConfig() 
         {
-            if (CurrentGameState <= GameControllerState.Stage1)
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage1.ToString()], 0);
-            else if(CurrentGameState <= GameControllerState.Stage2)
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage2.ToString()], 0);
-            else
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage3.ToString()], 0);
+            FillGoals();
         }
 
 
@@ -120,6 +124,7 @@ namespace DeCuisine
             switch (CurrentGameState)
             {
                 case GameControllerState.Start:
+                    Game.SendSound(BBSound.warningbuzz, new Vector3(0, 10, 0));
                     spawnPile();
                     nextGameState();
                     break;
@@ -128,12 +133,14 @@ namespace DeCuisine
                     {
                         risePile(); // gives a crazy scatter pile effect
                         nextGameState();
+                        Game.SendSound(BBSound.phasein, new Vector3(0, 10, 0));
                     }
                     updateObj();
                     break;
                 case GameControllerState.Scatter:
                     if (ticks == startTick)
                     {
+                        Game.SendSound(BBSound.explosionfar, new Vector3(0, 10, 0));
                         scatterPile(); // gives a crazy scatter pile effect
                         nextGameState();
                     }
@@ -174,10 +181,7 @@ namespace DeCuisine
 
         ServerIngredient spawnIngredient(IngredientType type, Vector3 location)
         {
-            List<IngredientType> types = new List<IngredientType>(Game.Config.Ingredients.Values);
-            IngredientType randIng = types[DC.random.Next(types.Count)];
-            var loc = RandomLocation();
-            return new ServerIngredient(randIng, Game, loc);
+            return new ServerIngredient(type, Game, location);
         }
 
         public static Vector3 RandomLocation()
@@ -275,6 +279,7 @@ namespace DeCuisine
             if (goalToRemove != null)
             {
                 this.Goals.Remove(goalToRemove);
+                FillGoals();
                 return true;
             }
             else
@@ -344,6 +349,9 @@ namespace DeCuisine
         /// </summary>
         private void spawnPile()
         {
+            HashSet<IngredientType> goalIng = new HashSet<IngredientType>();
+            foreach(var goal in this.Goals)
+                goalIng.Add(goal.EndGoal.FinalProduct);
             foreach (var ing in this.NeededHash)
             {
                 for (int x = 0; x < ing.Value; x++)
@@ -355,7 +363,10 @@ namespace DeCuisine
             }
             for (int x = 0; x < pileSize; x++)
             {
-                var tmp = spawnIngredient(this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count)), RandomLocation());
+                var tmpIngType =  this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count));
+                if(goalIng.Contains(tmpIngType))
+                    continue;
+                var tmp = spawnIngredient(tmpIngType, RandomLocation());
                 //tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet
                 //tmp.Body.ActivationState = ActivationState.ActiveTag;
             }

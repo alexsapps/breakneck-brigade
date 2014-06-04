@@ -498,6 +498,10 @@ namespace Breakneck_Brigade.Graphics
             if (goalCache != null)
             {
                 goalCache = goalCache.ToList(); //make it a cache, so we can enumerate safely
+                int width = 0;
+                foreach (IngredientType it in goalCache)
+                    if (it.DefaultPoints.ToString().Length > width)
+                        width = it.DefaultPoints.ToString().Length;
                 foreach (IngredientType it in goalCache)
                 {
                     TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, FONT_SCALE, FONT_SCALE);
@@ -633,7 +637,7 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for( int i = 0; i < ingredient.nCount; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
+                        DrawRecipe_PrintIngredient(xPos, yPos, ingredient);
                         yPos -= (spacing + padding);
                     }
                 }
@@ -646,11 +650,16 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for (int i = 0; i < ingredient.nOptional; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
+                        DrawRecipe_PrintIngredient(xPos, yPos, ingredient);
                         yPos -= (spacing + padding);
                     }
                 }
             }
+        }
+
+        private static void DrawRecipe_PrintIngredient(int xPos, int yPos, RecipeIngredient ingredient)
+        {
+            TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, FONT_SIZE, FONT_SIZE);
         }
 
         ModelTimer modelTimer = null;
