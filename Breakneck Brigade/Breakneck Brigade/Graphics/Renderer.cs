@@ -28,7 +28,8 @@ namespace Breakneck_Brigade.Graphics
         private const string CROSSHAIR_MODEL_NAME = "crosshair";
         public const string BLANKQUAD_MODEL_NAME = "blankQuad";
         public const string FONT_TEXTURE = "fontWhite.tga";
-        private int padding = 5;
+        public const float FONT_SCALE = 1.0f;
+        private int padding = 8;
         private int spacing = 10;
 
         private Stopwatch  _stopwatch = new Stopwatch();
@@ -499,12 +500,12 @@ namespace Breakneck_Brigade.Graphics
                 goalCache = goalCache.ToList(); //make it a cache, so we can enumerate safely
                 foreach (IngredientType it in goalCache)
                 {
-                    TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, .75f, .75f);
+                    TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, FONT_SCALE, FONT_SCALE);
                     yPos += spacing + padding;
                 }
-                TextRenderer.printToScreen(xPos, yPos, "\"Make these items!\"", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "\"Make these items!\"", FONT_SCALE, FONT_SCALE);
                 yPos += spacing + padding;
-                TextRenderer.printToScreen(xPos, yPos, "The master chef sez", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "The master chef sez", FONT_SCALE, FONT_SCALE);
             }
         }
 
@@ -542,7 +543,7 @@ namespace Breakneck_Brigade.Graphics
                         ingedientList += "-";
 
                         //yPos -= (spacing + padding);
-                        TextRenderer.printToScreen(xPos, yPos - (spacing + padding), ingedientList, .75f, .75f);
+                        TextRenderer.printToScreen(xPos, yPos - (spacing + padding), ingedientList, FONT_SCALE, FONT_SCALE);
                     }
 
                     // lookingAt = lookedAtObject.ToString();
@@ -555,7 +556,7 @@ namespace Breakneck_Brigade.Graphics
                 TextRenderer.printToScreen(500, 40, "Looking at: " + lookingAt, .75f, .75f);
                 TextRenderer.printToScreen(500, 15, info, .75f, .75f);
 #else
-                TextRenderer.printToScreen(xPos, yPos, "Looking at: " + lookingAt, .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "Looking at: " + lookingAt, FONT_SCALE, FONT_SCALE);
 #endif
                 
             }
@@ -570,7 +571,7 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null)
             {
-                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(), .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(), FONT_SCALE, FONT_SCALE);
             }
         }
 
@@ -586,15 +587,15 @@ namespace Breakneck_Brigade.Graphics
                 header = "Team: " + Program.lobbyState.MyTeam.Name;
             else
                 header = "Team Scores:";
-            TextRenderer.printToScreen(xPos, yPos, header, .75f, .75f);
+            TextRenderer.printToScreen(xPos, yPos, header, FONT_SCALE, FONT_SCALE);
             yPos -= (spacing + padding);
-            TextRenderer.printToScreen(xPos, yPos, "-----------", .75f, .75f);
+            TextRenderer.printToScreen(xPos, yPos, "-----------", FONT_SCALE, FONT_SCALE);
             yPos -= (spacing + padding);
             if (Program.lobbyState != null && Program.lobbyState.Teams != null)
             {
                 foreach (ClientTeam team in Program.lobbyState.Teams.Values.ToList())
                 {
-                    TextRenderer.printToScreen(xPos, yPos, team.Name + ": " + team.Score.ToString(), .75f, .75f);
+                    TextRenderer.printToScreen(xPos, yPos, team.Name + ": " + team.Score.ToString(), FONT_SCALE, FONT_SCALE);
                     yPos -= (spacing + padding);
                 }
             }
@@ -612,15 +613,15 @@ namespace Breakneck_Brigade.Graphics
             int spacing = 10;
             if (selectedRecipe != null)
             {
-                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
-                TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "----------", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
-                TextRenderer.printToScreen(xPos, yPos, "USABLE COOKERS:", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "USABLE COOKERS:", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
                 foreach (CookerType cooker in selectedRecipe.UsableCookers)
                 {
-                    TextRenderer.printToScreen(xPos, yPos, cooker.FriendlyName, .75f, .75f);
+                    TextRenderer.printToScreen(xPos, yPos, cooker.FriendlyName, FONT_SCALE, FONT_SCALE);
                     yPos -= (spacing + padding);
                 }
 
@@ -632,20 +633,20 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for( int i = 0; i < ingredient.nCount; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, .75f, .75f);
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
                         yPos -= (spacing + padding);
                     }
                 }
 
-                TextRenderer.printToScreen(xPos, yPos, "----------", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "----------", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
-                TextRenderer.printToScreen(xPos, yPos, "OPTIONAL:", .75f, .75f);
+                TextRenderer.printToScreen(xPos, yPos, "OPTIONAL:", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
                 foreach (RecipeIngredient ingredient in selectedRecipe.Ingredients)
                 {
                     for (int i = 0; i < ingredient.nOptional; i++)
                     {
-                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, .75f, .75f);
+                        TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
                         yPos -= (spacing + padding);
                     }
                 }
