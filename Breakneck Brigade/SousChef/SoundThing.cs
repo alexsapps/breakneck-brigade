@@ -30,6 +30,7 @@ namespace SousChef
         /// </summary>
         private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
+
         /// <summary>
         /// Plays a sound. See class header comments for details.
         /// </summary>
@@ -82,10 +83,8 @@ namespace SousChef
             /// </summary>
             private double volume;
 
-
             /// <summary>
             /// Constructor, creates a SoundThread with a specified sound to play.
-            /// 
             /// </summary>
             /// <param name="path">The path to the file to play</param>
             /// <param name="volume">The volume level to play a sound between 0-1, where 0 is queit, and 1 is loudest.</param>

@@ -26,7 +26,7 @@ namespace Breakneck_Brigade
         public List<AParticleSpawner> ParticleSpawners { get; set;}
 
         public ConfigSalad Config { get; private set; }
-        public List<Recipe> Recipies { get; private set; }
+        public List<Recipe> RequiredRecipies { get; private set; }
 
         public ClientGame(BBLock @lock)
         {
@@ -36,7 +36,7 @@ namespace Breakneck_Brigade
             ParticleSpawners = new List<AParticleSpawner>();
             Goals = new List<IngredientType>();
             Config = new GameObjectConfig().GetConfigSalad();
-            this.Recipies = this.Config.Recipes.Values.ToList();
+            this.CalculateRequiredRecipes();
             TintedObjects = new Dictionary<string, HashSet<string>>();
             TintedObjects.Add("red", new HashSet<string>());
             TintedObjects.Add("blue", new HashSet<string>());
@@ -44,6 +44,47 @@ namespace Breakneck_Brigade
             HeldId = -1;
         }
 
+        /// <summary>
+        /// Returns the list of recipies needed to complete the goals
+        /// </summary>
+        /// <returns></returns>
+        public void CalculateRequiredRecipes()
+        {
+            Dictionary<string, Recipe> masterList = new Dictionary<string, Recipe>();
+            List<Recipe> newRecipes = new List<Recipe>(), oldRecipes = new List<Recipe>();
 
+            foreach (IngredientType ingriendient in this.Goals)
+            {
+                Recipe recipe;
+                if (this.Config.Recipes.TryGetValue(ingriendient.Name, out recipe))
+                {
+                    masterList[recipe.Name] = recipe;
+                    oldRecipes.Add(recipe);
+                }
+            }
+
+            int oldCount = 0;
+            do
+            {
+                oldCount = masterList.Count;
+                newRecipes = new List<Recipe>();
+                foreach (Recipe recipe in oldRecipes)
+                {
+                    foreach (RecipeIngredient ingredient in recipe.Ingredients)
+                    {
+                        Recipe intermediateRecipe;
+                        if (this.Config.Recipes.TryGetValue(ingredient.Ingredient.Name, out intermediateRecipe) && intermediateRecipe.Name != recipe.Name)
+                        {
+                            masterList[ingredient.Ingredient.Name] = intermediateRecipe;
+                            newRecipes.Add(intermediateRecipe);
+                        }
+                    }
+                }
+
+                oldRecipes = newRecipes;
+            } while (oldCount < masterList.Count);
+
+            this.RequiredRecipies = masterList.Values.ToList();
+        }
     }
 }

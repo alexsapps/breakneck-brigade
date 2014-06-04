@@ -197,8 +197,11 @@ namespace Breakneck_Brigade
             // Change page down.
             if(keyDown(GlfwKeys.GLFW_KEY_R))
             {
-                this.bookIndex = (this.bookIndex + 1) % this.Game.Recipies.Count;
-                this.SelectedRecipe = this.Game.Recipies[bookIndex];
+                if (this.Game.RequiredRecipies.Count > 0)
+                {
+                    this.bookIndex = (this.bookIndex + 1) % this.Game.RequiredRecipies.Count;
+                    this.SelectedRecipe = this.Game.RequiredRecipies[bookIndex];
+                }
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());
@@ -209,13 +212,16 @@ namespace Breakneck_Brigade
             // Change page up.
             if (keyDown(GlfwKeys.GLFW_KEY_F))
             {
-                this.bookIndex--;
-                if (this.bookIndex < 0)
+                if (this.Game.RequiredRecipies.Count > 0)
                 {
-                    this.bookIndex = this.Game.Recipies.Count - 1;
-                }
+                    this.bookIndex--;
+                    if (this.bookIndex < 0)
+                    {
+                        this.bookIndex = this.Game.RequiredRecipies.Count - 1;
+                    }
 
-                this.SelectedRecipe = this.Game.Recipies[bookIndex];
+                    this.SelectedRecipe = this.Game.RequiredRecipies[bookIndex];
+                }
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());

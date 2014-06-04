@@ -612,8 +612,6 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="yPos"></param>
         private void DrawRecipe(Recipe selectedRecipe, int xPos, int yPos)
         {
-            int padding = 5;
-            int spacing = 10;
             if (selectedRecipe != null)
             {
                 TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, FONT_SCALE, FONT_SCALE);

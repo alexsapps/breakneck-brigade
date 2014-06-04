@@ -789,6 +789,7 @@ namespace Breakneck_Brigade
                                             foreach (var g in e.Goals)
                                                 game.Goals.Add(game.Config.Ingredients[g]);
                                             game.Goals.Sort();
+                                            game.CalculateRequiredRecipes();
                                             break;
                                         }
                                         case ServerMessageType.TintListUpdate:
