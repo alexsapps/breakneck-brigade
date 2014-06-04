@@ -15,7 +15,7 @@ namespace Breakneck_Brigade.Graphics
         private const int TEXTURE_HEIGHT    = 256;
         private const int GLYPH_WIDTH       = 16;
         private const int GLYPH_HEIGHT      = 16;
-        private const int GLYPH_RENDER_WIDTH      = GLYPH_WIDTH-3;
+        private const int GLYPH_RENDER_WIDTH      = GLYPH_WIDTH;
         private const int COLS              = TEXTURE_WIDTH / GLYPH_WIDTH;
         private const int ROWS              = TEXTURE_HEIGHT / GLYPH_HEIGHT;
 

@@ -240,8 +240,7 @@ namespace DeCuisine
                 else
                     held.Position = moveOutsideBody(this.GeomInfo.Size[2] + held.GeomInfo.Size[0]); // put the object outside our body before throwing
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
-                if (held.Body.LinearVelocity.X == 0 && held.Body.LinearVelocity.Y == 0 && held.Body.LinearVelocity.Z == 0)
-                    Console.WriteLine("WHAT THE FUCK");
+                held.Body.AngularVelocity = Vector3.Zero;
                 _hand.Held = null;
                 this.Game.SendSound(BBSound.punchmiss, Position);
                 this.MarkDirty();

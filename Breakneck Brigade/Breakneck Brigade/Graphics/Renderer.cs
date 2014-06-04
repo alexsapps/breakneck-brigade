@@ -659,7 +659,7 @@ namespace Breakneck_Brigade.Graphics
 
         private static void DrawRecipe_PrintIngredient(int xPos, int yPos, RecipeIngredient ingredient)
         {
-            TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, FONT_SIZE, FONT_SIZE);
+            TextRenderer.printToScreen(xPos, yPos, ingredient.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
         }
 
         ModelTimer modelTimer = null;
