@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SousChef
 {
+    /// <summary>
+    /// The enum listing sounds which can be played.  Be sure that the sound file you want to play is in res, and add it's file name, without the extension, to the list.
+    /// </summary>
     public enum BBSound
     {
         bodyfall1,
