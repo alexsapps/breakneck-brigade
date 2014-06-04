@@ -352,6 +352,9 @@ namespace DeCuisine
         /// </summary>
         private void spawnPile()
         {
+            HashSet<IngredientType> goalIng = new HashSet<IngredientType>();
+            foreach(var goal in this.Goals)
+                goalIng.Add(goal.EndGoal.FinalProduct);
             foreach (var ing in this.NeededHash)
             {
                 for (int x = 0; x < ing.Value; x++)
@@ -363,7 +366,10 @@ namespace DeCuisine
             }
             for (int x = 0; x < pileSize; x++)
             {
-                var tmp = spawnIngredient(this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count)), RandomLocation());
+                var tmpIngType =  this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count));
+                if(goalIng.Contains(tmpIngType))
+                    continue;
+                var tmp = spawnIngredient(tmpIngType, RandomLocation());
                 //tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet
                 //tmp.Body.ActivationState = ActivationState.ActiveTag;
             }
