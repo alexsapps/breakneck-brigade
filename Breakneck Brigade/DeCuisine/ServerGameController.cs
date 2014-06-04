@@ -16,36 +16,52 @@ namespace DeCuisine
         public List<Goal> Goals { get; set; }
         public Dictionary<string,string> TintList { get; set; }
         public Dictionary<IngredientType, int> NeededHash { get; set; } // the dict of the number of ingredients needed to make the goals 
-        
 
+        private int ticks; //server ticks, not time ticks
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
         private string[] defaultTeams = new string[]{"blue", "red"}; //Add more team names for more teams
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
 
 
-        private Dictionary<GameControllerState, int> numOfGoalsByState; // dictionary conaining the number of goals
+        private Dictionary<GameControllerStage, int> numOfGoalsByState; // dictionary conaining the number of goals
 #if PROJECT_WORLD_BUILDING
         private int pileSize = 0; // don't spawn ingredients
 #else
         private int pileSize = 200;
 #endif   
         public GameControllerState CurrentGameState { get; set; }
+        public GameControllerStage CurrentStage { get; set; }
         
         public enum GameControllerState
         {
             Start,
             Waiting,
             Scatter,
+            Play,
+            End
+        }
+
+        public enum GameControllerStage
+        {
             Stage1,
             Stage2,
-            Stage3,
-            End
+            Stage3
         }
         protected void nextGameState()
         {
             CurrentGameState = (GameControllerState)((int)CurrentGameState + 1);
+            // advanced to next stage if we aren't at the end
+            if (CurrentGameState == GameControllerState.End && CurrentStage != GameControllerStage.Stage3)
+            {
+                CurrentStage = (GameControllerStage)((int)CurrentStage + 1);
+                CurrentGameState = GameControllerState.Start;
+                FillGoals();
+                this.ticks = 0;
+            }
         }
+
+
 
 #if PROJECT_WORLD_BUILDING
         private int startTick = 30 * 2; // Don't care about pile when buliding the world
@@ -71,22 +87,25 @@ namespace DeCuisine
             }
             this.Goals = new List<Goal>();
             this.NeededHash = new Dictionary<IngredientType, int>();
-            this.numOfGoalsByState = new Dictionary<GameControllerState,int>();
+            this.numOfGoalsByState = new Dictionary<GameControllerStage,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
-            this.numOfGoalsByState.Add(GameControllerState.Stage1, 5);
-            this.numOfGoalsByState.Add(GameControllerState.Stage2, 7);
-            this.numOfGoalsByState.Add(GameControllerState.Stage3, 10);
+            this.numOfGoalsByState.Add(GameControllerStage.Stage1, 1);
+            this.numOfGoalsByState.Add(GameControllerStage.Stage2, 2);
+            this.numOfGoalsByState.Add(GameControllerStage.Stage3, 3);
+            this.ticks = 0;
         }
 
         private void FillGoals()
         {
-            if (CurrentGameState <= GameControllerState.Stage1)
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage1], 0);
-            else if (CurrentGameState <= GameControllerState.Stage2)
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage2], 0);
+            if (CurrentStage == GameControllerStage.Stage1)
+                FillGoals(this.numOfGoalsByState[GameControllerStage.Stage1], 0);
+            else if (CurrentStage == GameControllerStage.Stage2)
+                FillGoals(this.numOfGoalsByState[GameControllerStage.Stage2], 0);
             else
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage3], 0);
+                FillGoals(this.numOfGoalsByState[GameControllerStage.Stage3], 0);
         }
+
+
         private void FillGoals(int numOfGoals, int complexity)
         {
 #if !PROJECT_WORLD_BUILDING
@@ -98,12 +117,9 @@ namespace DeCuisine
                 // loop over ingredients and add them to the needed hash
                 foreach (var ing in tmpRec.Ingredients)
                 {
-                    int count;
-                    if (!this.NeededHash.TryGetValue(ing.Ingredient, out count))
-                        this.NeededHash.Add(ing.Ingredient, 0); // initialize the dict
-                    int i = 0;
-                    while(i++ < ing.nCount + ing.nOptional)
-                        this.NeededHash[ing.Ingredient]++;
+                    if (ing.Ingredient == tmpRec.FinalProduct)
+                        continue; // stacked object, i.e. cake, don't spawn it
+                    putInNeededHash(ing);
                 }
                 Goals.Add(new Goal(tmpRec.FinalProduct.DefaultPoints, tmpRec, complexity));
                 _goalsDirty = true;
@@ -111,13 +127,35 @@ namespace DeCuisine
 #endif
         }
 
+        /// <summary>
+        /// Check if the item you need to hash is also a recipe final product and spawns 
+        /// the needed components to make that.
+        /// </summary>
+        private void putInNeededHash(RecipeIngredient recIng)
+        {
+            int count;
+            // You know how we spend so much time learning recursion? This is the only instance
+            // in this game
+            if (this.Game.Config.Recipes.ContainsKey(recIng.Ingredient.Name))
+            {
+                foreach (var ingRec in this.Game.Config.Recipes[recIng.Ingredient.Name].Ingredients)
+                    putInNeededHash(ingRec);
+            }
+            else
+            {
+                if (!this.NeededHash.TryGetValue(recIng.Ingredient, out count))
+                    this.NeededHash.Add(recIng.Ingredient, 0);
+                int i = 0;
+                while (i++ < recIng.nCount + recIng.nOptional)
+                    this.NeededHash[recIng.Ingredient]++;
+            }
+
+        }
+
         public void UpdateConfig() 
         {
             FillGoals();
         }
-
-
-        int ticks = 1; //server ticks, not time ticks
 
         public bool Update()
         {
@@ -146,10 +184,13 @@ namespace DeCuisine
                     }
                     updateObj();
                     break;
-
-                case GameControllerState.Stage1:
+                case GameControllerState.Play:
                     updateObj();
                     break;
+                case GameControllerState.End:
+                    updateObj();
+                    break;
+
             }
            
             if (_lobbyStateDirty)
@@ -166,7 +207,7 @@ namespace DeCuisine
             if (CheckWin())
                 return false;
             
-            ticks++;
+            this.ticks++;
             return true;
         }
 
@@ -279,7 +320,8 @@ namespace DeCuisine
             if (goalToRemove != null)
             {
                 this.Goals.Remove(goalToRemove);
-                FillGoals();
+                if (this.Goals.Count == 0)
+                    this.nextGameState();
                 return true;
             }
             else
@@ -364,7 +406,9 @@ namespace DeCuisine
             for (int x = 0; x < pileSize; x++)
             {
                 var tmpIngType =  this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count));
-                if(goalIng.Contains(tmpIngType))
+                if (goalIng.Contains(tmpIngType))
+                    continue;
+                else if (this.Game.Config.Recipes.ContainsKey(tmpIngType.Name))
                     continue;
                 var tmp = spawnIngredient(tmpIngType, RandomLocation());
                 //tmp.Body.Gravity = new Vector3(0, 0, 0); // Don't have them start yet

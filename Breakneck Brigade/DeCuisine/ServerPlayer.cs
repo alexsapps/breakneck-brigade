@@ -231,7 +231,6 @@ namespace DeCuisine
                 var _hand = this.Hands[hand];
                 var held = _hand.Held;
 
-
                 // Throw object
                 //this.Game.World.RemoveConstraint(spSlider1);
                 this.Game.World.RemoveConstraint(constraint);

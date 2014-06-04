@@ -4,6 +4,7 @@
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
   <cooker name="blender" friendlyName="Blender" size="9, 11, 9" mass="9001.0">
     <recipe>milkshake</recipe>
+    <recipe>sauce</recipe>
   </cooker>
 
   <cooker name="oven" friendlyName="Oven" size="16,16,16" mass="9001.0">
@@ -28,5 +29,6 @@
   
   <cooker name="bowl" friendlyName="Bowl" size="12,6,12" mass="9001.0">
     <recipe>caesarSalad</recipe>
+    <recipe>cakeBatter</recipe>
   </cooker>
 </cookers>

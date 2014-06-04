@@ -32,6 +32,8 @@ namespace DeCuisine
             base.AddToWorld(position);
             LastPlayerHolding = null;
             Cleanliness = 100;
+            this.Body.ActivationState = ActivationState.ActiveTag;
+            this.Body.ActivationState = ActivationState.DisableDeactivation;
         }
 
         /// <summary>

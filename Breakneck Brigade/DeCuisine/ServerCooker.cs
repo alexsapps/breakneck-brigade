@@ -16,7 +16,7 @@ namespace DeCuisine
     /// </summary>
     class ServerCooker : ServerGameObject
     {
-        private const float EJECTSPEED = 5.0f;
+        private const float EJECTSPEED = 10.0f;
 
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
         public Dictionary<int, ServerIngredient> Contents
@@ -118,7 +118,7 @@ namespace DeCuisine
                     validRecipes.Add(recipe.Value);
             }
 
-            if (validRecipes == null) // no valid recipe found
+            if (validRecipes.Count == 0) // no valid recipe found
             {
                 this.Game.SendSound(BBSound.glass, this.Position);
                 return null;
@@ -192,9 +192,10 @@ namespace DeCuisine
             // score the mothafuckin thing
             this.Team.Points += score;
             this.Game.SendLobbyStateToAll(); // update client scores
-            Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1], this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+            Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1] * 1.5f, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
             ServerIngredient newIngredient = new ServerIngredient(finalProduct, this.Game, ingredientSpawningPoint);
-            newIngredient.Body.ApplyImpulse(new Vector3(0, EJECTSPEED, 0), ingredientSpawningPoint);
+            Random rand = new Random();
+            newIngredient.Body.ApplyImpulse(new Vector3((float)rand.NextDouble(), EJECTSPEED * (float)rand.NextDouble(), (float)rand.NextDouble()), ingredientSpawningPoint);
             this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
             this.Game.SendSound(BBSound.trayhit1, this.Position);
             this.MarkDirty();
@@ -306,6 +307,14 @@ namespace DeCuisine
                 ((ServerIngredient)obj).LastPlayerHolding != null &&
                 ((ServerIngredient)obj).LastPlayerHolding.Client.Team == Team)
             {
+                foreach(ServerPlayer.HandInventory hand in ((ServerIngredient)obj).LastPlayerHolding.Hands.Values.ToList())
+                {
+                    if (hand != null && hand.Held != null)
+                    {
+                        return;
+                    }
+                }
+
                 this.AddIngredient((ServerIngredient)obj);
             }
         }

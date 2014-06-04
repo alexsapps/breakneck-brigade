@@ -25,15 +25,7 @@
     <ingredient optional="2">butter</ingredient>
   </recipe>
   <recipe product="cake">
-    <ingredient>flour</ingredient>
-    <ingredient>milk</ingredient>
-    <ingredient>egg</ingredient>
-    <ingredient>egg</ingredient>
-    <ingredient>butter</ingredient>
-    <ingredient>butter</ingredient>
-    <ingredient>sugar</ingredient>
-    <ingredient>sugar</ingredient>
-    <ingredient optional="1">cake</ingredient>
+    <ingredient>cakeBatter</ingredient>
   </recipe>
   <recipe product="chicken">
     <ingredient>rawChicken</ingredient>
@@ -55,5 +47,19 @@
     <ingredient>sauce</ingredient>
     <ingredient optional="2">butter</ingredient>
     <ingredient optional="1">cheese</ingredient>
+  </recipe>
+  <recipe product="sauce">
+  	<ingredient>tomato</ingredient>
+  	<ingredient>onion</ingredient>
+  </recipe>
+  <recipe product="cakeBatter">
+    <ingredient>flour</ingredient>
+    <ingredient>milk</ingredient>
+    <ingredient>egg</ingredient>
+    <ingredient>egg</ingredient>
+    <ingredient>butter</ingredient>
+    <ingredient>butter</ingredient>
+    <ingredient>sugar</ingredient>
+    <ingredient>sugar</ingredient>
   </recipe>
 </recipes>
