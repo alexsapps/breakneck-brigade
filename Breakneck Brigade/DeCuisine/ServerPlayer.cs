@@ -213,6 +213,9 @@ namespace DeCuisine
                 this.PickUpObject((ServerIngredient)this.LookingAt);
             else
             {
+                if (this.Hands[hand].Held == null)
+                    return;
+
                 SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
                 Matrix4 rotate = Matrix4.MakeRotateYDeg(-orientation) * Matrix4.MakeRotateXDeg(-incline);
                 imp = rotate * imp;
@@ -228,22 +231,16 @@ namespace DeCuisine
                 var _hand = this.Hands[hand];
                 var held = _hand.Held;
 
-                // Cause you can shoot oranges now. Why the fuck not? 
-                
-                if (held == null)
-                {
-                    return;
-                    var tmp = new ServerIngredient(this.Game.Config.Ingredients["orange"], Game, crossPos);
-                    tmp.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.SHOOTSCALER;
-                    return;
-                }
-
 
                 // Throw object
                 //this.Game.World.RemoveConstraint(spSlider1);
                 this.Game.World.RemoveConstraint(constraint);
-                held.Position = crossPos;
-                //held.Body.Gravity = this.Game.World.Gravity;
+                held.Position = moveOutsideBody(); // put the object outside our body before throwing
+                //Longer objects i.e. bread, collide with the player when thrown while in the longer direction.
+                //The reason being bullet uses the center of mass as position. A proper overlap test
+                //would be better but this is good enough for now
+                //held.Position = new Vector3(held.Position.X + held.GeomInfo.Size[0], held.Position.Y, held.Position.Z + held.GeomInfo.Size[2]);
+
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
                 if (held.Body.LinearVelocity.X == 0 && held.Body.LinearVelocity.Y == 0 && held.Body.LinearVelocity.Z == 0)
                     Console.WriteLine("WHAT THE FUCK");
@@ -310,6 +307,28 @@ namespace DeCuisine
             }
         }
 
+        /// <summary>
+        /// We need to move the object out of our body for a few things. This will return an object 
+        /// starts at our crosshairs outside out bodies.
+        /// </summary>
+        /// <returns>Position of the crosshair outside out body.</returns>
+        private Vector3 moveOutsideBody()
+        {
+            Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
+
+            SCVector4 moveOutsideBody = new SCVector4(0, 0, 1);
+            moveOutsideBody *= rotMat;
+            moveOutsideBody *= this.GeomInfo.Size[2];
+
+            // Check what the player is looking at
+            Vector3 start = new Vector3
+                (
+                    this.Position.X + moveOutsideBody.X, //Math.Sin(this.Incline * Math.PI / 180.0f) *
+                    this.Position.Y + moveOutsideBody.Y + this.EyeHeight,
+                    this.Position.Z + moveOutsideBody.Z//this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
+               );
+            return start;
+        }
         protected override void updateHook()
         {
             if (this.Body.LinearVelocity.Y < 0)
@@ -333,17 +352,8 @@ namespace DeCuisine
 
             Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
 
-            SCVector4 moveOutsideBody = new SCVector4(0, 0, 1);
-            moveOutsideBody *= rotMat;
-            moveOutsideBody *= this.GeomInfo.Size[2];
-
             // Check what the player is looking at
-            Vector3 start = new Vector3
-                (
-                    this.Position.X + moveOutsideBody.X, //Math.Sin(this.Incline * Math.PI / 180.0f) *
-                    this.Position.Y + moveOutsideBody.Y + this.EyeHeight,
-                    this.Position.Z + moveOutsideBody.Z//this.GeomInfo.Size[0]) //Math.Sin(this.Incline * Math.PI / 180.0f) * 
-               );
+            Vector3 start = moveOutsideBody();
 
             SCVector4 yDir = new SCVector4
                 (
