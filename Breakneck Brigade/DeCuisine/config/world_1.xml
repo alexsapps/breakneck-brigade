@@ -31,7 +31,7 @@
     <cooker team="blue" type="bowl" coordinate="400, 20, 484"></cooker>
 
 
-    <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,90,180" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
+    <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,45,90" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
 
 
   </space>
