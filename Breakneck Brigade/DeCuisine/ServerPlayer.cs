@@ -235,12 +235,10 @@ namespace DeCuisine
                 // Throw object
                 //this.Game.World.RemoveConstraint(spSlider1);
                 this.Game.World.RemoveConstraint(constraint);
-                held.Position = moveOutsideBody(); // put the object outside our body before throwing
-                //Longer objects i.e. bread, collide with the player when thrown while in the longer direction.
-                //The reason being bullet uses the center of mass as position. A proper overlap test
-                //would be better but this is good enough for now
-                //held.Position = new Vector3(held.Position.X + held.GeomInfo.Size[0], held.Position.Y, held.Position.Z + held.GeomInfo.Size[2]);
-
+                if(held.GeomInfo.Size[2] >= held.GeomInfo.Size[0])
+                    held.Position = moveOutsideBody(this.GeomInfo.Size[2] + held.GeomInfo.Size[2]); // put the object outside our body before throwing
+                else
+                    held.Position = moveOutsideBody(this.GeomInfo.Size[2] + held.GeomInfo.Size[0]); // put the object outside our body before throwing
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
                 if (held.Body.LinearVelocity.X == 0 && held.Body.LinearVelocity.Y == 0 && held.Body.LinearVelocity.Z == 0)
                     Console.WriteLine("WHAT THE FUCK");
@@ -312,13 +310,13 @@ namespace DeCuisine
         /// starts at our crosshairs outside out bodies.
         /// </summary>
         /// <returns>Position of the crosshair outside out body.</returns>
-        private Vector3 moveOutsideBody()
+        private Vector3 moveOutsideBody(float howMuch)
         {
             Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
 
             SCVector4 moveOutsideBody = new SCVector4(0, 0, 1);
             moveOutsideBody *= rotMat;
-            moveOutsideBody *= this.GeomInfo.Size[2];
+            moveOutsideBody *= howMuch;// this.GeomInfo.Size[2];
 
             // Check what the player is looking at
             Vector3 start = new Vector3
@@ -353,7 +351,7 @@ namespace DeCuisine
             Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
 
             // Check what the player is looking at
-            Vector3 start = moveOutsideBody();
+            Vector3 start = moveOutsideBody(this.GeomInfo.Size[2]);
 
             SCVector4 yDir = new SCVector4
                 (

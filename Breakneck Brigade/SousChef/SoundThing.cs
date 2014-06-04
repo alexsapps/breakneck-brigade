@@ -101,7 +101,7 @@ namespace SousChef
                 player.Open(new Uri(path, UriKind.Relative));
                 player.Volume = volume;
                 player.Play();
-                Thread.Sleep(4500); //FIXME: Should be managed by an event.  Thread suicides in 4.5 seconds
+                Thread.Sleep(4000); //FIXME: Should be managed by an event.  Thread suicides in 4.5 seconds
             }
         }
     }
