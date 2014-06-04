@@ -31,7 +31,6 @@ namespace Breakneck_Brigade
         public ClientGame(BBLock @lock)
         {
             Lock = @lock;
-            
             LiveGameObjects = new Dictionary<int, ClientGameObject>();
             GameObjectsCache = new Dictionary<int, ClientGameObject>();
             ParticleSpawners = new List<AParticleSpawner>();

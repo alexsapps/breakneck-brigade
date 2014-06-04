@@ -8,6 +8,7 @@ using System.Collections;
 using System.Diagnostics;
 using Tao.Glfw;
 using Tao.OpenGl;
+using System.Threading;
 
 namespace Breakneck_Brigade
 {
@@ -45,6 +46,8 @@ namespace Breakneck_Brigade
         bool throwing;
         DateTime lastDownThrow;
         DateTime lastThrow;
+        Thread backgroundMusicThread;
+
         public void Update(InputManager IM, ClientGame game, Graphics.Camera cam)
         {
             game.Lock.AssertHeld();
@@ -54,6 +57,12 @@ namespace Breakneck_Brigade
             keys = IM.GetKeys();
             downKeys = IM.GetDownKeyEdges();
             upKeys = IM.GetUpKeyEdges();
+
+            // Check background music
+            if(backgroundMusicThread == null || backgroundMusicThread.IsAlive == false)
+            {
+                backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.12);
+            }
 
             // Orientation & Incline update
             float rotx, roty;

@@ -33,6 +33,7 @@ namespace SousChef
         lasercannonfire,
         footsteps,
         phasein,
-        warningbuzz
+        warningbuzz,
+        cheering
     }
 }

@@ -35,11 +35,15 @@ namespace SousChef
         /// </summary>
         /// <param name="key">The key of the sound to play.  Note that this *is* case-sensitive.</param>
         /// <param name="volume">The volume to play at, on a scale of 0-1, where 0 is silent and 1 is loudest.</param>
-        public static void Play(BBSound key, double volume)
+        public static Thread Play(BBSound key, double volume)
         {
             String temp = "";
             if (l.TryGetValue(key.ToString(), out temp))
-                new Thread(new SoundThread(temp, volume).DoWork).Start();
+            {
+                Thread soundThread = new Thread(new SoundThread(temp, volume).DoWork);
+                soundThread.Start();
+                return soundThread;
+            }
             else
                 throw new Exception("no sound file for " + key.ToString());
         }
@@ -94,14 +98,13 @@ namespace SousChef
              /// <summary>
              /// Actually plays the sound.  Should only be called by Thread.
              /// </summary>
-
             public void DoWork()
             {
                 MediaPlayer player = new MediaPlayer();
                 player.Open(new Uri(path, UriKind.Relative));
                 player.Volume = volume;
                 player.Play();
-                Thread.Sleep(4000); //FIXME: Should be managed by an event.  Thread suicides in 4.5 seconds
+                Thread.Sleep(40000); // FIXME: Need to make this into an event notifier instead.
             }
         }
     }
