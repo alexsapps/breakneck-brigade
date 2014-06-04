@@ -131,7 +131,6 @@ namespace DeCuisine
                 case GameControllerState.Waiting:
                     if (ticks == scatterTick)
                     {
-                        Game.SendSound(BBSound.explosionfar, new Vector3(0, 10, 0));
                         risePile(); // gives a crazy scatter pile effect
                         nextGameState();
                         Game.SendSound(BBSound.phasein, new Vector3(0, 10, 0));
