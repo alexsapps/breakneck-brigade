@@ -98,17 +98,39 @@ namespace DeCuisine
                 // loop over ingredients and add them to the needed hash
                 foreach (var ing in tmpRec.Ingredients)
                 {
-                    int count;
-                    if (!this.NeededHash.TryGetValue(ing.Ingredient, out count))
-                        this.NeededHash.Add(ing.Ingredient, 0); // initialize the dict
-                    int i = 0;
-                    while(i++ < ing.nCount + ing.nOptional)
-                        this.NeededHash[ing.Ingredient]++;
+                    if (ing.Ingredient == tmpRec.FinalProduct)
+                        continue; // stacked object, i.e. cake, don't spawn it
+                    putInNeededHash(ing);
                 }
                 Goals.Add(new Goal(tmpRec.FinalProduct.DefaultPoints, tmpRec, complexity));
                 _goalsDirty = true;
             }
 #endif
+        }
+
+        /// <summary>
+        /// Check if the item you need to hash is also a recipe final product and spawns 
+        /// the needed components to make that.
+        /// </summary>
+        private void putInNeededHash(RecipeIngredient recIng)
+        {
+            int count;
+            // You know how we spend so much time learning recursion? This is the only instance
+            // in this game
+            if (this.Game.Config.Recipes.ContainsKey(recIng.Ingredient.Name))
+            {
+                foreach (var ingRec in this.Game.Config.Recipes[recIng.Ingredient.Name].Ingredients)
+                    putInNeededHash(ingRec);
+            }
+            else
+            {
+                if (!this.NeededHash.TryGetValue(recIng.Ingredient, out count))
+                    this.NeededHash.Add(recIng.Ingredient, 0);
+                int i = 0;
+                while (i++ < recIng.nCount + recIng.nOptional)
+                    this.NeededHash[recIng.Ingredient]++;
+            }
+
         }
 
         public void UpdateConfig() 
