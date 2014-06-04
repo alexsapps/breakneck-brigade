@@ -110,25 +110,61 @@ namespace DeCuisine
         public ServerIngredient Cook()
         {
             var copyContents = this.Contents;
+            var validRecipes = new List<Recipe>();
             //find if there is a valid recipe
             foreach (var recipe in this.Type.Recipes)
             {
                 if (this.CheckRecipe(recipe.Value))
-                {
-                    this.FinishCook(recipe.Value);
-                    break;
-                }
-                   
+                    validRecipes.Add(recipe.Value);
             }
 
-            this.Game.SendSound(BBSound.glass, this.Position);
+            if (validRecipes == null) // no valid recipe found
+            {
+                this.Game.SendSound(BBSound.glass, this.Position);
+                return null;
+            }
+            else if (validRecipes.Count == 1)
+            {
+                // Only one found, cook it.
+                int score = 0;
+                List<ServerIngredient> matching = new List<ServerIngredient>();
+                matching = calculateMatching(validRecipes[0], out score);
+                this.FinishCook(matching, score, validRecipes[0].FinalProduct);
+            }
+            else
+            {
+                List<ServerIngredient> toRemove = new List<ServerIngredient>(); // find the recipe that matches the most ingredients
+                int highestMatch = 0;
+                int bestRecIndx = 0;
+                int[] scores = new int[validRecipes.Count];
+
+
+                for(int x = 0; x < validRecipes.Count; x++)
+                {
+                    var matching = calculateMatching(validRecipes[x], out scores[x]);
+                    if(matching.Count > highestMatch)
+                    {
+                        bestRecIndx = x;
+                        highestMatch = matching.Count;
+                        toRemove = matching;
+                    }
+                }
+                if (toRemove != null)
+                    this.FinishCook(toRemove, scores[bestRecIndx], validRecipes[bestRecIndx].FinalProduct);
+                else
+                    throw new Exception("Some how we got here but here but I'm not sure how.");
+            }
             return null;
+
         }
 
-        private void FinishCook(Recipe recipe)
+        /// <summary>
+        /// return a list of matching ingredients in the current contents, returns the score
+        /// </summary>
+        private List<ServerIngredient> calculateMatching(Recipe recipe, out int cookScore)
         {
-            int cookScore = 0;
-            List<ServerIngredient> toEject = new List<ServerIngredient>();
+            List<ServerIngredient> allMatching = new List<ServerIngredient>();
+            cookScore = 0;
             // Final scan of the recipe to add up all the points
             foreach (var recIng in recipe.Ingredients)
             {
@@ -136,26 +172,37 @@ namespace DeCuisine
                 matchingCont = this.ReturnContents(recIng, recIng.nCount + recIng.nOptional);
                 if (matchingCont != null)
                 {
-                    toEject.AddRange(matchingCont);
+                    allMatching.AddRange(matchingCont);
                     cookScore += recIng.CalculateScore(matchingCont.Count);
                 }
             }
-            
-            foreach(var ingredient in toEject) //toList because collection gets modified during enumeration
-            {
-                //remove all the ingredients from the game world
-                ingredient.Remove();
-            }
+            return allMatching;
+        }
 
+        /// <summary>
+        /// Finish the cook. Remove the consumed ingredients, add the score, and make the last 
+        /// final product.
+        /// </summary>
+        private void FinishCook(List<ServerIngredient> toRemove, int score, IngredientType finalProduct)
+        {
+            // remove from game world
+            foreach(var ingredient in toRemove) 
+                ingredient.Remove();
+
+            // score the mothafuckin thing
+            this.Team.Points += score;
+            this.Game.SendLobbyStateToAll(); // update client scores
             Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1], this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
-            ServerIngredient newIngredient = new ServerIngredient(recipe.FinalProduct, this.Game, ingredientSpawningPoint);
+            ServerIngredient newIngredient = new ServerIngredient(finalProduct, this.Game, ingredientSpawningPoint);
             newIngredient.Body.ApplyImpulse(new Vector3(0, EJECTSPEED, 0), ingredientSpawningPoint);
             this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
             this.Game.SendSound(BBSound.trayhit1, this.Position);
             this.MarkDirty();
         }
 
-
+        /// <summary>
+        /// Check if the cooker has any valid recipes
+        /// </summary>
         public bool CheckRecipe(Recipe recipe)
         {
             foreach (var recIng in recipe.Ingredients)
@@ -166,6 +213,10 @@ namespace DeCuisine
             return true;
         }
 
+        /// <summary>
+        /// Check the contents of the cooker for the passed in type for the number of essintial
+        /// ingredients
+        /// </summary>
         public bool CheckContents(IngredientType ingType, int numEssential)
         {
             int found = 0;
@@ -177,6 +228,11 @@ namespace DeCuisine
             return found >= numEssential;
         }
 
+
+        /// <summary>
+        /// Returns the list of the ingredients that matche the passed in RecipeIngredient, up to
+        /// and not more than needed.
+        /// </summary>
         public List<ServerIngredient> ReturnContents(RecipeIngredient ing, int needed)
         {
             List<ServerIngredient> matchingIng = new List<ServerIngredient>();

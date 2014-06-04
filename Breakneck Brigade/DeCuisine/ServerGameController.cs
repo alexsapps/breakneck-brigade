@@ -20,7 +20,7 @@ namespace DeCuisine
 
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
-        private string[] defaultTeams = new string[]{"red", "blue"}; //Add more team names for more teams
+        private string[] defaultTeams = new string[]{"blue", "red"}; //Add more team names for more teams
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
 
 
