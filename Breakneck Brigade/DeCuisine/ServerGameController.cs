@@ -181,10 +181,7 @@ namespace DeCuisine
 
         ServerIngredient spawnIngredient(IngredientType type, Vector3 location)
         {
-            List<IngredientType> types = new List<IngredientType>(Game.Config.Ingredients.Values);
-            IngredientType randIng = types[DC.random.Next(types.Count)];
-            var loc = RandomLocation();
-            return new ServerIngredient(randIng, Game, loc);
+            return new ServerIngredient(type, Game, location);
         }
 
         public static Vector3 RandomLocation()
