@@ -24,7 +24,7 @@ namespace DeCuisine
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
 
 
-        private Dictionary<string,int> numOfGoalsByState; // dictionary conaining the number of goals
+        private Dictionary<GameControllerState, int> numOfGoalsByState; // dictionary conaining the number of goals
 #if PROJECT_WORLD_BUILDING
         private int pileSize = 0; // don't spawn ingredients
 #else
@@ -71,13 +71,22 @@ namespace DeCuisine
             }
             this.Goals = new List<Goal>();
             this.NeededHash = new Dictionary<IngredientType, int>();
-            this.numOfGoalsByState = new Dictionary<string,int>();
+            this.numOfGoalsByState = new Dictionary<GameControllerState,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
-            this.numOfGoalsByState.Add(GameControllerState.Stage1.ToString(), 5);
-            this.numOfGoalsByState.Add(GameControllerState.Stage2.ToString(), 7);
-            this.numOfGoalsByState.Add(GameControllerState.Stage3.ToString(), 10);
+            this.numOfGoalsByState.Add(GameControllerState.Stage1, 5);
+            this.numOfGoalsByState.Add(GameControllerState.Stage2, 7);
+            this.numOfGoalsByState.Add(GameControllerState.Stage3, 10);
         }
 
+        private void FillGoals()
+        {
+            if (CurrentGameState <= GameControllerState.Stage1)
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage1], 0);
+            else if (CurrentGameState <= GameControllerState.Stage2)
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage2], 0);
+            else
+                FillGoals(this.numOfGoalsByState[GameControllerState.Stage3], 0);
+        }
         private void FillGoals(int numOfGoals, int complexity)
         {
 #if !PROJECT_WORLD_BUILDING
@@ -104,12 +113,7 @@ namespace DeCuisine
 
         public void UpdateConfig() 
         {
-            if (CurrentGameState <= GameControllerState.Stage1)
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage1.ToString()], 0);
-            else if(CurrentGameState <= GameControllerState.Stage2)
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage2.ToString()], 0);
-            else
-                FillGoals(this.numOfGoalsByState[GameControllerState.Stage3.ToString()], 0);
+            FillGoals();
         }
 
 
@@ -275,6 +279,7 @@ namespace DeCuisine
             if (goalToRemove != null)
             {
                 this.Goals.Remove(goalToRemove);
+                FillGoals();
                 return true;
             }
             else
