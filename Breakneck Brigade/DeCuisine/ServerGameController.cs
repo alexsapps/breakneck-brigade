@@ -124,20 +124,24 @@ namespace DeCuisine
             switch (CurrentGameState)
             {
                 case GameControllerState.Start:
+                    Game.SendSound(BBSound.warningbuzz, new Vector3(0, 10, 0));
                     spawnPile();
                     nextGameState();
                     break;
                 case GameControllerState.Waiting:
                     if (ticks == scatterTick)
                     {
+                        Game.SendSound(BBSound.explosionfar, new Vector3(0, 10, 0));
                         risePile(); // gives a crazy scatter pile effect
                         nextGameState();
+                        Game.SendSound(BBSound.phasein, new Vector3(0, 10, 0));
                     }
                     updateObj();
                     break;
                 case GameControllerState.Scatter:
                     if (ticks == startTick)
                     {
+                        Game.SendSound(BBSound.explosionfar, new Vector3(0, 10, 0));
                         scatterPile(); // gives a crazy scatter pile effect
                         nextGameState();
                     }

@@ -26,7 +26,7 @@ namespace SousChef
         private static Dictionary<string, string> _l;
 
         /// <summary>
-        /// I have no idea what this does, but Alex says we need it >.>
+        /// I have no idea what the fuck this does, but Alex says we need it :o
         /// </summary>
         private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
@@ -101,8 +101,7 @@ namespace SousChef
                 player.Open(new Uri(path, UriKind.Relative));
                 player.Volume = volume;
                 player.Play();
-                Thread.Sleep(10000); //FIXME: This really should be managed by an event
-                // Console.WriteLine("Done playing " + path);
+                Thread.Sleep(4500); //FIXME: Should be managed by an event.  Thread suicides in 4.5 seconds
             }
         }
     }
