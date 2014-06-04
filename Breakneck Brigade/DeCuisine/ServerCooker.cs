@@ -16,7 +16,7 @@ namespace DeCuisine
     /// </summary>
     class ServerCooker : ServerGameObject
     {
-        private const float EJECTSPEED = 10.0f;
+        private const float EJECTSPEED = 40.0f;
 
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
         public Dictionary<int, ServerIngredient> Contents
@@ -195,7 +195,7 @@ namespace DeCuisine
             Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1] * 1.5f, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
             ServerIngredient newIngredient = new ServerIngredient(finalProduct, this.Game, ingredientSpawningPoint);
             Random rand = new Random();
-            newIngredient.Body.ApplyImpulse(new Vector3((float)rand.NextDouble(), EJECTSPEED * (float)rand.NextDouble(), (float)rand.NextDouble()), ingredientSpawningPoint);
+            newIngredient.Body.ApplyImpulse(new Vector3(EJECTSPEED * (float)rand.NextDouble(), EJECTSPEED * (float)rand.NextDouble(), EJECTSPEED * (float)rand.NextDouble()), ingredientSpawningPoint);
             this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
             this.Game.SendSound(BBSound.trayhit1, this.Position);
             this.MarkDirty();

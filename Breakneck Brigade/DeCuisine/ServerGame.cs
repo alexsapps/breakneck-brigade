@@ -404,7 +404,7 @@ namespace DeCuisine
                                         if(((ServerIngredient) sgo).Type.Name == objectName)
                                         {
                                             Vector3 above = sgo.Position + new Vector3(0, 10, 0);
-                                            SendParticleEffect(BBParticleEffect.ARROW, above);
+                                            SendParticleEffect(BBParticleEffect.ARROW, above, player.Id);
                                         }
                                     }
                                 }
@@ -754,11 +754,22 @@ namespace DeCuisine
         }
         public void SendParticleEffect(BBParticleEffect effect, Vector3 location)
         {
-            SendParticleEffect(effect, location, 0);
+            SendParticleEffect(effect, location, 0, null);
+        }
+        public void SendParticleEffect(BBParticleEffect effect, Vector3 location, ServerPlayer player)
+        {
+            SendParticleEffect(effect, location, 0, player);
         }
         public void SendParticleEffect(BBParticleEffect effect, Vector3 location, int param)
         {
-            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4(), Param = param };
+            SendParticleEffect(effect, location, param, null);
+        }
+        public void SendParticleEffect(BBParticleEffect effect, Vector3 location, int param, ServerPlayer player)
+        {
+            int id = -1;
+            if (player != null)
+                id = player.Id;
+            var msg = new ServerParticleEffectMessage() { ParticleEffect = effect, Location = location.ToVector4(), Param = param, Id = id };
             ServerEvents.Add(msg);
         }
 

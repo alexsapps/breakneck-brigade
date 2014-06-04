@@ -261,8 +261,6 @@ namespace DeCuisine
         /// Assign the player to the passed in team name. Currently not called by anything
         /// but somwhere we may want to have the ability to let players pick. 
         /// </summary>
-        /// <param name="teamName"></param>
-        /// <returns></returns>
         public void AssignTeam(Client client, string teamName)
         {
             ServerTeam team;
