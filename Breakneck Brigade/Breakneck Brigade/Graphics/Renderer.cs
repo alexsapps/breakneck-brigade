@@ -61,8 +61,8 @@ namespace Breakneck_Brigade.Graphics
         private     Camera          Camera;
         public      static int      WindowWidth    = 0;
         public      static int      WindowHeight   = 0;
-        private     const float     _desiredWidth   = 1024.0f;
-        private     const float     _desiredHeight  = 768.0f;
+        private     const float     _desiredWidth   = 1200.0f;
+        private     const float     _desiredHeight  = 900.0f;
         private     const float     _desiredRatio = _desiredWidth/_desiredHeight;
 
         /// <summary>
@@ -402,8 +402,7 @@ namespace Breakneck_Brigade.Graphics
                 Console.Error.WriteLine("ERROR: GLFW Initialization failed!");
                 Environment.Exit(1);
             }
-            Glfw.glfwOpenWindowHint(Glfw.GLFW_WINDOW_NO_RESIZE, Gl.GL_TRUE);
-            Glfw.glfwOpenWindow((int) _desiredWidth, (int) _desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_WINDOW);
+            Glfw.glfwOpenWindow((int) _desiredWidth, (int) _desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_FULLSCREEN);
             Glfw.glfwSwapInterval(0);
 
         }
