@@ -64,6 +64,11 @@ namespace Breakneck_Brigade
                 backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.12);
             }
 
+            if (this.SelectedRecipe == null && this.Game.RequiredRecipies != null && this.Game.RequiredRecipies.Count > 0)
+            {
+                this.SelectedRecipe = this.Game.RequiredRecipies[this.bookIndex];
+            }
+
             // Orientation & Incline update
             float rotx, roty;
             IM.GetRotAndClear(out rotx, out roty);

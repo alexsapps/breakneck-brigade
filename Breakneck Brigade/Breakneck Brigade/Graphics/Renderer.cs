@@ -476,9 +476,21 @@ namespace Breakneck_Brigade.Graphics
             //Models[BLANKQUAD_MODEL_NAME].Render();
             this.DrawGoals(5, padding);
             this.DrawHeld(500, 30);
+
+            int xPos = 5, yPos = 600;
+            /*
+            TextRenderer.printToScreen(xPos, yPos, "COOKBOOK", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "R-F to flip forward-back", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "Red is intermediate item.", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "--------------------", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+             */
             if (player != null)
             {
-                this.DrawRecipe(player.SelectedRecipe, 5, 500);
+                this.DrawRecipe(player.SelectedRecipe, xPos, yPos);
             }
 
             this.DrawTime((int)WindowWidth / 2, (int)WindowHeight - 20);
@@ -503,9 +515,12 @@ namespace Breakneck_Brigade.Graphics
                         width = it.DefaultPoints.ToString().Length;
                 foreach (IngredientType it in goalCache)
                 {
+                    Gl.glColor3f(0, 1, 0);
                     TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, FONT_SCALE, FONT_SCALE);
                     yPos += spacing + padding;
                 }
+
+                Gl.glColor3f(1, 1, 1);
                 TextRenderer.printToScreen(xPos, yPos, "\"Make these items!\"", FONT_SCALE, FONT_SCALE);
                 yPos += spacing + padding;
                 TextRenderer.printToScreen(xPos, yPos, "The master chef sez", FONT_SCALE, FONT_SCALE);
@@ -614,8 +629,18 @@ namespace Breakneck_Brigade.Graphics
         {
             if (selectedRecipe != null)
             {
+                if (Program.game.Goals.Contains(selectedRecipe.FinalProduct))
+                {
+                    Gl.glColor3f(0, 1, 0);
+                }
+                else
+                {
+                    Gl.glColor3f(1, 0, 0);
+                }
+
                 TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
+                Gl.glColor3f(1, 1, 1);
                 TextRenderer.printToScreen(xPos, yPos, "----------", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
                 TextRenderer.printToScreen(xPos, yPos, "USABLE COOKERS:", FONT_SCALE, FONT_SCALE);
@@ -634,11 +659,21 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for( int i = 0; i < ingredient.nCount; i++)
                     {
+                        if (Program.game.Config.Recipes.ContainsKey(ingredient.Ingredient.Name))
+                        {
+                            Gl.glColor3f(1, 0, 0);
+                        }
+                        else
+                        {
+                            Gl.glColor3f(1, 1, 1);
+                        }
+
                         DrawRecipe_PrintIngredient(xPos, yPos, ingredient);
                         yPos -= (spacing + padding);
                     }
                 }
 
+                Gl.glColor3f(1, 1, 1);
                 TextRenderer.printToScreen(xPos, yPos, "----------", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
                 TextRenderer.printToScreen(xPos, yPos, "OPTIONAL:", FONT_SCALE, FONT_SCALE);
@@ -647,11 +682,22 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for (int i = 0; i < ingredient.nOptional; i++)
                     {
+                        if (Program.game.Config.Recipes.ContainsKey(ingredient.Ingredient.Name))
+                        {
+                            Gl.glColor3f(1, 0, 0);
+                        }
+                        else
+                        {
+                            Gl.glColor3f(1, 1, 1);
+                        }
+
                         DrawRecipe_PrintIngredient(xPos, yPos, ingredient);
                         yPos -= (spacing + padding);
                     }
                 }
             }
+
+            Gl.glColor3f(1, 1, 1);
         }
 
         private static void DrawRecipe_PrintIngredient(int xPos, int yPos, RecipeIngredient ingredient)
