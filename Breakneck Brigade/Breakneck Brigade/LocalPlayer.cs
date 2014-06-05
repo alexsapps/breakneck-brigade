@@ -46,7 +46,6 @@ namespace Breakneck_Brigade
         bool throwing;
         DateTime lastDownThrow;
         DateTime lastThrow;
-        Thread backgroundMusicThread;
 
         public void Update(InputManager IM, ClientGame game, Graphics.Camera cam)
         {
@@ -57,12 +56,6 @@ namespace Breakneck_Brigade
             keys = IM.GetKeys();
             downKeys = IM.GetDownKeyEdges();
             upKeys = IM.GetUpKeyEdges();
-
-            // Check background music
-            if(backgroundMusicThread == null || backgroundMusicThread.IsAlive == false)
-            {
-                backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.12);
-            }
 
             if (this.SelectedRecipe == null && this.Game.RequiredRecipies != null && this.Game.RequiredRecipies.Count > 0)
             {

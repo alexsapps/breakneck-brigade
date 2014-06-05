@@ -371,9 +371,13 @@ namespace Breakneck_Brigade
                 }
             }
         }
+
+        static SoundThread backgroundMusicThread = null;
+
         static bool doGame()
         {
             GameMode oldMode = GameMode.None;
+            
             while (true)
             {
                 lock (clientLock)
@@ -432,6 +436,13 @@ namespace Breakneck_Brigade
                                     game.ParticleSpawners.Add(testSpawner);
                                 }*/
                                 renderer.ParticleSpawners   = new List<AParticleSpawner>(game.ParticleSpawners);
+
+                                // Check background music
+                                if(backgroundMusicThread == null || backgroundMusicThread.Finished)
+                                {
+                                    backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.12);
+                                }
+
                                 break;
                         }
                     }
@@ -535,6 +546,8 @@ namespace Breakneck_Brigade
             game = null;
             lobbyState.Mode = GameMode.None;
             renderer.GameObjects = null;
+            if(backgroundMusicThread != null)
+                backgroundMusicThread.Stop();
             Program.WriteLine("Disconnected.");
         }
 
