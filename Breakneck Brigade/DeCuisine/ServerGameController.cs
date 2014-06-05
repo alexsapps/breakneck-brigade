@@ -91,7 +91,7 @@ namespace DeCuisine
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
             this.numOfGoalsByState.Add(GameControllerStage.Stage1, 1);
             this.numOfGoalsByState.Add(GameControllerStage.Stage2, 2);
-            this.numOfGoalsByState.Add(GameControllerStage.Stage3, 3);
+            this.numOfGoalsByState.Add(GameControllerStage.Stage3, 4);
             this.ticks = 0;
         }
 
