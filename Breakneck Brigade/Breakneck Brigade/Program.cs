@@ -452,7 +452,11 @@ namespace Breakneck_Brigade
                                 // Check background music
                                 if(backgroundMusicThread == null || backgroundMusicThread.Finished)
                                 {
+#if PROJECT_DEBUG
+                                    backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.11); // it's so loud for hearing every 3 minutes
+#else
                                     backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.42);
+#endif
                                 }
 
                                 break;
