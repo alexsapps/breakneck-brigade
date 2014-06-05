@@ -108,6 +108,7 @@ namespace DeCuisine
 
         private void FillGoals(int numOfGoals, int complexity)
         {
+            //DEV TESTING CAKE
 #if !PROJECT_WORLD_BUILDING
             int numOfRecipes = this.Game.Config.Recipes.Count();
             while (numOfGoals > Goals.Count)
@@ -477,6 +478,40 @@ namespace DeCuisine
             }
             return vel;
         }
+
+        /// <summary>
+        /// Return all the recipe for the current goals.
+        /// </summary>
+        /// <param name="team"></param>
+        public List<Recipe> getGoalRecipeList()
+        {
+            List<Recipe> tmpRecipes = new List<Recipe>();
+
+            foreach (Goal goal in this.Goals)
+            {
+                tmpRecipes.AddRange(recurseDownRecipe(goal.EndGoal));
+            }
+            return tmpRecipes;
+        }
+
+        /// <summary>
+        /// Recurses down the recipe list to add only inermidiate steps
+        /// </summary>
+        /// <param name="rec"></param>
+        /// <returns></returns>
+        List<Recipe> recurseDownRecipe(Recipe rec)
+        {
+            List<Recipe> recList = new List<Recipe>();
+            recList.Add(rec); // add the current recipe
+            foreach (var ingredientType in rec.Ingredients)
+            {
+                if(this.Game.Config.Recipes.ContainsKey(ingredientType.Ingredient.Name))
+                    recList.AddRange(recurseDownRecipe(this.Game.Config.Recipes[ingredientType.Ingredient.Name]));
+            }
+            return recList;
+        }
+
+
 
         /// <summary>
         /// Class which facilitates choosing items randomly based on their weights.
