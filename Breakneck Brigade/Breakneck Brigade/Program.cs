@@ -699,7 +699,8 @@ namespace Breakneck_Brigade
                         bool b;
                         if (checkDisconnect(false, out b))
                             return;
-
+                        if (mylock != client.ServerMessagesLock)
+                            return; //LOL
                         Debug.Assert(mylock == client.ServerMessagesLock);
                         Monitor.Wait(mylock);
                     }
