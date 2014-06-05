@@ -393,6 +393,18 @@ namespace Breakneck_Brigade
                         }
                         if (lobbyState.Mode != oldMode)
                         {
+
+                            if (oldMode == GameMode.Started || oldMode == GameMode.Paused)
+                            {
+                                if (lobbyState.Mode != GameMode.Started && lobbyState.Mode != GameMode.Paused)
+                                {
+                                    if (backgroundMusicThread != null)
+                                        backgroundMusicThread.Stop();
+
+                                    renderer.GameObjects = null;
+                                }
+                            }
+
                             switch (lobbyState.Mode)
                             {
                                 case GameMode.Init:
@@ -440,7 +452,7 @@ namespace Breakneck_Brigade
                                 // Check background music
                                 if(backgroundMusicThread == null || backgroundMusicThread.Finished)
                                 {
-                                    backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.12);
+                                    backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.42);
                                 }
 
                                 break;
@@ -738,18 +750,13 @@ namespace Breakneck_Brigade
                                     game = new ClientGame(gameLock);
                                     break;
                                 case GameMode.Results:
-                                    MessageBox.Show(lobbyState.WinningTeam == null ? "Draw!  Neither team wins." : lobbyState.WinningTeam.Name + " wins!");
-                                    if(lobbyState.WinningTeam != null && lobbyState.WinningTeam.Clients.Contains("hi"))
-                                    {
-                                        int volume = (int)Math.Log(4, 2.0);
-                                        SoundThing.Play(BBSound.explosionfar, volume);
-                                    }
+                                    //winning team is lobbyState.WinningTeam
+                                    if(lobbyState.IWin)
+                                        SoundThing.Play(BBSound.explosionfar, 2);
+                                    else if (!lobbyState.IsDraw)
+                                        SoundThing.Play(BBSound.sadtrombone, 2);
                                     else
-                                    {
-                                        int volume = (int)Math.Log(4, 2.0);
-                                        SoundThing.Play(BBSound.sadtrombone, volume);
-                                    }
-
+                                        { }
                                     break;
                                 case GameMode.Stopping:
                                     break;
