@@ -26,10 +26,11 @@ namespace Breakneck_Brigade
         public Vector4 Velocity;
         public float WalkSpeed = 140f;
         public float RunSpeed = 380f;
-        public Recipe SelectedRecipe { get; private set; }
+        
         public List<ClientEvent> NetworkEvents;
         private bool _stopped = false;
-        private int bookIndex = 0;
+
+        
         
         public LocalPlayer()
         {
@@ -56,11 +57,6 @@ namespace Breakneck_Brigade
             keys = IM.GetKeys();
             downKeys = IM.GetDownKeyEdges();
             upKeys = IM.GetUpKeyEdges();
-
-            if (this.SelectedRecipe == null && this.Game.RequiredRecipies != null && this.Game.RequiredRecipies.Count > 0)
-            {
-                this.SelectedRecipe = this.Game.RequiredRecipies[this.bookIndex];
-            }
 
             // Orientation & Incline update
             float rotx, roty;
@@ -156,7 +152,7 @@ namespace Breakneck_Brigade
             }
 
             // Handle cooker eject
-            if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_ENTER))
+            if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_LEFT_SHIFT))
             {
                 this.NetworkEvents.Add(new ClientEjectEvent());
             }
@@ -195,11 +191,7 @@ namespace Breakneck_Brigade
             // Change page down.
             if(keyDown(GlfwKeys.GLFW_KEY_R))
             {
-                if (this.Game.RequiredRecipies.Count > 0)
-                {
-                    this.bookIndex = (this.bookIndex + 1) % this.Game.RequiredRecipies.Count;
-                    this.SelectedRecipe = this.Game.RequiredRecipies[bookIndex];
-                }
+                this.Game.DecrementPage();
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());
@@ -210,16 +202,7 @@ namespace Breakneck_Brigade
             // Change page up.
             if (keyDown(GlfwKeys.GLFW_KEY_F))
             {
-                if (this.Game.RequiredRecipies.Count > 0)
-                {
-                    this.bookIndex--;
-                    if (this.bookIndex < 0)
-                    {
-                        this.bookIndex = this.Game.RequiredRecipies.Count - 1;
-                    }
-
-                    this.SelectedRecipe = this.Game.RequiredRecipies[bookIndex];
-                }
+                this.Game.IncrementPage();
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());

@@ -490,7 +490,7 @@ namespace Breakneck_Brigade.Graphics
              */
             if (player != null)
             {
-                this.DrawRecipe(player.SelectedRecipe, xPos, yPos);
+                this.DrawRecipe(Program.game.SelectedRecipe, xPos, yPos);
             }
 
             this.DrawTime((int)WindowWidth / 2, (int)WindowHeight - 20);

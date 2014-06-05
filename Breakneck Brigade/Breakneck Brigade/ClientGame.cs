@@ -27,7 +27,13 @@ namespace Breakneck_Brigade
 
         public ConfigSalad Config { get; private set; }
         public List<Recipe> RequiredRecipies { get; private set; }
+        public Recipe SelectedRecipe { get; private set; }
+        private int bookIndex = 0;
 
+        /// <summary>
+        /// Initializes game.
+        /// </summary>
+        /// <param name="lock"></param>
         public ClientGame(BBLock @lock)
         {
             Lock = @lock;
@@ -85,6 +91,52 @@ namespace Breakneck_Brigade
             } while (oldCount < masterList.Count);
 
             this.RequiredRecipies = masterList.Values.ToList();
+            if(this.RequiredRecipies.Count > 0)
+            {
+                this.bookIndex = 0;
+                this.SelectedRecipe = this.RequiredRecipies[0];
+            }
+            else
+            {
+                this.SelectedRecipe = null;
+            }
+        }
+
+        /// <summary>
+        /// Increment page in cookbook.
+        /// </summary>
+        public void IncrementPage()
+        {
+            if (this.RequiredRecipies.Count > 0)
+            {
+                this.bookIndex = (this.bookIndex + 1) % this.RequiredRecipies.Count;
+                this.SelectedRecipe = this.RequiredRecipies[bookIndex];
+            }
+            else
+            {
+                this.SelectedRecipe = null;
+            }
+        }
+
+        /// <summary>
+        /// Decrement page in cookbook.
+        /// </summary>
+        public void DecrementPage()
+        {
+            if (this.RequiredRecipies.Count > 0)
+            {
+                this.bookIndex--;
+                if (this.bookIndex < 0)
+                {
+                    this.bookIndex = this.RequiredRecipies.Count - 1;
+                }
+
+                this.SelectedRecipe = this.RequiredRecipies[bookIndex];
+            }
+            else
+            {
+                this.SelectedRecipe = null;
+            }
         }
     }
 }
