@@ -584,46 +584,6 @@ namespace Breakneck_Brigade.Graphics
                 }
             }
         }
-                    /*
-                    TextRenderer.printToScreen(xPos, yPos, lookedAtObject, FONT_SCALE, FONT_SCALE);
-#if PROJECT_WORLD_BUILDING
-                    // append id if we are building the world
-                    lookingAt += " " + Program.game.LookatId +
-                        " At position ";
-                    info = +(int)lookedAtObject.Position.X + " " +
-                        (int)lookedAtObject.Position.Y + " " + (int)lookedAtObject.Position.Z + 
-                        " scaled at " + (int)lookedAtObject.Sides[0] + " " + (int)lookedAtObject.Sides[1] + " " +
-                        (int)lookedAtObject.Sides[2];
-#endif
-                    if(lookedAtObject is ClientCooker)
-                    {
-                        ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
-                        lookingAt += " (" + lookedAtCooker.Team.Name + ")";
-                        string ingedientList = "- ";
-                        foreach(ClientIngredient ingredient in lookedAtCooker.Contents)
-                        {
-                            ingedientList += ingredient.ModelName + " ";
-                        }
-
-                        ingedientList += "-";
-
-                        //yPos -= (spacing + padding);
-                        TextRenderer.printToScreen(xPos, yPos - (spacing + padding), ingedientList, FONT_SCALE, FONT_SCALE);
-                    }
-
-                    // lookingAt = lookedAtObject.ToString();
-                }
-                else
-                {
-                    lookingAt = "nothing";
-                }
-#if PROJECT_WORLD_BUILDING
-                TextRenderer.printToScreen(500, 40, "Looking at: " + lookingAt, .75f, .75f);
-                TextRenderer.printToScreen(500, 15, info, .75f, .75f);
-#else
-                TextRenderer.printToScreen(xPos, yPos, "Looking at: " + lookingAt, FONT_SCALE, FONT_SCALE);
-#endif
-                */
 
         /// <summary>
         /// Draws the timer
@@ -768,6 +728,7 @@ namespace Breakneck_Brigade.Graphics
                 }
 
             Renderer.enableTransparency();
+            
             //Particles
             if(ParticleSpawners != null)
             {           
@@ -777,8 +738,9 @@ namespace Breakneck_Brigade.Graphics
                 }
 
             }
+
             Renderer.disableTransparency();
-            //DebugPicking();
+            // DebugPicking();
 
             CurrentDrawMode = -1;
         }

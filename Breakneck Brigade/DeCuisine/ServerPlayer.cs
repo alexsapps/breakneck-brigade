@@ -267,7 +267,7 @@ namespace DeCuisine
                 if(held.GeomInfo.Size[2] >= held.GeomInfo.Size[0])
                     held.Position = moveOutsideBody(this.GeomInfo.Size[0] + held.GeomInfo.Size[2]); // put the object outside our body before throwing
                 else
-                    held.Position = moveOutsideBody(this.GeomInfo.Size[2] + held.GeomInfo.Size[0]); // put the object outside our body before throwing
+                    held.Position = moveOutsideBody(this.GeomInfo.Size[0] + held.GeomInfo.Size[0]); // put the object outside our body before throwing
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
                 held.Body.AngularVelocity = Vector3.Zero;
                 _hand.Held = null;
@@ -408,11 +408,12 @@ namespace DeCuisine
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
 
+            // Raycasting
             Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
-
-            // Check what the player is looking at
-            Vector3 start = moveOutsideBody(this.GeomInfo.Size[2]/2);
-
+            CollisionFlags currentFlags = this.Body.CollisionFlags;
+            this.Body.CollisionFlags = CollisionFlags.None; // Temporarily make it invisible to raycasts.
+            Vector3 start = this.Position;
+            start.Y += this.EyeHeight;
             SCVector4 yDir = new SCVector4
                 (
                     0,
@@ -428,8 +429,10 @@ namespace DeCuisine
                     start.Y + final.Y,
                     start.Z + final.Z
                 );
+
             CollisionWorld.ClosestRayResultCallback raycastCallback = new CollisionWorld.ClosestRayResultCallback(start, end);
             this.Game.World.RayTest(start, end, raycastCallback);
+            this.Body.CollisionFlags = currentFlags;
             if (raycastCallback.HasHit)
             {
                 //Filter Results
@@ -439,7 +442,6 @@ namespace DeCuisine
             {
                 this.LookingAt = null;
             }
-
             this.start = start;
             this.end = end;
 
