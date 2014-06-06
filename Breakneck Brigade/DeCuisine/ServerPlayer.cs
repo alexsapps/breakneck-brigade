@@ -450,7 +450,7 @@ namespace DeCuisine
                 this.dashCool--;
 
             if (DateTime.Now.TimeOfDay - this.lastStunned > STUNTIME)
-                this.isStunned = true;
+                this.isStunned = false;
 
         }
 
