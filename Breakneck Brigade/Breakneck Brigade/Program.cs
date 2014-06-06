@@ -821,6 +821,15 @@ namespace Breakneck_Brigade
                             {
                                 game.GameTime = new TimeSpan((long)reader.ReadInt64());
 
+                                BBSound tempsoundtrack = (BBSound)reader.ReadInt32();
+                                if (tempsoundtrack != backgroundmusic)
+                                {
+                                    backgroundmusic = tempsoundtrack;
+                                    if (backgroundMusicThread != null)
+                                        backgroundMusicThread.Stop();
+                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.11);
+                                }
+
                                 int len = reader.ReadInt32();
                                 for (int i = 0; i < len; i++)
                                 {

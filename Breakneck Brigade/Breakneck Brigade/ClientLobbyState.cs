@@ -18,6 +18,8 @@ namespace Breakneck_Brigade
         public ClientTeam WinningTeam { get; set; }
         public ClientTeam MyTeam { get; set; }
 
+
+
         public bool IsDraw { get { if (Mode != GameMode.Results) { throw new Exception(); } return WinningTeam == null; } }
         public bool IWin { get { if (Mode != GameMode.Results) { throw new Exception(); } return (WinningTeam == MyTeam) && WinningTeam != null; } }
 

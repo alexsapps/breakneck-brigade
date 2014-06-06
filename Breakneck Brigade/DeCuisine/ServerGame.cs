@@ -29,6 +29,8 @@ namespace DeCuisine
         public DateTime StartTime { get; set; }
         public TimeSpan GameTime { get { return DateTime.Now.Subtract(StartTime); } }
 
+        public BBSound backgroundsound = BBSound.soundtrack;
+
         public ConfigSalad Config { get; private set; }
 
         public HashSet<ServerGameObject> HasAdded = new HashSet<ServerGameObject>();  
@@ -576,6 +578,7 @@ namespace DeCuisine
             //game state information that only applies while connected, but isn't associated with game objects
 
             writer.Write(GameTime.Ticks);
+            writer.Write((int)backgroundsound);
         }
 
         public int GameObjSendOrderComparison(ServerGameObject o1, ServerGameObject o2)
