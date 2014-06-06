@@ -41,7 +41,7 @@ namespace Breakneck_Brigade
             eyeHeight = reader.ReadSingle();
 
             //Add team indicator
-            game.ParticleSpawners.Add(new PSTeamIndicator(this));
+            //game.ParticleSpawners.Add(new PSTeamIndicator(this));
 
             base.finalizeConstruction();
         }
