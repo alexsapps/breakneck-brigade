@@ -6,8 +6,8 @@
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
   <ingredient name="tomato" friendlyName="Tomato" shape="sphere" points="100" size="6, 6, 6"/>
   <ingredient name="butter" friendlyName="Butter" points="100" size="3, 3, 8"/>
-  <ingredient powerup="1" name="wine" friendlyName="Wine" points="200" shape="cylinder" size="2, 5, 2"/>
-  <ingredient name="cheese" friendlyName="Cheese" points="100" size="10, 4, 10"/>
+  <ingredient powerup="200" name="wine" friendlyName="Wine" points="200" shape="cylinder" size="2, 5, 2"/>
+  <ingredient name="cheese" friendlyName="Cheese" points="100" shape="cylinder" size="10, 4, 10"/>
   <ingredient name="carrot" friendlyName="Carrot" points="100" shape="cylinder" size="3, 12, 3"/>
   <ingredient name="coconut" friendlyName="Coconut" shape="sphere" points="100" size="6, 6, 6"/>
   <ingredient name="sugar" friendlyName="Sugar" points="100" size="5, 5, 5"/>
