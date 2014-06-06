@@ -339,6 +339,7 @@ namespace DeCuisine
 
         public bool ScoreDeliver(ServerIngredient ing)
         {
+            Goal goalToRemove = null;
             foreach (var goal in Goals)
             {
                 if (goal.EndGoal.FinalProduct.Name == ing.Type.Name)
@@ -351,7 +352,7 @@ namespace DeCuisine
                         {
                             // the other team already scored it, remove the goal frm the goals list
                             ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity/2));
-                            this.Goals.Remove(goal);
+                            goalToRemove = goal;
                             _goalsDirty = true;
                         } else
                         {
@@ -366,6 +367,13 @@ namespace DeCuisine
 
                     }
                 }
+            }
+            if (goalToRemove != null)
+            {
+                this.Goals.Remove(goalToRemove);
+                if(Goals.Count == 0)
+                    this.nextGameState();
+                return true;
             }
             return false;
         }
