@@ -25,7 +25,7 @@ namespace DeCuisine
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
         private int stageNum = 1;
         private ServerIngredient powerItem{get; set;}
-        private TimeSpan goalExpireTime = new TimeSpan(0,0,5);
+        private TimeSpan goalExpireTime = new TimeSpan(0,0,10);
 
 
 
