@@ -129,7 +129,36 @@ namespace DeCuisine
 
         public override void Serialize(BinaryWriter stream)
         {
-            base.Serialize(stream);
+            //base.Serialize(stream);
+
+            Game.Lock.AssertHeld();
+            serializeEssential(stream);
+            stream.Write(this.Position.X);
+            stream.Write(this.Position.Y);
+            stream.Write(this.Position.Z);
+            Matrix4 rotScale = _modelScale;
+            rotScale *= this.getRotation();
+            stream.Write(rotScale[0, 0]);
+            stream.Write(rotScale[1, 0]);
+            stream.Write(rotScale[2, 0]);
+            stream.Write(rotScale[0, 1]);
+            stream.Write(rotScale[1, 1]);
+            stream.Write(rotScale[2, 1]);
+            stream.Write(rotScale[0, 2]);
+            stream.Write(rotScale[1, 2]);
+            stream.Write(rotScale[2, 2]);
+            //Send the bounding box data
+            Vector3 min, max;
+            this.Body.GetAabb(out min, out max);
+            stream.Write(min.X);
+            stream.Write(min.Y);
+            stream.Write(min.Z);
+            stream.Write(max.X);
+            stream.Write(max.Y);
+            stream.Write(max.Z);
+
+
+
             stream.Write(Team.Name);
             int lookingAtId = -1;
             if(this.LookingAt != null)
@@ -140,6 +169,12 @@ namespace DeCuisine
             stream.Write(this.EyeHeight);
         }
 
+        private SousChef.Matrix4 getRotation()
+        {
+            Matrix4 rot = Matrix4.MakeRotateYDeg(-Orientation);
+
+            return rot;
+        }
 
         /// <summary>
         /// Update the current stream. Mostly position but orientation and
