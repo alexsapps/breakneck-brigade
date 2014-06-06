@@ -223,6 +223,20 @@ namespace DeCuisine
                             }
                     ret = b.ToString();
                     break;
+                case "endgame":
+                    lock (server.Lock)
+                        lock (server.Game.Lock)
+                        {
+                            server.Game.StartTime = DateTime.Now.AddTicks(0 - server.Game.Controller.MaxTime);
+                            if(parts.Length > 1)
+                            {
+                                ServerTeam team;
+                                server.Game.Controller.Teams.TryGetValue(parts[1], out team);
+                                if (team != null)
+                                    team.Points = 999999999;
+                            }
+                        }
+                    break;
                 default:
                     if (!CommandLinePlayer.ReadArgs(parts, server, out ret))
                         ret = String.Format("Breakneck Brigade server does not understand command: {0}", parts[0]);

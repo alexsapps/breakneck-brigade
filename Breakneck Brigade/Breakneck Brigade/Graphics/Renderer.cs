@@ -23,7 +23,7 @@ namespace Breakneck_Brigade.Graphics
     {
         public static TextRenderer TextRenderer;
         public static bool GameOver = false;
-        public static bool IWon = false; // You're a BORN LOSER.
+        public static bool? IWon = null;
         private ModelParser parser;
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
@@ -523,10 +523,19 @@ namespace Breakneck_Brigade.Graphics
 
         private void DrawResults()
         {
-            if(IWon)
-                TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "You win!!", FONT_SCALE * 3, FONT_SCALE * 3);
+            float scalex = FONT_SCALE * 1.0f;
+            float scaley = FONT_SCALE * 1.0f;
+            if (IWon.HasValue)
+            {
+                if (IWon.Value)
+                    TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "you win!!", scalex, scaley);
+                else
+                    TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "you lose...", scalex, scaley);
+            }
             else
-                TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "You lose...", FONT_SCALE * 3, FONT_SCALE * 3);
+            {
+                TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "draw", scalex, scaley);
+            }
         }
 
         private void DrawGoals(int xPos, int yPos)
@@ -636,7 +645,7 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null)
             {
-                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(), FONT_SCALE, FONT_SCALE);
+                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(@"hh\:mm\:ss\.ff"), FONT_SCALE, FONT_SCALE);
             }
         }
 
