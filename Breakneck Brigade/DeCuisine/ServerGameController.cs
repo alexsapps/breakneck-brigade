@@ -134,7 +134,7 @@ namespace DeCuisine
                 Recipe recipe;
                 do
                 {
-                    this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
+                    recipe = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
                 } while (recipe.intermediate);
                 // loop over ingredients and add them to the needed hash
                 foreach (var ing in recipe.Ingredients)
