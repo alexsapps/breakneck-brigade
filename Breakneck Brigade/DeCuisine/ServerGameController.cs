@@ -14,9 +14,9 @@ namespace DeCuisine
         protected ServerGame Game { get; set; }
         public Dictionary<string, ServerTeam> Teams { get; set; }
         public List<Goal> Goals { get; set; }
-        public Dictionary<IngredientType, int> NeededHash { get; set; } // the dict of the number of ingredients needed to make the goals 
+        public Dictionary<IngredientType, int> NeededCounts { get; set; } // the dict of the number of ingredients needed to make the goals 
 
-        private Dictionary<ServerIngredient, double> finishedProducts; // Hash that holds the currently finished product in the game world
+        private Dictionary<ServerIngredient, double> finishedProdHash; // Hash that holds the currently finished product in the game world
         private int ticks; //server ticks, not time ticks
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
@@ -81,7 +81,7 @@ namespace DeCuisine
         public ServerGameController(ServerGame game)
         {
             this.Game = game;
-            finishedProducts = new Dictionary<ServerIngredient, double>();
+            finishedProdHash = new Dictionary<ServerIngredient, double>();
             this.numOfGoalsByState = new Dictionary<GameControllerStage,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
             this.numOfGoalsByState.Add(GameControllerStage.Stage1, 1);
@@ -103,7 +103,7 @@ namespace DeCuisine
                 teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams.
             }
             this.Goals = new List<Goal>();
-            this.NeededHash = new Dictionary<IngredientType, int>();
+            this.NeededCounts = new Dictionary<IngredientType, int>();
             this.ticks = 0;
             this.stageNum = 1;
         }
@@ -131,15 +131,19 @@ namespace DeCuisine
             while (numOfGoals > Goals.Count)
             {
                 // Grab random recipe
-                var tmpRec = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
-                // loop over ingredients and add them to the needed hash
-                foreach (var ing in tmpRec.Ingredients)
+                Recipe recipe;
+                do
                 {
-                    if (ing.Ingredient == tmpRec.FinalProduct)
+                    recipe = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
+                } while (recipe.intermediate);
+                // loop over ingredients and add them to the needed hash
+                foreach (var ing in recipe.Ingredients)
+                {
+                    if (ing.Ingredient == recipe.FinalProduct)
                         continue; // stacked object, i.e. cake, don't spawn it
-                    putInNeededHash(ing);
+                    putInNeededCounts(ing);
                 }
-                Goals.Add(new Goal(tmpRec.FinalProduct.DefaultPoints, tmpRec, complexity));
+                Goals.Add(new Goal(recipe.FinalProduct.DefaultPoints, recipe, complexity));
                 _goalsDirty = true;
             }
 #endif
@@ -149,25 +153,23 @@ namespace DeCuisine
         /// Check if the item you need to hash is also a recipe final product and spawns 
         /// the needed components to make that.
         /// </summary>
-        private void putInNeededHash(RecipeIngredient recIng)
+        private void putInNeededCounts(RecipeIngredient recIng)
         {
-            int count;
             // You know how we spend so much time learning recursion? This is the only instance
             // in this game
+            int multiplicity = Teams.Count;
             if (this.Game.Config.Recipes.ContainsKey(recIng.Ingredient.Name))
             {
                 foreach (var ingRec in this.Game.Config.Recipes[recIng.Ingredient.Name].Ingredients)
-                    putInNeededHash(ingRec);
+                    putInNeededCounts(ingRec);
             }
             else
             {
-                if (!this.NeededHash.TryGetValue(recIng.Ingredient, out count))
-                    this.NeededHash.Add(recIng.Ingredient, 0);
-                int i = 0;
-                while (i++ < recIng.nCount + recIng.nOptional)
-                    this.NeededHash[recIng.Ingredient]++;
+                if (this.NeededCounts.ContainsKey(recIng.Ingredient))
+                    this.NeededCounts[recIng.Ingredient] += recIng.nCount * multiplicity;
+                else
+                    this.NeededCounts[recIng.Ingredient] = recIng.nCount * multiplicity;
             }
-
         }
 
         public void UpdateConfig() 
@@ -271,7 +273,6 @@ namespace DeCuisine
                     minTeam = team;
                 }
             }
-
             AssignTeam(client, minTeam);
         }
 
@@ -353,15 +354,20 @@ namespace DeCuisine
         /// </summary>
         /// <param name="finalProduct">The product you made</param>
         /// <param name="components">All of the ingredients that made the Product.</param>
-        public void FinishCook(ServerIngredient finalProduct, List<ServerIngredient> components, double complexity)
+        public void FinishCook(ServerIngredient finalProduct, List<ServerIngredient> components, double complexity, ServerTeam team)
         {
             List<IngredientType> tmpList = new List<IngredientType>();
             foreach (var comp in components)
             {
-                tmpList.Add(comp.Type);
+                if (finishedProdHash.ContainsKey(comp))
+                {
+                    // you used the finished product so remove it.
+                    complexity += finishedProdHash[comp];
+                    finishedProdHash.Remove(comp);
+                }
             }
-
-            finishedProducts.Add(finalProduct, complexity);
+            team.Points += (int)(finalProduct.Type.DefaultPoints * (1 + complexity)); 
+            finishedProdHash.Add(finalProduct, complexity);
             this.Game.SendLobbyStateToAll(); // update client scores
         }
 
@@ -439,7 +445,7 @@ namespace DeCuisine
             HashSet<IngredientType> goalIng = new HashSet<IngredientType>();
             foreach(var goal in this.Goals)
                 goalIng.Add(goal.EndGoal.FinalProduct);
-            foreach (var ing in this.NeededHash)
+            foreach (var ing in this.NeededCounts)
             {
                 for (int x = 0; x < ing.Value; x++)
                 {
@@ -471,7 +477,11 @@ namespace DeCuisine
                 if (obj.ObjectClass == GameObjectClass.Ingredient)
                 {
                     // scatter only ingredients. Should be in the pile currently
-                    obj.Body.LinearVelocity = randomVelocity(700);
+                    var velocity = randomVelocity(26);
+                    velocity.X = (float)Math.Pow(velocity.X, 2.0) * Math.Sign(velocity.X);
+                    velocity.Y = (float)Math.Pow(velocity.Y, 2.0) * Math.Sign(velocity.Y);
+                    velocity.Z = (float)Math.Pow(velocity.Z, 2.0) * Math.Sign(velocity.Z);
+                    obj.Body.LinearVelocity = velocity;
                     obj.Body.Gravity = this.Game.World.Gravity;
                 }
             }

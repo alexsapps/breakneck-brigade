@@ -160,9 +160,8 @@ namespace DeCuisine
             runThread = new Thread(new ThreadStart(Run));
             runThread.Start();
 
-            Mode = GameMode.Started;
-            StartTime = DateTime.Now;
-            SendModeChangeUpdate();
+            while (Mode != GameMode.Started)
+                Monitor.Wait(Lock);
         }
 
         public void Stop()
@@ -215,28 +214,36 @@ namespace DeCuisine
             /* initialize physics */
             lock (Lock)
             {
+                Mode = GameMode.Started;
+                SendModeChangeUpdate();
+
                 this.CollisionShapes = new AlignedCollisionShapeArray();
 
                 // collision configuration contains default setup for memory, collision setup
                 WorldFileParser p = new WorldFileParser(new GameObjectConfig(), this);
                 p.LoadFile(1);
                 _world.SetInternalTickCallback(CollisionCallback);
+
+
+                //we just loaded the config file, and the objects think everything has been added in a delta kind of way, but really it was just initing, so clear this.  init data is not just a big delta anymore,
+                //it's it's own thing sent in StartClient which uses the CalculateGameStateFull function.  this is a workaround that's easier than an actual solution, such as game objects checking if the game is
+                //in init mode before adding it to HasAdded
+                HasAdded.Clear();
+                HasChanged.Clear();
+                HasRemoved.Clear();
+
+                // loop over clients and make play objects for them
+                var startMsg = CalculateGameStateMessage(CalculateGameStateFull); //must be computed before StartClient called for any client, because it should not include their players, which are already in HasChanged
+                foreach (var client in clients)
+                {
+                    StartClient(client);
+                    client.SendMessage(startMsg);
+                }
+
+                StartTime = DateTime.Now;
+                Monitor.PulseAll(Lock);
             }
 
-            //we just loaded the config file, and the objects think everything has been added in a delta kind of way, but really it was just initing, so clear this.  init data is not just a big delta anymore,
-            //it's it's own thing sent in StartClient which uses the CalculateGameStateFull function.  this is a workaround that's easier than an actual solution, such as game objects checking if the game is
-            //in init mode before adding it to HasAdded
-            HasAdded.Clear();
-            HasChanged.Clear();
-            HasRemoved.Clear();
-
-            // loop over clients and make play objects for them
-            var startMsg = CalculateGameStateMessage(CalculateGameStateFull); //must be computed before StartClient called for any client, because it should not include their players, which are already in HasChanged
-            foreach (var client in clients)
-            {
-                StartClient(client);
-                client.SendMessage(startMsg);
-            }
             try
             {
                 long next;

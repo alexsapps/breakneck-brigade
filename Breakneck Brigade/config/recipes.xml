@@ -48,11 +48,11 @@
     <ingredient optional="2">butter</ingredient>
     <ingredient optional="1">cheese</ingredient>
   </recipe>
-  <recipe product="sauce">
+  <recipe intermediate="true" product="sauce">
   	<ingredient>tomato</ingredient>
   	<ingredient>onion</ingredient>
   </recipe>
-  <recipe product="cakeBatter">
+  <recipe intermediate="true" product="cakeBatter">
     <ingredient>flour</ingredient>
     <ingredient>milk</ingredient>
     <ingredient count="2">egg</ingredient>
