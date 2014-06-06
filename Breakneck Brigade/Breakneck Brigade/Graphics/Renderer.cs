@@ -279,6 +279,7 @@ namespace Breakneck_Brigade.Graphics
 
             //Red chef model
             Model redChef = new Model("redChef");
+            redChef.ModelMatrix = Renderer.Models["chef"].ModelMatrix;
             redChef.Meshes = new List<AObject3D>(Renderer.Models["chef"].Meshes);
             TexturedMesh redHat = new TexturedMesh();
             redHat.VBO = ((TexturedMesh) redChef.Meshes[2]).VBO;
