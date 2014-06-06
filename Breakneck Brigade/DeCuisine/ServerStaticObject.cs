@@ -73,6 +73,14 @@ namespace DeCuisine
             {
                 this.Game.Controller.powerUpItem((ServerIngredient)obj, this);
             }
-        }
+
+            if(this.FriendlyName == "DJ Turntable" && obj.ObjectClass == GameObjectClass.Ingredient)
+            {
+     
+                // THIS SHOULD CHANGE THE MUSIC
+                Console.WriteLine("Should be changing the music!");
+                
+            }
+        } 
     }
 }

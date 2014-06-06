@@ -56,6 +56,11 @@ namespace Breakneck_Brigade
         static public LocalPlayer localPlayer;
         static public InputManager IM;
 
+        /// <summary>
+        /// The currently playing background song.
+        /// </summary>
+        public static BBSound backgroundmusic = BBSound.soundtrack;
+
         static void Main(string[] args)
         {
             
@@ -472,9 +477,9 @@ namespace Breakneck_Brigade
                                 if(backgroundMusicThread == null || backgroundMusicThread.Finished)
                                 {
 #if PROJECT_DEBUG
-                                    backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.11); // it's so loud for hearing every 3 minutes
+                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.11); // it's so loud for hearing every 3 minutes
 #else
-                                    backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.42);
+                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.42);
 #endif
                                 }
 
