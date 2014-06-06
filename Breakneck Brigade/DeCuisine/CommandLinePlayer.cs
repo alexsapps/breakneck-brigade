@@ -388,7 +388,7 @@ namespace DeCuisine
             Random rand = new Random();
             CookerType randCooker = types[rand.Next(types.Count)];
             Vector3 spawnLoc = new Vector3(rand.Next(-500,500), rand.Next(300), rand.Next(-500, 500));
-            new ServerCooker(randCooker, game.Controller.Teams.ElementAt(0).Value, game, spawnLoc);
+            new ServerCooker(randCooker, game.Controller.Teams.ElementAt(0).Value, game, spawnLoc, null);
             return "Made a " + randCooker.Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
@@ -398,7 +398,7 @@ namespace DeCuisine
         public static string SpawnCooker(ServerGame game, string type)
         {
             Vector3 spawnLoc = randomSpawn();
-            new ServerCooker(game.Config.Cookers[type], game.Controller.Teams.ElementAt(0).Value, game, spawnLoc);
+            new ServerCooker(game.Config.Cookers[type], game.Controller.Teams.ElementAt(0).Value, game, spawnLoc, null);
             return "Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 
@@ -408,7 +408,7 @@ namespace DeCuisine
         public static string SpawnCooker(ServerGame game, string type, double x, double y, double z)
         {
             Vector3 spawnLoc = new Vector3((float)x, (float)y, (float)z);
-            new ServerCooker(game.Config.Cookers[type], game.Controller.Teams.ElementAt(0).Value, game, spawnLoc);
+            new ServerCooker(game.Config.Cookers[type], game.Controller.Teams.ElementAt(0).Value, game, spawnLoc, null);
             return "Made a " + game.Config.Cookers[type].Name + " at " + spawnLoc.X + " " + spawnLoc.Y + " " + spawnLoc.Z;
         }
 

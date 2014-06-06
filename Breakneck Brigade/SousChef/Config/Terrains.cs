@@ -53,7 +53,7 @@ namespace SousChef
             parseName(out name, out friendlyName);
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, 0, null
+                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, 0, 0.0f, null
                 );
 
             return new TerrainType(name, friendlyName, geomInfo);

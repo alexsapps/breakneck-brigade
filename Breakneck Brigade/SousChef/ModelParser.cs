@@ -156,26 +156,10 @@ namespace SousChef.MPNamespace
                         maxVerts.Z = vert.Z;
                 }
                 Vector4 width = maxVerts - minVerts;
-                Console.WriteLine("Width before scale: ");
-                width.Print();
                 width.Scale(.5f);
-                Console.WriteLine("Width after scale: ");
-                width.Print();
                 Vector4 trans = minVerts + width;
                 trans.Negate();
 
-                Console.WriteLine("Max vert: ");
-                maxVerts.Print();
-                Console.WriteLine("Min vert: ");
-                minVerts.Print();
-                Console.WriteLine("Trans: ");
-                trans.Print();
-                Vector4 translatedMin = trans + minVerts;
-                Vector4 translatedMax = trans + maxVerts;
-                Console.WriteLine("Translated Min: ");
-                translatedMin.Print();
-                Console.WriteLine("Translated Max: ");
-                translatedMax.Print();
 
                 Matrix4 transMat = new Matrix4();
                 transMat *= Matrix4.MakeRotateYDeg(rot.Y);
