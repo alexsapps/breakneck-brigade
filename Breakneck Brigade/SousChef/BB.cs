@@ -24,7 +24,7 @@ namespace SousChef
         public static GeometryInfo GetPlayerGeomInfo()
         {
             var vertMinMax = modelParser.ScaleVector[DefaultPlayerModel];
-            return new GeometryInfo() { Mass = 200, Model = DefaultPlayerModel, Shape = GeomShape.Box, Size = BB.GetPlayerSides(), Friction = 2.05f, Restitution = 0.2f };
+            return new GeometryInfo() { Mass = 200, Model = DefaultPlayerModel, Shape = GeomShape.Capsule, Size = BB.GetPlayerSides(), Friction = 2.05f, Restitution = 0.2f };
         }
         public static float[] GetPlayerSides()
         {
