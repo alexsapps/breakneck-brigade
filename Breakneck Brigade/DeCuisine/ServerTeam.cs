@@ -19,7 +19,7 @@ namespace DeCuisine
 
         public ServerTeam(string name, Vector3 spawnPoint)
         {
-            _members = new List<Client>();
+            this._members = new List<Client>();
             this.Name = name;
             this.HintHash = new Dictionary<ServerCooker,List<string>>();
             this.SpawnPoint = spawnPoint;
@@ -29,16 +29,28 @@ namespace DeCuisine
         {
             return new List<Client>(_members);
         }
+
         public void AddMember(Client member)
         {
             _members.Add(member);
+            if (member.Player != null)
+            {
+                member.Player.Team = this;
+            }
+
             member.Disconnected += member_Disconnected;
         }
         public void RemoveMember(Client member)
         {
             _members.Remove(member);
+            if (member.Player != null)
+            {
+                member.Player.Team = null;
+            }
+
             member.Disconnected -= member_Disconnected;
         }
+
         void member_Disconnected(object sender, EventArgs e)
         {
             Debug.Assert(_members.Contains((Client)sender));

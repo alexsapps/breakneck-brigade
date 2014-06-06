@@ -381,7 +381,7 @@ namespace DeCuisine
                             break;
                         case ClientEventType.LeftClickEvent:
                             var thrEv = (ClientLeftClickEvent)input.Event;
-                            player.HandleClick(thrEv.Hand, thrEv.Orientation, thrEv.Incline, thrEv.Force);
+                            player.Throw(thrEv.Hand, thrEv.Force); // thrEv.Orientation, thrEv.Incline, thrEv.Force);
                             break;
                         case ClientEventType.Dash:
                             player.Dash();
