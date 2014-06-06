@@ -30,7 +30,17 @@
     <cooker team="blue" type="oven" coordinate="300, 20, 484"></cooker>
     <cooker team="blue" type="bowl" coordinate="400, 20, 484"></cooker>
 
-    <static type="celingLight" coordinate="-300, 200, 0" size="5, 20, 5" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate="-300, 220, 0" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate=  "0, 220, 0" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate="300, 220, 0" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+
+    <static type="celingLight" coordinate="-300, 220, 300" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate=  "0, 220,  300" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate="300, 220,  300" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+
+    <static type="celingLight" coordinate="-300, 220, -300" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate=  "0, 220,  -300" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate="300, 220,  -300" size="10, 20, 10" model="ceilingLight" friendlyName="Light"/>
 
 
     <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,45,90" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
