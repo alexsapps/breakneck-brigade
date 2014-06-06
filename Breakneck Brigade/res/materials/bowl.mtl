@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 19.05.2014 15:26:29
+# File Created: 05.06.2014 21:15:29
 
-newmtl Material__26
+newmtl Material__29
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -12,5 +12,4 @@ newmtl Material__26
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka bowl.tga
-	map_Kd bowl.tga
+	map_Kd defaultMetal.tga
