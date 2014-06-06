@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 03.06.2014 16:50:35
+# File Created: 05.06.2014 19:32:00
 
-newmtl Material__3
+newmtl Material__10
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -15,7 +15,7 @@ newmtl Material__3
 	map_Ka chef_body.tga
 	map_Kd chef_body.tga
 
-newmtl Material__4
+newmtl Material__9
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -29,7 +29,7 @@ newmtl Material__4
 	map_Ka chef_skin.tga
 	map_Kd chef_skin.tga
 
-newmtl Material__6
+newmtl Material__8
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -40,5 +40,5 @@ newmtl Material__6
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka chef_hat.tga
-	map_Kd chef_hat.tga
+	map_Ka chef_blue.tga
+	map_Kd chef_blue.tga
