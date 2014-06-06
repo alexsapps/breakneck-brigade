@@ -13,7 +13,7 @@ namespace DeCuisine
 {
     class ServerPlayer : ServerGameObject
     {        
-        private const float JUMPSPEED = 100;
+        private const float JUMPSPEED = 150;
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;

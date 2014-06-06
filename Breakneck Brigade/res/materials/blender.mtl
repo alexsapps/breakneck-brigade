@@ -1,5 +1,33 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 20.05.2014 12:43:38
+# File Created: 06.06.2014 11:05:15
+
+newmtl Material__26
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka blenderGlass.tga
+	map_Kd blenderGlass.tga
+
+newmtl Material__25
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka blenderTop.tga
+	map_Kd blenderTop.tga
 
 newmtl Material__28
 	Ns 10.0000
@@ -12,10 +40,10 @@ newmtl Material__28
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka colWhite.tga
-	map_Kd colWhite.tga
+	map_Ka blenderBody.tga
+	map_Kd blenderBody.tga
 
-newmtl Material__29
+newmtl Material__27
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -26,19 +54,5 @@ newmtl Material__29
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka colBlack.tga
-	map_Kd colBlack.tga
-
-newmtl Material__30
-	Ns 10.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.5880 0.5880 0.5880
-	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
-	Ke 0.0000 0.0000 0.0000
-	map_Ka colGrey.tga
-	map_Kd colGrey.tga
+	map_Ka blenderButton.tga
+	map_Kd blenderButton.tga
