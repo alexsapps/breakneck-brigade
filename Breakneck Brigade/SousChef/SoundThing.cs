@@ -18,7 +18,7 @@ namespace SousChef
     /// Method is case sensitive, and omits the file extension.  Files to be played MUST be in "res\sounds\"
     /// 
     /// </summary>
-    public class SoundThing
+    public static class SoundThing
     {
         /// <summary>
         /// Internal dictionary/hashmap which links files with their shorthand names.
@@ -30,22 +30,31 @@ namespace SousChef
         /// </summary>
         private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
+        private static List<SoundThread> soundThreads = new List<SoundThread>();
+
         /// <summary>
         /// Plays a sound. See class header comments for details.
         /// </summary>
         /// <param name="key">The key of the sound to play.  Note that this *is* case-sensitive.</param>
         /// <param name="volume">The volume to play at, on a scale of 0-1, where 0 is silent and 1 is loudest.</param>
-        public static Thread Play(BBSound key, double volume)
+        public static SoundThread Play(BBSound key, double volume)
         {
             String temp = "";
             if (l.TryGetValue(key.ToString(), out temp))
             {
-                Thread soundThread = new Thread(new SoundThread(temp, volume).DoWork);
-                soundThread.Start();
+                var soundThread = new SoundThread(temp, volume);
+                new Thread(soundThread.DoWork).Start();
+                soundThreads.Add(soundThread);
                 return soundThread;
             }
             else
                 throw new Exception("no sound file for " + key.ToString());
+        }
+
+        public static void Stop()
+        {
+            foreach (var soundThread in soundThreads)
+                soundThread.Stop();
         }
 
         /// <summary>
@@ -66,45 +75,75 @@ namespace SousChef
             }
             return m;
         }
+    }
+
+    /// <summary>
+    /// class representing a thread playing a sound.
+    /// </summary>
+    public class SoundThread
+    {
+        /// <summary>
+        /// The path to the file to play
+        /// </summary>
+        private string path;
 
         /// <summary>
-        /// Internal class representing a thread playing a sound.
+        /// The volume to play the sound at
         /// </summary>
-        private class SoundThread
+        private double volume;
+
+        public bool Finished { get { return quit; } }
+
+        /// <summary>
+        /// Constructor, creates a SoundThread with a specified sound to play.
+        /// </summary>
+        /// <param name="path">The path to the file to play</param>
+        /// <param name="volume">The volume level to play a sound between 0-1, where 0 is queit, and 1 is loudest.</param>
+        public SoundThread(string path, double volume)
         {
-            /// <summary>
-            /// The path to the file to play
-            /// </summary>
-            private string path;
+            this.path = path;
+            this.volume = volume;
+        }
 
-            /// <summary>
-            /// The volume to play the sound at
-            /// </summary>
-            private double volume;
-
-
-            /// <summary>
-            /// Constructor, creates a SoundThread with a specified sound to play.
-            /// 
-            /// </summary>
-            /// <param name="path">The path to the file to play</param>
-            /// <param name="volume">The volume level to play a sound between 0-1, where 0 is queit, and 1 is loudest.</param>
-            public SoundThread(string path, double volume)
+        /// <summary>
+        /// Actually plays the sound.  Should only be called by Thread.
+        /// </summary>
+        public void DoWork()
+        {
+            MediaPlayer player = new MediaPlayer();
+            player.MediaEnded += player_MediaEnded;
+            player.MediaFailed += player_MediaEnded;
+            player.Open(new Uri(path, UriKind.Relative));
+            player.Volume = volume;
+            lock (endLock)
             {
-                this.path = path;
-                this.volume = volume;
-            }
-            
-             /// <summary>
-             /// Actually plays the sound.  Should only be called by Thread.
-             /// </summary>
-            public void DoWork()
-            {
-                MediaPlayer player = new MediaPlayer();
-                player.Open(new Uri(path, UriKind.Relative));
-                player.Volume = volume;
                 player.Play();
-                Thread.Sleep(40000); // FIXME: Need to make this into an event notifier instead.
+                while (!quit)
+                {
+                    Monitor.Wait(endLock, 10);
+                    if (player.Position >= player.NaturalDuration)
+                    {
+                        quit = true;
+                        break; //workaround.  see http://answers.flyppdevportal.com/categories/metro/csharpvb.aspx?ID=4af53ba0-906d-4f99-9d70-a91ed7a27c0b
+                    }
+                }
+                player.Stop();
+            }
+        }
+
+        bool quit = false;
+        BBLock endLock = new BBLock();
+        void player_MediaEnded(object sender, EventArgs e)
+        {
+            Stop();
+        }
+
+        public void Stop()
+        {
+            lock (endLock)
+            {
+                quit = true;
+                Monitor.PulseAll(endLock);
             }
         }
     }

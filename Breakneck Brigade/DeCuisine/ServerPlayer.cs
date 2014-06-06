@@ -349,7 +349,7 @@ namespace DeCuisine
             Matrix4 rotMat = Matrix4.MakeRotateYDeg(-this.Orientation + 180);
 
             // Check what the player is looking at
-            Vector3 start = moveOutsideBody(this.GeomInfo.Size[2]);
+            Vector3 start = moveOutsideBody(this.GeomInfo.Size[2]/2);
 
             SCVector4 yDir = new SCVector4
                 (

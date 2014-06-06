@@ -26,10 +26,11 @@ namespace Breakneck_Brigade
         public Vector4 Velocity;
         public float WalkSpeed = 140f;
         public float RunSpeed = 380f;
-        public Recipe SelectedRecipe { get; private set; }
+        
         public List<ClientEvent> NetworkEvents;
         private bool _stopped = false;
-        private int bookIndex = 0;
+
+        
         
         public LocalPlayer()
         {
@@ -46,7 +47,6 @@ namespace Breakneck_Brigade
         bool throwing;
         DateTime lastDownThrow;
         DateTime lastThrow;
-        Thread backgroundMusicThread;
 
         public void Update(InputManager IM, ClientGame game, Graphics.Camera cam)
         {
@@ -57,12 +57,6 @@ namespace Breakneck_Brigade
             keys = IM.GetKeys();
             downKeys = IM.GetDownKeyEdges();
             upKeys = IM.GetUpKeyEdges();
-
-            // Check background music
-            if(backgroundMusicThread == null || backgroundMusicThread.IsAlive == false)
-            {
-                backgroundMusicThread = SoundThing.Play(BBSound.soundtrack, 0.12);
-            }
 
             // Orientation & Incline update
             float rotx, roty;
@@ -158,7 +152,7 @@ namespace Breakneck_Brigade
             }
 
             // Handle cooker eject
-            if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_ENTER))
+            if (this.downKeys.Contains(GlfwKeys.GLFW_KEY_LEFT_SHIFT))
             {
                 this.NetworkEvents.Add(new ClientEjectEvent());
             }
@@ -197,8 +191,7 @@ namespace Breakneck_Brigade
             // Change page down.
             if(keyDown(GlfwKeys.GLFW_KEY_R))
             {
-                this.bookIndex = (this.bookIndex + 1) % this.Game.Recipies.Count;
-                this.SelectedRecipe = this.Game.Recipies[bookIndex];
+                this.Game.DecrementPage();
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());
@@ -209,13 +202,7 @@ namespace Breakneck_Brigade
             // Change page up.
             if (keyDown(GlfwKeys.GLFW_KEY_F))
             {
-                this.bookIndex--;
-                if (this.bookIndex < 0)
-                {
-                    this.bookIndex = this.Game.Recipies.Count - 1;
-                }
-
-                this.SelectedRecipe = this.Game.Recipies[bookIndex];
+                this.Game.IncrementPage();
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());

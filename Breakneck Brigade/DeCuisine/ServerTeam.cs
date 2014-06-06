@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BulletSharp;
+using SousChef;
 namespace DeCuisine
 {
     class ServerTeam
@@ -13,14 +14,14 @@ namespace DeCuisine
         
         public int Points { get; set; }
         public string Name { get; set; }
-        public HashSet<string> TintList{ get; set; }
+        public Dictionary<ServerCooker,List<string>> HintHash{ get; set; }
         public Vector3 SpawnPoint;
 
         public ServerTeam(string name, Vector3 spawnPoint)
         {
             _members = new List<Client>();
             this.Name = name;
-            this.TintList = new HashSet<string>();
+            this.HintHash = new Dictionary<ServerCooker,List<string>>();
             this.SpawnPoint = spawnPoint;
         }
 
@@ -42,6 +43,24 @@ namespace DeCuisine
         {
             Debug.Assert(_members.Contains((Client)sender));
             _members.Remove((Client)sender);
+        }
+
+        /// <summary>
+        /// Loop over all the lists in the hint hash and returns a list of 
+        /// unique string values of the ingredients to hint for this team
+        /// </summary>
+        public List<string> getTintList()
+        {
+            HashSet<string> tmpHash = new HashSet<string>();
+
+            foreach (var tmpList in HintHash.Values.ToList())
+            {
+                foreach (var ing in tmpList)
+                {
+                    tmpHash.Add(ing);
+                }
+            }
+            return tmpHash.ToList();
         }
     }
 }

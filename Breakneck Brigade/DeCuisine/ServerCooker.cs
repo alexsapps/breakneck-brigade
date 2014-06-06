@@ -47,6 +47,7 @@ namespace DeCuisine
             this._contents = new Dictionary<int, ServerIngredient>();
             this.Team = team;
             AddToWorld(transform);
+            this.Team.HintHash.Add(this, new List<string>()); // add itself to the hint hash
         }
 
 
@@ -189,6 +190,8 @@ namespace DeCuisine
             foreach(var ingredient in toRemove) 
                 ingredient.Remove();
 
+            this.Team.HintHash[this] = new List<string>(); // Clear the list in the hint hash
+
             // score the mothafuckin thing
             this.Team.Points += score;
             this.Game.SendLobbyStateToAll(); // update client scores
@@ -199,6 +202,8 @@ namespace DeCuisine
             this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
             this.Game.SendSound(BBSound.trayhit1, this.Position);
             this.MarkDirty();
+
+
         }
 
         /// <summary>
@@ -324,24 +329,35 @@ namespace DeCuisine
         /// </summary>
         private void recomputeTintList()
         {
+            this.Team.HintHash[this] = new List<string>(); // erase the old list
+            //this.Game.Controller.
+            // recompute list.
             foreach (var ing in this.Contents.Values)
             {
-                foreach (var potentialRec in this.Type.RecipeHash[ing.Type.Name]) 
+                foreach (var potentialRec in this.Game.Controller.getGoalRecipeList()) 
                 {
+                    if (!this.Type.Recipes.ContainsValue(potentialRec))
+                        continue; // skip recipe if it doesn't belong to this cooker
                     foreach (var potentialIng in potentialRec.Ingredients)
                     {
                         bool skip = false;
+                        int numberAlreadyInCooker = 0; // keep track of more than one of the same objects. 
                         foreach(var ing2 in Contents.Values)
                         {
                             if (ing2.Type == potentialIng.Ingredient)
                             {
-                                skip = true;
-                                break; //don't tint if already in contents
+                                numberAlreadyInCooker++;
+                                // if the nessasary number is in the cooker, skip
+                                if (numberAlreadyInCooker == potentialIng.total)
+                                {
+                                    skip = true;
+                                    break; 
+                                }
                             }
                         }
                         if (!skip)
                         {
-                            this.Team.TintList.Add(potentialIng.Ingredient.Name);
+                            this.Team.HintHash[this].Add(potentialIng.Ingredient.Name);
                         }
                     }
                 }

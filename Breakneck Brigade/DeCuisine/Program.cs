@@ -50,6 +50,11 @@ namespace DeCuisine
                 try
                 {
                     String[] parts = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 0)
+                    {
+                        serverConsole.Prompt();
+                        continue;
+                    }
 
                     /*
                      * server only commands here

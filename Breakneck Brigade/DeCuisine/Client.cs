@@ -41,10 +41,13 @@ namespace DeCuisine
         public event EventHandler Connected;
         public event EventHandler Disconnected;
 
+        string ip_str;
+
         public Client(Server server, TcpClient c)
         {
             this.Server = server;
             this.connection = c;
+            ip_str = c.Client.RemoteEndPoint.ToString();
             ServerMessages = new List<ServerMessage>();
         }
 
@@ -250,7 +253,7 @@ namespace DeCuisine
             if (Player != null)
                 return Player.ToString();
             else
-                return connection.Client.RemoteEndPoint.ToString();
+                return ip_str; //use ip_str so no sync needed.  don't use "connection" b/c it might have been disposed.
         }
     }
 }
