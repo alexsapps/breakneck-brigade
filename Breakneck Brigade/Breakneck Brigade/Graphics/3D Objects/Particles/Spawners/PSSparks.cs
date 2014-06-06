@@ -24,16 +24,16 @@ namespace Breakneck_Brigade.Graphics
 
         public PSSparks() : base() 
         {
-            Lifetime = -1.0f;
+            Lifetime = 0.5f;
         }
         public PSSparks(Vector4 pos) : base(pos) 
         {
-            Lifetime = -1.0f;
+            Lifetime = 0.5f;
         }
         public PSSparks(Vector4 pos, ClientGameObject follow)
             : base(pos)
         {
-            Lifetime = -1.0f;
+            Lifetime = 0.5f;
             Follow = follow;
         }
 
