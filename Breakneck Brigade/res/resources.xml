@@ -573,7 +573,7 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <rotY>0</rotY>
       <rotZ>0</rotZ>      
     </model>
-	<model>
+    <model>
       <filename>wine</filename>
       <posX>0</posX>
       <posY>0</posY>
@@ -583,15 +583,10 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <scaleZ>1.0</scaleZ>
       <rotX>0</rotX>
       <rotY>0</rotY>
-      <rotZ>0</rotZ>      
+      <rotZ>0</rotZ>
     </model>
-<<<<<<< HEAD
-	<model>
-      <filename>counter</filename>
-=======
     <model>
-      <filename>ceilingLight</filename>
->>>>>>> b488aa5d2ea57b1ee743c1605ed1b9a29dddc129
+      <filename>counter</filename>
       <posX>0</posX>
       <posY>0</posY>
       <posZ>0</posZ>
@@ -600,11 +595,19 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <scaleZ>1.0</scaleZ>
       <rotX>0</rotX>
       <rotY>0</rotY>
-<<<<<<< HEAD
-      <rotZ>0</rotZ>      
-=======
       <rotZ>0</rotZ>
->>>>>>> b488aa5d2ea57b1ee743c1605ed1b9a29dddc129
+    </model>
+     <model>
+      <filename>ceilingLight</filename>
+      <posX>0</posX>
+      <posY>0</posY>
+      <posZ>0</posZ>
+      <scaleX>1.0</scaleX>
+      <scaleY>1.0</scaleY>
+      <scaleZ>1.0</scaleZ>
+      <rotX>0</rotX>
+      <rotY>0</rotY>
+      <rotZ>0</rotZ>      
     </model>
   </models>
 </resources>

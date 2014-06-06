@@ -14,9 +14,9 @@ namespace DeCuisine
         protected ServerGame Game { get; set; }
         public Dictionary<string, ServerTeam> Teams { get; set; }
         public List<Goal> Goals { get; set; }
-        public Dictionary<string,string> TintList { get; set; }
         public Dictionary<IngredientType, int> NeededHash { get; set; } // the dict of the number of ingredients needed to make the goals 
 
+        private Dictionary<ServerIngredient, double> finishedProducts; // Hash that holds the currently finished product in the game world
         private int ticks; //server ticks, not time ticks
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
@@ -81,6 +81,7 @@ namespace DeCuisine
         public ServerGameController(ServerGame game)
         {
             this.Game = game;
+            finishedProducts = new Dictionary<ServerIngredient, double>();
             this.numOfGoalsByState = new Dictionary<GameControllerStage,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
             this.numOfGoalsByState.Add(GameControllerStage.Stage1, 1);
@@ -126,7 +127,6 @@ namespace DeCuisine
         /// <param name="complexity"></param>
         private void FillGoals(int numOfGoals, int complexity)
         {
-            //DEV TESTING CAKE
 #if !PROJECT_WORLD_BUILDING
             int numOfRecipes = this.Game.Config.Recipes.Count();
             while (numOfGoals > Goals.Count)
@@ -345,6 +345,35 @@ namespace DeCuisine
             {
                 return false;
             }
+        }
+
+
+        /// <summary>
+        /// Function to add the cooked objects ingredients to keep track of the items
+        /// that went into the ingredient. Should only be called after a cook event.
+        /// </summary>
+        /// <param name="finalProduct">The product you made</param>
+        /// <param name="components">All of the ingredients that made the Product.</param>
+        public void FinishCook(ServerIngredient finalProduct, List<ServerIngredient> components, double complexity)
+        {
+            List<IngredientType> tmpList = new List<IngredientType>();
+            foreach (var comp in components)
+            {
+                tmpList.Add(comp.Type);
+            }
+
+            finishedProducts.Add(finalProduct, complexity);
+            this.Game.SendLobbyStateToAll(); // update client scores
+        }
+
+        /// <summary>
+        /// Power up a already made ingredient with a booster ingredient.
+        /// </summary>
+        /// <param name="ingToPowerUp"></param>
+        /// <param name="powerUpIng"></param>
+        public void PowerUp(ServerIngredient ingToPowerUp, ServerIngredient powerUpIng)
+        {
+
         }
 
         public bool CheckWin()
