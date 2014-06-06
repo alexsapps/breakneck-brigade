@@ -22,6 +22,8 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         public static TextRenderer TextRenderer;
+        public static bool GameOver = false;
+        public static bool IWon = false; // You're a BORN LOSER.
         private ModelParser parser;
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
         private const string RESOURCES_XML_PATH = "res\\resources.xml";
@@ -460,6 +462,11 @@ namespace Breakneck_Brigade.Graphics
 
         private void Render2D(LocalPlayer player)
         {
+            if(GameOver)
+            {
+                DrawResults();
+                return;
+            }
             /*
             Gl.glPushMatrix();
             Gl.glBegin(Gl.GL_QUADS);
@@ -501,6 +508,14 @@ namespace Breakneck_Brigade.Graphics
             //Models["iceCream"].Render();
 
             Gl.glPopAttrib();
+        }
+
+        private void DrawResults()
+        {
+            if(IWon)
+                TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "You win!!", FONT_SCALE * 3, FONT_SCALE * 3);
+            else
+                TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "You lose...", FONT_SCALE * 3, FONT_SCALE * 3);
         }
 
         private void DrawGoals(int xPos, int yPos)

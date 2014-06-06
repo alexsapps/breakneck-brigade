@@ -45,10 +45,10 @@ namespace Breakneck_Brigade.Graphics
  	        base.Spawn();
             Particle3D particle = new Particle3D(Renderer.Models["indicator"], team == "red" ? Renderer.Textures["confettiRed.tga"] : Renderer.Textures["confettiBlue.tga"])
             {
-                Position            = new Vector4(0, playerHeight/2 + 10, 0),
+                Position            = new Vector4(0, playerHeight/2 + 15, 0),
                 Velocity            = new Vector4(0, 0, 0),
                 Acceleration        = new Vector4(0, 0, 0),
-                Scale               = 0.5f,
+                Scale               = 1.0f,
                 Rotation            = new Vector4(0, 0, 0),
                 RotationalVelocity  = new Vector4(0, 0.5, 0),
                 Lifetime            = -1

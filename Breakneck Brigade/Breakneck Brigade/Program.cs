@@ -755,12 +755,20 @@ namespace Breakneck_Brigade
                                     break;
                                 case GameMode.Results:
                                     //winning team is lobbyState.WinningTeam
-                                    if(lobbyState.IWin)
+                                    if (lobbyState.IWin)
+                                    {
                                         SoundThing.Play(BBSound.explosionfar, 2);
+                                        Renderer.GameOver = true;
+                                        Renderer.IWon = true;
+                                    }
                                     else if (!lobbyState.IsDraw)
+                                    {
                                         SoundThing.Play(BBSound.sadtrombone, 2);
+                                        Renderer.GameOver = true;
+                                        Renderer.IWon = false;
+                                    }
                                     else
-                                        { }
+                                    { }
                                     break;
                                 case GameMode.Stopping:
                                     break;
