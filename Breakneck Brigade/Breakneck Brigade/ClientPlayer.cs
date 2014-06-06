@@ -41,6 +41,7 @@ namespace Breakneck_Brigade
             eyeHeight = reader.ReadSingle();
 
             //Add team indicator
+            this.Model = TeamName == "red" ? Renderer.Models["redChef"] : Renderer.Models["chef"];
             //game.ParticleSpawners.Add(new PSTeamIndicator(this));
 
             base.finalizeConstruction();

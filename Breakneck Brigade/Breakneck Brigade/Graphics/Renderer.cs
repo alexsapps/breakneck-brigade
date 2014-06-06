@@ -277,6 +277,15 @@ namespace Breakneck_Brigade.Graphics
 
             Models.Add(blankQuadModel.Name, blankQuadModel);
 
+            //Red chef model
+            Model redChef = new Model("redChef");
+            redChef.Meshes = Renderer.Models["chef"].Meshes;
+            TexturedMesh redHat = new TexturedMesh();
+            redHat.VBO = ((TexturedMesh) redChef.Meshes[2]).VBO;
+            redHat.Texture = Renderer.Textures["chefRed.tga"];
+            redChef.Meshes[2] = redHat;
+            Models.Add("redChef", redChef);
+
             TextRenderer = new TextRenderer();
         }
 
