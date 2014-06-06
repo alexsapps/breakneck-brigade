@@ -20,6 +20,8 @@ namespace SousChef
     /// </summary>
     public static class SoundThing
     {
+        public static bool off;
+
         /// <summary>
         /// Internal dictionary/hashmap which links files with their shorthand names.
         /// </summary>
@@ -37,6 +39,9 @@ namespace SousChef
         /// <param name="volume">The volume to play at, on a scale of 0-1, where 0 is silent and 1 is loudest.</param>
         public static SoundThread Play(BBSound key, double volume)
         {
+            if (off)
+                return null;
+
             String temp = "";
             if (l.TryGetValue(key.ToString(), out temp))
             {
@@ -107,10 +112,10 @@ namespace SousChef
         {
             this.path = path;
 
-            if (volume > 0.7)
-                this.volume = 0.7;
-            else if (volume < 0.1)
-                this.volume = 0.1;
+            if (volume > 0.99)
+                this.volume = 0.99;
+            else if (volume < 0.0)
+                this.volume = 0.0;
             else
                 this.volume = volume;
         }
@@ -124,7 +129,6 @@ namespace SousChef
             player.MediaEnded += player_MediaEnded;
             player.MediaFailed += player_MediaEnded;
             player.Open(new Uri(path, UriKind.Relative));
-            Console.WriteLine("THIS IS THE VOLUME YES???? " + volume);
             player.Volume = volume;
             lock (endLock)
             {
