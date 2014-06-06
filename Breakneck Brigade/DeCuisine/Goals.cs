@@ -12,6 +12,7 @@ namespace DeCuisine
         public int Points { get; set; }
         public Recipe EndGoal { get; set; }
         public string GoalString { get; set; } // the string that is used to convey what the goal is
+        public bool Expiring { get; set; }
         //delegate CompleteFunction;
 
         public Goal(int points, Recipe goal, int complexity)

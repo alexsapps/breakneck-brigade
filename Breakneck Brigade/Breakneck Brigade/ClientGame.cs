@@ -20,7 +20,7 @@ namespace Breakneck_Brigade
         public Dictionary<int, ClientGameObject> LiveGameObjects { get; set; }
         public Dictionary<int, ClientGameObject> GameObjectsCache { get; set; }
         public Dictionary<string, HashSet<string>> TintedObjects { get; protected set; }
-        public List<IngredientType> Goals { get; protected set; }
+        public List<ClientGoal> Goals { get; protected set; }
         public int LookatId { get; set; }
         public int HeldId { get; set; }
         public List<AParticleSpawner> ParticleSpawners { get; set;}

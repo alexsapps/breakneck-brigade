@@ -845,10 +845,18 @@ namespace Breakneck_Brigade
                                         case ServerMessageType.GoalsUpdate:
                                         {
                                             var e = new ServerGoalsUpdateMessage();
-                                            e.Read(reader);
                                             game.Goals.Clear();
-                                            foreach (var g in e.Goals)
-                                                game.Goals.Add(game.Config.Ingredients[g]);
+                                            e.Read((greader) =>
+                                            {
+                                                int glen = reader.ReadInt32();
+                                                for (int gi = 0; gi < glen; i++)
+                                                {
+                                                    var ingredient = game.Config.Ingredients[greader.ReadString()];
+                                                    bool expiring = greader.ReadBoolean();
+                                                    game.Goals.Add(new ClientGoal(ingredient, expiring));
+                                                }
+                                            });
+
                                             game.Goals.Sort();
                                             game.CalculateRequiredRecipes();
                                             break;
