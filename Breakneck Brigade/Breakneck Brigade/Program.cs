@@ -876,6 +876,10 @@ namespace Breakneck_Brigade
                                                 case BBParticleEffect.SPLASH:
                                                     break;
                                                 case BBParticleEffect.STARS:
+                                                    if (e.FollowID != -1)
+                                                        spawner = new PSStars(e.Location, game.LiveGameObjects[e.FollowID]);
+                                                    else
+                                                        spawner = new PSStars(e.Location);
                                                     break;
                                                 case BBParticleEffect.ARROW:
                                                     if (e.FollowID != -1)

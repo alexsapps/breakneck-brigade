@@ -13,8 +13,9 @@ namespace SousChef
         public List<CookerType> UsableCookers { get; private set; }
         public List<RecipeIngredient> Ingredients { get; private set; } //if this ever changes, make sure to set _hash=null
         public IngredientType FinalProduct;
+        public bool intermediate { get; set; } // if this is an intermediate ingredient i.e. sauce
         
-        public Recipe(string name, string friendlyName, List<RecipeIngredient> ingredients, IngredientType finalProduct)
+        public Recipe(string name, string friendlyName, List<RecipeIngredient> ingredients, IngredientType finalProduct, bool intermediate)
         {
             this.Name = name;
             this.FriendlyName = friendlyName;
@@ -25,6 +26,7 @@ namespace SousChef
             int sum = 0;
             foreach (var ingredient in ingredients)
                 sum += ingredient.Ingredient.DefaultPoints;
+            this.intermediate = intermediate;
 
             hash(); //compute now
         }

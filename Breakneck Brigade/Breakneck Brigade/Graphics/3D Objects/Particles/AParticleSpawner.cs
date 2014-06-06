@@ -154,7 +154,6 @@ namespace Breakneck_Brigade.Graphics
             }
             else if(isFollowing && Follow == null)
             {
-                this.StopSpawning();
                 this.DestroyAll();
                 RemoveMe = true;
                 return;
