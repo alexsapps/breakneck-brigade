@@ -15,6 +15,7 @@ namespace DeCuisine
         public Dictionary<string, ServerTeam> Teams { get; set; }
         public List<Goal> Goals { get; set; }
         public Dictionary<IngredientType, int> NeededCounts { get; set; } // the dict of the number of ingredients needed to make the goals 
+        public Dictionary<Goal, DateTime> ExpiringGoals;
 
         private Dictionary<ServerIngredient, double> finishedProdHash; // Hash that holds the currently finished product in the game world
         private int ticks; //server ticks, not time ticks
@@ -24,6 +25,8 @@ namespace DeCuisine
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
         private int stageNum = 1;
         private ServerIngredient powerItem{get; set;}
+        private TimeSpan goalExpireTime = new TimeSpan(0,0,30);
+
 
 
         private Dictionary<GameControllerStage, int> numOfGoalsByState; // dictionary conaining the number of goals
@@ -90,6 +93,7 @@ namespace DeCuisine
             this.numOfGoalsByState.Add(GameControllerStage.Stage3, 3);
             this.ResetGame();
             this.powerItem = null;
+            this.ExpiringGoals = new Dictionary<Goal, DateTime>();
         }
 
         /// <summary>
@@ -215,20 +219,39 @@ namespace DeCuisine
 
             }
            
+            if (CheckWin())
+                return false;
+
+            List<Goal> goalsExpired = new List<Goal>();
+            foreach (var goal in this.ExpiringGoals)
+            {
+                if (DateTime.Now.Subtract(goal.Value) > this.goalExpireTime)
+                {
+                    _goalsDirty = true;
+                    this.Goals.Remove(goal.Key);
+                    if (this.Goals.Count == 0)
+                        this.nextGameState();
+                    Program.WriteLine("test");
+                    goalsExpired.Add(goal.Key);
+                }
+            }
+            if (goalsExpired != null)
+            {
+                foreach (var goal in goalsExpired)
+                    this.ExpiringGoals.Remove(goal);
+            }
+
             if (_lobbyStateDirty)
             {
                 _lobbyStateDirty = false;
                 Game.SendLobbyStateToAll();
             }
-            if(_goalsDirty)
+            if (_goalsDirty)
             {
                 _goalsDirty = false;
                 Game.SendGoalsUpdate();
             }
 
-            if (CheckWin())
-                return false;
-            
             this.ticks++;
             return true;
         }
@@ -316,37 +339,35 @@ namespace DeCuisine
 
         public bool ScoreDeliver(ServerIngredient ing)
         {
-            Goal goalToRemove = null;
             foreach (var goal in Goals)
             {
                 if (goal.EndGoal.FinalProduct.Name == ing.Type.Name)
                 {
                     if (ing.LastPlayerHolding != null)
                     {
-                        Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position, 0, ing.LastPlayerHolding.Id);
                         double complexity = 0;
-                        ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity));
-                        ing.Remove();
-                        MarkLobbyStateDirty();
-                        goalToRemove = goal;
-                        _goalsDirty = true;
-                        Program.WriteLine("Scored " + ((Goal)goal).Points + " By making a " + ((Goal)goal).EndGoal.FinalProduct.Name + " for team " + ing.LastPlayerHolding.Client.Team.Name);
-                        this.DisplayScore();
-                        break;
+                        Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position, 0, ing.LastPlayerHolding.Id);
+                        if (this.ExpiringGoals.ContainsKey(goal))
+                        {
+                            // the other team already scored it, remove the goal frm the goals list
+                            ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity/2));
+                            this.Goals.Remove(goal);
+                            _goalsDirty = true;
+                        } else
+                        {
+                            ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity));
+                            ing.Remove();
+                            MarkLobbyStateDirty();
+                            this.ExpiringGoals.Add(goal, DateTime.Now);
+                            goal.Expiring = true;
+                            _goalsDirty = true;
+                            return true;
+                        }
+
                     }
                 }
             }
-            if (goalToRemove != null)
-            {
-                this.Goals.Remove(goalToRemove);
-                if (this.Goals.Count == 0)
-                    this.nextGameState();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
 
