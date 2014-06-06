@@ -844,8 +844,8 @@ namespace Breakneck_Brigade
                                             var playerPos = localPlayer.GetPosition();
                                             var soundPos = e.Location;
                                             double distance = getDistance(playerPos, soundPos);
-                                            int volume = (int)Math.Log(distance, 2.0);
-                                            SoundThing.Play(e.Sound, volume);
+                                            SoundThing.Play(e.Sound, Math.Log(distance));
+                                            //Console.WriteLine(Math.Log(1/distance));
                                             break;
                                         }
                                         case ServerMessageType.ParticleEffect:

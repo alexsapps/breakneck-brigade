@@ -195,8 +195,7 @@ namespace Breakneck_Brigade
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());
-                int volume = (int)Math.Log(4, 2.0);
-                SoundThing.Play(BBSound.pageturn1, volume);
+                SoundThing.Play(BBSound.pageturn1, 0.3);
             }
 
             // Change page up.
@@ -206,8 +205,7 @@ namespace Breakneck_Brigade
 
                 // Play sound
                 //double distance = Program.getDistance(this.GetPosition(), this.GetPosition());
-                int volume = (int)Math.Log(4, 2.0);
-                SoundThing.Play(BBSound.pageturn2, volume);
+                SoundThing.Play(BBSound.pageturn2, 0.5);
             }
 
             if (this.Player != null)

@@ -30,8 +30,6 @@ namespace SousChef
         /// </summary>
         private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
-        private static List<SoundThread> soundThreads = new List<SoundThread>();
-
         /// <summary>
         /// Plays a sound. See class header comments for details.
         /// </summary>
@@ -44,17 +42,10 @@ namespace SousChef
             {
                 var soundThread = new SoundThread(temp, volume);
                 new Thread(soundThread.DoWork).Start();
-                soundThreads.Add(soundThread);
                 return soundThread;
             }
             else
                 throw new Exception("no sound file for " + key.ToString());
-        }
-
-        public static void Stop()
-        {
-            foreach (var soundThread in soundThreads)
-                soundThread.Stop();
         }
 
         /// <summary>
@@ -92,6 +83,19 @@ namespace SousChef
         /// </summary>
         private double volume;
 
+        /// <summary>
+        /// flag for if we've quit
+        /// </summary>
+        private bool quit = false;
+       
+        /// <summary>
+        /// Monitor for multi-threading
+        /// </summary>
+        private BBLock endLock = new BBLock();
+
+        /// <summary>
+        /// ?
+        /// </summary>
         public bool Finished { get { return quit; } }
 
         /// <summary>
@@ -102,7 +106,13 @@ namespace SousChef
         public SoundThread(string path, double volume)
         {
             this.path = path;
-            this.volume = volume;
+
+            if (volume > 0.7)
+                this.volume = 0.7;
+            else if (volume < 0.1)
+                this.volume = 0.1;
+            else
+                this.volume = volume;
         }
 
         /// <summary>
@@ -114,6 +124,7 @@ namespace SousChef
             player.MediaEnded += player_MediaEnded;
             player.MediaFailed += player_MediaEnded;
             player.Open(new Uri(path, UriKind.Relative));
+            Console.WriteLine("THIS IS THE VOLUME YES???? " + volume);
             player.Volume = volume;
             lock (endLock)
             {
@@ -131,8 +142,7 @@ namespace SousChef
             }
         }
 
-        bool quit = false;
-        BBLock endLock = new BBLock();
+
         void player_MediaEnded(object sender, EventArgs e)
         {
             Stop();
