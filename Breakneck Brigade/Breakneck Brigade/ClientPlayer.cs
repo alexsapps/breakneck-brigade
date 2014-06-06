@@ -12,7 +12,8 @@ namespace Breakneck_Brigade
 {
     class ClientPlayer : ClientGameObject
     {
-        public override string ModelName { get { return BB.DefaultPlayerModel; } }
+        private string _modelName;
+        public override string ModelName { get { return _modelName; } }
         public string TeamName { get; set; } // TODO: Make this control the texture used
         public ClientGameObject LookingAt { get; set; }
         public int LookingAtId { get; set; }
@@ -41,7 +42,7 @@ namespace Breakneck_Brigade
             eyeHeight = reader.ReadSingle();
 
             //Add team indicator
-            this.Model = TeamName == "red" ? Renderer.Models["redChef"] : Renderer.Models["chef"];
+            this._modelName = TeamName == "red" ? "redChef" : "chef";
             //game.ParticleSpawners.Add(new PSTeamIndicator(this));
 
             base.finalizeConstruction();
