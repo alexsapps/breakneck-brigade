@@ -472,11 +472,6 @@ namespace Breakneck_Brigade.Graphics
 
         private void Render2D(LocalPlayer player)
         {
-            if(GameOver)
-            {
-                DrawResults();
-                return;
-            }
             /*
             Gl.glPushMatrix();
             Gl.glBegin(Gl.GL_QUADS);
@@ -490,6 +485,12 @@ namespace Breakneck_Brigade.Graphics
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
             Models[CROSSHAIR_MODEL_NAME].Render();
             Renderer.enableTransparency();
+
+            if (GameOver)
+            {
+                DrawResults();
+                return;
+            }
             //Models[BLANKQUAD_MODEL_NAME].Render();
             this.DrawGoals(5, padding);
             this.DrawHeld((WindowWidth / 2) + 15, (WindowHeight / 2) - 10);
