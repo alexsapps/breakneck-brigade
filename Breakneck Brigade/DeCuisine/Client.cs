@@ -19,8 +19,42 @@ namespace DeCuisine
         
         public bool IsConnected { get; private set; }
 
-        public ServerPlayer Player { get; set; }
-        public ServerTeam Team { get; set; }
+        ServerPlayer _player;
+        public ServerPlayer Player 
+        { 
+            get
+            {
+                return _player;
+            }
+
+            set
+            {
+                this._player = value;
+                if (this.Team != null && value != null)
+                {
+                    this.Player.Team = this.Team;
+                }
+            }
+        }
+
+        ServerTeam _team; 
+        public ServerTeam Team 
+        { 
+            get
+            {
+                return _team;
+            }
+
+            set
+            {
+                if(this.Player != null)
+                {
+                    this.Player.Team = value;
+                }
+
+                _team = value;
+            }
+        }
 
         public Server Server { get; set; }
         public ServerGame Game { get { return Server.Game; } }

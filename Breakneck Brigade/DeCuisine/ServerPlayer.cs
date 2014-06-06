@@ -17,7 +17,9 @@ namespace DeCuisine
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
+        private const int STUNTIME = 300;
         private const float HOLDDISTANCE = 5.0f;
+        private const float MAXVELOCITY = 380f;
 #if PROJECT_WORLD_BUILDING
         private const float LINEOFSIGHTSCALAR = 100;//4000;
 #else
@@ -30,7 +32,9 @@ namespace DeCuisine
         private const int DASHTIME = 5; // seconds * 30. 
 #endif
         private int dashTicks { get; set; }
+        private int stunTicks { get; set; }
         private int dashCool { get; set; }
+        public ServerTeam Team { get; set; }
         public string Name { get; set; }
         private Generic6DofConstraint constraint { get; set; }
         private bool isFalling { get; set; }
@@ -104,8 +108,8 @@ namespace DeCuisine
             : base(game)
         {
             base.AddToWorld(position);
-            this.Body.Friction = 2.05f;
             this.EyeHeight = 8.0f;
+            this.stunTicks = 0;
             this.constraint = null;
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
@@ -113,8 +117,9 @@ namespace DeCuisine
             HandInventory tmp = new HandInventory(null);
             this.Hands.Add("left", tmp);
             this.Hands.Add("right", tmp);
+            this.Team = null;
             this.dashTicks = 0; // don't start dashing
-            this.dashCool = 0;
+            this.stunTicks = 0;
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -157,8 +162,16 @@ namespace DeCuisine
         /// </summary>
         public void Move(Vector3 vel)
         {
-            if (this.dashTicks != 0)
+            if (this.dashTicks > 0 || this.stunTicks > 0)
                 return;
+
+            /*
+            if (this.Body.LinearVelocity.Length() < MAXVELOCITY)
+            {
+                this.Body.ApplyCentralImpulse(vel);
+            }
+            */
+
             this.Body.LinearVelocity = new Vector3(vel.X, this.Body.LinearVelocity.Y + vel.Y, vel.Z);
             this.Body.ActivationState = ActivationState.ActiveTag;
         }
@@ -168,21 +181,31 @@ namespace DeCuisine
         /// </summary>
         public void Move(float x, float y, float z)
         {
-            if (this.dashTicks != 0)
-                return;
-            this.Body.LinearVelocity = new Vector3(x, this.Body.LinearVelocity.Y + y, z);
-            this.Body.ActivationState = ActivationState.ActiveTag;
+            this.Move(new Vector3(x, y, z));
         }
 
         public override void OnCollide(ServerGameObject obj)
         {
             base.OnCollide(obj);
+
+            // If hit player with dash, stun them.
+            if(obj is ServerPlayer)
+            {
+                ServerPlayer otherPlayer = (ServerPlayer)obj;
+                if(this.dashTicks > 0 && this.Team != otherPlayer.Team)
+                {
+                    otherPlayer.Stun();
+                }
+            }
         }
 
+        /// <summary>
+        /// Perform an air dash.
+        /// </summary>
         public void Dash()
         {
-            if (this.dashCool != 0)
-                return; // no dash until cooldown is done.
+            if (this.dashCool > 0 || this.stunTicks > 0)
+                return;
             this.dashTicks = DASHTIME;
             SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
             Matrix4 rotate = Matrix4.MakeRotateYDeg(-this.Orientation) * Matrix4.MakeRotateXDeg(-this.Incline);
@@ -203,11 +226,16 @@ namespace DeCuisine
         /// Throw an object from the passed in hand
         /// </summary>
         /// <param name="hand"></param>
-        public void HandleClick(string hand, float orientation, float incline, float scalar)
+        public void Throw(string hand, float scalar)
         {
 #if PROJECT_WORLD_BUILDING
             return;
 #endif
+            float orientation = this.Orientation;
+            float incline = this.Incline;
+            if (this.stunTicks > 0)
+                return;
+            
             if (this.Hands[hand].Held == null && this.LookingAt != null && 
                 this.LookingAt.ObjectClass == GameObjectClass.Ingredient)
                 this.PickUpObject((ServerIngredient)this.LookingAt);
@@ -244,11 +272,32 @@ namespace DeCuisine
                 this.Game.SendSound(BBSound.punchmiss, Position);
                 this.MarkDirty();
             }
+        }
 
+        /// <summary>
+        /// Stuns the player from doing anything and dropping their item.
+        /// </summary>
+        public void Stun()
+        {
+            this.Throw("left", 0.0f); // Drop object in front of player.
+            this.stunTicks = STUNTIME;
+            Game.SendParticleEffect(BBParticleEffect.CONFETTI, this.Position, 0, this.Id);
+        }
+
+        /// <summary>
+        /// Checks if this player is stunned or not.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsStunned()
+        {
+            return (this.stunTicks > 0) ? true : false;
         }
 
         private void PickUpObject(ServerIngredient obj)
         {
+            if (this.stunTicks > 0)
+                return;
+
             Game.SendSound(BBSound.bodyfall1, Position);
             constraint = new Generic6DofConstraint(
                 this.Body, obj.Body,
@@ -271,6 +320,9 @@ namespace DeCuisine
         /// </summary>
         public void AttemptToEjectCooker()
         {
+            if (this.stunTicks > 0)
+                return;
+
             if(this.LookingAt != null && this.LookingAt.ObjectClass == GameObjectClass.Cooker)
             {
                 ((ServerCooker)this.LookingAt).Eject();
@@ -295,6 +347,9 @@ namespace DeCuisine
         /// </summary>
         public void Jump()
         {
+            if (this.stunTicks > 0)
+                return;
+
             if (this.canJump || Game.MultiJump)
             {
                 this.Move(this.Body.LinearVelocity.X, ServerPlayer.JUMPSPEED, this.Body.LinearVelocity.Z);
@@ -325,6 +380,10 @@ namespace DeCuisine
                );
             return start;
         }
+
+        /// <summary>
+        /// Update method.
+        /// </summary>
         protected override void updateHook()
         {
             if (this.Body.LinearVelocity.Y < 0)
@@ -384,8 +443,12 @@ namespace DeCuisine
             // Check if player needs to stop dashing
             if (dashTicks > 0)
                 CheckDashing();
+
             if (this.dashCool > 0)
                 this.dashCool--;
+
+            if (this.stunTicks > 0)
+                this.stunTicks--;
 
         }
 
