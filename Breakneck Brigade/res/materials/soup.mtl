@@ -12,8 +12,8 @@ newmtl Material__31
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka soupBowl.tga
-	map_Kd soupBowl.tga
+	map_Ka bowlWhite.tga
+	map_Kd bowlWhite.tga
 
 newmtl Material__32
 	Ns 10.0000
