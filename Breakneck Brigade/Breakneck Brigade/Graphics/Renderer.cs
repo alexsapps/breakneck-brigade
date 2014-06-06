@@ -658,7 +658,7 @@ namespace Breakneck_Brigade.Graphics
                         Gl.glColor3f(1, 0, 0);
                     else
                         Gl.glColor3f(0, 1, 0);
-                    TextRenderer.printToScreen(xPos, yPos, (goal.Ingredient.DefaultPoints.ToString() + " ").PadLeft(width + 1) + goal.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
+                    TextRenderer.printToScreen(xPos, yPos, goal.Ingredient.FriendlyName + " (" + (goal.Ingredient.DefaultPoints.ToString() + " ").PadLeft(width + 1) + "pts)", FONT_SCALE, FONT_SCALE);
 
                     yPos += spacing + padding;
                 }
