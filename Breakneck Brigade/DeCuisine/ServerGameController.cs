@@ -284,13 +284,9 @@ namespace DeCuisine
         {
             ServerTeam team;
             if (Teams.TryGetValue(teamName, out team))
-            {
                 AssignTeam(client, team);
-            }
             else
-            {
                 throw new Exception("How the hell did we allow them to pick a team that doesn't exist?");
-            }
         }
 
         public void AssignTeam(Client client, ServerTeam team)
@@ -515,9 +511,9 @@ namespace DeCuisine
         private Vector3 randomVelocity(int max)
         {
             // Some weird logic to get a random large negative and positive number
-            float[] xVel = new float[3]{DC.random.Next(max / 2, max),  DC.random.Next(-max, -(max / 2)), 0};
+            float[] xVel = new float[3]{DC.random.Next(0, max),  DC.random.Next(-max, -(max / 2)), 0};
             //float yVel = DC.random.Next(max, max*4/3);
-            float[] zVel = new float[3]{ DC.random.Next(max / 2, max), DC.random.Next(-max, -(max / 2)), 0, };
+            float[] zVel = new float[3]{ DC.random.Next( 0, max), DC.random.Next(-max, -(max / 2)), 0, };
             
             Vector3 vel = new Vector3(xVel[DC.random.Next(0, 3)], 0, zVel[DC.random.Next(0, 3)]);
             if(vel.X == 0 && vel.Y == 0)
