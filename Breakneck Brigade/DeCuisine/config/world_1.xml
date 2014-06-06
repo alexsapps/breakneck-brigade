@@ -34,20 +34,20 @@
     <cooker team="blue" type="oven"    orientation="135" coordinate="  -152, 16, -128"></cooker>
     <cooker team="blue" type="bowl"    orientation="315" coordinate="-240, 30, -30"></cooker>
 
-    <static type="celingLight" coordinate="-200, 180, 0"  size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
-    <static type="celingLight"  coordinate="200, 180, 0"  size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate="-200, 190, 0"  size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight"  coordinate="200, 190, 0"  size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
 
-    <static type="celingLight" coordinate=  "0,  180,  200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
-    <static type="celingLight" coordinate=  "0,  180, -200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate=  "0,  190,  200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate=  "0,  190, -200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
 
-    <static type="celingLight" coordinate= "-200, 180,  200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
-    <static type="celingLight" coordinate= "-200, 180, -200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate= "-200, 190,  200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate= "-200, 190, -200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
 
-    <static type="celingLight" coordinate= "200, 180,  200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
-    <static type="celingLight" coordinate= "200, 180, -200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate= "200, 190,  200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
+    <static type="celingLight" coordinate= "200, 190, -200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
 
 
-    <static type="celingLight" coordinate= "300, 180, 200" size="30, 30, 10" model="ceilingLight" friendlyName="Power Up Window"/>
+    <static type="celingLight" coordinate= "300, 190, 200" size="30, 30, 10" model="ceilingLight" friendlyName="Power Up Window"/>
 
 
     <static type="deliveryWindow" coordinate="0, 100, -460" size="40,45,90" orientation="-90" model="deliveryWindow" friendlyName="Delivery Window"/>
@@ -55,7 +55,25 @@
     <static type="cdj" coordinate="480, 5, -480" size="12, 3, 16" orientation="315" model="cdj" friendlyName="DJ Turntable"/>
 
 
-    <static type="shelf" coordinate="487, 30, -250" size="23, 28, 10" orientation="270" model="shelf" friendlyName="Just a shelf"/>
+    <static type="shelf" coordinate="480, 25, 400" size="100, 20, 20" orientation="270" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="480, 25, 190" size="100, 20, 20" orientation="270" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="480, 25, -20" size="100, 20, 20" orientation="270" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="480, 25, -230" size="100, 20, 20" orientation="270" model="shelf" friendlyName="Shelf"/>
+
+    <static type="shelf" coordinate="-480, 25, 400" size="100, 20, 20" orientation="90" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="-480, 25, 190" size="100, 20, 20" orientation="90" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="-480, 25, -20" size="100, 20, 20" orientation="90" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="-480, 25, -230" size="100, 20, 20" orientation="90" model="shelf" friendlyName="Shelf"/>
+
+    <static type="shelf" coordinate="360, 25, 480" size="100, 20, 20" orientation="180" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="150, 25, 480" size="100, 20, 20" orientation="180" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="-360, 25, 480" size="100, 20, 20" orientation="180" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="-150, 25, 480" size="100, 20, 20" orientation="180" model="shelf" friendlyName="Shelf"/>
+
+    <static type="shelf" coordinate="270, 25, -480" size="100, 20, 20" orientation="0" model="shelf" friendlyName="Shelf"/>
+    <static type="shelf" coordinate="-270, 25, -480" size="100, 20, 20" orientation="0" model="shelf" friendlyName="Shelf"/>    
+    
+    <static type="refrigerator" coordinate="0, 50, 500" size="50,50,10" orientation="180" model="refrigerator" friendlyName="Refrigerator"/>
 
   </space>
 </world>
