@@ -15,12 +15,28 @@ namespace SousChef
         public float Mass { get; set; }
         public GeomShape Shape { get; set; }
         public float[] Size { get; set; }
-        public float[] ModelScale { get; set; }
+        public float[] ModelScale { get; protected set; }
         public float Friction { get; set; }
         public float RollingFriction { get; set; }
         public float Restitution { get; set; }
         public float AngularDamping { get; set; }
         public float Orientation { get; set; }
+
+        private string _model;
+        public string Model
+        {
+            get
+            {
+                return _model;
+            }
+            set
+            {
+                _model = value;
+                var scaleVector = BB.modelParser.ScaleVector;
+                var vertMinMax = value != null && scaleVector.ContainsKey(value) ? scaleVector[value] : scaleVector["bread"];
+                ModelScale = new float[] { (vertMinMax[1].X - vertMinMax[0].X) / 2, (vertMinMax[1].Y - vertMinMax[0].Y) / 2, (vertMinMax[1].Z - vertMinMax[0].Z) / 2 };
+            }
+        }
 
         /// <summary>
         /// Gets or set the lsit of euler angles to rotate this object.

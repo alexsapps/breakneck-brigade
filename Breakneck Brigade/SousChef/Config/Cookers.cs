@@ -20,6 +20,7 @@ namespace SousChef
         public float defaultRollingFriction;
         public float defaultRestitution;
         public float defaultAngularDamping;
+        public float defaultOrientation;
 
         protected override void handleAttributes()
         {
@@ -31,6 +32,7 @@ namespace SousChef
             defaultRollingFriction = float.Parse(attrib("defaultFriction"));
             defaultRestitution = float.Parse(attrib("defaultRestitution"));
             defaultAngularDamping = float.Parse(attrib("defaultAngularDamping"));
+            defaultOrientation = float.Parse(attrib("defaultOrientation"));
         }
     }
     public class CookerParser : BBXItemParser<CookerType>
@@ -65,7 +67,7 @@ namespace SousChef
             parseName(out name, out friendlyName);
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
+                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, fileParser.defaultOrientation, null
                 );
 
             return new CookerType(name, friendlyName, geomInfo, recipes);
