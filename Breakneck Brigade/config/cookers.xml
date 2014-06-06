@@ -7,7 +7,7 @@
     <recipe>sauce</recipe>
   </cooker>
 
-  <cooker name="oven" friendlyName="Oven" size="16,16,16" mass="9001.0">
+  <cooker name="oven" friendlyName="Stove" size="16,16,16" mass="9001.0">
     <recipe>chicken</recipe>
     <recipe>cake</recipe>
   </cooker>

@@ -381,7 +381,7 @@ namespace Breakneck_Brigade
 
                         lock (gameLock)
                         {
-                            lobbyState = new ClientLobbyState();
+                            //lobbyState = new ClientLobbyState();
                             lobbyState.Mode = GameMode.Init;
 
                             serverMessageHandlerLoopThread = new Thread(new ThreadStart(serverMessageHandlerLoop));
@@ -784,8 +784,8 @@ namespace Breakneck_Brigade
                                 case GameMode.Results:
                                     //winning team is lobbyState.WinningTeam
 
-                                    //Renderer.GameOverScore = Program.lobbyState.MyTeam.Score.ToString();
-                                    Renderer.GameOverScore = "0";
+                                    Renderer.GameOverScore = Program.lobbyState.MyTeam.Score.ToString();
+                                    //Renderer.GameOverScore = "0";
 
                                     if (lobbyState.IWin)
                                     {
@@ -977,6 +977,8 @@ namespace Breakneck_Brigade
 #endif
                                 string myTeam = r.ReadString();
                                 lobbyState.MyTeam = lobbyState.Teams[myTeam];
+                                if (lobbyState.MyTeam == null)
+                                    Debugger.Break();
                                 lobbyState.MaxScore = r.ReadInt32();
                                 lobbyState.MaxTime = new TimeSpan(r.ReadInt64());
                                 if (r.ReadBoolean())

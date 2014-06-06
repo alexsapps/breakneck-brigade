@@ -77,6 +77,7 @@ namespace DeCuisine
 
         public class HandInventory
         {
+            protected ServerPlayer player;
             private ServerGameObject _held;
             public ServerGameObject Held
             {
@@ -87,7 +88,10 @@ namespace DeCuisine
                 set
                 {
                     if (_held != null)
+                    {
                         _held.Removed -= Held_Removed;
+                        player.removeConstraint();
+                    }
                     _held = value;
                     if (_held != null)
                         _held.Removed += Held_Removed;
@@ -99,10 +103,11 @@ namespace DeCuisine
                 Debug.Assert(sender == Held);
                 Held = null;
             }
-           
-            public HandInventory(ServerGameObject toHold) 
+
+            public HandInventory(ServerGameObject toHold, ServerPlayer player) 
             {
                 this.Held = toHold;
+                this.player = player;
             }
         }
         public Dictionary<string,HandInventory> Hands;
@@ -116,7 +121,7 @@ namespace DeCuisine
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
             this.Hands = new Dictionary<string, HandInventory>();
-            HandInventory tmp = new HandInventory(null);
+            HandInventory tmp = new HandInventory(null, this);
             this.Hands.Add("left", tmp);
             this.dashTicks = 0; // don't start dashing
             this.canJump = true;
@@ -223,6 +228,13 @@ namespace DeCuisine
             Game.SendSound(BBSound.punchmiss, Position);
         }
 
+        protected void removeConstraint()
+        {
+            //this.Game.World.RemoveConstraint(spSlider1);
+            this.Game.World.RemoveConstraint(constraint);
+            constraint = null;
+        }
+
         /// <summary>
         /// Throw an object from the passed in hand
         /// </summary>
@@ -261,16 +273,16 @@ namespace DeCuisine
                 var held = _hand.Held;
 
                 // Throw object
-                //this.Game.World.RemoveConstraint(spSlider1);
-                this.Game.World.RemoveConstraint(constraint);
-                constraint = null;
+                
+                _hand.Held = null;
+
                 if(held.GeomInfo.Size[2] >= held.GeomInfo.Size[0])
                     held.Position = moveOutsideBody(this.GeomInfo.Size[0] + held.GeomInfo.Size[2]); // put the object outside our body before throwing
                 else
                     held.Position = moveOutsideBody(this.GeomInfo.Size[0] + held.GeomInfo.Size[0]); // put the object outside our body before throwing
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;
                 held.Body.AngularVelocity = Vector3.Zero;
-                _hand.Held = null;
+                
                 this.Game.SendSound(BBSound.punchmiss, Position);
                 this.MarkDirty();
             }
@@ -317,7 +329,7 @@ namespace DeCuisine
             constraint.LinearUpperLimit = new Vector3(0, 0, 0);
 
             this.Game.World.AddConstraint(constraint,true);
-            this.Hands["left"] = new HandInventory(obj); // book keeping to keep track
+            this.Hands["left"] = new HandInventory(obj, this); // book keeping to keep track
             obj.LastPlayerHolding = this;
             MarkDirty();
         }
