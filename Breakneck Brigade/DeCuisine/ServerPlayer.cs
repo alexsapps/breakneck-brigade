@@ -17,7 +17,7 @@ namespace DeCuisine
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
-        private const TimeSpan STUNTIME = new TimeSpan(0, 0, 0, 0, 50);
+        private readonly TimeSpan STUNTIME = new TimeSpan(0, 0, 0, 0, 50);
 
         //private const int STUNTIME = 300;
         private const float HOLDDISTANCE = 5.0f;
