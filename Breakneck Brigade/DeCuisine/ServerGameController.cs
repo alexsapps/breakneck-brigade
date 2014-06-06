@@ -25,7 +25,7 @@ namespace DeCuisine
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
         private int stageNum = 1;
         private ServerIngredient powerItem{get; set;}
-        private TimeSpan goalExpireTime = new TimeSpan(0,0,5);
+        private TimeSpan goalExpireTime = new TimeSpan(0,0,10);
 
 
 
@@ -399,6 +399,8 @@ namespace DeCuisine
             }
             team.Points += (int)(finalProduct.Type.DefaultPoints * (1 + complexity)); 
             finishedProdHash.Add(finalProduct, complexity);
+            if (complexity > 0)
+                Game.SendParticleEffect(BBParticleEffect.STARS, finalProduct.Position, 0, finalProduct.Id);
             this.Game.SendLobbyStateToAll(); // update client scores
         }
 
