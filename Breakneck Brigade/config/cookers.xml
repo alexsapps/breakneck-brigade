@@ -12,12 +12,12 @@
     <recipe>cake</recipe>
   </cooker>
 
- <cooker name="pot" friendlyName="Pot" size="18,9,18" mass="90001.0">
+ <cooker name="pot" friendlyName="Pot" size="18,9,20" mass="90001.0">
     <recipe>soup</recipe>
     <recipe>cookedPasta</recipe>
   </cooker>
 
-  <cooker name="pan" friendlyName="Pan" size="18,9,18" mass="90001.0">
+  <cooker name="pan" friendlyName="Pan" size="22,9,28" mass="90001.0">
     <recipe>cookedChicken</recipe>
     <recipe>cookedSteak</recipe>
     <recipe>hamburger</recipe>
