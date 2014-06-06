@@ -38,6 +38,8 @@ namespace SousChef
         edm,
         bootie,
         breakthetargets,
-        robotwars
+        robotwars,
+        frozen,
+        starcraft
     }
 }

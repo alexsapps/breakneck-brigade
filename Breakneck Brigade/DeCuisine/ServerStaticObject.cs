@@ -18,7 +18,7 @@ namespace DeCuisine
         public string Team { get; set; }
 
 
-        public static BBSound[] bgmusic = new BBSound[] { BBSound.soundtrack, BBSound.edm, BBSound.bootie, BBSound.breakthetargets, BBSound.robotwars};
+        public static BBSound[] bgmusic = new BBSound[] { BBSound.soundtrack, BBSound.edm, BBSound.bootie, BBSound.breakthetargets, BBSound.robotwars, BBSound.starcraft, BBSound.frozen};
         public static int currbgindex = 0;
 
         public static DateTime lastcollision = DateTime.Now;
