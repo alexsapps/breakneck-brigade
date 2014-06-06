@@ -55,11 +55,8 @@
   <recipe product="cakeBatter">
     <ingredient>flour</ingredient>
     <ingredient>milk</ingredient>
-    <ingredient>egg</ingredient>
-    <ingredient>egg</ingredient>
-    <ingredient>butter</ingredient>
-    <ingredient>butter</ingredient>
-    <ingredient>sugar</ingredient>
-    <ingredient>sugar</ingredient>
+    <ingredient count="2">egg</ingredient>
+    <ingredient count="2">butter</ingredient>
+    <ingredient count="2">sugar</ingredient>
   </recipe>
 </recipes>

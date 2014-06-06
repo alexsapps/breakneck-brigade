@@ -47,6 +47,7 @@ namespace DeCuisine
             this._contents = new Dictionary<int, ServerIngredient>();
             this.Team = team;
             AddToWorld(transform);
+            this.Team.HintHash.Add(this, new List<string>()); // add itself to the hint hash
         }
 
 
@@ -126,31 +127,32 @@ namespace DeCuisine
             else if (validRecipes.Count == 1)
             {
                 // Only one found, cook it.
-                int score = 0;
                 List<ServerIngredient> matching = new List<ServerIngredient>();
-                matching = calculateMatching(validRecipes[0], out score);
-                this.FinishCook(matching, score, validRecipes[0].FinalProduct);
+                double complexity = 0;
+                matching = calculateMatching(validRecipes[0], ref complexity);
+                this.FinishCook(matching, validRecipes[0].FinalProduct, complexity);
             }
             else
             {
                 List<ServerIngredient> toRemove = new List<ServerIngredient>(); // find the recipe that matches the most ingredients
                 int highestMatch = 0;
                 int bestRecIndx = 0;
-                int[] scores = new int[validRecipes.Count];
-
+                double bestComplexity = 0;
 
                 for(int x = 0; x < validRecipes.Count; x++)
                 {
-                    var matching = calculateMatching(validRecipes[x], out scores[x]);
+                    double tmpComplexity = 0;
+                    var matching = calculateMatching(validRecipes[x], ref tmpComplexity );
                     if(matching.Count > highestMatch)
                     {
                         bestRecIndx = x;
                         highestMatch = matching.Count;
                         toRemove = matching;
+                        bestComplexity = tmpComplexity;
                     }
                 }
                 if (toRemove != null)
-                    this.FinishCook(toRemove, scores[bestRecIndx], validRecipes[bestRecIndx].FinalProduct);
+                    this.FinishCook(toRemove, validRecipes[bestRecIndx].FinalProduct, bestComplexity);
                 else
                     throw new Exception("Some how we got here but here but I'm not sure how.");
             }
@@ -161,10 +163,10 @@ namespace DeCuisine
         /// <summary>
         /// return a list of matching ingredients in the current contents, returns the score
         /// </summary>
-        private List<ServerIngredient> calculateMatching(Recipe recipe, out int cookScore)
+        private List<ServerIngredient> calculateMatching(Recipe recipe, ref double complexity)
         {
+
             List<ServerIngredient> allMatching = new List<ServerIngredient>();
-            cookScore = 0;
             // Final scan of the recipe to add up all the points
             foreach (var recIng in recipe.Ingredients)
             {
@@ -172,8 +174,14 @@ namespace DeCuisine
                 matchingCont = this.ReturnContents(recIng, recIng.nCount + recIng.nOptional);
                 if (matchingCont != null)
                 {
+                    if(matchingCont.Count > recIng.nCount)
+                    {
+                        // optional ingredients added, add the complexity 
+                        if(recIng.nOptional != 0)
+                            // shoudl never be zero but it's good to be safe
+                            complexity = matchingCont.Count / recIng.nOptional;
+                    }
                     allMatching.AddRange(matchingCont);
-                    cookScore += recIng.CalculateScore(matchingCont.Count);
                 }
             }
             return allMatching;
@@ -183,22 +191,28 @@ namespace DeCuisine
         /// Finish the cook. Remove the consumed ingredients, add the score, and make the last 
         /// final product.
         /// </summary>
-        private void FinishCook(List<ServerIngredient> toRemove, int score, IngredientType finalProduct)
+        private void FinishCook(List<ServerIngredient> toRemove, IngredientType finalProduct, double complexity)
         {
-            // remove from game world
-            foreach(var ingredient in toRemove) 
-                ingredient.Remove();
+            this.Team.HintHash[this] = new List<string>(); // Clear the list in the hint hash
 
-            // score the mothafuckin thing
-            this.Team.Points += score;
-            this.Game.SendLobbyStateToAll(); // update client scores
             Vector3 ingredientSpawningPoint = new Vector3(this.Position.X, this.Position.Y + this.GeomInfo.Size[1] * 1.5f, this.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
             ServerIngredient newIngredient = new ServerIngredient(finalProduct, this.Game, ingredientSpawningPoint);
+
+            // Calculate the score and save the individual ingredients
+            this.Game.Controller.FinishCook(newIngredient, toRemove, complexity);
+
+            // remove from game world
+            foreach (var ingredient in toRemove)
+                ingredient.Remove();
+
+            // Shoot the object!
             Random rand = new Random();
             newIngredient.Body.ApplyImpulse(new Vector3(EJECTSPEED * (float)rand.NextDouble(), EJECTSPEED * (float)rand.NextDouble(), EJECTSPEED * (float)rand.NextDouble()), ingredientSpawningPoint);
             this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
             this.Game.SendSound(BBSound.trayhit1, this.Position);
             this.MarkDirty();
+
+
         }
 
         /// <summary>
@@ -324,24 +338,35 @@ namespace DeCuisine
         /// </summary>
         private void recomputeTintList()
         {
+            this.Team.HintHash[this] = new List<string>(); // erase the old list
+            //this.Game.Controller.
+            // recompute list.
             foreach (var ing in this.Contents.Values)
             {
-                foreach (var potentialRec in this.Type.RecipeHash[ing.Type.Name]) 
+                foreach (var potentialRec in this.Game.Controller.getGoalRecipeList()) 
                 {
+                    if (!this.Type.Recipes.ContainsValue(potentialRec))
+                        continue; // skip recipe if it doesn't belong to this cooker
                     foreach (var potentialIng in potentialRec.Ingredients)
                     {
                         bool skip = false;
+                        int numberAlreadyInCooker = 0; // keep track of more than one of the same objects. 
                         foreach(var ing2 in Contents.Values)
                         {
                             if (ing2.Type == potentialIng.Ingredient)
                             {
-                                skip = true;
-                                break; //don't tint if already in contents
+                                numberAlreadyInCooker++;
+                                // if the nessasary number is in the cooker, skip
+                                if (numberAlreadyInCooker == potentialIng.total)
+                                {
+                                    skip = true;
+                                    break; 
+                                }
                             }
                         }
                         if (!skip)
                         {
-                            this.Team.TintList.Add(potentialIng.Ingredient.Name);
+                            this.Team.HintHash[this].Add(potentialIng.Ingredient.Name);
                         }
                     }
                 }

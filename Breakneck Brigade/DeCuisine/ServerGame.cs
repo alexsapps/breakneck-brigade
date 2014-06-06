@@ -395,7 +395,7 @@ namespace DeCuisine
                             player.AttemptToCook();
                             break;
                         case ClientEventType.Hint:
-                            foreach(string objectName in client.Team.TintList)
+                            foreach(var objectName in client.Team.getTintList())
                             {
                                 foreach(ServerGameObject sgo in GameObjects.Values)
                                 {
@@ -731,7 +731,7 @@ namespace DeCuisine
         }
         private ServerTintListUpdateMessage computeTintListMessage(ServerTeam team)
         {
-            return new ServerTintListUpdateMessage() { Team = team.Name, TintList = team.TintList.ToList() };
+            return new ServerTintListUpdateMessage() { Team = team.Name, TintList = team.getTintList()};
         }
 
 

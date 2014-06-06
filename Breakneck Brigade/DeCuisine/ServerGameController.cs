@@ -14,14 +14,15 @@ namespace DeCuisine
         protected ServerGame Game { get; set; }
         public Dictionary<string, ServerTeam> Teams { get; set; }
         public List<Goal> Goals { get; set; }
-        public Dictionary<string,string> TintList { get; set; }
         public Dictionary<IngredientType, int> NeededHash { get; set; } // the dict of the number of ingredients needed to make the goals 
 
+        private Dictionary<ServerIngredient, double> finishedProducts; // Hash that holds the currently finished product in the game world
         private int ticks; //server ticks, not time ticks
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
         private string[] defaultTeams = new string[]{"blue", "red"}; //Add more team names for more teams
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
+        private int stageNum = 1;
 
 
         private Dictionary<GameControllerStage, int> numOfGoalsByState; // dictionary conaining the number of goals
@@ -52,11 +53,13 @@ namespace DeCuisine
         {
             CurrentGameState = (GameControllerState)((int)CurrentGameState + 1);
             // advanced to next stage if we aren't at the end
-            if (CurrentGameState == GameControllerState.End && CurrentStage != GameControllerStage.Stage3)
+            if (CurrentGameState == GameControllerState.End) // && CurrentStage != GameControllerStage.Stage3)
             {
-                CurrentStage = (GameControllerStage)((int)CurrentStage + 1);
-                CurrentGameState = GameControllerState.Start;
-                FillGoals();
+                // CurrentStage = (GameControllerStage)((int)CurrentStage + 1);
+                this.CurrentGameState = GameControllerState.Start;
+                // FillGoals();
+                this.FillGoals(stageNum, 0);
+                this.stageNum++;
                 this.ticks = 0;
             }
         }
@@ -73,26 +76,37 @@ namespace DeCuisine
         private bool _goalsDirty = false;
 
         public int ScoreToWin = 20000000;
-        public long MaxTime = new TimeSpan(0,15,0).Ticks;
+        public long MaxTime = new TimeSpan(0,5,0).Ticks;
 
         public ServerGameController(ServerGame game)
         {
             this.Game = game;
-            this.SpawnTick = 30 * SECONDSTOSPAWN;//game.FrameRateMilliseconds * SECONDSTOSPAWN; FrameRate not set, TODO:
-            this.Teams = new Dictionary<string, ServerTeam>();
-            foreach (string teamName in this.defaultTeams)
-            {
-                this.Teams.Add(teamName, new ServerTeam(teamName,teamSpawn ));
-                teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams.
-            }
-            this.Goals = new List<Goal>();
-            this.NeededHash = new Dictionary<IngredientType, int>();
+            finishedProducts = new Dictionary<ServerIngredient, double>();
             this.numOfGoalsByState = new Dictionary<GameControllerStage,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
             this.numOfGoalsByState.Add(GameControllerStage.Stage1, 1);
             this.numOfGoalsByState.Add(GameControllerStage.Stage2, 2);
             this.numOfGoalsByState.Add(GameControllerStage.Stage3, 3);
+            this.ResetGame();
+        }
+
+        /// <summary>
+        /// Initializes everything for the game.
+        /// </summary>
+        private void ResetGame()
+        {
+            this.SpawnTick = 30 * SECONDSTOSPAWN;//game.FrameRateMilliseconds * SECONDSTOSPAWN; FrameRate not set, TODO:
+            this.Teams = new Dictionary<string, ServerTeam>();
+            foreach (string teamName in this.defaultTeams)
+            {
+                this.Teams.Add(teamName, new ServerTeam(teamName, teamSpawn));
+                teamSpawn.X *= -1; // the idea is that each team spawns at opposite ends. Only works cause we have 2 teams.
+            }
+            this.Goals = new List<Goal>();
+            this.NeededHash = new Dictionary<IngredientType, int>();
             this.ticks = 0;
+            this.stageNum = 1;
+            this.MaxTime = new TimeSpan(0, 5, 0).Ticks;
         }
 
         private void FillGoals()
@@ -106,6 +120,11 @@ namespace DeCuisine
         }
 
 
+        /// <summary>
+        /// Get the list of goals needed for the round.
+        /// </summary>
+        /// <param name="numOfGoals"></param>
+        /// <param name="complexity"></param>
         private void FillGoals(int numOfGoals, int complexity)
         {
 #if !PROJECT_WORLD_BUILDING
@@ -328,6 +347,35 @@ namespace DeCuisine
             }
         }
 
+
+        /// <summary>
+        /// Function to add the cooked objects ingredients to keep track of the items
+        /// that went into the ingredient. Should only be called after a cook event.
+        /// </summary>
+        /// <param name="finalProduct">The product you made</param>
+        /// <param name="components">All of the ingredients that made the Product.</param>
+        public void FinishCook(ServerIngredient finalProduct, List<ServerIngredient> components, double complexity)
+        {
+            List<IngredientType> tmpList = new List<IngredientType>();
+            foreach (var comp in components)
+            {
+                tmpList.Add(comp.Type);
+            }
+
+            finishedProducts.Add(finalProduct, complexity);
+            this.Game.SendLobbyStateToAll(); // update client scores
+        }
+
+        /// <summary>
+        /// Power up a already made ingredient with a booster ingredient.
+        /// </summary>
+        /// <param name="ingToPowerUp"></param>
+        /// <param name="powerUpIng"></param>
+        public void PowerUp(ServerIngredient ingToPowerUp, ServerIngredient powerUpIng)
+        {
+
+        }
+
         public bool CheckWin()
         {
 #if PROJECT_WORLD_BUILDING
@@ -345,7 +393,7 @@ namespace DeCuisine
                 }
             }
 
-            if (maxTeams[0].Points >= this.ScoreToWin || DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime)
+            if (DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime) //maxTeams[0].Points >= this.ScoreToWin || 
             {
                 if (maxTeams.Count == 1)
                     Game.Winner = maxTeams[0];
@@ -477,6 +525,40 @@ namespace DeCuisine
             }
             return vel;
         }
+
+        /// <summary>
+        /// Return all the recipe for the current goals.
+        /// </summary>
+        /// <param name="team"></param>
+        public List<Recipe> getGoalRecipeList()
+        {
+            List<Recipe> tmpRecipes = new List<Recipe>();
+
+            foreach (Goal goal in this.Goals)
+            {
+                tmpRecipes.AddRange(recurseDownRecipe(goal.EndGoal));
+            }
+            return tmpRecipes;
+        }
+
+        /// <summary>
+        /// Recurses down the recipe list to add only inermidiate steps
+        /// </summary>
+        /// <param name="rec"></param>
+        /// <returns></returns>
+        List<Recipe> recurseDownRecipe(Recipe rec)
+        {
+            List<Recipe> recList = new List<Recipe>();
+            recList.Add(rec); // add the current recipe
+            foreach (var ingredientType in rec.Ingredients)
+            {
+                if(this.Game.Config.Recipes.ContainsKey(ingredientType.Ingredient.Name))
+                    recList.AddRange(recurseDownRecipe(this.Game.Config.Recipes[ingredientType.Ingredient.Name]));
+            }
+            return recList;
+        }
+
+
 
         /// <summary>
         /// Class which facilitates choosing items randomly based on their weights.

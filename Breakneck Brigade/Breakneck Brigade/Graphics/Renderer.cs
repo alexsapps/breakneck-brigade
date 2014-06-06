@@ -475,10 +475,22 @@ namespace Breakneck_Brigade.Graphics
             Renderer.enableTransparency();
             //Models[BLANKQUAD_MODEL_NAME].Render();
             this.DrawGoals(5, padding);
-            this.DrawHeld(500, 30);
+            this.DrawHeld((WindowWidth / 2) + 15, (WindowHeight / 2) - 10);
+
+            int xPos = 5, yPos = 600;
+            /*
+            TextRenderer.printToScreen(xPos, yPos, "COOKBOOK", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "R-F to flip forward-back", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "Red is intermediate item.", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+            TextRenderer.printToScreen(xPos, yPos, "--------------------", FONT_SCALE, FONT_SCALE);
+            yPos -= (spacing + padding);
+             */
             if (player != null)
             {
-                this.DrawRecipe(player.SelectedRecipe, 5, 500);
+                this.DrawRecipe(Program.game.SelectedRecipe, xPos, yPos);
             }
 
             this.DrawTime((int)WindowWidth / 2, (int)WindowHeight - 20);
@@ -503,9 +515,12 @@ namespace Breakneck_Brigade.Graphics
                         width = it.DefaultPoints.ToString().Length;
                 foreach (IngredientType it in goalCache)
                 {
+                    Gl.glColor3f(0, 1, 0);
                     TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, FONT_SCALE, FONT_SCALE);
                     yPos += spacing + padding;
                 }
+
+                Gl.glColor3f(1, 1, 1);
                 TextRenderer.printToScreen(xPos, yPos, "\"Make these items!\"", FONT_SCALE, FONT_SCALE);
                 yPos += spacing + padding;
                 TextRenderer.printToScreen(xPos, yPos, "The master chef sez", FONT_SCALE, FONT_SCALE);
@@ -516,14 +531,36 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null && Program.game.LiveGameObjects != null)
             {
-                string lookingAt;
+                //string lookingAt;
 #if PROJECT_WORLD_BUILDING
                 string info = "";
 #endif
                 if (Program.game.LiveGameObjects.ContainsKey(Program.game.LookatId))
                 {
                     ClientGameObject lookedAtObject = Program.game.LiveGameObjects[Program.game.LookatId];
-                    lookingAt = lookedAtObject.ModelName;
+                    if (lookedAtObject is ClientCooker)
+                    {
+                        ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
+                        TextRenderer.printToScreen(xPos, yPos, lookedAtCooker.Type.FriendlyName + " (" + lookedAtCooker.Team.Name + ")", FONT_SCALE, FONT_SCALE);
+                        yPos -= (spacing + padding);
+                        TextRenderer.printToScreen(xPos, yPos, "Contains: ", FONT_SCALE, FONT_SCALE);
+                        yPos -= (spacing + padding);
+                        foreach (ClientIngredient ingredient in lookedAtCooker.Contents)
+                        {
+                            TextRenderer.printToScreen(xPos, yPos, "- " + ingredient.Type.FriendlyName, FONT_SCALE, FONT_SCALE);
+                            yPos -= (spacing + padding);
+                        }
+                    }
+                    else if (lookedAtObject is ClientIngredient)
+                    {
+                        ClientIngredient lookedAtIngredient = (ClientIngredient)lookedAtObject;
+                        TextRenderer.printToScreen(xPos, yPos, lookedAtIngredient.Type.FriendlyName, FONT_SCALE, FONT_SCALE);
+                    }
+                }
+            }
+        }
+                    /*
+                    TextRenderer.printToScreen(xPos, yPos, lookedAtObject, FONT_SCALE, FONT_SCALE);
 #if PROJECT_WORLD_BUILDING
                     // append id if we are building the world
                     lookingAt += " " + Program.game.LookatId +
@@ -561,9 +598,7 @@ namespace Breakneck_Brigade.Graphics
 #else
                 TextRenderer.printToScreen(xPos, yPos, "Looking at: " + lookingAt, FONT_SCALE, FONT_SCALE);
 #endif
-                
-            }
-        }
+                */
 
         /// <summary>
         /// Draws the timer
@@ -612,12 +647,20 @@ namespace Breakneck_Brigade.Graphics
         /// <param name="yPos"></param>
         private void DrawRecipe(Recipe selectedRecipe, int xPos, int yPos)
         {
-            int padding = 5;
-            int spacing = 10;
             if (selectedRecipe != null)
             {
+                if (Program.game.Goals.Contains(selectedRecipe.FinalProduct))
+                {
+                    Gl.glColor3f(0, 1, 0);
+                }
+                else
+                {
+                    Gl.glColor3f(1, 0, 0);
+                }
+
                 TextRenderer.printToScreen(xPos, yPos, selectedRecipe.FriendlyName, FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
+                Gl.glColor3f(1, 1, 1);
                 TextRenderer.printToScreen(xPos, yPos, "----------", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
                 TextRenderer.printToScreen(xPos, yPos, "USABLE COOKERS:", FONT_SCALE, FONT_SCALE);
@@ -636,11 +679,21 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for( int i = 0; i < ingredient.nCount; i++)
                     {
+                        if (Program.game.Config.Recipes.ContainsKey(ingredient.Ingredient.Name))
+                        {
+                            Gl.glColor3f(1, 0, 0);
+                        }
+                        else
+                        {
+                            Gl.glColor3f(1, 1, 1);
+                        }
+
                         DrawRecipe_PrintIngredient(xPos, yPos, ingredient);
                         yPos -= (spacing + padding);
                     }
                 }
 
+                Gl.glColor3f(1, 1, 1);
                 TextRenderer.printToScreen(xPos, yPos, "----------", FONT_SCALE, FONT_SCALE);
                 yPos -= (spacing + padding);
                 TextRenderer.printToScreen(xPos, yPos, "OPTIONAL:", FONT_SCALE, FONT_SCALE);
@@ -649,11 +702,22 @@ namespace Breakneck_Brigade.Graphics
                 {
                     for (int i = 0; i < ingredient.nOptional; i++)
                     {
+                        if (Program.game.Config.Recipes.ContainsKey(ingredient.Ingredient.Name))
+                        {
+                            Gl.glColor3f(1, 0, 0);
+                        }
+                        else
+                        {
+                            Gl.glColor3f(1, 1, 1);
+                        }
+
                         DrawRecipe_PrintIngredient(xPos, yPos, ingredient);
                         yPos -= (spacing + padding);
                     }
                 }
             }
+
+            Gl.glColor3f(1, 1, 1);
         }
 
         private static void DrawRecipe_PrintIngredient(int xPos, int yPos, RecipeIngredient ingredient)
