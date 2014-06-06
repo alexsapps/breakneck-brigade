@@ -473,16 +473,6 @@ namespace Breakneck_Brigade.Graphics
 
         private void Render2D(LocalPlayer player)
         {
-            /*
-            Gl.glPushMatrix();
-            Gl.glBegin(Gl.GL_QUADS);
-                Gl.glVertex3f(-.50f, .50f, 0.0f);
-                Gl.glVertex3f(-.50f, -.50f, 0.0f);
-                Gl.glVertex3f(.50f, -.50f, 0.0f);
-                Gl.glVertex3f(.50f, .50f, 0.0f);
-            Gl.glEnd();
-            Gl.glPopMatrix();
-             */
             Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
             Models[CROSSHAIR_MODEL_NAME].Render();
             Renderer.enableTransparency();
@@ -492,21 +482,11 @@ namespace Breakneck_Brigade.Graphics
                 DrawResults();
                 return;
             }
-            //Models[BLANKQUAD_MODEL_NAME].Render();
             this.DrawGoals(5, padding);
             this.DrawHeld((WindowWidth / 2) + 15, (WindowHeight / 2) - 10);
 
             int xPos = 5, yPos = 600;
-            /*
-            TextRenderer.printToScreen(xPos, yPos, "COOKBOOK", FONT_SCALE, FONT_SCALE);
-            yPos -= (spacing + padding);
-            TextRenderer.printToScreen(xPos, yPos, "R-F to flip forward-back", FONT_SCALE, FONT_SCALE);
-            yPos -= (spacing + padding);
-            TextRenderer.printToScreen(xPos, yPos, "Red is intermediate item.", FONT_SCALE, FONT_SCALE);
-            yPos -= (spacing + padding);
-            TextRenderer.printToScreen(xPos, yPos, "--------------------", FONT_SCALE, FONT_SCALE);
-            yPos -= (spacing + padding);
-             */
+            
             if (player != null)
             {
                 this.DrawRecipe(Program.game.SelectedRecipe, xPos, yPos);
@@ -515,10 +495,7 @@ namespace Breakneck_Brigade.Graphics
             this.DrawTime((int)WindowWidth / 2, (int)WindowHeight - 20);
             this.DrawScores(5, (int)WindowHeight - 20);
 
-
-            Renderer.disableTransparency();
-            //Models["iceCream"].Render();
-
+            Renderer.disableTransparency();         
             Gl.glPopAttrib();
         }
 
