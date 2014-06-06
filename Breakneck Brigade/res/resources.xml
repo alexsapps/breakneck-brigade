@@ -54,6 +54,9 @@ filename: 	the name of the texture. Note: all files associated
     <texture>
       <filename>smokeYellow</filename>
     </texture>
+	<texture>
+      <filename>chefRed</filename>
+    </texture>
 
   </textures>
 
