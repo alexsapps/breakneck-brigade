@@ -1,4 +1,4 @@
-<ingredients defaultSize="4,4,4" defaultMass="5.0" defaultFriction="5.0" defaultRollingFriction="0.9" defaultRestitution="0.5" defaultAngularDamping=".4">
+<ingredients defaultSize="4,4,4" defaultMass="5.0" defaultFriction="5.0" defaultRollingFriction="0.9" defaultRestitution="0.5" defaultAngularDamping=".4" defaultOrientation="0.0">
 
   <!--  default shape is box -->
 

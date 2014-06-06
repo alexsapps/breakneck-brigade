@@ -1,4 +1,4 @@
-<cookers defaultSize="8,8,8" defaultMass="30.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.1" defaultAngularDamping=".999">
+<cookers defaultSize="8,8,8" defaultMass="30.0" defaultFriction="5.0" defaultRollingFriction="2.0" defaultRestitution="0.1" defaultAngularDamping=".999" defaultOrientation="0.0">
   <!--  default shape is box -->
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->

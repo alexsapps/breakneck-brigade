@@ -194,7 +194,10 @@ namespace DeCuisine
 
         protected override ServerCooker returnItem()
         {
-            return new ServerCooker(serverGame.Config.Cookers[attributes["type"]], serverGame.Controller.Teams[attributes["team"]],  serverGame, getCoordinateAttrib());
+            var cookerType = serverGame.Config.Cookers[attributes["type"]];
+            GeometryInfo typeGeom = cookerType.GeomInfo;
+            var geomInfo = getGeomInfo(attributes, typeGeom.Size, typeGeom.Mass, typeGeom.Friction, typeGeom.RollingFriction, typeGeom.Restitution, typeGeom.AngularDamping, typeGeom.Orientation, typeGeom.Model);
+            return new ServerCooker(cookerType, serverGame.Controller.Teams[attributes["team"]],  serverGame, getCoordinateAttrib(), geomInfo);
         }
     }
 
@@ -212,7 +215,7 @@ namespace DeCuisine
             var type = serverGame.Config.Terrains[name];
 
             var position = getCoordinateAttrib();
-            var geomInfo = getGeomInfo(attributes, type.GeomInfo.Size, type.GeomInfo.Mass, type.GeomInfo.Friction, type.GeomInfo.RollingFriction, type.GeomInfo.Restitution, type.GeomInfo.AngularDamping, type.Name);
+            var geomInfo = getGeomInfo(attributes, type.GeomInfo.Size, type.GeomInfo.Mass, type.GeomInfo.Friction, type.GeomInfo.RollingFriction, type.GeomInfo.Restitution, type.GeomInfo.AngularDamping, type.GeomInfo.Orientation, type.Name);
             serverPlane = new ServerTerrain(serverGame, type, position, geomInfo);
         }
         protected override void reset()
@@ -237,7 +240,7 @@ namespace DeCuisine
         protected override void HandleAttributes()
         {
             var position = getCoordinateAttrib("coordinate");
-            var geomInfo = getGeomInfo(attributes, new float[] {5, 5, 5}, 10000, 5, 5, 0, .999f, null);
+            var geomInfo = getGeomInfo(attributes, new float[] {5, 5, 5}, 10000, 5, 5, 0, .999f, 0.0f, null);
             string friendlyName = null;
             attributes.TryGetValue("friendlyName", out friendlyName);
             serverStatic = new ServerStaticObject(serverGame, geomInfo, attributes["model"], friendlyName, position);
