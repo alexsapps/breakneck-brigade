@@ -17,7 +17,9 @@ namespace DeCuisine
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
-        private const int STUNTIME = 300;
+        private const TimeSpan STUNTIME = new TimeSpan(0, 0, 0, 0, 50);
+
+        //private const int STUNTIME = 300;
         private const float HOLDDISTANCE = 5.0f;
         private const float MAXVELOCITY = 380f;
 #if PROJECT_WORLD_BUILDING
@@ -31,8 +33,9 @@ namespace DeCuisine
 #else
         private const int DASHTIME = 5; // seconds * 30. 
 #endif
+        private TimeSpan lastStunned = DateTime.Now.TimeOfDay;
+        private bool isStunned = false;
         private int dashTicks { get; set; }
-        private int stunTicks { get; set; }
         private int dashCool { get; set; }
         public ServerTeam Team { get; set; }
         public string Name { get; set; }
@@ -109,7 +112,6 @@ namespace DeCuisine
         {
             base.AddToWorld(position);
             this.EyeHeight = 8.0f;
-            this.stunTicks = 0;
             this.constraint = null;
             this.Body.AngularFactor = new Vector3(0, 0, 0);
             this.Client = client;
@@ -119,7 +121,6 @@ namespace DeCuisine
             this.Hands.Add("right", tmp);
             this.Team = null;
             this.dashTicks = 0; // don't start dashing
-            this.stunTicks = 0;
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -162,7 +163,7 @@ namespace DeCuisine
         /// </summary>
         public void Move(Vector3 vel)
         {
-            if (this.dashTicks > 0 || this.stunTicks > 0)
+            if (this.dashTicks > 0 || this.isStunned)
                 return;
 
             /*
@@ -204,7 +205,7 @@ namespace DeCuisine
         /// </summary>
         public void Dash()
         {
-            if (this.dashCool > 0 || this.stunTicks > 0)
+            if (this.dashCool > 0 || this.isStunned)
                 return;
             this.dashTicks = DASHTIME;
             SousChef.Vector4 imp = new SousChef.Vector4(0.0f, 0.0f, -1.0f);
@@ -233,7 +234,7 @@ namespace DeCuisine
 #endif
             float orientation = this.Orientation;
             float incline = this.Incline;
-            if (this.stunTicks > 0)
+            if (this.isStunned)
                 return;
             
             if (this.Hands[hand].Held == null && this.LookingAt != null && 
@@ -280,7 +281,8 @@ namespace DeCuisine
         public void Stun()
         {
             this.Throw("left", 0.0f); // Drop object in front of player.
-            this.stunTicks = STUNTIME;
+            this.lastStunned = DateTime.Now.TimeOfDay;
+            this.isStunned = true;
             Game.SendParticleEffect(BBParticleEffect.SPARKS, this.Position, 0, this.Id);
         }
 
@@ -290,12 +292,12 @@ namespace DeCuisine
         /// <returns></returns>
         public bool IsStunned()
         {
-            return (this.stunTicks > 0) ? true : false;
+            return this.isStunned;
         }
 
         private void PickUpObject(ServerIngredient obj)
         {
-            if (this.stunTicks > 0)
+            if (this.isStunned)
                 return;
 
             Game.SendSound(BBSound.bodyfall1, Position);
@@ -320,7 +322,7 @@ namespace DeCuisine
         /// </summary>
         public void AttemptToEjectCooker()
         {
-            if (this.stunTicks > 0)
+            if (this.isStunned)
                 return;
 
             if(this.LookingAt != null && this.LookingAt.ObjectClass == GameObjectClass.Cooker)
@@ -347,7 +349,7 @@ namespace DeCuisine
         /// </summary>
         public void Jump()
         {
-            if (this.stunTicks > 0)
+            if (this.isStunned)
                 return;
 
             if (this.canJump || Game.MultiJump)
@@ -447,8 +449,8 @@ namespace DeCuisine
             if (this.dashCool > 0)
                 this.dashCool--;
 
-            if (this.stunTicks > 0)
-                this.stunTicks--;
+            if (DateTime.Now.TimeOfDay - this.lastStunned > STUNTIME)
+                this.isStunned = true;
 
         }
 
