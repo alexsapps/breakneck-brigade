@@ -23,6 +23,7 @@ namespace DeCuisine
         private string[] defaultTeams = new string[]{"blue", "red"}; //Add more team names for more teams
         private Vector3 teamSpawn = new Vector3(400, 20, 0);
         private int stageNum = 1;
+        private ServerIngredient powerItem{get; set;}
 
 
         private Dictionary<GameControllerStage, int> numOfGoalsByState; // dictionary conaining the number of goals
@@ -88,6 +89,7 @@ namespace DeCuisine
             this.numOfGoalsByState.Add(GameControllerStage.Stage2, 2);
             this.numOfGoalsByState.Add(GameControllerStage.Stage3, 3);
             this.ResetGame();
+            this.powerItem = null;
         }
 
         /// <summary>
@@ -284,13 +286,9 @@ namespace DeCuisine
         {
             ServerTeam team;
             if (Teams.TryGetValue(teamName, out team))
-            {
                 AssignTeam(client, team);
-            }
             else
-            {
                 throw new Exception("How the hell did we allow them to pick a team that doesn't exist?");
-            }
         }
 
         public void AssignTeam(Client client, ServerTeam team)
@@ -323,7 +321,8 @@ namespace DeCuisine
                     if (ing.LastPlayerHolding != null)
                     {
                         Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position, 0, ing.LastPlayerHolding.Id);
-                        ing.LastPlayerHolding.Client.Team.Points += ((Goal)goal).Points;
+                        double complexity = 0;
+                        ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity));
                         ing.Remove();
                         MarkLobbyStateDirty();
                         goalToRemove = goal;
@@ -369,16 +368,6 @@ namespace DeCuisine
             team.Points += (int)(finalProduct.Type.DefaultPoints * (1 + complexity)); 
             finishedProdHash.Add(finalProduct, complexity);
             this.Game.SendLobbyStateToAll(); // update client scores
-        }
-
-        /// <summary>
-        /// Power up a already made ingredient with a booster ingredient.
-        /// </summary>
-        /// <param name="ingToPowerUp"></param>
-        /// <param name="powerUpIng"></param>
-        public void PowerUp(ServerIngredient ingToPowerUp, ServerIngredient powerUpIng)
-        {
-
         }
 
         public bool CheckWin()
@@ -515,9 +504,9 @@ namespace DeCuisine
         private Vector3 randomVelocity(int max)
         {
             // Some weird logic to get a random large negative and positive number
-            float[] xVel = new float[3]{DC.random.Next(max / 2, max),  DC.random.Next(-max, -(max / 2)), 0};
+            float[] xVel = new float[3]{DC.random.Next(0, max),  DC.random.Next(-max, -(max)), 0};
             //float yVel = DC.random.Next(max, max*4/3);
-            float[] zVel = new float[3]{ DC.random.Next(max / 2, max), DC.random.Next(-max, -(max / 2)), 0, };
+            float[] zVel = new float[3]{ DC.random.Next( 0, max), DC.random.Next(-max, -(max)), 0, };
             
             Vector3 vel = new Vector3(xVel[DC.random.Next(0, 3)], 0, zVel[DC.random.Next(0, 3)]);
             if(vel.X == 0 && vel.Y == 0)
@@ -567,7 +556,45 @@ namespace DeCuisine
             return recList;
         }
 
+        /// <summary>
+        /// Power up an ingredient
+        /// </summary>
+        public void powerUpItem(ServerIngredient powUpIng, ServerStaticObject powerWindow)
+        {
+            double tmp;
+            if(powUpIng.Type.powerUp == 0)
+            {
+                if(!this.finishedProdHash.TryGetValue(powUpIng, out tmp)) 
+                    return; // not a finished product, can't power it up
+                if (powUpIng == this.powerItem)
+                    return;
+                this.powerItem = powUpIng;
+                powUpIng.ToRender = false; // hide the object
+                powUpIng.Removed += ingredient_Removed;
+            }
+            else
+            {
+                if (this.powerItem == null)
+                    return; // need the power item first.
+                Vector3 ingredientSpawningPoint = new Vector3(powerWindow.Position.X, powerWindow.Position.Y + powerWindow.GeomInfo.Size[1], powerWindow.Position.Z); // spawn above cooker for now TODO: Logically spawn depeding on cooker
+                powerItem.Body.ApplyImpulse(new Vector3(0, 300, 0), ingredientSpawningPoint);
+                powerItem.ToRender = true;
+                if (!this.finishedProdHash.TryGetValue(powerItem, out tmp))
+                    throw new Exception("Something is wrong with the powering up items"); // not a finished product, can't power it up
+                this.finishedProdHash[powerItem] += powUpIng.Type.powerUp;
+                Game.SendParticleEffect(BBParticleEffect.STARS, powerItem.Position, 0, powerItem.Id);
+                powUpIng.Remove();
+            }
+        }
 
+        // happens when an ingredient is removed from the world
+        private void ingredient_Removed(object sender, EventArgs e)
+        {
+            var ingredient = ((ServerIngredient)sender);
+            if (this.powerItem == ingredient)
+                this.powerItem = null;
+            ingredient.Removed -= ingredient_Removed;
+        }
 
         /// <summary>
         /// Class which facilitates choosing items randomly based on their weights.

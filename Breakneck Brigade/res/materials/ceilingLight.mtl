@@ -1,52 +1,72 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 05.06.2014 15:13:29
+# File Created: 06.06.2014 01:21:17
 
-newmtl wire_087225143
-	Ns 32
-	d 1
-	Tr 0
-	Tf 1 1 1
+newmtl Material__3
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.3412 0.8824 0.5608
-	Kd 0.3412 0.8824 0.5608
-	Ks 0.3500 0.3500 0.3500
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka chrome.tga
+	map_Kd chrome.tga
 
-newmtl wire_153228214
-	Ns 32
-	d 1
-	Tr 0
-	Tf 1 1 1
+newmtl Material__5
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.6000 0.8941 0.8392
-	Kd 0.6000 0.8941 0.8392
-	Ks 0.3500 0.3500 0.3500
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka bs.tga
+	map_Kd bs.tga
 
-newmtl wire_006135006
-	Ns 32
-	d 1
-	Tr 0
-	Tf 1 1 1
+newmtl Material__6
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0235 0.5294 0.0235
-	Kd 0.0235 0.5294 0.0235
-	Ks 0.3500 0.3500 0.3500
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka butter.tga
+	map_Kd butter.tga
 
-newmtl wire_006135113
-	Ns 32
-	d 1
-	Tr 0
-	Tf 1 1 1
+newmtl Material__4
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0235 0.5294 0.4431
-	Kd 0.0235 0.5294 0.4431
-	Ks 0.3500 0.3500 0.3500
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka colBlack.tga
+	map_Kd colBlack.tga
 
-newmtl wire_135006006
-	Ns 32
-	d 1
-	Tr 0
-	Tf 1 1 1
+newmtl Material__2
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.5294 0.0235 0.0235
-	Kd 0.5294 0.0235 0.0235
-	Ks 0.3500 0.3500 0.3500
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka defaultMetal.tga
+	map_Kd defaultMetal.tga

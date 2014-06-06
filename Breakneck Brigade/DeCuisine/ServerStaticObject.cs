@@ -66,6 +66,11 @@ namespace DeCuisine
                     this.Game.SendSound(BBSound.eatfood, this.Position);
                 }
             }
+            // hacky...
+            if (this.FriendlyName == "Power Up Window" && obj.ObjectClass == GameObjectClass.Ingredient)
+            {
+                this.Game.Controller.powerUpItem((ServerIngredient)obj, this);
+            }
         }
     }
 }
