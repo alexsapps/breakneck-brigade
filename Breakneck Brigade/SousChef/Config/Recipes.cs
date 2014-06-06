@@ -52,8 +52,14 @@ namespace SousChef
                 name = finalProductName;
                 friendlyName = friendlyName ?? finalProduct.FriendlyName;
             }
-            
-            return new Recipe(name, friendlyName, ingredients, finalProduct);
+            bool intermidiate = false;
+            string inter;
+            if (attributes.TryGetValue("intermediate", out inter))
+            {
+                if (inter == "true")
+                    intermidiate = true;
+            }
+            return new Recipe(name, friendlyName, ingredients, finalProduct, intermidiate);
         }
 
         protected override void reset()

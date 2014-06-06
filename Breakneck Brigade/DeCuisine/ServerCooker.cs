@@ -177,9 +177,13 @@ namespace DeCuisine
                     if(matchingCont.Count > recIng.nCount)
                     {
                         // optional ingredients added, add the complexity 
-                        if(recIng.nOptional != 0)
-                            // shoudl never be zero but it's good to be safe
-                            complexity = matchingCont.Count / recIng.nOptional;
+                        if (recIng.nOptional != 0)
+                        {
+                            int numOverNCount = matchingCont.Count - recIng.nCount;
+                            complexity += numOverNCount * ((double)recIng.Ingredient.DefaultPoints / 300.0);
+                        }
+                            // should never be zero but it's good to be safe
+
                     }
                     allMatching.AddRange(matchingCont);
                 }
@@ -199,7 +203,7 @@ namespace DeCuisine
             ServerIngredient newIngredient = new ServerIngredient(finalProduct, this.Game, ingredientSpawningPoint);
 
             // Calculate the score and save the individual ingredients
-            this.Game.Controller.FinishCook(newIngredient, toRemove, complexity);
+            this.Game.Controller.FinishCook(newIngredient, toRemove, complexity, this.Team);
 
             // remove from game world
             foreach (var ingredient in toRemove)

@@ -16,7 +16,7 @@ namespace DeCuisine
         public List<Goal> Goals { get; set; }
         public Dictionary<IngredientType, int> NeededHash { get; set; } // the dict of the number of ingredients needed to make the goals 
 
-        private Dictionary<ServerIngredient, double> finishedProducts; // Hash that holds the currently finished product in the game world
+        private Dictionary<ServerIngredient, double> finishedProdHash; // Hash that holds the currently finished product in the game world
         private int ticks; //server ticks, not time ticks
         public int SpawnTick;
         private int SECONDSTOSPAWN = 1;
@@ -81,7 +81,7 @@ namespace DeCuisine
         public ServerGameController(ServerGame game)
         {
             this.Game = game;
-            finishedProducts = new Dictionary<ServerIngredient, double>();
+            finishedProdHash = new Dictionary<ServerIngredient, double>();
             this.numOfGoalsByState = new Dictionary<GameControllerStage,int>();
             // TODO: read this from a file. For now we need gameplay. Also why can't I map a enum?
             this.numOfGoalsByState.Add(GameControllerStage.Stage1, 1);
@@ -132,6 +132,9 @@ namespace DeCuisine
             {
                 // Grab random recipe
                 var tmpRec = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
+                // don't pick intermediate ingredients as goals
+                while(tmpRec.intermediate)
+                    tmpRec = this.Game.Config.Recipes.ElementAt(DC.random.Next(0, numOfRecipes)).Value;
                 // loop over ingredients and add them to the needed hash
                 foreach (var ing in tmpRec.Ingredients)
                 {
@@ -353,15 +356,20 @@ namespace DeCuisine
         /// </summary>
         /// <param name="finalProduct">The product you made</param>
         /// <param name="components">All of the ingredients that made the Product.</param>
-        public void FinishCook(ServerIngredient finalProduct, List<ServerIngredient> components, double complexity)
+        public void FinishCook(ServerIngredient finalProduct, List<ServerIngredient> components, double complexity, ServerTeam team)
         {
             List<IngredientType> tmpList = new List<IngredientType>();
             foreach (var comp in components)
             {
-                tmpList.Add(comp.Type);
+                if (finishedProdHash.ContainsKey(comp))
+                {
+                    // you used the finished product so remove it.
+                    complexity += finishedProdHash[comp];
+                    finishedProdHash.Remove(comp);
+                }
             }
-
-            finishedProducts.Add(finalProduct, complexity);
+            team.Points += (int)(finalProduct.Type.DefaultPoints * (1 + complexity)); 
+            finishedProdHash.Add(finalProduct, complexity);
             this.Game.SendLobbyStateToAll(); // update client scores
         }
 
