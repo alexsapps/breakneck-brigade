@@ -33,21 +33,11 @@ namespace DeCuisine
         public void AddMember(Client member)
         {
             _members.Add(member);
-            if (member.Player != null)
-            {
-                member.Player.Team = this;
-            }
-
             member.Disconnected += member_Disconnected;
         }
         public void RemoveMember(Client member)
         {
             _members.Remove(member);
-            if (member.Player != null)
-            {
-                member.Player.Team = null;
-            }
-
             member.Disconnected -= member_Disconnected;
         }
 

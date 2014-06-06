@@ -4,39 +4,39 @@
 
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
-  <ingredient name="tomato" friendlyName="Tomato" shape="sphere" points="15" size="6, 6, 6"/>
-  <ingredient name="butter" friendlyName="Butter" points="15" size="3, 3, 8"/>
-  <ingredient powerup="1" name="wine" friendlyName="Wine" points="15" size="2, 5, 2"/>
-  <ingredient name="cheese" friendlyName="Cheese" points="15" size="10, 4, 10"/>
-  <ingredient name="carrot" friendlyName="Carrot" points="15" size="3, 12, 3"/>
-  <ingredient name="coconut" friendlyName="Coconut" shape="sphere" points="15" size="6, 6, 6"/>
-  <ingredient name="sugar" friendlyName="Sugar" points="10" size="5, 5, 5"/>
-  <ingredient name="milk" friendlyName="Milk" points="30" size="6, 12, 6"/>
-  <ingredient name="icecream" friendlyName="Ice Cream" points="40" size="4, 10.66, 4"/>
-  <ingredient name="flour" friendlyName="Flour" points="40" size="6, 8, 4.5"/>
-  <ingredient name="bread" friendlyName="Bread" points="15" size="12, 6, 6"/>
-  <ingredient name="lettuce" friendlyName="Lettuce" shape="sphere" points="10" size="8, 8, 8"/>
-  <ingredient name="watermelon" friendlyName="Watermelon" shape="sphere" points="70" size="9, 8, 8"/>
-  <ingredient name="egg" friendlyName="Egg" shape="sphere" points="110" size="3, 4, 3" />
-  <ingredient name="orange" friendlyName="Orange" points="110" shape="sphere" size="5, 5, 5"/>
-  <ingredient name="steak" friendlyName="Steak" points="110" size="8, 2, 8" />
+  <ingredient name="tomato" friendlyName="Tomato" shape="sphere" points="100" size="6, 6, 6"/>
+  <ingredient name="butter" friendlyName="Butter" points="100" size="3, 3, 8"/>
+  <ingredient powerup="1" name="wine" friendlyName="Wine" points="200" shape="cylinder" size="2, 5, 2"/>
+  <ingredient name="cheese" friendlyName="Cheese" points="100" size="10, 4, 10"/>
+  <ingredient name="carrot" friendlyName="Carrot" points="100" shape="cylinder" size="3, 12, 3"/>
+  <ingredient name="coconut" friendlyName="Coconut" shape="sphere" points="100" size="6, 6, 6"/>
+  <ingredient name="sugar" friendlyName="Sugar" points="100" size="5, 5, 5"/>
+  <ingredient name="milk" friendlyName="Milk" points="100" size="6, 12, 6"/>
+  <ingredient name="icecream" friendlyName="Ice Cream" points="100" shape="cylinder" size="4, 10.66, 4"/>
+  <ingredient name="flour" friendlyName="Flour" points="100" size="6, 8, 4.5"/>
+  <ingredient name="bread" friendlyName="Bread" points="100" size="12, 6, 6"/>
+  <ingredient name="lettuce" friendlyName="Lettuce" shape="sphere" points="100" size="8, 8, 8"/>
+  <ingredient name="watermelon" friendlyName="Watermelon" shape="sphere" points="30" size="9, 8, 8"/>
+  <ingredient name="egg" friendlyName="Egg" shape="sphere" points="100" size="3, 4, 3" />
+  <ingredient name="orange" friendlyName="Orange" points="100" shape="sphere" size="5, 5, 5"/>
+  <ingredient name="steak" friendlyName="Steak" points="100" size="8, 2, 8" />
   <!--et starts here-->
-  <ingredient name="salt" friendlyName="Salt" points="110" size="5, 7, 5"/>
-  <ingredient name="onion" friendlyName="Onion" points="2000" size="2, 2, 2"/>
-  <ingredient name="noodles" friendlyName="Noodles" points="110" size="5, 9, 2" />
-  <ingredient name="rawChicken" friendlyName="Raw Chicken" points="110" size="4, 1, 4" />
+  <ingredient name="salt" friendlyName="Salt" points="100" shape="cylinder" size="5, 7, 5"/>
+  <ingredient name="onion" friendlyName="Onion" points="100" size="2, 2, 2"/>
+  <ingredient name="noodles" friendlyName="Noodles" points="100" size="5, 9, 2" />
+  <ingredient name="rawChicken" friendlyName="Raw Chicken" points="100" size="4, 1, 4" />
 
   <!--Final Recipe Products-->
-  <ingredient name="hamburger" friendlyName="Hamburger" points="2000" size="6, 6, 6"/>
-  <ingredient name="milkshake" friendlyName="Milkshake" points="70" size="6, 12, 6" />
-  <ingredient name="cookedSteak" friendlyName="Cooked Steak" points="110" size="4, 1, 4" />
-  <ingredient name="pasta" friendlyName="Pasta" points="110" size="4, 1, 4" />
-  <ingredient name="cake" friendlyName="Cake" points="2000" size="6, 4, 6"/>
-  <ingredient name="Toasted Bread" friendlyName="Toasted Bread" points="110" size="9, 1.5, 9" />
-  <ingredient name="chicken" friendlyName="Chicken" points="110" size="4, 1, 4" />
-  <ingredient name="caesarSalad" friendlyName="Caesar Salad" points="110" size="4, 1, 4" />
-  <ingredient name="soup" friendlyName="Soup" points="110" size="4, 1, 4" />
-  <ingredient name="cakeBatter" friendlyName="Cake Batter" points="110" size="4, 1, 4" />
-  <ingredient name="sauce" friendlyName="Sauce" points="110" size="4, 8, 4" />
+  <ingredient name="hamburger" friendlyName="Hamburger" points="1000" size="6, 6, 6"/>
+  <ingredient name="milkshake" friendlyName="Milkshake" points="1000" size="6, 12, 6" />
+  <ingredient name="cookedSteak" friendlyName="Cooked Steak" points="1000" size="4, 1, 4" />
+  <ingredient name="pasta" friendlyName="Pasta" points="1000" size="4, 1, 4" />
+  <ingredient name="cake" friendlyName="Cake" points="1500" size="6, 4, 6"/>
+  <ingredient name="Toasted Bread" friendlyName="Toasted Bread" points="1000" size="9, 1.5, 9" />
+  <ingredient name="chicken" friendlyName="Chicken" points="1000" size="4, 1, 4" />
+  <ingredient name="caesarSalad" friendlyName="Caesar Salad" points="1000" size="4, 1, 4" />
+  <ingredient name="soup" friendlyName="Soup" points="1000" size="4, 1, 4" />
+  <ingredient name="cakeBatter" friendlyName="Cake Batter" points="1000" size="4, 1, 4" />
+  <ingredient name="sauce" friendlyName="Sauce" points="1000" shape="cylinder" size="4, 8, 4" />
 
 </ingredients>

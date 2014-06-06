@@ -287,8 +287,6 @@ namespace DeCuisine
             ServerTeam team;
             if (Teams.TryGetValue(teamName, out team))
                 AssignTeam(client, team);
-            else
-                throw new Exception("How the hell did we allow them to pick a team that doesn't exist?");
         }
 
         public void AssignTeam(Client client, ServerTeam team)
@@ -296,7 +294,12 @@ namespace DeCuisine
             if (client.Team != null)
                 client.Team.RemoveMember(client);
             team.AddMember(client);
-            client.Team = team;
+            lock (client.Lock)
+            {
+                client.Team = team;
+                if (client.Player != null)
+                    client.Player.MarkDirty();
+            }
             MarkLobbyStateDirty();
         }
 

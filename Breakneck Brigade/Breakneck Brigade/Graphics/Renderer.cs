@@ -570,6 +570,9 @@ namespace Breakneck_Brigade.Graphics
                         ClientIngredient lookedAtIngredient = (ClientIngredient)lookedAtObject;
                         TextRenderer.printToScreen(xPos, yPos, lookedAtIngredient.Type.FriendlyName, FONT_SCALE, FONT_SCALE);
                     }
+                    else if(lookedAtObject.ModelName == "cdj")
+                        TextRenderer.printToScreen(xPos, yPos, "TURN DOWN FOR WHAT???", FONT_SCALE, FONT_SCALE);
+
                 }
             }
         }

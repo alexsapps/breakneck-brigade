@@ -42,6 +42,8 @@ namespace Breakneck_Brigade
                 base.RenderColored(1f, 0.5f, .5f);
             else if (this.Team == "blue")
                 base.RenderColored(.5f, .5f, 1f);
+            else if (this._modelName == "cdj" && this.Game.LookatId == this.Id)
+               base.RenderColored(0.0f, 1f, 0.0f);
             else
                 base.Render();
         }

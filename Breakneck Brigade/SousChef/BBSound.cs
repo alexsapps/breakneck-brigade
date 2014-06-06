@@ -34,6 +34,7 @@ namespace SousChef
         footsteps,
         phasein,
         warningbuzz,
-        cheering
+        cheering,
+        edm
     }
 }
