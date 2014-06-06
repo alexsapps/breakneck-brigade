@@ -827,7 +827,7 @@ namespace Breakneck_Brigade
                                     backgroundmusic = tempsoundtrack;
                                     if (backgroundMusicThread != null)
                                         backgroundMusicThread.Stop();
-                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.11);
+                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.25);
                                 }
 
                                 int len = reader.ReadInt32();

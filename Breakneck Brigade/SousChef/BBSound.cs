@@ -35,6 +35,9 @@ namespace SousChef
         phasein,
         warningbuzz,
         cheering,
-        edm
+        edm,
+        bootie,
+        breakthetargets,
+        robotwars
     }
 }

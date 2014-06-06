@@ -18,7 +18,7 @@ namespace DeCuisine
         public string Team { get; set; }
 
 
-        public static BBSound[] bgmusic = new BBSound[] { BBSound.soundtrack, BBSound.edm};
+        public static BBSound[] bgmusic = new BBSound[] { BBSound.soundtrack, BBSound.edm, BBSound.bootie, BBSound.breakthetargets, BBSound.robotwars};
         public static int currbgindex = 0;
 
         public static DateTime lastcollision = DateTime.Now;
@@ -79,17 +79,12 @@ namespace DeCuisine
                 this.Game.Controller.powerUpItem((ServerIngredient)obj, this);
             }
 
-            if(this.FriendlyName == "DJ Turntable" && obj.ObjectClass == GameObjectClass.Ingredient && ((ServerIngredient) obj).LastPlayerHolding != null)
+            if (this.FriendlyName == "DJ Turntable" && obj.ObjectClass == GameObjectClass.Ingredient && ((ServerIngredient)obj).LastPlayerHolding != null)
             {
-                if (DateTime.Now.Subtract(lastcollision).TotalSeconds > 5)
-                    Game.backgroundsound = bgmusic[++currbgindex % bgmusic.Length];
-  
-                            
+                if (DateTime.Now.Subtract(lastcollision).TotalSeconds > 3)
+                    Game.backgroundsound = bgmusic[++currbgindex % bgmusic.Length];  // THIS SHOULD CHANGE THE MUSIC
+
                 lastcollision = DateTime.Now;
-     
-                // THIS SHOULD CHANGE THE MUSIC
-                //Console.WriteLine("Should be changing the music!");
-                
             }
         } 
     }
