@@ -740,7 +740,7 @@ namespace Breakneck_Brigade.Graphics
             {
                 foreach (ClientTeam team in Program.lobbyState.Teams.Values.ToList())
                 {
-                    TextRenderer.printToScreen(xPos, yPos, team.Name + ": " + team.Score.ToString(), FONT_SCALE, FONT_SCALE);
+                    TextRenderer.printToScreen(xPos, yPos, (team.Name + ": ").PadRight(6) + team.Score.ToString(), FONT_SCALE, FONT_SCALE);
                     yPos -= (spacing + padding);
                 }
             }
