@@ -537,7 +537,8 @@ namespace Breakneck_Brigade.Graphics
                 foreach (var goal in goalCache)
                 {
                     Gl.glColor3f(0, 1, 0);
-                    TextRenderer.printToScreen(xPos, yPos, goal.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
+                    TextRenderer.printToScreen(xPos, yPos, (goal.Ingredient.DefaultPoints.ToString() + " ").PadLeft(width + 1) + goal.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
+
                     yPos += spacing + padding;
                 }
 
