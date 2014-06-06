@@ -475,7 +475,7 @@ namespace Breakneck_Brigade.Graphics
             Renderer.enableTransparency();
             //Models[BLANKQUAD_MODEL_NAME].Render();
             this.DrawGoals(5, padding);
-            this.DrawHeld(500, 30);
+            this.DrawHeld((WindowWidth / 2) + 15, (WindowHeight / 2) - 10);
 
             int xPos = 5, yPos = 600;
             /*
@@ -531,14 +531,36 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null && Program.game.LiveGameObjects != null)
             {
-                string lookingAt;
+                //string lookingAt;
 #if PROJECT_WORLD_BUILDING
                 string info = "";
 #endif
                 if (Program.game.LiveGameObjects.ContainsKey(Program.game.LookatId))
                 {
                     ClientGameObject lookedAtObject = Program.game.LiveGameObjects[Program.game.LookatId];
-                    lookingAt = lookedAtObject.ModelName;
+                    if (lookedAtObject is ClientCooker)
+                    {
+                        ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
+                        TextRenderer.printToScreen(xPos, yPos, lookedAtCooker.Type.FriendlyName + " (" + lookedAtCooker.Team.Name + ")", FONT_SCALE, FONT_SCALE);
+                        yPos -= (spacing + padding);
+                        TextRenderer.printToScreen(xPos, yPos, "Contains: ", FONT_SCALE, FONT_SCALE);
+                        yPos -= (spacing + padding);
+                        foreach (ClientIngredient ingredient in lookedAtCooker.Contents)
+                        {
+                            TextRenderer.printToScreen(xPos, yPos, "- " + ingredient.Type.FriendlyName, FONT_SCALE, FONT_SCALE);
+                            yPos -= (spacing + padding);
+                        }
+                    }
+                    else if (lookedAtObject is ClientIngredient)
+                    {
+                        ClientIngredient lookedAtIngredient = (ClientIngredient)lookedAtObject;
+                        TextRenderer.printToScreen(xPos, yPos, lookedAtIngredient.Type.FriendlyName, FONT_SCALE, FONT_SCALE);
+                    }
+                }
+            }
+        }
+                    /*
+                    TextRenderer.printToScreen(xPos, yPos, lookedAtObject, FONT_SCALE, FONT_SCALE);
 #if PROJECT_WORLD_BUILDING
                     // append id if we are building the world
                     lookingAt += " " + Program.game.LookatId +
@@ -576,9 +598,7 @@ namespace Breakneck_Brigade.Graphics
 #else
                 TextRenderer.printToScreen(xPos, yPos, "Looking at: " + lookingAt, FONT_SCALE, FONT_SCALE);
 #endif
-                
-            }
-        }
+                */
 
         /// <summary>
         /// Draws the timer
