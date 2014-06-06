@@ -121,6 +121,7 @@ namespace DeCuisine
             this.Hands.Add("right", tmp);
             this.Team = null;
             this.dashTicks = 0; // don't start dashing
+            this.canJump = true;
         }
 
         public override void Serialize(BinaryWriter stream)
