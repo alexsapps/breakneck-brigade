@@ -12,8 +12,8 @@ newmtl Material__10
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka chef_body.tga
-	map_Kd chef_body.tga
+	map_Ka chefBody.tga
+	map_Kd chefBody.tga
 
 newmtl Material__9
 	Ns 10.0000
@@ -26,8 +26,8 @@ newmtl Material__9
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka chef_skin.tga
-	map_Kd chef_skin.tga
+	map_Ka chefSkin.tga
+	map_Kd chefSkin.tga
 
 newmtl Material__8
 	Ns 10.0000
@@ -40,5 +40,5 @@ newmtl Material__8
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka chef_blue.tga
-	map_Kd chef_blue.tga
+	map_Ka chefBlue.tga
+	map_Kd chefBlue.tga
