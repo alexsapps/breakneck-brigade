@@ -22,6 +22,7 @@ namespace Breakneck_Brigade.Graphics
             Lifetime = -1f;
             Follow = cp;
             team = cp.TeamName;
+            StartSpawning();
         }
 
         public override void StartSpawning()
@@ -34,7 +35,8 @@ namespace Breakneck_Brigade.Graphics
         public override void Render() //Disable transparency and disable face culling
         {
             Renderer.disableTransparency();
-            base.Render();
+            if(Follow != Program.localPlayer.Player)
+                base.Render();
             Renderer.enableTransparency();
         }
 
@@ -43,13 +45,13 @@ namespace Breakneck_Brigade.Graphics
  	        base.Spawn();
             Particle3D particle = new Particle3D(Renderer.Models["indicator"], team == "red" ? Renderer.Textures["confettiRed.tga"] : Renderer.Textures["confettiBlue.tga"])
             {
-                Position            = new Vector4(0, playerHeight/2 + 5, 0),
+                Position            = new Vector4(0, playerHeight/2 + 10, 0),
                 Velocity            = new Vector4(0, 0, 0),
                 Acceleration        = new Vector4(0, 0, 0),
-                Scale               = 5f,
+                Scale               = 0.5f,
                 Rotation            = new Vector4(0, 0, 0),
-                RotationalVelocity  = new Vector4(0, 1, 0),
-                Lifetime            = 5f
+                RotationalVelocity  = new Vector4(0, 0.5, 0),
+                Lifetime            = -1
             };
 
                 _particles.Add(particle);

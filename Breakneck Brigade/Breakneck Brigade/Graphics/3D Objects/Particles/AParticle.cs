@@ -82,11 +82,14 @@ namespace Breakneck_Brigade.Graphics
                 //OnCreate();
             }
             _age += timestep;
-            if(_age > Lifetime)
+            if (Lifetime != -1)
             {
-                ShouldDie = true;
-                //OnDestroy();
-                return; // Don't need to continue to updating
+                if (_age > Lifetime)
+                {
+                    ShouldDie = true;
+                    //OnDestroy();
+                    return; // Don't need to continue to updating
+                }
             }
             Velocity += Acceleration*timestep;
             Position += Velocity*timestep;
