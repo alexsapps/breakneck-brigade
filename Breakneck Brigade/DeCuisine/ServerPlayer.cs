@@ -171,7 +171,7 @@ namespace DeCuisine
 
         private SousChef.Matrix4 getRotation()
         {
-            Matrix4 rot = Matrix4.MakeRotateYDeg(Orientation);
+            Matrix4 rot = Matrix4.MakeRotateYDeg(Orientation + 180);
 
             return rot;
         }

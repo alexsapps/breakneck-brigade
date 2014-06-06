@@ -33,7 +33,7 @@ namespace Breakneck_Brigade.Graphics
         public PSSparks(Vector4 pos, ClientGameObject follow)
             : base(pos)
         {
-            Lifetime = 0.5f;
+            Lifetime = 2.0f;
             Follow = follow;
             isFollowing = true;
         }
