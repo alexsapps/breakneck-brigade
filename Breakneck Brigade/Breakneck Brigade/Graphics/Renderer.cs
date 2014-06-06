@@ -22,7 +22,9 @@ namespace Breakneck_Brigade.Graphics
     class Renderer : IDisposable
     {
         public static TextRenderer TextRenderer;
-        public static bool GameOver = false;
+        public static GameMode GameMode;
+        public static string GameOverScore;
+
         public static bool? IWon = null;
         private ModelParser parser;
         private const DebugMode DEBUG_MODE = DebugMode.OFF;
@@ -477,7 +479,7 @@ namespace Breakneck_Brigade.Graphics
             Models[CROSSHAIR_MODEL_NAME].Render();
             Renderer.enableTransparency();
 
-            if (GameOver)
+            if (GameMode == SousChef.GameMode.Results)
             {
                 this.DrawResults((int)WindowWidth / 2, (int)WindowHeight / 2);
                 return;
@@ -516,7 +518,7 @@ namespace Breakneck_Brigade.Graphics
             }
 
             yPos += spacing + padding;
-            TextRenderer.printToScreen(xPos, yPos, "Score: " + Program.lobbyState.MyTeam.Score, scalex, scaley);
+            TextRenderer.printToScreen(xPos, yPos, "Score: " + GameOverScore, scalex, scaley);
 
         }
 

@@ -160,7 +160,7 @@ namespace DeCuisine
             runThread = new Thread(new ThreadStart(Run));
             runThread.Start();
 
-            while (Mode != GameMode.Started)
+            while (Mode == GameMode.Init)
                 Monitor.Wait(Lock);
         }
 
@@ -753,11 +753,9 @@ namespace DeCuisine
             {
                 var count = Controller.Goals.Count;
                 writer.Write(count);
-                writer.Write(444);
                 for (int i = 0; i < count; i++)
                 {
                     var goal = Controller.Goals[i];
-                    writer.Write(555);
                     writer.Write(goal.EndGoal.FinalProduct.Name);
                     writer.Write(goal.Expiring);
                 }

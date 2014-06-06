@@ -381,7 +381,9 @@ namespace Breakneck_Brigade
 
                         lock (gameLock)
                         {
+                            lobbyState = new ClientLobbyState();
                             lobbyState.Mode = GameMode.Init;
+
                             serverMessageHandlerLoopThread = new Thread(new ThreadStart(serverMessageHandlerLoop));
                             serverMessageHandlerLoopThread.Start();
                         }
@@ -771,6 +773,7 @@ namespace Breakneck_Brigade
                         lock (gameLock)
                         {
                             lobbyState.Mode = msg.Mode;
+                            Renderer.GameMode = lobbyState.Mode;
                             switch (lobbyState.Mode)
                             {
                                 case GameMode.Init:
@@ -781,7 +784,7 @@ namespace Breakneck_Brigade
                                 case GameMode.Results:
                                     //winning team is lobbyState.WinningTeam
 
-                                    Renderer.GameOver = true;
+                                    Renderer.GameOverScore = Program.lobbyState.MyTeam.Score.ToString();
 
                                     if (lobbyState.IWin)
                                     {
@@ -850,12 +853,8 @@ namespace Breakneck_Brigade
                                             e.Read((greader) =>
                                             {
                                                 int glen = greader.ReadInt32();
-                                                int four = greader.ReadInt32();
-                                                Debug.Assert(four == 444);
                                                 for (int gi = 0; gi < glen; gi++)
                                                 {
-                                                    int five = greader.ReadInt32();
-                                                    Debug.Assert(five == 555);
                                                     var ingredient = game.Config.Ingredients[greader.ReadString()];
                                                     bool expiring = greader.ReadBoolean();
                                                     game.Goals.Add(new ClientGoal(ingredient, expiring));
