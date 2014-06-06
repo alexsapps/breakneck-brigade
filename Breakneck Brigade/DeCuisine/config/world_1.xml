@@ -55,5 +55,7 @@
     <static type="cdj" coordinate="480, 5, -480" size="12, 3, 16" orientation="315" model="cdj" friendlyName="DJ Turntable"/>
 
 
+    <static type="shelf" coordinate="100, 10, 50" size="12, 3, 16" orientation="315" model="shelf" friendlyName="Just a shelf"/>
+
   </space>
 </world>
