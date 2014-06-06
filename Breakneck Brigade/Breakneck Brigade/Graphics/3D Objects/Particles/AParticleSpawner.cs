@@ -48,7 +48,8 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// A client object to follows
         /// </summary>
-        public ClientGameObject Follow = null; 
+        public ClientGameObject Follow = null;
+        protected bool isFollowing = false;
 
         public bool RemoveMe { get; protected set; }
 
@@ -114,8 +115,11 @@ namespace Breakneck_Brigade.Graphics
                 {
                     if(_spawning)
                         StopSpawning();
-                    if(_particles.Count == 0)
+                    if (_particles.Count == 0)
+                    {
                         RemoveMe = true;
+                        return;
+                    }
                 }
             }
 
@@ -144,9 +148,16 @@ namespace Breakneck_Brigade.Graphics
             if(_toKill.Count > 0)
                 _toKill.Clear();
 
-            if (Follow != null)
+            if (isFollowing && Follow != null)
             {
                 Position = Follow.Position;
+            }
+            else if(isFollowing && Follow == null)
+            {
+                this.StopSpawning();
+                this.DestroyAll();
+                RemoveMe = true;
+                return;
             }
 
             //Make sure location is accurate

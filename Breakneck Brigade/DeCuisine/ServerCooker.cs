@@ -211,6 +211,7 @@ namespace DeCuisine
             this.Game.SendParticleEffect(BBParticleEffect.SMOKE, this.Position, (int)SmokeType.GREY);
             this.Game.SendSound(BBSound.trayhit1, this.Position);
             this.MarkDirty();
+            this.Game.SendParticleEffect(BBParticleEffect.SMOKE, new Vector3(0, 0, 0), (int) (SmokeType.GREY | SmokeType.RED | SmokeType.YELLOW), newIngredient.Id);
 
 
         }

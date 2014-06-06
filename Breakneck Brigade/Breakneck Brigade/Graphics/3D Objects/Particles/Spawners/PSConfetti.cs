@@ -35,6 +35,7 @@ namespace Breakneck_Brigade.Graphics
         {
             Lifetime    = 5f;
             Follow      = follow;
+            isFollowing = true;
         }
 
         public override void StartSpawning()

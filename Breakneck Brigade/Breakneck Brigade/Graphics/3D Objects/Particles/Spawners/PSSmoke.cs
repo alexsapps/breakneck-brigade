@@ -44,6 +44,7 @@ namespace Breakneck_Brigade.Graphics
             smokeTypes = new List<Texture>();
             populateSmokeTypes(st);
             Follow = follow;
+            isFollowing = true;
         }
 
         

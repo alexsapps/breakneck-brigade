@@ -7,7 +7,7 @@ using SousChef;
 
 namespace Breakneck_Brigade.Graphics
 {
-    class PSSparks : AParticleSpawner
+    class PSStars : AParticleSpawner
     {
         Random rand     = new Random();
         //Spawner parameters
@@ -22,19 +22,20 @@ namespace Breakneck_Brigade.Graphics
         const   int     PARTS_PER_SPAWN = 10;
 
 
-        public PSSparks() : base() 
+        public PSStars() : base() 
         {
             Lifetime = 0.5f;
         }
-        public PSSparks(Vector4 pos) : base(pos) 
+        public PSStars(Vector4 pos) : base(pos) 
         {
             Lifetime = 0.5f;
         }
-        public PSSparks(Vector4 pos, ClientGameObject follow)
+        public PSStars(Vector4 pos, ClientGameObject follow)
             : base(pos)
         {
             Lifetime = 0.5f;
             Follow = follow;
+            isFollowing = true;
         }
 
         protected override void Spawn()

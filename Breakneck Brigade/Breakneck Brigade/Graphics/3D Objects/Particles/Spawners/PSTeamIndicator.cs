@@ -20,6 +20,7 @@ namespace Breakneck_Brigade.Graphics
         {
             Lifetime = -1f;
             Follow = cp;
+            isFollowing = true;
             team = cp.TeamName;
             StartSpawning();
         }

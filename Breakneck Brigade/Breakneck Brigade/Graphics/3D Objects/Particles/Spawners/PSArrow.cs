@@ -31,6 +31,7 @@ namespace Breakneck_Brigade.Graphics
             Lifetime = 5f;
             spawnPeriod = Lifetime;
             Follow = follow;
+            isFollowing = true;
         }
 
         public override void Render() //Disable transparency and disable face culling
