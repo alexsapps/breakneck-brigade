@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Breakneck_Brigade
 {
-    class ClientGoal
+    class ClientGoal : IComparable<ClientGoal>
     {
         public IngredientType Ingredient { get; set; }
         public bool Expiring { get; set; }
@@ -14,6 +14,11 @@ namespace Breakneck_Brigade
         {
             this.Ingredient = ingredient;
             this.Expiring = expiring;
+        }
+
+        public int CompareTo(ClientGoal other)
+        {
+            return Ingredient.CompareTo(other.Ingredient);
         }
     }
 }
