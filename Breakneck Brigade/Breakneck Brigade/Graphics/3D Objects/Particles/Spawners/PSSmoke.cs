@@ -16,15 +16,15 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// How many particle to spawn per spawn event
         /// </summary>
-        const int PARTS_PER_SPAWN = 10;
+        const int PARTS_PER_SPAWN = 20;
         /// <summary>
         /// The maximum difference in particle position from the spawner's location
         /// </summary>
-        const float MAX_POS = 10f;
+        const float MAX_POS = 20f;
         /// <summary>
         /// Maximum time to live on particles
         /// </summary>
-        const float MAX_LIFETIME = 5f;
+        const float MAX_LIFETIME = 7.5f;
 
         public PSSmoke(SmokeType st) : base() 
         {
@@ -64,9 +64,9 @@ namespace Breakneck_Brigade.Graphics
                 Particle3D particle = new Particle3D(smokeTypes[rand.Next(smokeTypes.Count)])
                 {
                     Position            = genRandomPos(),
-                    Velocity            = new Vector4(0, 0, 0),
-                    Acceleration        = new Vector4(0, 4, 0),
-                    Scale               = 1f,
+                    Velocity            = genRandomAcc(),
+                    Acceleration        = genRandomAcc(),
+                    Scale               = 2f,
                     Rotation            = genRandomRot(),
                     RotationalVelocity  = new Vector4(0,0,0),
                     Lifetime            = (float) (rand.NextDouble() * MAX_LIFETIME)
@@ -97,6 +97,12 @@ namespace Breakneck_Brigade.Graphics
             return new Vector4((rand.Next(2) == 0 ? 1 : -1) * rand.NextDouble() * MAX_POS,
                                 0,
                                (rand.Next(2) == 0 ? 1 : -1) * rand.NextDouble() * MAX_POS);
+        }
+        private Vector4 genRandomAcc()
+        {
+            return new Vector4(0,
+                               rand.NextDouble() * 8 + 6,
+                               0);
         }
         private Vector4 genRandomRot()
         {

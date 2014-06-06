@@ -345,14 +345,14 @@ namespace Breakneck_Brigade.Graphics
             /* LIGHTING */
             Gl.glEnable(Gl.GL_LIGHTING);
 
-            float[] position1 = { -200, 190, 0, 1 };
-            float[] position2 = { 200, 190, 0, 1 };
-            float[] position3 = { 0, 190, 200, 1 };
-            float[] position4 = { 0, 190, -200, 1 };
-            float[] position5 = { -200, 190, 200, 1 };
-            float[] position6 = { -200, 190, -200, 1 };
-            float[] position7 = { 200, 190, 200, 1 };
-            float[] position8 = { 200, 190, -200, 1 };
+            float[] position1 = {-200, 100,    0, 1 };
+            float[] position2 = { 200, 100,    0, 1 };
+            float[] position3 = {   0, 100,  200, 1 };
+            float[] position4 = {   0, 100, -200, 1 };
+            float[] position5 = {-200, 100,  200, 1 };
+            float[] position6 = {-200, 100, -200, 1 };
+            float[] position7 = { 200, 100,  200, 1 };
+            float[] position8 = { 200, 100, -200, 1 };
             float[] ambientColor = { .2f, .2f, .2f, 1 };
             float[] spotDirection = { 0.0f, -1.0f, 0.0f };
             float[] spotDirection2 = { 0.0f, -1.0f, -1.0f };
@@ -478,7 +478,7 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnable(Gl.GL_LIGHT7);
 
             
-            Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, new float[]{ 0.6f, 0.6f, 0.6f, 0.6f });
+            Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, new float[]{ 0.4f, 0.4f, 0.4f, 0.4f });
 
             /* RENDERING SETTINGS */
             //Enables manual setting of colors and materials of primatives (through glColor__, etc)
@@ -684,7 +684,7 @@ namespace Breakneck_Brigade.Graphics
                     if (lookedAtObject is ClientCooker)
                     {
                         ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
-                        TextRenderer.printToScreen(xPos, yPos, lookedAtCooker.Type.FriendlyName + " (" + lookedAtCooker.Team.Name + ") - Left Shift - Remove Ingredients", FONT_SCALE, FONT_SCALE);
+                        TextRenderer.printToScreen(xPos, yPos, lookedAtCooker.Type.FriendlyName + " (" + lookedAtCooker.Team.Name + ")", FONT_SCALE, FONT_SCALE);
                         yPos -= (spacing + padding);
                         TextRenderer.printToScreen(xPos, yPos, "Contains: ", FONT_SCALE, FONT_SCALE);
                         yPos -= (spacing + padding);

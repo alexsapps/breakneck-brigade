@@ -265,7 +265,7 @@ namespace DeCuisine
                 // find out where your cross hairs are.
                 var crossPos = new Vector3(
                         this.Position.X + (float)Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE,
-                        this.Position.Y + this.EyeHeight + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
+                        this.Position.Y - this.EyeHeight/2 + (float)Math.Sin(this.Incline * Math.PI / 180.0f) * HOLDDISTANCE * -1,
                         this.Position.Z + (float)Math.Cos(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE * -1);
 
                 // Is this to get around a bug? Why would you want to do this...
@@ -420,7 +420,7 @@ namespace DeCuisine
                 // move the object in front of you
                 this.Hands["left"].Held.Position = new Vector3(
                     this.Position.X + (float)(Math.Sin(this.Orientation * Math.PI / 180.0f) * HOLDDISTANCE),
-                    this.Position.Y + this.EyeHeight * 0.75f + (float)Math.Sin((this.Incline > 0 && this.canJump ? 0 : this.Incline) * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: 
+                    this.Position.Y + this.EyeHeight/2 + (float)Math.Sin((this.Incline > 0 && this.canJump ? 0 : this.Incline) * Math.PI / 180.0f) * -HOLDDISTANCE, // TODO: 
                     this.Position.Z + (float)(Math.Cos(this.Orientation * Math.PI / 180.0f) * -HOLDDISTANCE));
             }
 

@@ -2,7 +2,7 @@
   <!--  default shape is box -->
   <!--  shape="box" sides=".,.,." mass="." friction="." restitution="." -->
   <!--  shape="sphere" sides="." mass="." friction="." restitution="." -->
-  <cooker name="blender" friendlyName="Blender" size="9, 11, 9" mass="9001.0">
+  <cooker name="blender" friendlyName="Blender" size="7, 14, 9" mass="9001.0">
     <recipe>milkshake</recipe>
     <recipe>sauce</recipe>
   </cooker>
