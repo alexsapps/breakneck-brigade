@@ -76,10 +76,8 @@ namespace SousChef
         private static Dictionary<string, string> makeDict()
         {
             Dictionary<string, string> m = new Dictionary<string, string>();
-            Console.WriteLine(@"res\sounds\");
-            Console.WriteLine( @"*\.(mp3|wav)");
 
-            foreach (string s in Directory.GetFiles(@"res\sounds\", @"*")) //@"*\.(mp3|wav)", SearchOption.AllDirectories))
+            foreach (string s in Directory.GetFiles(@"res\sounds\", @"*")) 
             {
                 int start = s.LastIndexOf(@"\") + 1;
                 int length = s.LastIndexOf('.')  - start;
@@ -130,8 +128,8 @@ namespace SousChef
 
             if (volume > 0.99)
                 this.volume = 0.99;
-            else if (volume < 0.0)
-                this.volume = 0.0;
+            else if (volume < 0.1)
+                this.volume = 0.1;
             else
                 this.volume = volume;
         }

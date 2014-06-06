@@ -789,12 +789,12 @@ namespace Breakneck_Brigade
 
                                     if (lobbyState.IWin)
                                     {
-                                        SoundThing.Play(BBSound.explosionfar, 2);
+                                        SoundThing.Play(BBSound.explosionfar, 1.0);
                                         Renderer.IWon = true;
                                     }
                                     else if (!lobbyState.IsDraw)
                                     {
-                                        SoundThing.Play(BBSound.sadtrombone, 2);
+                                        SoundThing.Play(BBSound.sadtrombone, 1.0);
                                         Renderer.IWon = false;
                                     }
                                     else
@@ -827,7 +827,7 @@ namespace Breakneck_Brigade
                                     backgroundmusic = tempsoundtrack;
                                     if (backgroundMusicThread != null)
                                         backgroundMusicThread.Stop();
-                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.25);
+                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.20);
                                 }
 
                                 int len = reader.ReadInt32();

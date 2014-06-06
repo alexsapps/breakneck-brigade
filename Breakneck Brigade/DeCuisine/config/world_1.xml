@@ -52,7 +52,7 @@
 
     <static type="deliveryWindow" coordinate="0, 100, -460" size="40,45,90" orientation="-90" model="deliveryWindow" friendlyName="Delivery Window"/>
 
-    <static type="cdj" coordinate="480, 5, -480" size="12, 3, 16" orientation="315" model="cdj" friendlyName="DJ Turntable"/>
+    <static type="cdj" coordinate="480, 6, -480" size="9, 3, 12" orientation="315" model="cdj" friendlyName="DJ Turntable"/>
 
 
     <static type="shelf" coordinate="480, 25, 400" size="100, 20, 20" orientation="270" model="shelf" friendlyName="Shelf"/>
