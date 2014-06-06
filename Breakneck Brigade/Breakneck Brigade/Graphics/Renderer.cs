@@ -489,7 +489,7 @@ namespace Breakneck_Brigade.Graphics
 
             if (GameOver)
             {
-                DrawResults();
+                this.DrawResults((int)WindowWidth / 2, (int)WindowHeight / 2);
                 return;
             }
             //Models[BLANKQUAD_MODEL_NAME].Render();
@@ -522,21 +522,25 @@ namespace Breakneck_Brigade.Graphics
             Gl.glPopAttrib();
         }
 
-        private void DrawResults()
+        private void DrawResults(int xPos, int yPos)
         {
             float scalex = FONT_SCALE * 1.0f;
             float scaley = FONT_SCALE * 1.0f;
             if (IWon.HasValue)
             {
                 if (IWon.Value)
-                    TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "you win!!", scalex, scaley);
+                    TextRenderer.printToScreen(xPos, yPos, "You win!!", scalex, scaley);
                 else
-                    TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "you lose...", scalex, scaley);
+                    TextRenderer.printToScreen(xPos, yPos, "You lose...", scalex, scaley);
             }
             else
             {
-                TextRenderer.printToScreen((int)WindowWidth / 2, (int)WindowHeight / 2, "draw", scalex, scaley);
+                TextRenderer.printToScreen(xPos, yPos, "Draw", scalex, scaley);
             }
+
+            yPos += spacing + padding;
+            TextRenderer.printToScreen(xPos, yPos, "Score: " + Program.lobbyState.MyTeam.Score, scalex, scaley);
+
         }
 
         private void DrawGoals(int xPos, int yPos)
