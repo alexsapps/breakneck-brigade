@@ -37,18 +37,18 @@ namespace Breakneck_Brigade.Graphics
 
         public PSStars() : base() 
         {
-            Lifetime = -1f;
+            Lifetime = 10f;
             this.spawnPeriod = .05;
         }
         public PSStars(Vector4 pos) : base(pos) 
         {
-            Lifetime = -1f;
+            Lifetime = 10f;
             this.spawnPeriod = .05;
         }
         public PSStars(Vector4 pos, ClientGameObject follow)
             : base(pos)
         {
-            Lifetime = -1f;
+            Lifetime = 10f;
             Follow = follow;
             isFollowing = true;
             this.spawnPeriod = .05;
