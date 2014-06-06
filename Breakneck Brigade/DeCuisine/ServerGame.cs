@@ -555,8 +555,8 @@ namespace DeCuisine
             foreach (var team in Controller.Teams.Values)
             {
                 events.Add(computeTintListMessage(team));
-                events.Add(computeGoalsMessage());
             }
+            events.Add(computeGoalsMessage());
 
             writer.Write(events.Count);
             foreach (var e in events)
@@ -751,9 +751,13 @@ namespace DeCuisine
             var msg = new ServerGoalsUpdateMessage();
             msg.Write((writer) =>
             {
-                writer.Write(Controller.Goals.Count);
-                foreach (var goal in Controller.Goals)
+                var count = Controller.Goals.Count;
+                writer.Write(count);
+                writer.Write(444);
+                for (int i = 0; i < count; i++)
                 {
+                    var goal = Controller.Goals[i];
+                    writer.Write(555);
                     writer.Write(goal.EndGoal.FinalProduct.Name);
                     writer.Write(goal.Expiring);
                 }
