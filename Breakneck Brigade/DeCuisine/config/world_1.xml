@@ -54,6 +54,8 @@
 
     <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,45,90" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
 
+    <static type="cdj" coordinate="480, 5, -480" size="12, 3, 16" orientation="45" model="cdj" friendlyName="DJ Turntable"/>
+
 
   </space>
 </world>
