@@ -17,7 +17,7 @@ namespace DeCuisine
         private const float THROWSCALER = 500;
         private const float SHOOTSCALER = 1000; // A boy can dream right?
         private const float DASHSCALER = 1500;
-        private readonly TimeSpan STUNTIME = new TimeSpan(0, 0, 0, 0, 50);
+        private readonly TimeSpan STUNTIME = new TimeSpan(0, 0, 0, 2, 0);
 
         //private const int STUNTIME = 300;
         private const float HOLDDISTANCE = 5.0f;
@@ -171,7 +171,7 @@ namespace DeCuisine
 
         private SousChef.Matrix4 getRotation()
         {
-            Matrix4 rot = Matrix4.MakeRotateYDeg(-Orientation);
+            Matrix4 rot = Matrix4.MakeRotateYDeg(Orientation);
 
             return rot;
         }
@@ -183,7 +183,35 @@ namespace DeCuisine
         /// <param name="stream"></param>
         public override void UpdateStream(BinaryWriter stream)
         {
-            base.UpdateStream(stream);
+            //base.UpdateStream(stream);
+
+            stream.Write((Int32)Id);
+            stream.Write((bool)ToRender); // no need to cast but being explicit gets my jollys off
+            stream.Write(this.Position.X);
+            stream.Write(this.Position.Y);
+            stream.Write(this.Position.Z);
+            Matrix4 rotScale = _modelScale;
+            rotScale *= this.getRotation();
+            stream.Write(rotScale[0, 0]);
+            stream.Write(rotScale[1, 0]);
+            stream.Write(rotScale[2, 0]);
+            stream.Write(rotScale[0, 1]);
+            stream.Write(rotScale[1, 1]);
+            stream.Write(rotScale[2, 1]);
+            stream.Write(rotScale[0, 2]);
+            stream.Write(rotScale[1, 2]);
+            stream.Write(rotScale[2, 2]);
+
+            //Send the bounding box data
+            Vector3 min, max;
+            this.Body.GetAabb(out min, out max);
+            stream.Write(min.X);
+            stream.Write(min.Y);
+            stream.Write(min.Z);
+            stream.Write(max.X);
+            stream.Write(max.Y);
+            stream.Write(max.Z);
+
             stream.Write(Team.Name);
             int lookingAtId = -1;
             if (this.LookingAt != null)

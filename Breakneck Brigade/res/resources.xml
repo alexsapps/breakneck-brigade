@@ -105,7 +105,7 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <scaleY>1.0</scaleY>
       <scaleZ>1.0</scaleZ>
       <rotX>0</rotX>
-      <rotY>180</rotY>
+      <rotY>0</rotY>
       <rotZ>0</rotZ>
     </model>
     <model>

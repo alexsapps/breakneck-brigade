@@ -19,16 +19,16 @@ namespace Breakneck_Brigade.Graphics
         /// <summary>
         /// How many particles should be spawned at each spawn event
         /// </summary>
-        const   int     PARTS_PER_SPAWN = 10;
+        const   int     PARTS_PER_SPAWN = 20;
 
 
         public PSSparks() : base() 
         {
-            Lifetime = 0.5f;
+            Lifetime = 2.0f;
         }
         public PSSparks(Vector4 pos) : base(pos) 
         {
-            Lifetime = 0.5f;
+            Lifetime = 2.0f;
         }
         public PSSparks(Vector4 pos, ClientGameObject follow)
             : base(pos)
