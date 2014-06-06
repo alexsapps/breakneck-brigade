@@ -555,8 +555,8 @@ namespace DeCuisine
             foreach (var team in Controller.Teams.Values)
             {
                 events.Add(computeTintListMessage(team));
-                events.Add(computeGoalsMessage());
             }
+            events.Add(computeGoalsMessage());
 
             writer.Write(events.Count);
             foreach (var e in events)
@@ -748,10 +748,21 @@ namespace DeCuisine
         }
         private ServerGoalsUpdateMessage computeGoalsMessage()
         {
-            var goalList = new List<string>();
-            foreach (var goal in Controller.Goals)
-                goalList.Add(goal.EndGoal.FinalProduct.Name);
-            return new ServerGoalsUpdateMessage() { Goals = goalList };
+            var msg = new ServerGoalsUpdateMessage();
+            msg.Write((writer) =>
+            {
+                var count = Controller.Goals.Count;
+                writer.Write(count);
+                writer.Write(444);
+                for (int i = 0; i < count; i++)
+                {
+                    var goal = Controller.Goals[i];
+                    writer.Write(555);
+                    writer.Write(goal.EndGoal.FinalProduct.Name);
+                    writer.Write(goal.Expiring);
+                }
+            });
+            return msg;
         }
 
         public void SendSound(BBSound sound, Vector3 location)

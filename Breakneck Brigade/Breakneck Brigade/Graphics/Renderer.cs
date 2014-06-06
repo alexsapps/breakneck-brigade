@@ -527,13 +527,13 @@ namespace Breakneck_Brigade.Graphics
             {
                 goalCache = goalCache.ToList(); //make it a cache, so we can enumerate safely
                 int width = 0;
-                foreach (IngredientType it in goalCache)
-                    if (it.DefaultPoints.ToString().Length > width)
-                        width = it.DefaultPoints.ToString().Length;
-                foreach (IngredientType it in goalCache)
+                foreach (var goal in goalCache)
+                    if (goal.Ingredient.DefaultPoints.ToString().Length > width)
+                        width = goal.Ingredient.DefaultPoints.ToString().Length;
+                foreach (var goal in goalCache)
                 {
                     Gl.glColor3f(0, 1, 0);
-                    TextRenderer.printToScreen(xPos, yPos, it.FriendlyName, FONT_SCALE, FONT_SCALE);
+                    TextRenderer.printToScreen(xPos, yPos, goal.Ingredient.FriendlyName, FONT_SCALE, FONT_SCALE);
                     yPos += spacing + padding;
                 }
 
@@ -670,7 +670,7 @@ namespace Breakneck_Brigade.Graphics
         {
             if (selectedRecipe != null)
             {
-                if (Program.game.Goals.Contains(selectedRecipe.FinalProduct))
+                if (Program.game.HasGoal(selectedRecipe.FinalProduct))
                 {
                     Gl.glColor3f(0, 1, 0);
                 }

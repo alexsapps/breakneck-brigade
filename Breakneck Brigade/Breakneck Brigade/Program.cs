@@ -210,7 +210,7 @@ namespace Breakneck_Brigade
                                     consoleGameOp(() =>
                                         {
                                             foreach (var goal in game.Goals)
-                                                Program.WriteLine(goal.Name);
+                                                Program.WriteLine(goal.Ingredient.Name);
                                         });
                                     break;
                                 }
@@ -845,10 +845,23 @@ namespace Breakneck_Brigade
                                         case ServerMessageType.GoalsUpdate:
                                         {
                                             var e = new ServerGoalsUpdateMessage();
-                                            e.Read(reader);
                                             game.Goals.Clear();
-                                            foreach (var g in e.Goals)
-                                                game.Goals.Add(game.Config.Ingredients[g]);
+                                            e.Read(reader);
+                                            e.Read((greader) =>
+                                            {
+                                                int glen = greader.ReadInt32();
+                                                int four = greader.ReadInt32();
+                                                Debug.Assert(four == 444);
+                                                for (int gi = 0; gi < glen; gi++)
+                                                {
+                                                    int five = greader.ReadInt32();
+                                                    Debug.Assert(five == 555);
+                                                    var ingredient = game.Config.Ingredients[greader.ReadString()];
+                                                    bool expiring = greader.ReadBoolean();
+                                                    game.Goals.Add(new ClientGoal(ingredient, expiring));
+                                                }
+                                            });
+
                                             game.Goals.Sort();
                                             game.CalculateRequiredRecipes();
                                             break;

@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="ClientGoal.cs" />
     <Compile Include="ClientLobbyState.cs" />
     <Compile Include="ClientStaticObject.cs" />
     <Compile Include="ClientCooker.cs" />

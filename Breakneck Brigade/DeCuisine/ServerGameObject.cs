@@ -188,6 +188,9 @@ namespace DeCuisine
                 case GeomShape.Cylinder:
                     geom = new CylinderShape(info.Size[0], info.Size[1], info.Size[2]);
                     break;
+                case GeomShape.Capsule:
+                    geom = new CapsuleShape(info.Size[0], info.Size[1]);
+                    break;
                 default: throw new Exception("AddToWorld not defined for GeomShape of " + info.Shape.ToString());
             }
 

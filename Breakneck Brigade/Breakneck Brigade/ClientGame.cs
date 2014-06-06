@@ -20,7 +20,8 @@ namespace Breakneck_Brigade
         public Dictionary<int, ClientGameObject> LiveGameObjects { get; set; }
         public Dictionary<int, ClientGameObject> GameObjectsCache { get; set; }
         public Dictionary<string, HashSet<string>> TintedObjects { get; protected set; }
-        public List<IngredientType> Goals { get; protected set; }
+        public List<ClientGoal> Goals { get; protected set; }
+        public bool HasGoal(IngredientType ingr) { return Goals.Any(g => g.Ingredient == ingr); }
         public int LookatId { get; set; }
         public int HeldId { get; set; }
         public List<AParticleSpawner> ParticleSpawners { get; set;}
@@ -40,7 +41,7 @@ namespace Breakneck_Brigade
             LiveGameObjects = new Dictionary<int, ClientGameObject>();
             GameObjectsCache = new Dictionary<int, ClientGameObject>();
             ParticleSpawners = new List<AParticleSpawner>();
-            Goals = new List<IngredientType>();
+            Goals = new List<ClientGoal>();
             Config = new GameObjectConfig().GetConfigSalad();
             this.CalculateRequiredRecipes();
             TintedObjects = new Dictionary<string, HashSet<string>>();
@@ -59,8 +60,9 @@ namespace Breakneck_Brigade
             Dictionary<string, Recipe> masterList = new Dictionary<string, Recipe>();
             List<Recipe> newRecipes = new List<Recipe>(), oldRecipes = new List<Recipe>();
 
-            foreach (IngredientType ingriendient in this.Goals)
+            foreach (var goal in this.Goals)
             {
+                IngredientType ingriendient = goal.Ingredient;
                 Recipe recipe;
                 if (this.Config.Recipes.TryGetValue(ingriendient.Name, out recipe))
                 {
