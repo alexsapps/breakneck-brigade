@@ -85,6 +85,18 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
 
   <models>
     <model>
+      <filename>butter</filename>
+      <posX>0</posX>
+      <posY>0</posY>
+      <posZ>0</posZ>
+      <scaleX>.4</scaleX>
+      <scaleY>.4</scaleY>
+      <scaleZ>.4</scaleZ>
+      <rotX>0</rotX>
+      <rotY>0</rotY>
+      <rotZ>0</rotZ>
+    </model>
+    <model>
       <filename>chef</filename>
       <posX>0</posX>
       <posY>0</posY>
@@ -373,18 +385,6 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
       <rotZ>0</rotZ>
     </model>
     <model>
-      <filename>butter</filename>
-      <posX>0</posX>
-      <posY>0</posY>
-      <posZ>0</posZ>
-      <scaleX>.4</scaleX>
-      <scaleY>.4</scaleY>
-      <scaleZ>.4</scaleZ>
-      <rotX>0</rotX>
-      <rotY>0</rotY>
-      <rotZ>0</rotZ>
-    </model>
-    <model>
       <filename>cheese</filename>
       <posX>0</posX>
       <posY>0</posY>
@@ -638,6 +638,30 @@ rotX/Y/Z:	the initial rotation in each dimension. By default,
     </model>
     <model>
       <filename>cakeBatter</filename>
+      <posX>0</posX>
+      <posY>0</posY>
+      <posZ>0</posZ>
+      <scaleX>1.0</scaleX>
+      <scaleY>1.0</scaleY>
+      <scaleZ>1.0</scaleZ>
+      <rotX>0</rotX>
+      <rotY>0</rotY>
+      <rotZ>0</rotZ>
+    </model>
+    <model>
+      <filename>cdj</filename>
+      <posX>0</posX>
+      <posY>0</posY>
+      <posZ>0</posZ>
+      <scaleX>1.0</scaleX>
+      <scaleY>1.0</scaleY>
+      <scaleZ>1.0</scaleZ>
+      <rotX>0</rotX>
+      <rotY>0</rotY>
+      <rotZ>0</rotZ>
+    </model>
+	<model>
+      <filename>cake</filename>
       <posX>0</posX>
       <posY>0</posY>
       <posZ>0</posZ>

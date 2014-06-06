@@ -322,7 +322,6 @@ namespace DeCuisine
                     {
                         Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position, 0, ing.LastPlayerHolding.Id);
                         double complexity = 0;
-                        this.finishedProdHash.TryGetValue(ing, out complexity);
                         ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity));
                         ing.Remove();
                         MarkLobbyStateDirty();
@@ -369,16 +368,6 @@ namespace DeCuisine
             team.Points += (int)(finalProduct.Type.DefaultPoints * (1 + complexity)); 
             finishedProdHash.Add(finalProduct, complexity);
             this.Game.SendLobbyStateToAll(); // update client scores
-        }
-
-        /// <summary>
-        /// Power up a already made ingredient with a booster ingredient.
-        /// </summary>
-        /// <param name="ingToPowerUp"></param>
-        /// <param name="powerUpIng"></param>
-        public void PowerUp(ServerIngredient ingToPowerUp, ServerIngredient powerUpIng)
-        {
-
         }
 
         public bool CheckWin()
@@ -593,6 +582,7 @@ namespace DeCuisine
                 if (!this.finishedProdHash.TryGetValue(powerItem, out tmp))
                     throw new Exception("Something is wrong with the powering up items"); // not a finished product, can't power it up
                 this.finishedProdHash[powerItem] += powUpIng.Type.powerUp;
+                Game.SendParticleEffect(BBParticleEffect.STARS, powerItem.Position, 0, powerItem.Id);
                 powUpIng.Remove();
             }
         }

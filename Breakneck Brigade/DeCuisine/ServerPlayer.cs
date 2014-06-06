@@ -121,6 +121,7 @@ namespace DeCuisine
             this.Hands.Add("right", tmp);
             this.Team = null;
             this.dashTicks = 0; // don't start dashing
+            this.canJump = true;
         }
 
         public override void Serialize(BinaryWriter stream)
@@ -264,7 +265,7 @@ namespace DeCuisine
                 //this.Game.World.RemoveConstraint(spSlider1);
                 this.Game.World.RemoveConstraint(constraint);
                 if(held.GeomInfo.Size[2] >= held.GeomInfo.Size[0])
-                    held.Position = moveOutsideBody(this.GeomInfo.Size[2] + held.GeomInfo.Size[2]); // put the object outside our body before throwing
+                    held.Position = moveOutsideBody(this.GeomInfo.Size[0] + held.GeomInfo.Size[2]); // put the object outside our body before throwing
                 else
                     held.Position = moveOutsideBody(this.GeomInfo.Size[2] + held.GeomInfo.Size[0]); // put the object outside our body before throwing
                 held.Body.LinearVelocity = new Vector3(imp.X, imp.Y, imp.Z) * ServerPlayer.THROWSCALER;

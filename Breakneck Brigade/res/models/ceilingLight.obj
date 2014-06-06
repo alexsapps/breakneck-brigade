@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 05.06.2014 15:13:29
+# File Created: 06.06.2014 01:21:17
 
 mtllib ceilingLight.mtl
 
@@ -339,7 +339,7 @@ vt 1.0076 1.0000 0.2601
 # 153 texture coords
 
 g Cone001
-usemtl wire_087225143
+usemtl Material__3
 s 1
 f 1/1/1 2/2/1 3/3/1 4/4/1 
 f 1/1/1 5/5/1 6/6/1 2/2/1 
@@ -747,7 +747,7 @@ vt -0.0197 1.0000 0.8794
 # 117 texture coords
 
 g Cylinder001
-usemtl wire_153228214
+usemtl Material__5
 s 1
 f 147/154/27 148/155/27 149/156/27 150/157/27 
 f 147/154/27 151/158/27 152/159/27 148/155/27 
@@ -2395,7 +2395,7 @@ vt 0.9688 -0.0000 0.0000
 # 559 texture coords
 
 g Sphere001
-usemtl wire_006135006
+usemtl Material__6
 s 1
 f 257/271/47 258/272/48 259/273/49 
 f 257/274/47 259/273/49 260/275/50 
@@ -3247,7 +3247,7 @@ vt 1.0076 1.0000 0.1035
 # 153 texture coords
 
 g Cone002
-usemtl wire_006135113
+usemtl Material__4
 s 1
 f 739/830/529 740/831/529 741/832/529 742/833/529 
 f 739/830/529 743/834/529 744/835/529 740/831/529 
@@ -3733,7 +3733,7 @@ vt 1.0076 1.0000 0.9319
 # 153 texture coords
 
 g Cone003
-usemtl wire_135006006
+usemtl Material__2
 s 1
 f 885/983/555 886/984/555 887/985/555 888/986/555 
 f 885/983/555 889/987/555 890/988/555 886/984/555 

@@ -885,8 +885,8 @@ namespace DeCuisine
                     oldGeomInfo = statObj.GeomInfo; // No type so it's different
                     attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, oldGeomInfo.Orientation, oldGeomInfo.Model);
-                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, "fucker", statObj.Position);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, oldGeomInfo.Model);
+                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, "fucker", statObj.Position, "blue");
                     statObj.Remove();
                     break;
                 case GameObjectClass.Terrain:
