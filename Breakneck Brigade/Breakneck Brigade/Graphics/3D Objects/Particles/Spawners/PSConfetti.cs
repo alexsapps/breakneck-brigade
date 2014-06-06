@@ -11,7 +11,6 @@ namespace Breakneck_Brigade.Graphics
     class PSConfetti : AParticleSpawner
     {
         Random rand                 = new Random();
-        ClientGameObject Follow     = null; 
 
         /// <summary>
         /// How many particle to spawn per spawn event
@@ -46,10 +45,6 @@ namespace Breakneck_Brigade.Graphics
 
         public override void Update()
         {
-            if(Follow != null)
-            {
-                Position = Follow.Position;
-            }
             base.Update();
         }
 

@@ -859,17 +859,25 @@ namespace Breakneck_Brigade
                                                         spawner = new PSConfetti(e.Location);
                                                     break;
                                                 case BBParticleEffect.SMOKE:
-                                                    spawner = new PSSmoke(e.Location, (SmokeType) e.Param);
+                                                    if (e.FollowID != -1)
+                                                        spawner = new PSSmoke(e.Location, (SmokeType) e.Param, game.LiveGameObjects[e.FollowID]);
+                                                    else
+                                                        spawner = new PSSmoke(e.Location, (SmokeType) e.Param);
                                                     break;
                                                 case BBParticleEffect.SPARKS:
-                                                    spawner = new PSSparks(e.Location);
+                                                    if (e.FollowID != -1)
+                                                        spawner = new PSSparks(e.Location, game.LiveGameObjects[e.FollowID]);
+                                                    else
+                                                        spawner = new PSSparks(e.Location);
                                                     break;
                                                 case BBParticleEffect.SPLASH:
                                                     break;
                                                 case BBParticleEffect.STARS:
                                                     break;
                                                 case BBParticleEffect.ARROW:
-                                                    if(e.Id == game.PlayerObjId)
+                                                    if (e.FollowID != -1)
+                                                        spawner = new PSArrow(e.Location, game.LiveGameObjects[e.FollowID]);
+                                                    else
                                                         spawner = new PSArrow(e.Location);
                                                     break;
                                             }

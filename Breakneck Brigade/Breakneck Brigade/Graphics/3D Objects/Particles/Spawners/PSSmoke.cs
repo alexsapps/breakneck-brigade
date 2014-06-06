@@ -38,6 +38,13 @@ namespace Breakneck_Brigade.Graphics
             smokeTypes = new List<Texture>();
             populateSmokeTypes(st);
         }
+        public PSSmoke(Vector4 pos, SmokeType st, ClientGameObject follow)
+        {
+            Lifetime = 5f;
+            smokeTypes = new List<Texture>();
+            populateSmokeTypes(st);
+            Follow = follow;
+        }
 
         
         public override void Render() //Disable transparency and disable face culling

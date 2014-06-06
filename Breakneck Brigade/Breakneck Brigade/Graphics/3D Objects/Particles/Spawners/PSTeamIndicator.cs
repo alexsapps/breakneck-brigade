@@ -10,7 +10,6 @@ namespace Breakneck_Brigade.Graphics
 {
     class PSTeamIndicator : AParticleSpawner
     {
-        ClientGameObject Follow = null;
         static float playerHeight = BB.GetPlayerSides()[1];
         string team;
 
@@ -59,8 +58,6 @@ namespace Breakneck_Brigade.Graphics
 
         public override void Update()
         {
-            Position = Follow.Position;
-
             base.Update();
         }
     }

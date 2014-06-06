@@ -45,6 +45,11 @@ namespace Breakneck_Brigade.Graphics
         /// </summary>
         protected float _age { get; set; }
 
+        /// <summary>
+        /// A client object to follows
+        /// </summary>
+        public ClientGameObject Follow = null; 
+
         public bool RemoveMe { get; protected set; }
 
         public AParticleSpawner()
@@ -138,6 +143,11 @@ namespace Breakneck_Brigade.Graphics
             }
             if(_toKill.Count > 0)
                 _toKill.Clear();
+
+            if (Follow != null)
+            {
+                Position = Follow.Position;
+            }
 
             //Make sure location is accurate
             _transform.TranslationMat(Position.X, Position.Y, Position.Z);

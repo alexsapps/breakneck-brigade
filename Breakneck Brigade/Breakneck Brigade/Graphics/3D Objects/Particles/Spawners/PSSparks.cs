@@ -30,6 +30,12 @@ namespace Breakneck_Brigade.Graphics
         {
             Lifetime = -1.0f;
         }
+        public PSSparks(Vector4 pos, ClientGameObject follow)
+            : base(pos)
+        {
+            Lifetime = -1.0f;
+            Follow = follow;
+        }
 
         protected override void Spawn()
         {

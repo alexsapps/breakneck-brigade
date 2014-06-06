@@ -25,6 +25,13 @@ namespace Breakneck_Brigade.Graphics
             Lifetime = 5f;
             spawnPeriod = Lifetime;
         }
+        public PSArrow(Vector4 pos, ClientGameObject follow)
+            : base(pos)
+        {
+            Lifetime = 5f;
+            spawnPeriod = Lifetime;
+            Follow = follow;
+        }
 
         public override void Render() //Disable transparency and disable face culling
         {
