@@ -33,6 +33,11 @@ namespace SousChef
         private static Dictionary<string, string> l { get { return _l ?? (_l = makeDict()); } }
 
         /// <summary>
+        /// Currently playing list of sounds.  This makes the cdj possible.
+        /// </summary>
+        private static List<SoundThread> soundThreads = new List<SoundThread>();
+
+        /// <summary>
         /// Plays a sound. See class header comments for details.
         /// </summary>
         /// <param name="key">The key of the sound to play.  Note that this *is* case-sensitive.</param>
@@ -47,10 +52,21 @@ namespace SousChef
             {
                 var soundThread = new SoundThread(temp, volume);
                 new Thread(soundThread.DoWork).Start();
+                soundThreads.Add(soundThread);
                 return soundThread;
             }
             else
                 throw new Exception("no sound file for " + key.ToString());
+        }
+
+
+        /// <summary>
+        /// Stop all currently playing sounds.
+        /// </summary>
+        public static void Stop()
+        {
+            foreach (var soundThread in soundThreads)
+                soundThread.Stop();
         }
 
         /// <summary>

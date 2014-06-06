@@ -25,6 +25,7 @@
 
 
     <!--Blue team side-->
+
     <static team="blue" type="counter"  coordinate="0, 10,-300"  size="200,10,25"  orientation="45" model="counter" friendlyName="Wooden Counter"></static>
     <static team="blue" type="counter"  coordinate="0, 10,-100"  orientation="180" size="200,10,25" model="counter" friendlyName="Wooden Counter"></static>
 
@@ -53,7 +54,7 @@
 
     <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,45,90" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
 
-    <static type="cdj" coordinate="480, 5, -480" size="12, 3, 16" orientation="45" model="cdj" friendlyName="DJ Turntable"/>
+    <static type="cdj" coordinate="480, 5, -480" size="12, 3, 16" orientation="315" model="cdj" friendlyName="DJ Turntable"/>
 
 
   </space>
