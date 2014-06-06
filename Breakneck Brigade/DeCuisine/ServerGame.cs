@@ -92,6 +92,11 @@ namespace DeCuisine
             MultiJump = false;
 #endif
         }
+        public void Dispose()
+        {
+            server.ClientEnter -= server_ClientEnter;
+            server.ClientLeave -= server_ClientLeave;
+        }
 
         public void ReloadConfig()
         {
@@ -682,12 +687,6 @@ namespace DeCuisine
         public void SendLobbyStateToAll()
         {
             MessageAll(calculateServerLobbyStateMessage);
-        }
-        
-
-        public void Dispose()
-        {
-
         }
 
         /*
