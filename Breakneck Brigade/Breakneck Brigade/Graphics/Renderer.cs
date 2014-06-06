@@ -190,9 +190,10 @@ namespace Breakneck_Brigade.Graphics
                         modelSubtree.ReadToNextSibling("rotZ");
                         float rotZ = modelSubtree.ReadElementContentAsFloat();
 
-                        Matrix4 modelMat = Matrix4.MakeTranslationMat(posX, posY, posZ);
-                        modelMat *= Matrix4.MakeRotateZDeg(rotZ);
+                        //Matrix4 modelMat = Matrix4.MakeTranslationMat(posX, posY, posZ);
+                        Matrix4 modelMat = new Matrix4();
                         modelMat *= Matrix4.MakeRotateYDeg(rotY);
+                        modelMat *= Matrix4.MakeRotateZDeg(rotZ);
                         modelMat *= Matrix4.MakeRotateXDeg(rotX);
                         modelMat *= Matrix4.MakeScalingMat(scaleX, scaleY, scaleZ);
 

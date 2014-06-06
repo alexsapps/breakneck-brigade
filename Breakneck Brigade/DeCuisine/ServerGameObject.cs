@@ -29,7 +29,7 @@ namespace DeCuisine
 
         public Matrix4 _modelScale;
         /// <summary>
-        /// ODE Matrix (X = left right, Y = in out, Z = up down)
+        /// Bullet matrix
         /// </summary>
         public SousChef.Matrix4 Rotation { get { return getRotation(); } set { setRotation(value); } }
 
@@ -210,9 +210,9 @@ namespace DeCuisine
                 body = new RigidBody(rbInfo);
             }
 
-            this._modelScale = Matrix4.MakeScalingMat(this.GeomInfo.Size[0] / this.GeomInfo.ModelScale[0],
-                              this.GeomInfo.Size[1] / this.GeomInfo.ModelScale[1],
-                              this.GeomInfo.Size[2] / this.GeomInfo.ModelScale[2]);
+            this._modelScale = Matrix4.MakeScalingMat(  this.GeomInfo.Size[0] / this.GeomInfo.ModelScale[0],
+                                                        this.GeomInfo.Size[1] / this.GeomInfo.ModelScale[1],
+                                                        this.GeomInfo.Size[2] / this.GeomInfo.ModelScale[2]);
 
             return body;
         }
@@ -337,9 +337,10 @@ namespace DeCuisine
             this.Game.Lock.AssertHeld();
             this.MarkDirty();
             Matrix transformWithoutRot = Matrix.Identity;
-            transformWithoutRot.M41 = this.Body.WorldTransform.M41;
-            transformWithoutRot.M42 = this.Body.WorldTransform.M42;
-            transformWithoutRot.M43 = this.Body.WorldTransform.M43;
+            transformWithoutRot.M41 = this.Body.CenterOfMassTransform.M41;
+            transformWithoutRot.M42 = this.Body.CenterOfMassTransform.M42;
+            transformWithoutRot.M43 = this.Body.CenterOfMassTransform.M43;
+            Matrix transform = this.Body.CenterOfMassTransform;
             this.Body.ProceedToTransform(Matrix.RotationY(value * MathConstants.DEG2RAD) * transformWithoutRot);
             _orientation = value;
         }
@@ -356,10 +357,12 @@ namespace DeCuisine
             if(this.Geom != null)
             {
                 Matrix r = this.Body.CenterOfMassTransform;
-                _rotation.SetAll(r.M11,  r.M21,  r.M31,  0,
-                                 r.M12,  r.M22,  r.M32,  0,
-                                 r.M13,  r.M23,  r.M33,  0,
-                                 0,      0,      0,      1);
+
+                /* BULLET IS ROW MAJOR */
+                _rotation.SetAll(r.M11, r.M12, r.M13, 0,
+                                 r.M21, r.M22, r.M23, 0,
+                                 r.M31, r.M32, r.M33, 0,
+                                 0, 0, 0, 1);
                 return _rotation;
             }
             else
@@ -378,14 +381,17 @@ namespace DeCuisine
                 //r.SetIdentity();
                 r = Matrix.Identity;
                 r.M11 = _rotation[0, 0];
-                r.M21 = _rotation[1, 0];
-                r.M31 = _rotation[2, 0];
-                r.M12 = _rotation[0, 1]; 
+                r.M21 = _rotation[0, 1];
+                r.M31 = _rotation[0, 2];
+                r.M12 = _rotation[1, 0]; 
                 r.M22 = _rotation[1, 1]; 
-                r.M32 = _rotation[2, 1];
-                r.M13 = _rotation[0, 2]; 
-                r.M23 = _rotation[1, 2];
+                r.M32 = _rotation[1, 2];
+                r.M13 = _rotation[2, 0]; 
+                r.M23 = _rotation[2, 1];
                 r.M33 = _rotation[2, 2];
+
+                this.Body.ProceedToTransform(r);
+                this.MarkDirty();
             }
             else
             {
