@@ -1,14 +1,14 @@
 <world gravity="0,-190,0">
   <space>
     <!-- Floor + Walls -->
-    <terrain type="floor" shape="box" coordinate="0, -10, 0"        size="500,10,500" />
-    <terrain type="wall" shape="box" coordinate="-510, 115,  0"   size="10,125,500" />
-    <terrain type="wall" shape="box" coordinate="0, 115,  -510"    size="500,125,10" />
-    <terrain type="wall" shape="box" coordinate="0, 115, 510"   size="500,125,10" />
-    <terrain type="wall" shape="box" coordinate="510, 115,   0"    size="10,125,500" />
+    <terrain type="floor" shape="box" coordinate="0, -100, 0"        size="500,100,500" />
+    <terrain type="wall" shape="box" coordinate="-600, 115,  0"   size="100,225,700" />
+    <terrain type="wall" shape="box" coordinate="0, 115,  -600"    size="500,225,100" />
+    <terrain type="wall" shape="box" coordinate="0, 115, 600"   size="500,225,100" />
+    <terrain type="wall" shape="box" coordinate="600, 115,   0"    size="100,225,700" />
 
     <!--Ceiling-->
-    <terrain type="floor" shape="box" coordinate="0, 250, 0" size="500,10,500" />
+    <terrain type="floor" shape="box" coordinate="0, 340, 0" size="500,100,500" />
 
     <!-- Red team side -->
     <static team="red" type="woodenCounter"  coordinate="484, 5, 200"  size="25,10,300" model="woodenCounter" friendlyName="Wooden Counter"></static>
@@ -29,6 +29,8 @@
     <cooker team="blue" type="pot" coordinate="200, 20, 484"></cooker>
     <cooker team="blue" type="oven" coordinate="300, 20, 484"></cooker>
     <cooker team="blue" type="bowl" coordinate="400, 20, 484"></cooker>
+
+    <static type="celingLight" coordinate="-300, 200, 0" size="5, 20, 5" model="ceilingLight" friendlyName="Light"/>
 
 
     <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,45,90" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
