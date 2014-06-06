@@ -281,7 +281,7 @@ namespace DeCuisine
         {
             this.Throw("left", 0.0f); // Drop object in front of player.
             this.stunTicks = STUNTIME;
-            Game.SendParticleEffect(BBParticleEffect.CONFETTI, this.Position, 0, this.Id);
+            Game.SendParticleEffect(BBParticleEffect.SPARKS, this.Position, 0, this.Id);
         }
 
         /// <summary>
