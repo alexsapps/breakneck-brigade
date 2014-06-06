@@ -784,7 +784,8 @@ namespace Breakneck_Brigade
                                 case GameMode.Results:
                                     //winning team is lobbyState.WinningTeam
 
-                                    Renderer.GameOverScore = Program.lobbyState.MyTeam.Score.ToString();
+                                    //Renderer.GameOverScore = Program.lobbyState.MyTeam.Score.ToString();
+                                    Renderer.GameOverScore = "0";
 
                                     if (lobbyState.IWin)
                                     {

@@ -482,6 +482,8 @@ namespace Breakneck_Brigade.Graphics
             if (GameMode == SousChef.GameMode.Results)
             {
                 this.DrawResults((int)WindowWidth / 2, (int)WindowHeight / 2);
+                Renderer.disableTransparency();
+                Gl.glPopAttrib();
                 return;
             }
             this.DrawGoals(5, padding);
