@@ -19,6 +19,7 @@ namespace SousChef
         public float defaultRollingFriction;
         public float defaultRestitution;
         public float defaultAngularDamping;
+        public float defaultOrientation;
 
         protected override void handleAttributes()
         {
@@ -30,6 +31,7 @@ namespace SousChef
             defaultRollingFriction = float.Parse(attrib("defaultRollingFriction"));
             defaultRestitution = float.Parse(attrib("defaultRestitution"));
             defaultAngularDamping = float.Parse(attrib("defaultAngularDamping"));
+            defaultOrientation = float.Parse(attrib("defaultOrientation"));
         }
         
         public override BBXItemParser<IngredientType> getItemParser() { return new IngredientParser(config, this); }
@@ -55,7 +57,7 @@ namespace SousChef
             int points = int.Parse(attributes["points"]);
 
             var geomInfo = getGeomInfo(attributes,
-                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
+                fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, fileParser.defaultOrientation, null
                 );
             double powerUp = 0;
             if (attributes.ContainsKey("powerup"))

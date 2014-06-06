@@ -863,8 +863,8 @@ namespace DeCuisine
                     // * MathConstants.DEG2RAD
                     attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     this.Config.Cookers[cooker.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, cooker.Type.Name);
-                    scaled = new ServerCooker(cooker.Type, cooker.Team, cooker.Game, cooker.Position);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, oldGeomInfo.Orientation, cooker.Type.Name);
+                    scaled = new ServerCooker(cooker.Type, cooker.Team, cooker.Game, cooker.Position, cooker.GeomInfo);
                     cooker.Remove();
                     //new ServerCooker(objToMove)
                     break;
@@ -873,7 +873,7 @@ namespace DeCuisine
                     oldGeomInfo = this.Config.Ingredients[ing.Type.Name].GeomInfo;
                     attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     this.Config.Ingredients[ing.Type.Name].GeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, ing.Type.Name);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, oldGeomInfo.Orientation, ing.Type.Name);
                     scaled = new ServerIngredient(ing.Type, ing.Game, ing.Position);
                     ing.Remove();
                     break;
@@ -885,8 +885,8 @@ namespace DeCuisine
                     oldGeomInfo = statObj.GeomInfo; // No type so it's different
                     attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, null);
-                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, "fucker", statObj.Position);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, oldGeomInfo.Orientation, oldGeomInfo.Model);
+                    scaled = new ServerStaticObject(statObj.Game, newGeomInfo, statObj.Model, "fucker", statObj.Position, "blue");
                     statObj.Remove();
                     break;
                 case GameObjectClass.Terrain:
@@ -894,7 +894,7 @@ namespace DeCuisine
                     oldGeomInfo = terrain.GeomInfo; // No type so it's different
                     attributes.Add("orientation",radToDegreeString(oldGeomInfo.Orientation));
                     newGeomInfo = BBXItemParser<CookerType>.getGeomInfo(
-                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, terrain.Type.Name);
+                        attributes, new float[3] { x, y, z }, oldGeomInfo.Mass, oldGeomInfo.Friction, oldGeomInfo.RollingFriction, oldGeomInfo.Restitution, oldGeomInfo.AngularDamping, oldGeomInfo.Orientation, terrain.Type.Name);
                     scaled = new ServerTerrain(terrain.Game, terrain.Type, terrain.Position, newGeomInfo);
                     terrain.Remove();
                     break;

@@ -23,7 +23,8 @@ namespace DeCuisine
         { get { return _contents; } private set { this.MarkDirty(); this._contents = value; } }
         public Dictionary<int, ServerIngredient> _contents;
         public CookerType Type { get; set; }
-        protected override GeometryInfo getGeomInfo() { return this.Game.Config.Cookers[Type.Name].GeomInfo; }
+        private GeometryInfo _geomInfo;
+        protected override GeometryInfo getGeomInfo() { return _geomInfo ?? this.Game.Config.Cookers[Type.Name].GeomInfo; }
         public ServerTeam Team { get; set; }
         
 
@@ -40,11 +41,12 @@ namespace DeCuisine
         /// <param name="transform">Initial location</param>
         /// <param name="server">The server where the cooker is made</param>
         /// <param name="type">What type of cooker i.e "oven"</param>
-        public ServerCooker(CookerType type, ServerTeam team, ServerGame game, Vector3 transform)
+        public ServerCooker(CookerType type, ServerTeam team, ServerGame game, Vector3 transform, GeometryInfo geomInfo)
             : base(game)
         {
             this.Type = type;
             this._contents = new Dictionary<int, ServerIngredient>();
+            this._geomInfo = geomInfo;
             this.Team = team;
             AddToWorld(transform);
             this.Team.HintHash.Add(this, new List<string>()); // add itself to the hint hash

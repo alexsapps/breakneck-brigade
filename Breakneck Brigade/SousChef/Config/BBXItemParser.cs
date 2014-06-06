@@ -116,17 +116,14 @@ namespace SousChef
             return items;
         }
 
-        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSize, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping, string temp)
+        public static GeometryInfo getGeomInfo(Dictionary<string, string> attributes, float[] defaultSize, float defaultMass, float defaultFriction, float defaultRollingFriction, float defaultRestitution, float defaultAngularDamping, float defaultOrientation, string model)
         {
             //Debug.Assert(attributes.ContainsKey("name")); //should not need name field
-            if (temp == null && attributes.ContainsKey("name"))
-                temp = attributes["name"];
-            else if (temp == null && attributes.ContainsKey("model"))
-                temp = attributes["model"];
-                
-            var vertMinMax = temp != null && scaleVector.ContainsKey(temp) ? scaleVector[temp] : scaleVector["bread"];
-            float[] modelScale = new float[] { (vertMinMax[1].X - vertMinMax[0].X)/2, (vertMinMax[1].Y - vertMinMax[0].Y)/2, (vertMinMax[1].Z - vertMinMax[0].Z)/2 };
-
+            if (model == null && attributes.ContainsKey("name"))
+                model = attributes["name"];
+            else if (model == null && attributes.ContainsKey("model"))
+                model = attributes["model"];
+            
             var shape = BB.ParseGeomShape(attributes.get("shape"), GeomShape.Box);
             float[] size = parseFloats(attributes.get("size"), defaultSize);
             float mass = parseFloat(attributes.get("mass"), defaultMass);
@@ -134,14 +131,14 @@ namespace SousChef
             float rollingFriction = parseFloat(attributes.get("rollingFriction"), defaultRollingFriction);
             float restitution = parseFloat(attributes.get("restitution"), defaultRestitution);
             float angularDamping = parseFloat(attributes.get("angularDamping"), defaultAngularDamping);
-            float orientation = parseFloat(attributes.get("orientation"), 0.0f);
+            float orientation = parseFloat(attributes.get("orientation"), defaultOrientation);
 
             GeometryInfo info = new GeometryInfo()
             {
                 Shape = shape,
                 Mass = mass,
                 Size = size,
-                ModelScale = modelScale,
+                Model = model,
                 Friction = friction,
                 RollingFriction = rollingFriction,
                 Restitution = restitution,
