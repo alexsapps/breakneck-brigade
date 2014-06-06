@@ -46,7 +46,7 @@ namespace Breakneck_Brigade.Graphics
                 Position            = new Vector4(0, playerHeight/2 + 5, 0),
                 Velocity            = new Vector4(0, 0, 0),
                 Acceleration        = new Vector4(0, 0, 0),
-                Scale               = 1f,
+                Scale               = 5f,
                 Rotation            = new Vector4(0, 0, 0),
                 RotationalVelocity  = new Vector4(0, 1, 0),
                 Lifetime            = 5f
