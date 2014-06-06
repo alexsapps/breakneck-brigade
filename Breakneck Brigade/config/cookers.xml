@@ -14,7 +14,7 @@
 
  <cooker name="pot" friendlyName="Pot" size="18,9,18" mass="9001.0">
     <recipe>soup</recipe>
-    <recipe>pasta</recipe>
+    <recipe>cookedPasta</recipe>
   </cooker>
 
   <cooker name="pan" friendlyName="Pan" size="18,9,18" mass="9001.0">

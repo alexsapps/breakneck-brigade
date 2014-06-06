@@ -41,7 +41,7 @@
   <recipe product="soup">
     <ingredient>tomato</ingredient>
   </recipe>
-  <recipe product="pasta">
+  <recipe product="cookedPasta">
     <ingredient>noodles</ingredient>
     <ingredient>sauce</ingredient>
     <ingredient optional="2">butter</ingredient>
