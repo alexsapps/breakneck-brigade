@@ -75,7 +75,7 @@ namespace DeCuisine
 #endif
         private bool _goalsDirty = false;
 
-        public int ScoreToWin = 1; //20000000;
+        public int ScoreToWin = 20000000;
         public readonly long MaxTime = new TimeSpan(0,5,0).Ticks;
 
         public ServerGameController(ServerGame game)
@@ -392,7 +392,7 @@ namespace DeCuisine
                 }
             }
 
-            if (DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime) //maxTeams[0].Points >= this.ScoreToWin || 
+            if (maxTeams[0].Points >= this.ScoreToWin || DateTime.Now.Subtract(Game.StartTime).Ticks > MaxTime)
             {
                 if (maxTeams.Count == 1)
                     Game.Winner = maxTeams[0];
