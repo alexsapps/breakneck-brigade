@@ -35,7 +35,7 @@ namespace DeCuisine
             {
                 start(); //start automatically
 
-            #if PROJECT_DEBUG
+            #if PROJECT_DEBUG || PROJECT_WORLD_BUILDING
                 lock (server.Game.Lock)
                 {
                     server.Game.Start(); //play automatically to make debugging easier.
