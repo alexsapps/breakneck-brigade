@@ -345,22 +345,138 @@ namespace Breakneck_Brigade.Graphics
             /* LIGHTING */
             Gl.glEnable(Gl.GL_LIGHTING);
 
-            float[] position1 = { 1000, 2000, 0, 1 };
-            float[] position2 = { 1000, 2000, 0, 1};
-            float[] ambientColor = { .1f, .1f, .1f, 1 };
+            float[] position1 = { -200, 180, 0, 1 };
+            float[] position2 = { 200, 180, 0, 1 };
+            float[] position3 = { 0, 180, 200, 1 };
+            float[] position4 = { 0, 180, -200, 1 };
+            float[] position5 = { -200, 180, 200, 1 };
+            float[] position6 = { -200, 180, -200, 1 };
+            float[] position7 = { 200, 180, 200, 1 };
+            float[] position8 = { 200, 180, -200, 1 };
+            float[] ambientColor = { .2f, .2f, .2f, 1 };
+            float[] spotDirection = { 0.0f, -1.0f, 0.0f };
+            float[] spotDirection2 = { 0.0f, -1.0f, -1.0f };
             //float[] ambientColor = { 0, 0, 0, 1 };
-            float[] diffuseColor = { 1, 1, 1, 1 };
-            float[] specularColor = { 1, 1, 1, 1 };
+            float[] diffuseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+            float[] specularColor = { 0.1f, 0.1f, 0.1f, .01f };
+            //Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position1);
+            //Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_POSITION, position2);
+            //Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_POSITION, position3);
+            //Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_POSITION, position4);
+            //Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_POSITION, position5);
+            //Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_POSITION, position6);
+            //Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_POSITION, position7);
+            //Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_POSITION, position8);
+            //Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_AMBIENT, ambientColor);
+            //Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_DIFFUSE, diffuseColor);
+            //Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_SPECULAR, specularColor);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position1);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_AMBIENT, ambientColor);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_DIFFUSE, diffuseColor);
             Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT0, Gl.GL_SPOT_CUTOFF, 60.0f);
+            //Gl.glLightf(Gl.GL_LIGHT0, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_SPOT_DIRECTION, spotDirection);
+            //Gl.glLightf(Gl.GL_LIGHT0, Gl.GL_CONSTANT_ATTENUATION, 2.0f);
+            Gl.glLightf(Gl.GL_LIGHT0, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+            //Gl.glLightf(Gl.GL_LIGHT0, Gl.GL_QUADRATIC_ATTENUATION, 0.05f);
+
+
             Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_POSITION, position2);
             Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_AMBIENT, ambientColor);
             Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_DIFFUSE, diffuseColor);
             Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT1, Gl.GL_SPOT_CUTOFF, 60.0f);
+            //Gl.glLightf(Gl.GL_LIGHT1, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT1, Gl.GL_SPOT_DIRECTION, spotDirection);
+            Gl.glLightf(Gl.GL_LIGHT1, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+
+            Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_POSITION, position3);
+            Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_AMBIENT, ambientColor);
+            Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_DIFFUSE, diffuseColor);
+            Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT2, Gl.GL_SPOT_CUTOFF, 60.0f);
+            //Gl.glLightf(Gl.GL_LIGHT2, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT2, Gl.GL_SPOT_DIRECTION, spotDirection);
+            Gl.glLightf(Gl.GL_LIGHT2, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+
+            Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_POSITION, position4);
+            Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_AMBIENT, ambientColor);
+            Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_DIFFUSE, diffuseColor);
+            Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT3, Gl.GL_SPOT_CUTOFF, 90.0f);
+            //Gl.glLightf(Gl.GL_LIGHT3, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT3, Gl.GL_SPOT_DIRECTION, spotDirection2);
+            Gl.glLightf(Gl.GL_LIGHT3, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+
+            Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_POSITION, position5);
+            Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_AMBIENT, ambientColor);
+            Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_DIFFUSE, diffuseColor);
+            Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT4, Gl.GL_SPOT_CUTOFF, 60.0f);
+            //Gl.glLightf(Gl.GL_LIGHT4, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT4, Gl.GL_SPOT_DIRECTION, spotDirection);
+            Gl.glLightf(Gl.GL_LIGHT4, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+
+            Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_POSITION, position6);
+            Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_AMBIENT, ambientColor);
+            Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_DIFFUSE, diffuseColor);
+            Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT5, Gl.GL_SPOT_CUTOFF, 60.0f);
+            //Gl.glLightf(Gl.GL_LIGHT5, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT5, Gl.GL_SPOT_DIRECTION, spotDirection);
+            Gl.glLightf(Gl.GL_LIGHT5, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+
+            Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_POSITION, position7);
+            Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_AMBIENT, ambientColor);
+            Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_DIFFUSE, diffuseColor);
+            Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT6, Gl.GL_SPOT_CUTOFF, 60.0f);
+            //Gl.glLightf(Gl.GL_LIGHT6, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT6, Gl.GL_SPOT_DIRECTION, spotDirection);
+            Gl.glLightf(Gl.GL_LIGHT6, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+
+            Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_POSITION, position8);
+            Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_AMBIENT, ambientColor);
+            Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_DIFFUSE, diffuseColor);
+            Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_SPECULAR, specularColor);
+            //Gl.glLightf(Gl.GL_LIGHT7, Gl.GL_SPOT_CUTOFF, 60.0f);
+            //Gl.glLightf(Gl.GL_LIGHT7, Gl.GL_SPOT_EXPONENT, 0.0f);
+            //Gl.glLightfv(Gl.GL_LIGHT7, Gl.GL_SPOT_DIRECTION, spotDirection);
+            Gl.glLightf(Gl.GL_LIGHT7, Gl.GL_LINEAR_ATTENUATION, 0.05f);
+
             Gl.glEnable(Gl.GL_LIGHT0);
             Gl.glEnable(Gl.GL_LIGHT1);
+            Gl.glEnable(Gl.GL_LIGHT2);
+            Gl.glEnable(Gl.GL_LIGHT3);
+            Gl.glEnable(Gl.GL_LIGHT4);
+            Gl.glEnable(Gl.GL_LIGHT5);
+            Gl.glEnable(Gl.GL_LIGHT6);
+            Gl.glEnable(Gl.GL_LIGHT7);
+
+            
+            Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, new float[]{ 0.4f, 0.4f, 0.4f, 0.4f });
 
             /* RENDERING SETTINGS */
             //Enables manual setting of colors and materials of primatives (through glColor__, etc)
