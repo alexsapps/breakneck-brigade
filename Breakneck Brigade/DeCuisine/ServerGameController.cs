@@ -75,8 +75,8 @@ namespace DeCuisine
 #endif
         private bool _goalsDirty = false;
 
-        public int ScoreToWin = 20000000;
-        public long MaxTime = new TimeSpan(0,5,0).Ticks;
+        public int ScoreToWin = 1; //20000000;
+        public readonly long MaxTime = new TimeSpan(0,5,0).Ticks;
 
         public ServerGameController(ServerGame game)
         {
@@ -106,7 +106,6 @@ namespace DeCuisine
             this.NeededHash = new Dictionary<IngredientType, int>();
             this.ticks = 0;
             this.stageNum = 1;
-            this.MaxTime = new TimeSpan(0, 5, 0).Ticks;
         }
 
         private void FillGoals()
@@ -386,7 +385,7 @@ namespace DeCuisine
             {
                 if (maxTeams.Count == 0 || team.Points == maxTeams[0].Points)
                     maxTeams.Add(team);
-                else if(team.Points > maxTeams[0].Points)
+                else if (team.Points > maxTeams[0].Points)
                 {
                     maxTeams.Clear();
                     maxTeams.Add(team);
@@ -403,7 +402,7 @@ namespace DeCuisine
             }
 
             return false;
-            }
+        }
 
         bool _lobbyStateDirty = false;
         void MarkLobbyStateDirty()

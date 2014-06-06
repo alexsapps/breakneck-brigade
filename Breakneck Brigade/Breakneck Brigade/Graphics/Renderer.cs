@@ -635,7 +635,7 @@ namespace Breakneck_Brigade.Graphics
         {
             if (Program.game != null)
             {
-                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(), FONT_SCALE, FONT_SCALE);
+                TextRenderer.printToScreen(xPos, yPos, "Time: " + Program.game.GameTime.ToString(@"hh\:mm\:ss\.ff"), FONT_SCALE, FONT_SCALE);
             }
         }
 
