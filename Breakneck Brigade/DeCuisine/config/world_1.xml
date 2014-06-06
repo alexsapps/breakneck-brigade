@@ -47,7 +47,7 @@
     <static type="celingLight" coordinate= "200, 190, -200" size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
 
 
-    <static type="celingLight" coordinate= "300, 190, 200" size="30, 30, 10" model="ceilingLight" friendlyName="Power Up Window"/>
+<!--    <static type="celingLight" coordinate= "300, 190, 200" size="30, 30, 10" model="ceilingLight" friendlyName="Power Up Window"/> -->
 
 
     <static type="deliveryWindow" coordinate="0, 100, -460" size="40,45,90" orientation="-90" model="deliveryWindow" friendlyName="Delivery Window"/>
