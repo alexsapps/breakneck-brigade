@@ -399,6 +399,8 @@ namespace DeCuisine
             }
             team.Points += (int)(finalProduct.Type.DefaultPoints * (1 + complexity)); 
             finishedProdHash.Add(finalProduct, complexity);
+            if (complexity > 0)
+                Game.SendParticleEffect(BBParticleEffect.STARS, finalProduct.Position, 0, finalProduct.Id);
             this.Game.SendLobbyStateToAll(); // update client scores
         }
 
