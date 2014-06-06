@@ -357,9 +357,9 @@ namespace Breakneck_Brigade.Graphics
             float[] spotDirection = { 0.0f, -1.0f, 0.0f };
             float[] spotDirection2 = { 0.0f, -1.0f, -1.0f };
             //float[] ambientColor = { 0, 0, 0, 1 };
-            float[] diffuseColor = { 0.7f, 0.7f, 0.7f, 0.7f };
-            float[] diffuseColorBlue = { 0.2f, 0.2f, 0.9f, 0.9f };
-            float[] diffuseColorRed = { 0.9f, 0.2f, 0.2f, 0.9f };
+            float[] diffuseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+            float[] diffuseColorBlue = { 0.0f, 0.0f, 1.0f, 1.0f };
+            float[] diffuseColorRed = { 1.0f, 0.0f, 0.0f, 1.0f };
             float[] specularColor = { 0.1f, 0.1f, 0.1f, .01f };
             //Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_POSITION, position1);
             //Gl.glLightfv(Gl.GL_LIGHT0, Gl.GL_AMBIENT, ambientColor);
@@ -478,7 +478,7 @@ namespace Breakneck_Brigade.Graphics
             Gl.glEnable(Gl.GL_LIGHT7);
 
             
-            Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, new float[]{ 0.4f, 0.4f, 0.4f, 0.4f });
+            Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, new float[]{ 0.6f, 0.6f, 0.6f, 0.6f });
 
             /* RENDERING SETTINGS */
             //Enables manual setting of colors and materials of primatives (through glColor__, etc)
