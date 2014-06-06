@@ -27,7 +27,7 @@
   <recipe product="cake">
     <ingredient>cakeBatter</ingredient>
   </recipe>
-  <recipe product="chicken">
+  <recipe product="cookedChicken">
     <ingredient>rawChicken</ingredient>
     <ingredient optional="1">egg</ingredient>
     <ingredient optional="1">flour</ingredient>

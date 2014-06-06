@@ -7,8 +7,8 @@
     <recipe>sauce</recipe>
   </cooker>
 
-  <cooker name="oven" friendlyName="Stove" size="16,16,16" mass="9001.0">
-    <recipe>chicken</recipe>
+  <cooker name="stove" friendlyName="Stove" size="16,16,16" mass="9001.0">
+    <recipe>cookedChicken</recipe>
     <recipe>cake</recipe>
   </cooker>
 
@@ -18,7 +18,7 @@
   </cooker>
 
   <cooker name="pan" friendlyName="Pan" size="18,9,18" mass="9001.0">
-    <recipe>chicken</recipe>
+    <recipe>cookedChicken</recipe>
     <recipe>cookedSteak</recipe>
     <recipe>hamburger</recipe>
   </cooker>
