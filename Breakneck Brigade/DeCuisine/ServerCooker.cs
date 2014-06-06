@@ -16,7 +16,7 @@ namespace DeCuisine
     /// </summary>
     class ServerCooker : ServerGameObject
     {
-        private const float EJECTSPEED = 40.0f;
+        private const float EJECTSPEED = 20.0f;
 
         public override GameObjectClass ObjectClass { get { return GameObjectClass.Cooker; } }
         public Dictionary<int, ServerIngredient> Contents

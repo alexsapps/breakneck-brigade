@@ -62,8 +62,8 @@ namespace DeCuisine
                 // CurrentStage = (GameControllerStage)((int)CurrentStage + 1);
                 this.CurrentGameState = GameControllerState.Start;
                 // FillGoals();
-                this.FillGoals(stageNum, 0);
                 this.stageNum++;
+                this.FillGoals(stageNum, 0);
                 this.ticks = 0;
             }
         }
