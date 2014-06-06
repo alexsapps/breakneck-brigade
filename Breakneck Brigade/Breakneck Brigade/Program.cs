@@ -372,7 +372,19 @@ namespace Breakneck_Brigade
                     Program.WriteLine("Prompting to connect...");
                     lock (clientLock)
                     {
-                        client = promptConnect();
+                        lock (promptConnectResultLock)
+                        {
+                            beginPromptConnect();
+                            norender++;
+                            while (promptConnectResult == null)
+                            {
+                                Glfw.glfwSwapBuffers();
+                                Monitor.Wait(promptConnectResultLock, 10);
+                            }
+                            norender--;
+                        }
+                        client = promptConnectResult.Client;
+                        promptConnectResult = null;
                         if (client == null)
                         {
                             onClosed();
@@ -396,6 +408,26 @@ namespace Breakneck_Brigade
                     //else, game ended or disconnected.  prompt to connect again.
                 }
             }
+        }
+
+        public static int norender = 0;
+
+        class PromptConnectResult
+        {
+            public Client Client;
+        }
+        static BBLock promptConnectResultLock = new BBLock();
+        static PromptConnectResult promptConnectResult = null;
+        static void beginPromptConnect()
+        {
+            new Thread(() => { 
+                var c = promptConnect();
+                lock (promptConnectResultLock)
+                {
+                    Program.promptConnectResult = new PromptConnectResult() { Client = c };
+                    Monitor.Pulse(promptConnectResultLock);
+                }
+            }).Start();
         }
 
         static SoundThread backgroundMusicThread = null;
@@ -604,22 +636,19 @@ namespace Breakneck_Brigade
                 prompter.Host = lastHost ?? globalConfig.GetSetting("server-host", BB.DefaultServerHost);
                 prompter.Port = lastPort ?? int.Parse(globalConfig.GetSetting("server-port", BB.DefaultServerPort));
 
-                lock (clientLock)
+                var client = new Client(clientLock);
+
+                try
                 {
-                    client = new Client(clientLock);
-
-                    try
-                    {
-                        //try to autoconnect
-                        client.Connect(prompter.Host, prompter.Port);
-                        return client;
-                    }
-                    catch
-                    {
-                        //autoconnect failed.  continue to prompt user.
-                    }
+                    //try to autoconnect
+                    client.Connect(prompter.Host, prompter.Port);
+                    return client;
                 }
-
+                catch
+                {
+                    //autoconnect failed.  continue to prompt user.
+                }
+                
                 prompter.BeginPrompt();
 
                 while (prompter.cont)
@@ -628,18 +657,17 @@ namespace Breakneck_Brigade
                     {
                         try
                         {
-                            lock (clientLock)
-                            {
-                                client = new Client(clientLock);
-                                client.Connect(prompter.Host, prompter.Port);
+                            
+                            client = new Client(clientLock);
+                            client.Connect(prompter.Host, prompter.Port);
                                 
-                                lastHost = prompter.Host; //remember, if succeeded
-                                lastPort = prompter.Port;
-                                addHost(prompter.Host, prompter.Port);
+                            lastHost = prompter.Host; //remember, if succeeded
+                            lastPort = prompter.Port;
+                            addHost(prompter.Host, prompter.Port);
 
-                                prompter.connectedCallback();
-                                return client;
-                            }
+                            prompter.connectedCallback();
+                            return client;
+                            
                         }
                         catch(Exception ex)
                         {

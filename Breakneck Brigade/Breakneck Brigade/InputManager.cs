@@ -150,6 +150,9 @@ namespace Breakneck_Brigade
         /// <param name="action">GLFW_PRESS or GLFW_RELEASE</param>
         void KeyboardInput(int temp, int action)
         {
+            if (Program.norender > 0)
+                return;
+
             bool pressed = (action == Glfw.GLFW_PRESS);
             GlfwKeys key = remap(temp);
             lock (Lock)
@@ -182,6 +185,9 @@ namespace Breakneck_Brigade
         /// <param name="y">position of mouse y position at callback</param>
         void MousePos(int x, int y)
         {
+            if (Program.norender > 0)
+                return;
+
             if (FpsMode)
             {
                 // Get difference of mouse pos & origin

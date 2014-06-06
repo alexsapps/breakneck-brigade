@@ -535,9 +535,9 @@ namespace Breakneck_Brigade.Graphics
                 Console.Error.WriteLine("ERROR: GLFW Initialization failed!");
                 Environment.Exit(1);
             }
-            Glfw.glfwOpenWindow((int)_desiredWidth, (int)_desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_WINDOW);
+            Glfw.glfwOpenWindow((int)_desiredWidth, (int)_desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_FULLSCREEN);
             Glfw.glfwSwapInterval(0);
-            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
+            //Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
         }
 
         /// <summary>
