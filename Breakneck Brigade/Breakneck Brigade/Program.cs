@@ -260,6 +260,25 @@ namespace Breakneck_Brigade
                                     }
                                     break;
                                 }
+                            case "soundtest":
+                                if (parts.Length > 1)
+                                {
+                                    if (parts[1] == "off")
+                                    {
+                                        SoundThing.off = true;
+                                        if (backgroundMusicThread != null)
+                                            backgroundMusicThread.Stop();
+                                    }
+                                    else if (parts[1] == "on")
+                                        SoundThing.off = false;
+                                    else
+                                        SoundThing.Play(BBSound.punchmiss, double.Parse(parts[1]));
+                                }
+                                else
+                                {
+                                    SoundThing.Play(BBSound.punchmiss, 1);
+                                }
+                                break;
                             default:
                                 Program.WriteLine("Command not recognized.");
                                 break;
@@ -844,8 +863,10 @@ namespace Breakneck_Brigade
                                             var playerPos = localPlayer.GetPosition();
                                             var soundPos = e.Location;
                                             double distance = getDistance(playerPos, soundPos);
-                                            SoundThing.Play(e.Sound, Math.Log(distance));
-                                            //Console.WriteLine(Math.Log(1/distance));
+                                            double volume;
+                                            volume = 1.0 / (distance/100 + 1.0); //1.0 - distance/1000;
+                                            SoundThing.Play(e.Sound, volume);
+                                            Console.WriteLine(volume);
                                             break;
                                         }
                                         case ServerMessageType.ParticleEffect:
