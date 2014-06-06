@@ -11,29 +11,28 @@
     <terrain type="floor" shape="box" coordinate="0, 340, 0" size="500,100,500" />
 
     <!-- Red team side -->
-    <static team="red" type="counter"  coordinate="0, 10, 300"  orientation="180" size="200,10,25" model="counter" friendlyName="Wooden Counter"></static>
-    <static team="red" type="counter"  coordinate="0, 10, 100"  size="200,10,25" model="counter" friendlyName="Wooden Counter"></static>
+    <static team="red" type="counter"  coordinate="299, 10, 31"  size="200,10,25"  orientation="-45" model="counter" friendlyName="Wooden Counter"></static>
+    <static team="red" type="counter"  coordinate="299, 10, 279"  orientation="-135" size="200,10,25" model="counter" friendlyName="Wooden Counter"></static>
     
-    <cooker team="red" type="blender" coordinate=" 100, 20, 300"></cooker>
-    <cooker team="red" type="pan"     coordinate="   0, 20, 300" ></cooker>
-    <cooker team="red" type="toaster" coordinate="-100, 20, 300"></cooker>
-    <cooker team="red" type="pot"     coordinate=" 100, 20, 100"></cooker>
-    <cooker team="red" type="oven"    coordinate="   0, 20, 100"></cooker>
-    <cooker team="red" type="bowl"    coordinate="-100, 20, 100"></cooker>
+    <cooker team="red" type="blender" orientation="45"  coordinate=" 202, 31, 375"></cooker>
+    <cooker team="red" type="pan"     orientation="45"  coordinate=" 300, 30, 302" ></cooker>
+    <cooker team="red" type="toaster" orientation="45"  coordinate=" 371, 30, 204"></cooker>
+    <cooker team="red" type="pot"     orientation="-315" coordinate=" 370, 30, 100"></cooker>
+    <cooker team="red" type="oven"    orientation="-315" coordinate=" 152, 16, -128"></cooker>
+    <cooker team="red" type="bowl"    orientation="-315" coordinate="240, 30, -30"></cooker>
 
 
 
     <!--Blue team side-->
+    <static team="blue" type="counter"  coordinate="-299, 10, 31"  size="200,10,25"  orientation="45" model="counter" friendlyName="Wooden Counter"></static>
+    <static team="blue" type="counter"  coordinate="-299, 10, 279"  orientation="135" size="200,10,25" model="counter" friendlyName="Wooden Counter"></static>
 
-    <static team="blue" type="counter"  coordinate="0, 10,-300"  size="200,10,25"  orientation="45" model="counter" friendlyName="Wooden Counter"></static>
-    <static team="blue" type="counter"  coordinate="0, 10,-100"  orientation="180" size="200,10,25" model="counter" friendlyName="Wooden Counter"></static>
-
-    <cooker team="blue" type="blender" coordinate=" 100, 20, -300" ></cooker>
-    <cooker team="blue" type="pan"     coordinate="   0, 20, -300" ></cooker>
-    <cooker team="blue" type="toaster" coordinate="-100, 20, -300"></cooker>
-    <cooker team="blue" type="pot"     coordinate=" 100, 20, -100"></cooker>
-    <cooker team="blue" type="oven"    coordinate="   0, 20, -100"></cooker>
-    <cooker team="blue" type="bowl"    coordinate="-100, 20, -100"></cooker>
+    <cooker team="blue" type="blender" orientation="-45" coordinate=" -202, 31, 375" ></cooker>
+    <cooker team="blue" type="pan"     orientation="-45" coordinate="   -300, 30, 302" ></cooker>
+    <cooker team="blue" type="toaster" orientation="-45" coordinate="-371, 30, 204"></cooker>
+    <cooker team="blue" type="pot"     orientation="315" coordinate=" -370, 30, 100"></cooker>
+    <cooker team="blue" type="oven"    orientation="135" coordinate="  -152, 16, -128"></cooker>
+    <cooker team="blue" type="bowl"    orientation="315" coordinate="-240, 30, -30"></cooker>
 
     <static type="celingLight" coordinate="-200, 180, 0"  size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
     <static type="celingLight"  coordinate="200, 180, 0"  size="30, 50, 30" model="ceilingLight" friendlyName="Light"/>
@@ -51,7 +50,7 @@
     <static type="celingLight" coordinate= "300, 180, 200" size="30, 30, 10" model="ceilingLight" friendlyName="Power Up Window"/>
 
 
-    <static type="deliveryWindow" coordinate="-300, 100, -460" size="40,45,90" orientation="90" model="deliveryWindow" friendlyName="Delivery Window"/>
+    <static type="deliveryWindow" coordinate="0, 100, -460" size="40,45,90" orientation="-90" model="deliveryWindow" friendlyName="Delivery Window"/>
 
     <static type="cdj" coordinate="480, 5, -480" size="12, 3, 16" orientation="315" model="cdj" friendlyName="DJ Turntable"/>
 
