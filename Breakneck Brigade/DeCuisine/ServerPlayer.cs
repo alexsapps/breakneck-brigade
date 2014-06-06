@@ -118,7 +118,6 @@ namespace DeCuisine
             this.Hands = new Dictionary<string, HandInventory>();
             HandInventory tmp = new HandInventory(null);
             this.Hands.Add("left", tmp);
-            this.Hands.Add("right", tmp);
             this.dashTicks = 0; // don't start dashing
             this.canJump = true;
         }
@@ -264,6 +263,7 @@ namespace DeCuisine
                 // Throw object
                 //this.Game.World.RemoveConstraint(spSlider1);
                 this.Game.World.RemoveConstraint(constraint);
+                constraint = null;
                 if(held.GeomInfo.Size[2] >= held.GeomInfo.Size[0])
                     held.Position = moveOutsideBody(this.GeomInfo.Size[0] + held.GeomInfo.Size[2]); // put the object outside our body before throwing
                 else
@@ -302,6 +302,10 @@ namespace DeCuisine
                 return;
 
             Game.SendSound(BBSound.bodyfall1, Position);
+            #if PROJECT_DEBUG
+                if (constraint != null)
+                    Debugger.Break();
+            #endif
             constraint = new Generic6DofConstraint(
                 this.Body, obj.Body,
                 Matrix.Identity,// * Matrix.Translation(0, this.EyeHeight * 0.75f, 0),
