@@ -34,7 +34,7 @@ namespace Breakneck_Brigade
         //GLFW_KEY_EQUAL         = 61, // = 
         GLFW_KEY_A             = 65,
         //GLFW_KEY_B             = 66,
-        //GLFW_KEY_C             = 67,
+        GLFW_KEY_C             = 67,
         GLFW_KEY_D             = 68,
         GLFW_KEY_E             = 69,
         GLFW_KEY_F             = 70,
@@ -57,7 +57,7 @@ namespace Breakneck_Brigade
         GLFW_KEY_W             = 87,
         //GLFW_KEY_X             = 88,
         //GLFW_KEY_Y             = 89,
-        //GLFW_KEY_Z             = 90,
+        GLFW_KEY_Z             = 90,
         //GLFW_KEY_LEFT_BRACKET  = 91, // [
         //GLFW_KEY_BACKSLASH     = 92, // \
         //GLFW_KEY_RIGHT_BRACKET = 93, // ]

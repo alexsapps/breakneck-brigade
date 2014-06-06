@@ -148,6 +148,7 @@
     <Compile Include="GlfwKeys.cs" />
     <Compile Include="Graphics\3D Objects\Glu Prims\TexturedGluSphere.cs" />
     <Compile Include="Graphics\3D Objects\Particles\Particle2D.cs" />
+    <Compile Include="Graphics\3D Objects\Particles\Spawners\PSTeamIndicator.cs" />
     <Compile Include="Graphics\3D Objects\Particles\Spawners\PSArrow.cs" />
     <Compile Include="Graphics\3D Objects\Particles\Spawners\PSSmoke.cs" />
     <Compile Include="Graphics\3D Objects\Particles\Spawners\PSConfetti.cs" />

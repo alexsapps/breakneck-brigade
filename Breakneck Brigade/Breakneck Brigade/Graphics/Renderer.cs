@@ -541,11 +541,12 @@ namespace Breakneck_Brigade.Graphics
                     if (lookedAtObject is ClientCooker)
                     {
                         ClientCooker lookedAtCooker = (ClientCooker)lookedAtObject;
-                        TextRenderer.printToScreen(xPos, yPos, lookedAtCooker.Type.FriendlyName + " (" + lookedAtCooker.Team.Name + ")", FONT_SCALE, FONT_SCALE);
+                        TextRenderer.printToScreen(xPos, yPos, lookedAtCooker.Type.FriendlyName + " (" + lookedAtCooker.Team.Name + ") - Left Shift - Remove Ingredients", FONT_SCALE, FONT_SCALE);
                         yPos -= (spacing + padding);
                         TextRenderer.printToScreen(xPos, yPos, "Contains: ", FONT_SCALE, FONT_SCALE);
                         yPos -= (spacing + padding);
-                        foreach (ClientIngredient ingredient in lookedAtCooker.Contents)
+                        List<ClientIngredient> copyIngs = new List<ClientIngredient>(lookedAtCooker.Contents);
+                        foreach (ClientIngredient ingredient in copyIngs)
                         {
                             TextRenderer.printToScreen(xPos, yPos, "- " + ingredient.Type.FriendlyName, FONT_SCALE, FONT_SCALE);
                             yPos -= (spacing + padding);

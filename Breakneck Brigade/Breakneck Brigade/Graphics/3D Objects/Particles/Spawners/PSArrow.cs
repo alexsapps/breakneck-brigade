@@ -25,7 +25,7 @@ namespace Breakneck_Brigade.Graphics
             Lifetime = 5f;
             spawnPeriod = Lifetime;
         }
-        
+
         public override void Render() //Disable transparency and disable face culling
         {
             Renderer.disableTransparency();

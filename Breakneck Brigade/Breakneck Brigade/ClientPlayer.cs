@@ -40,6 +40,9 @@ namespace Breakneck_Brigade
             end = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             eyeHeight = reader.ReadSingle();
 
+            //Add team indicator
+            game.ParticleSpawners.Add(new PSTeamIndicator(this));
+
             base.finalizeConstruction();
         }
 

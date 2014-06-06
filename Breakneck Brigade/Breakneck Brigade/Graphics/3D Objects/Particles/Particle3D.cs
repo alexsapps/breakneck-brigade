@@ -51,6 +51,12 @@ namespace Breakneck_Brigade.Graphics
             Obj3D = (TexturedMesh) model.Meshes[0];
         }
 
+        public Particle3D(Model model, Texture texture)
+            : base()
+        {
+            Obj3D = new TexturedMesh() { VBO = ((TexturedMesh)model.Meshes[0]).VBO, Texture = texture };
+        }
+
         public override void Update(float timestep)
         {
             base.Update(timestep);

@@ -163,7 +163,7 @@ namespace Breakneck_Brigade
                 this.NetworkEvents.Add(new ClientCookEvent());
             }
             // Handle drop event
-            if(this.downKeys.Contains(GlfwKeys.GLFW_KEY_Q))
+            if(this.downKeys.Contains(GlfwKeys.GLFW_KEY_F))
             {
                 NetworkEvents.Add(new ClientLeftClickEvent() { Hand = "left", Orientation = Orientation, Incline = Incline, Force = 0.0f });
             }
@@ -189,7 +189,7 @@ namespace Breakneck_Brigade
             }
 
             // Change page down.
-            if(keyDown(GlfwKeys.GLFW_KEY_R))
+            if(keyDown(GlfwKeys.GLFW_KEY_C))
             {
                 this.Game.DecrementPage();
 
@@ -200,7 +200,7 @@ namespace Breakneck_Brigade
             }
 
             // Change page up.
-            if (keyDown(GlfwKeys.GLFW_KEY_F))
+            if (keyDown(GlfwKeys.GLFW_KEY_Z))
             {
                 this.Game.IncrementPage();
 
