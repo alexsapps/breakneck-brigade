@@ -37,7 +37,7 @@ namespace DeCuisine
         private bool isStunned = false;
         private int dashTicks { get; set; }
         private int dashCool { get; set; }
-        public ServerTeam Team { get; set; }
+        public ServerTeam Team { get { return Client.Team; } }
         public string Name { get; set; }
         private Generic6DofConstraint constraint { get; set; }
         private bool isFalling { get; set; }
@@ -119,7 +119,6 @@ namespace DeCuisine
             HandInventory tmp = new HandInventory(null);
             this.Hands.Add("left", tmp);
             this.Hands.Add("right", tmp);
-            this.Team = null;
             this.dashTicks = 0; // don't start dashing
             this.canJump = true;
         }
@@ -127,7 +126,7 @@ namespace DeCuisine
         public override void Serialize(BinaryWriter stream)
         {
             base.Serialize(stream);
-            stream.Write(this.Client.Team.Name);
+            stream.Write(Team.Name);
             int lookingAtId = -1;
             if(this.LookingAt != null)
                 lookingAtId = this.LookingAt.Id;
@@ -146,6 +145,7 @@ namespace DeCuisine
         public override void UpdateStream(BinaryWriter stream)
         {
             base.UpdateStream(stream);
+            stream.Write(Team.Name);
             int lookingAtId = -1;
             if (this.LookingAt != null)
                 lookingAtId = this.LookingAt.Id;

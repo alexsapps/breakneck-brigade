@@ -12,8 +12,7 @@ namespace Breakneck_Brigade
 {
     class ClientPlayer : ClientGameObject
     {
-        private string _modelName;
-        public override string ModelName { get { return _modelName; } }
+        public override string ModelName { get { return TeamName == "red" ? "redChef" : "chef"; } }
         public string TeamName { get; set; } // TODO: Make this control the texture used
         public ClientGameObject LookingAt { get; set; }
         public int LookingAtId { get; set; }
@@ -41,8 +40,6 @@ namespace Breakneck_Brigade
             end = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             eyeHeight = reader.ReadSingle();
 
-            //Add team indicator
-            this._modelName = TeamName == "red" ? "redChef" : "chef";
             //game.ParticleSpawners.Add(new PSTeamIndicator(this));
 
             base.finalizeConstruction();
@@ -57,6 +54,8 @@ namespace Breakneck_Brigade
         {
             base.StreamUpdate(reader);
 
+            this.TeamName = reader.ReadString();
+            updateModel();
             this.LookingAtId = reader.ReadInt32();
             start = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             end = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
