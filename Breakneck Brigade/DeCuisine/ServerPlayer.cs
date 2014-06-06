@@ -252,8 +252,28 @@ namespace DeCuisine
             if (this.Hands[hand].Held == null && this.LookingAt != null && 
                 this.LookingAt.ObjectClass == GameObjectClass.Ingredient)
                 this.PickUpObject((ServerIngredient)this.LookingAt);
-            else
+            else if (this.LookingAt != null && 
+                    this.LookingAt.ObjectClass == GameObjectClass.StaticObject &&
+                    ((ServerStaticObject)this.LookingAt).FriendlyName == "Refrigerator")
             {
+                bool found = false;
+                while(!found)
+                {
+                    HashSet<IngredientType> goalIng = new HashSet<IngredientType>();
+                    foreach(var goal in this.Game.Controller.Goals)
+                        goalIng.Add(goal.EndGoal.FinalProduct);
+
+                    var tmpIngType =  this.Game.Config.Ingredients.Values.ElementAt(DC.random.Next(this.Game.Config.Ingredients.Count));
+                    if (goalIng.Contains(tmpIngType))
+                        continue;
+                    else if (this.Game.Config.Recipes.ContainsKey(tmpIngType.Name))
+                        continue;
+                    found = true;
+                    var tmp = this.Game.Controller.spawnIngredient(tmpIngType, new Vector3(this.LookingAt.Position.X, this.LookingAt.Position.Y, this.LookingAt.Position.Z - 30));
+                    tmp.Body.LinearVelocity = new Vector3(DC.random.Next(-300, 300), DC.random.Next(50,100), -300);
+                }
+
+            }else {
                 if (this.Hands[hand].Held == null)
                     return;
 

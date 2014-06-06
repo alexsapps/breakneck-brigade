@@ -265,7 +265,7 @@ namespace DeCuisine
 
         }
 
-        ServerIngredient spawnIngredient(IngredientType type, Vector3 location)
+        public ServerIngredient spawnIngredient(IngredientType type, Vector3 location)
         {
             return new ServerIngredient(type, Game, location);
         }
