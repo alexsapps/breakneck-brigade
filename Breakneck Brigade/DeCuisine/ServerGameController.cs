@@ -274,7 +274,6 @@ namespace DeCuisine
                     minTeam = team;
                 }
             }
-
             AssignTeam(client, minTeam);
         }
 
