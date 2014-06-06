@@ -8,7 +8,7 @@
     <terrain type="wall" shape="box" coordinate="600, 115,   0"    size="100,225,700" />
 
     <!--Ceiling-->
-    <terrain type="floor" shape="box" coordinate="0, 340, 0" size="500,100,500" />
+    <terrain type="ceiling" shape="box" coordinate="0, 340, 0" size="500,100,500" />
 
     <!-- Red team side -->
     <static team="red" type="counter"  coordinate="299, 10, 31"  size="200,10,25"  orientation="-45" model="counter" friendlyName="Wooden Counter"></static>
