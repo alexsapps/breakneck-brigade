@@ -512,9 +512,9 @@ namespace Breakneck_Brigade
                                 if(backgroundMusicThread == null || backgroundMusicThread.Finished)
                                 {
 #if PROJECT_DEBUG
-                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.11); // it's so loud for hearing every 3 minutes
+                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.2); // it's so loud for hearing every 3 minutes
 #else
-                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.42);
+                                    backgroundMusicThread = SoundThing.Play(backgroundmusic, 0.2);
 #endif
                                 }
 
