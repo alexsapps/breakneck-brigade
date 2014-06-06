@@ -21,7 +21,7 @@
   <ingredient name="orange" friendlyName="Orange" points="110" shape="sphere" size="5, 5, 5"/>
   <ingredient name="steak" friendlyName="Steak" points="110" size="8, 2, 8" />
   <!--et starts here-->
-  <ingredient name="salt" friendlyName="Salt" points="110" size="8, 5, 8"/>
+  <ingredient name="salt" friendlyName="Salt" points="110" size="5, 7, 5"/>
   <ingredient name="onion" friendlyName="Onion" points="2000" size="2, 2, 2"/>
   <ingredient name="noodles" friendlyName="Noodles" points="110" size="5, 9, 2" />
   <ingredient name="rawChicken" friendlyName="Raw Chicken" points="110" size="4, 1, 4" />
