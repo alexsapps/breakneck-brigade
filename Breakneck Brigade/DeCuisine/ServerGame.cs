@@ -748,10 +748,17 @@ namespace DeCuisine
         }
         private ServerGoalsUpdateMessage computeGoalsMessage()
         {
-            var goalList = new List<string>();
-            foreach (var goal in Controller.Goals)
-                goalList.Add(goal.EndGoal.FinalProduct.Name);
-            return new ServerGoalsUpdateMessage() { Goals = goalList };
+            var msg = new ServerGoalsUpdateMessage();
+            msg.Write((writer) =>
+            {
+                writer.Write(Controller.Goals.Count);
+                foreach (var goal in Controller.Goals)
+                {
+                    writer.Write(goal.EndGoal.FinalProduct.Name);
+                    writer.Write(goal.Expiring);
+                }
+            });
+            return msg;
         }
 
         public void SendSound(BBSound sound, Vector3 location)
