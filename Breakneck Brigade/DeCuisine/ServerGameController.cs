@@ -345,15 +345,25 @@ namespace DeCuisine
                 {
                     if (ing.LastPlayerHolding != null)
                     {
-                        Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position, 0, ing.LastPlayerHolding.Id);
                         double complexity = 0;
-                        ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity));
-                        ing.Remove();
-                        MarkLobbyStateDirty();
-                        Program.WriteLine("Scored " + ((Goal)goal).Points + " By making a " + ((Goal)goal).EndGoal.FinalProduct.Name + " for team " + ing.LastPlayerHolding.Client.Team.Name);
-                        this.DisplayScore();
-                        this.ExpiringGoals.Add(goal, DateTime.Now);
-                        return true;
+                        Game.SendParticleEffect(BBParticleEffect.CONFETTI, ing.LastPlayerHolding.Position, 0, ing.LastPlayerHolding.Id);
+                        if (this.ExpiringGoals.ContainsKey(goal))
+                        {
+                            // the other team already scored it, remove the goal frm the goals list
+                            ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity/2));
+                            this.Goals.Remove(goal);
+                            _goalsDirty = true;
+                        } else
+                        {
+                            ing.LastPlayerHolding.Client.Team.Points += (int)(((Goal)goal).Points + (1 + complexity));
+                            ing.Remove();
+                            MarkLobbyStateDirty();
+                            this.ExpiringGoals.Add(goal, DateTime.Now);
+                            goal.Expiring = true;
+                            _goalsDirty = true;
+                            return true;
+                        }
+
                     }
                 }
             }
