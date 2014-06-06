@@ -404,7 +404,7 @@ namespace Breakneck_Brigade.Graphics
             }
             Glfw.glfwOpenWindow((int)_desiredWidth, (int)_desiredHeight, 8, 8, 8, 8, 16, 0, Glfw.GLFW_WINDOW);
             Glfw.glfwSwapInterval(0);
-
+            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
         }
 
         /// <summary>

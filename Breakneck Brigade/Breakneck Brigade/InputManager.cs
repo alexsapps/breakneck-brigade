@@ -82,11 +82,11 @@ namespace Breakneck_Brigade
         private void _enableFPSMode()
         {
             MousePosInit();
-            Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR); //this doesn't always work.  bug in tao, can't be fixed.
+            //Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR); //this doesn't always work.  bug in tao, can't be fixed.
         }
         private void _disableFPSMode()
         {
-            Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
+            //Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
         }
 
 
