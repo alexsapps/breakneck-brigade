@@ -105,7 +105,11 @@ namespace Breakneck_Brigade.Graphics
             {
                 char c = str[ii];
                 float xPercent = (x + ii*GLYPH_RENDER_WIDTH) / (float) Renderer.WindowWidth;
-                float yPercent = y / (float) Renderer.WindowHeight;
+
+                float yAdj = y;
+                if (c == 'g' || c == 'p' || c == 'q' || c == 'y')
+                    yAdj -= 5;
+                float yPercent = yAdj / (float) Renderer.WindowHeight;
                 Gl.glPushMatrix();
 
                 Gl.glMultMatrixf(Matrix4.MakeTranslationMat(xPercent, yPercent, 0.0f).glArray);

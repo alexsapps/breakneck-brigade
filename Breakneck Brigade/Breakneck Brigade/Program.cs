@@ -426,6 +426,7 @@ namespace Breakneck_Brigade
                                         backgroundMusicThread.Stop();
 
                                     renderer.GameObjects = null;
+                                    renderer.ParticleSpawners = null;
                                 }
                             }
 

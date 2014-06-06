@@ -11,7 +11,8 @@ namespace SousChef
         None,
         Box,
         Sphere,
-        Cylinder
+        Cylinder,
+        Capsule
     }
 
     public partial class BB
