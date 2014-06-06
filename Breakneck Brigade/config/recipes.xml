@@ -33,7 +33,6 @@
     <ingredient optional="1">flour</ingredient>
     <ingredient optional="3">salt</ingredient>
     <ingredient optional="1">coconut</ingredient>
-    <ingredient optional="1">beer</ingredient>
   </recipe>
   <recipe product="Toasted Bread">
     <ingredient>bread</ingredient>

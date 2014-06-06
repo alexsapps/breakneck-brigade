@@ -57,8 +57,13 @@ namespace SousChef
             var geomInfo = getGeomInfo(attributes,
                 fileParser.defaultSize, fileParser.defaultMass, fileParser.defaultFriction, fileParser.defaultRollingFriction, fileParser.defaultRestitution, fileParser.defaultAngularDamping, null
                 );
-
-            return new IngredientType(name, friendlyName, geomInfo, points);
+            double powerUp = 0;
+            if (attributes.ContainsKey("powerup"))
+            {
+                if (!Double.TryParse(attributes["powerup"], out powerUp))
+                    throw new Exception("powerup not a double");
+            }
+            return new IngredientType(name, friendlyName, geomInfo, points, powerUp);
         }
 
         protected override void reset() { }
